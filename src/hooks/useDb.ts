@@ -71,7 +71,7 @@ export function useDb() {
 
       setLiters(totalLiters);
       setPercentage(calculatedPercentage);
-    } catch (e: any) => {
+    } catch (e: any) {
       console.error("Error processing database:", e);
       setError(e.message);
       setLiters(0);

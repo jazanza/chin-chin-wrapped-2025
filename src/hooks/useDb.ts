@@ -5,6 +5,7 @@ import { initDb, loadDb, queryData } from "@/lib/db";
 interface IElectronAPI {
   getDbBuffer: () => Promise<Uint8Array | null>;
   onDbUpdate: (callback: () => void) => void;
+  removeDbUpdateListener: (callback: () => void) => void;
 }
 
 declare global {
@@ -39,7 +40,8 @@ export function useDb() {
 
   const processData = useCallback(async () => {
     try {
-      setLoading(true);
+      // No need to set loading to true on every update, just initial load.
+      // setLoading(true); 
       setError(null);
 
       await initDb();
@@ -69,7 +71,7 @@ export function useDb() {
 
       setLiters(totalLiters);
       setPercentage(calculatedPercentage);
-    } catch (e: any) {
+    } catch (e: any) => {
       console.error("Error processing database:", e);
       setError(e.message);
       setLiters(0);
@@ -81,7 +83,14 @@ export function useDb() {
 
   useEffect(() => {
     processData(); // Initial data load
-    window.electronAPI.onDbUpdate(processData); // Set up listener for updates
+
+    const handleUpdate = () => processData();
+    window.electronAPI.onDbUpdate(handleUpdate);
+
+    // Cleanup function to remove the listener when the component unmounts
+    return () => {
+      window.electronAPI.removeDbUpdateListener(handleUpdate);
+    };
   }, [processData]);
 
   return { liters, percentage, goal: WEEKLY_GOAL_LITERS, loading, error };

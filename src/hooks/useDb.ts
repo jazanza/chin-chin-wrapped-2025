@@ -13,9 +13,6 @@ declare global {
   }
 }
 
-const WEEKLY_GOAL_LITERS = 500;
-const GOAL_ML = WEEKLY_GOAL_LITERS * 1000;
-
 const createQuery = (baseQuery: string, dateRange?: DateRange): string => {
   let whereClause = "WHERE T3.DocumentTypeId = 2";
   if (dateRange?.from) {
@@ -91,7 +88,7 @@ const categorizeBeer = (itemName: string): string => {
 
 export function useDb() {
   const [data, setData] = useState({
-    consumptionMetrics: { liters: 0, percentage: 0, goal: WEEKLY_GOAL_LITERS },
+    consumptionMetrics: { liters: 0 },
     flavorData: {},
     varietyMetrics: { totalLiters: 0, uniqueProducts: 0 },
     loyaltyMetrics: { topCustomers: [] },
@@ -126,7 +123,6 @@ export function useDb() {
         totalMl += item.Quantity * volume;
       }
       const totalLiters = totalMl / 1000;
-      const percentage = Math.min(totalMl / GOAL_ML, 1.0);
 
       const flavorMl: { [key: string]: number } = {};
       for (const item of spectrumData) {
@@ -155,7 +151,7 @@ export function useDb() {
       const topCustomers = sortedCustomers.slice(0, 5);
 
       setData({
-        consumptionMetrics: { liters: totalLiters, percentage, goal: WEEKLY_GOAL_LITERS },
+        consumptionMetrics: { liters: totalLiters },
         flavorData: flavorMl,
         varietyMetrics,
         loyaltyMetrics: { topCustomers },

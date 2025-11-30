@@ -70,7 +70,7 @@ export function BeerVisualizer({ percentage, liters, goal }: { percentage: numbe
 
   return (
     <>
-      <ambientLight intensity={0.7} />
+      <ambientLight intensity={0.2} />
       <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={2} castShadow />
       <pointLight position={[-10, -10, -10]} intensity={0.5} />
 

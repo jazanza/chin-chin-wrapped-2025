@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { DateRange } from "react-day-picker";
@@ -91,10 +91,11 @@ const Dashboard = () => {
         {error && <p className="text-xl text-red-500 text-center pt-40">Error: {error}</p>}
         {!loading && !error && (
           <Canvas shadows camera={{ position: [0, 1, 5], fov: 50 }}>
-            <ambientLight intensity={0.7} />
-            <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={2} castShadow />
-            <pointLight position={[-10, -10, -10]} intensity={0.5} />
-            {renderVisualization()}
+            <color attach="background" args={["#101010"]} />
+            <fog attach="fog" args={["#101010", 5, 15]} />
+            <Suspense fallback={null}>
+              {renderVisualization()}
+            </Suspense>
             <OrbitControls enableZoom={true} />
           </Canvas>
         )}

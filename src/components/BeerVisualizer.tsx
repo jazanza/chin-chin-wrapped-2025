@@ -1,40 +1,42 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
-function Bubbles({ liters }: { liters: number }) {
+function Bubbles({ liquidHeight, viewportWidth }: { liquidHeight: number; viewportWidth: number }) {
   const pointsRef = useRef<THREE.Points>(null!);
   const { viewport } = useThree();
+  const bottomY = -viewport.height / 2;
 
-  // El número de burbujas es proporcional a los litros, con un límite para el rendimiento.
-  const count = Math.min(Math.floor(liters * 100), 20000);
+  // El número de burbujas es proporcional a la altura del líquido.
+  const count = Math.min(Math.floor(liquidHeight * 200), 5000);
 
   const particles = useMemo(() => {
     const temp = [];
     for (let i = 0; i < count; i++) {
-      const x = THREE.MathUtils.randFloatSpread(viewport.width * 2);
-      const y = THREE.MathUtils.randFloatSpread(viewport.height * 2);
-      const z = THREE.MathUtils.randFloatSpread(10);
+      const x = THREE.MathUtils.randFloatSpread(viewportWidth);
+      const y = THREE.MathUtils.randFloat(bottomY, bottomY + liquidHeight);
+      const z = THREE.MathUtils.randFloatSpread(1);
       temp.push(x, y, z);
     }
     return new Float32Array(temp);
-  }, [count, viewport.width, viewport.height]);
+  }, [count, liquidHeight, viewportWidth, bottomY]);
 
   useFrame(() => {
-    if (!pointsRef.current || liters === 0) return;
+    if (!pointsRef.current || liquidHeight === 0) return;
     const positions = pointsRef.current.geometry.attributes.position.array;
+    const topY = bottomY + liquidHeight;
 
     for (let i = 1; i < positions.length; i += 3) {
       positions[i] += 0.01; // Velocidad de subida
-      if (positions[i] > viewport.height / 2) {
-        positions[i] = -viewport.height / 2; // Reiniciar abajo
+      if (positions[i] > topY) {
+        positions[i] = bottomY; // Reiniciar abajo
       }
     }
     pointsRef.current.geometry.attributes.position.needsUpdate = true;
   });
 
-  if (liters === 0) return null;
+  if (liquidHeight === 0) return null;
 
   return (
     <points ref={pointsRef}>
@@ -47,8 +49,8 @@ function Bubbles({ liters }: { liters: number }) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.05}
-        color="#FFD700"
+        size={0.03}
+        color="#FFFFFF"
         transparent
         opacity={0.7}
         blending={THREE.AdditiveBlending}
@@ -58,28 +60,66 @@ function Bubbles({ liters }: { liters: number }) {
 }
 
 export function BeerVisualizer({ liters }: { liters: number }) {
-  // La intensidad de la luz es proporcional a los litros.
-  const lightIntensity = Math.min(liters / 100, 5);
+  const { viewport } = useThree();
+  const liquidRef = useRef<THREE.Mesh>(null!);
+  const textRef = useRef<any>(null!);
+  const animatedHeight = useRef(0);
+
+  // Normalizamos los litros a una altura en la pantalla.
+  // Por ejemplo, 1000 litros llenan el 80% de la pantalla.
+  const MAX_LITERS_FOR_SCALE = 1000;
+  const targetHeight = (liters / MAX_LITERS_FOR_SCALE) * (viewport.height * 0.8);
+
+  useFrame(() => {
+    // Animar suavemente la altura del líquido (lerp)
+    animatedHeight.current = THREE.MathUtils.lerp(animatedHeight.current, targetHeight, 0.05);
+    
+    if (liquidRef.current) {
+      liquidRef.current.scale.y = animatedHeight.current;
+    }
+
+    if (textRef.current) {
+      // Posicionar el texto justo encima de la superficie del líquido
+      const topOfLiquid = -viewport.height / 2 + animatedHeight.current;
+      textRef.current.position.y = topOfLiquid + 0.3;
+    }
+  });
+  
+  // Reiniciar la animación si los litros cambian a 0
+  useEffect(() => {
+    if (liters === 0) {
+      animatedHeight.current = 0;
+    }
+  }, [liters]);
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <pointLight
-        position={[0, 0, 0]}
-        color="#FFA500"
-        intensity={lightIntensity}
-        distance={20}
-      />
+      <ambientLight intensity={0.7} />
+      <directionalLight position={[0, 5, 5]} intensity={1} />
 
-      <Bubbles liters={liters} />
+      {/* Barra de líquido */}
+      <mesh ref={liquidRef} position={[0, -viewport.height / 2, 0]} scale-y={0}>
+        <planeGeometry args={[viewport.width, 1]} />
+        <meshStandardMaterial
+          color="#FFD700"
+          metalness={0.4}
+          roughness={0.3}
+          transparent
+          opacity={0.85}
+        />
+      </mesh>
 
+      <Bubbles liquidHeight={animatedHeight.current} viewportWidth={viewport.width} />
+
+      {/* Texto con los litros */}
       <Text
-        position={[0, 0, 0]}
-        fontSize={1.2}
+        ref={textRef}
+        position={[0, -viewport.height / 2 + 0.3, 0]}
+        fontSize={0.5}
         color="white"
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.05}
+        outlineWidth={0.02}
         outlineColor="#000000"
       >
         {`${liters.toFixed(2)} L`}

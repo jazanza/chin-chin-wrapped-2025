@@ -5,7 +5,7 @@ import chokidar from "chokidar";
 
 // --- CONFIGURATION ---
 // IMPORTANT: Replace this with the actual path to your Aronium database file.
-const DB_FILE_PATH = "C:\\Aronium\\data\\Aronium.db";
+const DB_FILE_PATH = "/Users/jazanza/Downloads/aronium-auto-backup-2025-11-14-13-50-22.db";
 // --- END CONFIGURATION ---
 
 let mainWindow: BrowserWindow | null;

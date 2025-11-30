@@ -44,6 +44,11 @@ export function LoyaltyConstellation({ loyaltyMetrics }: { loyaltyMetrics: { top
 
   const [sun, ...planets] = topCustomers;
 
+  // Defensive check in case the first element is unexpectedly undefined
+  if (!sun) {
+    return <Text position={[0, 0, 0]} fontSize={0.3} color="white">No top customer data available</Text>;
+  }
+
   return (
     <group>
       {/* Sun - Top Customer */}

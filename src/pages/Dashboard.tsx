@@ -7,7 +7,7 @@ import { FlavorSpectrum } from "@/components/FlavorSpectrum";
 import { VarietyBalance } from "@/components/VarietyBalance";
 import { LoyaltyConstellation } from "@/components/LoyaltyConstellation";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { FileUploader } from "@/components/FileUploader";
 
 type ViewMode = "meter" | "spectrum" | "balance" | "loyalty";
 
@@ -16,12 +16,9 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("meter");
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  const handleFileUpload = async () => {
-    const dbBuffer = await window.electronAPI.openDbFile();
-    if (dbBuffer) {
-      await processData(dbBuffer);
-      setIsDataLoaded(true);
-    }
+  const handleFileLoaded = async (dbBuffer: Uint8Array) => {
+    await processData(dbBuffer);
+    setIsDataLoaded(true);
   };
 
   const renderVisualization = () => {
@@ -45,16 +42,7 @@ const Dashboard = () => {
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Visualizador de Cervecería</h1>
           <p className="text-xl text-gray-400 mb-8">Carga tu archivo de base de datos Aronium (.db) para comenzar.</p>
-          <Button onClick={handleFileUpload} size="lg" disabled={loading}>
-            {loading ? (
-              "Procesando..."
-            ) : (
-              <>
-                <Upload className="mr-2 h-5 w-5" />
-                Cargar Archivo .db
-              </>
-            )}
-          </Button>
+          <FileUploader onFileLoaded={handleFileLoaded} loading={loading} />
           {error && <p className="text-red-500 mt-4">Error: {error}</p>}
         </div>
       </div>

@@ -102,8 +102,8 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
         fontSize={2}
         color="white"
         anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.02}
+        anchorY="center"
+        outlineWidth={0.05}
         outlineColor="#000000"
       >
         {`0.00 Litros`}

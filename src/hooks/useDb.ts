@@ -14,6 +14,8 @@ declare global {
   }
 }
 
+const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
+
 const createQuery = (baseQuery: string, dateRange?: DateRange): string => {
   let whereClause = "WHERE T3.DocumentTypeId = 2";
   if (dateRange?.from) {
@@ -23,6 +25,15 @@ const createQuery = (baseQuery: string, dateRange?: DateRange): string => {
       : format(new Date(), "yyyy-MM-dd 23:59:59");
     whereClause += ` AND T3.DateCreated BETWEEN '${fromDate}' AND '${toDate}'`;
   }
+
+  const excludedCustomersString = EXCLUDED_CUSTOMERS.map(name => `'${name.replace(/'/g, "''")}'`).join(',');
+
+  if (baseQuery.includes("LEFT JOIN Customer")) {
+    whereClause += ` AND (T4.Name IS NULL OR T4.Name NOT IN (${excludedCustomersString}))`;
+  } else if (baseQuery.includes("INNER JOIN Customer")) {
+    whereClause += ` AND T4.Name NOT IN (${excludedCustomersString})`;
+  }
+
   return baseQuery.replace("{{WHERE_CLAUSE}}", whereClause);
 };
 
@@ -31,6 +42,7 @@ const VOLUME_QUERY_BASE = `
   FROM DocumentItem AS T1
   INNER JOIN Product AS T2 ON T1.ProductId = T2.Id
   INNER JOIN Document AS T3 ON T1.DocumentId = T3.Id
+  LEFT JOIN Customer AS T4 ON T3.CustomerId = T4.Id
   {{WHERE_CLAUSE}};
 `;
 
@@ -39,6 +51,7 @@ const SPECTRUM_QUERY_BASE = `
   FROM DocumentItem AS T1
   INNER JOIN Product AS T2 ON T1.ProductId = T2.Id
   INNER JOIN Document AS T3 ON T1.DocumentId = T3.Id
+  LEFT JOIN Customer AS T4 ON T3.CustomerId = T4.Id
   {{WHERE_CLAUSE}}
   GROUP BY T2.Name, T2.Description;
 `;
@@ -167,6 +180,7 @@ export function useDb() {
       const topCustomers = sortedCustomers.slice(0, 20);
 
       const rankedBeers = spectrumData
+        .filter(item => categorizeBeer(item.ItemName) !== "Other")
         .map(item => {
           const volume = extractVolumeMl(item.ItemName, item.ItemDescription);
           const category = categorizeBeer(item.ItemName);

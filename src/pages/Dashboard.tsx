@@ -25,8 +25,6 @@ const SCENE_PLAYLIST: Scene[] = [
   { viewMode: "meter", rangeKey: "last_month", title: "LITROS TOTALES" },
   { viewMode: "ranking", rangeKey: "last_month", title: "TOP 10 CERVEZAS" },
   { viewMode: "loyalty", rangeKey: "last_6_months", title: "CLIENTES LEALES" },
-  { viewMode: "balance", rangeKey: "all_time", title: "BALANCE: VOLUMEN VS VARIEDAD" },
-  { viewMode: "spectrum", rangeKey: "last_1_year", title: "ESPECTRO DE SABOR" },
   { viewMode: "ranking", rangeKey: "last_1_year", title: "TOP 10 ANUAL" },
   { viewMode: "loyalty", rangeKey: "all_time", title: "LEALTAD HISTÓRICA" },
 ];

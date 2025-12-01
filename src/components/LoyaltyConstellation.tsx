@@ -16,9 +16,9 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false }: { customer: C
   const lineRef = useRef<any>(null!);
   const velocity = useMemo(() => new THREE.Vector3(), []);
   const position = useMemo(() => isSun ? sunPosition.clone() : new THREE.Vector3(
-    (Math.random() - 0.5) * 8,
-    (Math.random() - 0.5) * 8,
-    (Math.random() - 0.5) * 8
+    (Math.random() - 0.5) * 12,
+    (Math.random() - 0.5) * 12,
+    (Math.random() - 0.5) * 12
   ), [isSun, sunPosition]);
 
   const mass = 0.1 + customer.liters * 0.005;
@@ -77,7 +77,7 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false }: { customer: C
         </bufferGeometry>
         <pointsMaterial size={0.03} color={color} />
       </points>
-      <Text position={[0, clusterRadius + 0.2, 0]} fontSize={0.15} color="white" anchorX="center">
+      <Text position={[0, clusterRadius + 0.2, 0]} fontSize={0.12} color="white" anchorX="center">
         {customer.name}
       </Text>
       <Text position={[0, -clusterRadius - 0.2, 0]} fontSize={0.1} color="white" anchorX="center">

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
+import { TypewriterText } from '../TypewriterText'; // Import the new component
 
 interface IntroStoryProps {
   customerName: string;
   totalVisits: number;
+  isPaused: boolean; // Added isPaused prop
 }
 
 const AnimatedBackgroundLines = () => {
@@ -55,17 +57,30 @@ const AnimatedBackgroundLines = () => {
   );
 };
 
-export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
+export const IntroStory = ({ customerName, totalVisits, isPaused }: IntroStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
+  const [isTitleTyped, setIsTitleTyped] = useState(false);
+  const [isSubTitleTyped, setIsSubTitleTyped] = useState(false);
+
+  useEffect(() => {
+    // Reset animation states when story changes
+    setIsTitleTyped(false);
+    setIsSubTitleTyped(false);
+  }, [customerName, totalVisits]);
+
   return (
     <group>
       <AnimatedBackgroundLines />
-      <Text
-        position={[0, 1.5 * responsiveScale, 0]} // Adjusted position for scaling
-        fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale} // Simulating 6vw
+      <TypewriterText
+        text={`¡HOLA, ${customerName.toUpperCase()}!`}
+        speed={50}
+        onComplete={() => setIsTitleTyped(true)}
+        isPaused={isPaused}
+        position={[0, 1.5 * responsiveScale, 0]}
+        fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale}
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -73,46 +88,52 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        ¡HOLA, {customerName.toUpperCase()}!
-      </Text>
-      <Text
-        position={[0, 0 * responsiveScale, 0]} // Adjusted position for scaling
-        fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale} // Simulating 6vw
-        color="#00FF66" // neon-green
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.03 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        ESTE FUE TU 2025 EN CHIN CHIN
-      </Text>
-      <Text
-        position={[0, -1.5 * responsiveScale, 0]} // Adjusted position for scaling
-        fontSize={0.3 * responsiveScale}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-      >
-        NOS VISITASTE {totalVisits} VECES
-      </Text>
-      {/* Simple visual for visits */}
-      {Array.from({ length: Math.min(totalVisits, 10) }).map((_, i) => (
-        <mesh key={i} position={[-2 + i * 0.4 * responsiveScale, -2.5 * responsiveScale, 0]}>
-          <sphereGeometry args={[0.1 * responsiveScale, 16, 16]} />
-          <meshBasicMaterial color={i % 2 === 0 ? "#FF008A" : "#00FF66"} /> {/* neon-magenta : neon-green */}
-        </mesh>
-      ))}
+        letterSpacing={-0.05}
+        fontWeight={900}
+      />
+      {isTitleTyped && (
+        <TypewriterText
+          text="ESTE FUE TU 2025 EN CHIN CHIN"
+          speed={50}
+          onComplete={() => setIsSubTitleTyped(true)}
+          isPaused={isPaused}
+          position={[0, 0 * responsiveScale, 0]}
+          fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
+          color="#00FF66" // neon-green
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.03 * responsiveScale}
+          outlineColor="#000000"
+          maxWidth={viewport.width * 0.8}
+          textAlign="center"
+          letterSpacing={-0.05}
+          fontWeight={900}
+        />
+      )}
+      {isSubTitleTyped && (
+        <group>
+          <Text
+            position={[0, -1.5 * responsiveScale, 0]}
+            fontSize={0.3 * responsiveScale}
+            color="white"
+            anchorX="center"
+            anchorY="middle"
+            maxWidth={viewport.width * 0.8}
+            textAlign="center"
+            letterSpacing={-0.05}
+            fontWeight={700}
+          >
+            NOS VISITASTE {totalVisits} VECES
+          </Text>
+          {/* Simple visual for visits */}
+          {Array.from({ length: Math.min(totalVisits, 10) }).map((_, i) => (
+            <mesh key={i} position={[-2 + i * 0.4 * responsiveScale, -2.5 * responsiveScale, 0]}>
+              <sphereGeometry args={[0.1 * responsiveScale, 16, 16]} />
+              <meshBasicMaterial color={i % 2 === 0 ? "#FF008A" : "#00FF66"} />
+            </mesh>
+          ))}
+        </group>
+      )}
     </group>
   );
 };

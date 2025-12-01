@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text } from '@react-three/drei';
-import { DominantBeerBarChart } from '../DominantBeerBarChart'; // Import the new bar chart
+import { DominantBeerBarChart } from '../DominantBeerBarChart';
 import { useThree } from '@react-three/fiber';
+import { TypewriterText } from '../TypewriterText'; // Import the new component
 
 interface DominantBeerStoryProps {
   dominantBeerCategory: string;
   categoryVolumes: { [key: string]: number };
+  isPaused: boolean; // Added isPaused prop
 }
 
-export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: DominantBeerStoryProps) => {
+export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes, isPaused }: DominantBeerStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
+  const [isTitleTyped, setIsTitleTyped] = useState(false);
+  const [isCategoryTyped, setIsCategoryTyped] = useState(false);
+
+  useEffect(() => {
+    setIsTitleTyped(false);
+    setIsCategoryTyped(false);
+  }, [dominantBeerCategory, categoryVolumes]);
+
   return (
     <group>
-      <Text
+      <TypewriterText
+        text="TU CERVEZA DOMINANTE"
+        speed={50}
+        onComplete={() => setIsTitleTyped(true)}
+        isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale} // Simulating 6vw
+        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -25,27 +39,31 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        TU CERVEZA DOMINANTE
-      </Text>
-      <Text
-        position={[0, 1.8 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale} // Simulating 6vw
-        color="#00FF66" // neon-green
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.05 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {dominantBeerCategory.toUpperCase()}
-      </Text>
-      <DominantBeerBarChart categoryVolumes={categoryVolumes} dominantBeerCategory={dominantBeerCategory} position={[0, -0.5 * responsiveScale, 0]} />
+        letterSpacing={-0.05}
+        fontWeight={900}
+      />
+      {isTitleTyped && (
+        <TypewriterText
+          text={dominantBeerCategory.toUpperCase()}
+          speed={50}
+          onComplete={() => setIsCategoryTyped(true)}
+          isPaused={isPaused}
+          position={[0, 1.8 * responsiveScale, 0]}
+          fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale}
+          color="#00FF66" // neon-green
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.05 * responsiveScale}
+          outlineColor="#000000"
+          maxWidth={viewport.width * 0.8}
+          textAlign="center"
+          letterSpacing={-0.05}
+          fontWeight={900}
+        />
+      )}
+      {isCategoryTyped && (
+        <DominantBeerBarChart categoryVolumes={categoryVolumes} dominantBeerCategory={dominantBeerCategory} position={[0, -0.5 * responsiveScale, 0]} />
+      )}
     </group>
   );
 };

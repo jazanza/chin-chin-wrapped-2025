@@ -1,7 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Text, Box, Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
+import { TypewriterText } from '../TypewriterText'; // Import the new component
 
 interface Product {
   name: string;
@@ -16,6 +17,7 @@ interface SummaryInfographicProps {
   dominantBeerCategory: string;
   top5Products: Product[];
   totalVisits: number;
+  isPaused: boolean; // Added isPaused prop
 }
 
 const ProgressBar = ({ value, maxValue, color, position, scaleFactor = 1, responsiveScale }: { value: number; maxValue: number; color: string; position: [number, number, number]; scaleFactor?: number; responsiveScale: number }) => {
@@ -50,6 +52,7 @@ export const SummaryInfographic = ({
   dominantBeerCategory,
   top5Products,
   totalVisits,
+  isPaused,
 }: SummaryInfographicProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
@@ -58,6 +61,14 @@ export const SummaryInfographic = ({
   const BASE_FONT_SIZE = 0.18 * responsiveScale;
   const SMALL_FONT_SIZE = 0.12 * responsiveScale;
   const LINE_HEIGHT = 0.4 * responsiveScale;
+
+  const [isTitleTyped, setIsTitleTyped] = useState(false);
+  const [isSubTitleTyped, setIsSubTitleTyped] = useState(false);
+
+  useEffect(() => {
+    setIsTitleTyped(false);
+    setIsSubTitleTyped(false);
+  }, [customerName, year]);
 
   return (
     <group position={[0, 0, 0]}>
@@ -70,9 +81,13 @@ export const SummaryInfographic = ({
       </Box>
 
       {/* Title */}
-      <Text
+      <TypewriterText
+        text={customerName.toUpperCase()}
+        speed={50}
+        onComplete={() => setIsTitleTyped(true)}
+        isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 2) * responsiveScale} // Simulating 6vw
+        fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 2) * responsiveScale}
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -80,180 +95,186 @@ export const SummaryInfographic = ({
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {customerName.toUpperCase()}
-      </Text>
-      <Text
-        position={[0, 2.1 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 1.2) * responsiveScale} // Simulating 6vw
-        color="#00FF66" // neon-green
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.01 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {year} WRAPPED
-      </Text>
+        letterSpacing={-0.05}
+        fontWeight={900}
+      />
+      {isTitleTyped && (
+        <TypewriterText
+          text={`${year} WRAPPED`}
+          speed={50}
+          onComplete={() => setIsSubTitleTyped(true)}
+          isPaused={isPaused}
+          position={[0, 2.1 * responsiveScale, 0]}
+          fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 1.2) * responsiveScale}
+          color="#00FF66" // neon-green
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.01 * responsiveScale}
+          outlineColor="#000000"
+          maxWidth={viewport.width * 0.8}
+          textAlign="center"
+          letterSpacing={-0.05}
+          fontWeight={900}
+        />
+      )}
 
-      {/* Total Liters */}
-      <Text
-        position={[-2.5 * responsiveScale, 1.2 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 1.5}
-        color="white"
-        anchorX="left"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.4}
-        textAlign="left"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-      >
-        TOTAL CONSUMIDO:
-      </Text>
-      <Text
-        position={[-2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-        color="#FF008A" // neon-magenta
-        anchorX="left"
-        anchorY="middle"
-        outlineWidth={0.02 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.4}
-        textAlign="left"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {totalLiters.toFixed(1)} L
-      </Text>
-      {/* Simple visual for total liters */}
-      <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
-        <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
-      </Cylinder>
-
-      {/* Dominant Beer Category */}
-      <Text
-        position={[2.5 * responsiveScale, 1.2 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 1.5}
-        color="white"
-        anchorX="right"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.4}
-        textAlign="right"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-      >
-        CERVEZA DOMINANTE:
-      </Text>
-      <Text
-        position={[2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-        color="#00FF66" // neon-green
-        anchorX="right"
-        anchorY="middle"
-        outlineWidth={0.02 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.4}
-        textAlign="right"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {dominantBeerCategory.toUpperCase()}
-      </Text>
-      {/* Simple visual for dominant beer */}
-      <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, 0.8 * responsiveScale, 0]}>
-        <meshBasicMaterial color="#00FF66" emissive="#00FF66" emissiveIntensity={0.5} />
-      </Box>
-
-      {/* Top 5 Products */}
-      <Text
-        position={[-2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 1.2}
-        color="white"
-        anchorX="left"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.4}
-        textAlign="left"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-      >
-        TOP 5 PRODUCTOS:
-      </Text>
-      {top5Products.map((product, index) => (
-        <group key={product.name} position={[-2.5 * responsiveScale, -0.6 * responsiveScale - index * LINE_HEIGHT, 0]}>
+      {isSubTitleTyped && (
+        <group>
+          {/* Total Liters */}
           <Text
-            fontSize={SMALL_FONT_SIZE}
+            position={[-2.5 * responsiveScale, 1.2 * responsiveScale, 0]}
+            fontSize={BASE_FONT_SIZE * 1.5}
             color="white"
             anchorX="left"
             anchorY="middle"
-            maxWidth={viewport.width * 0.3}
+            maxWidth={viewport.width * 0.4}
             textAlign="left"
-            letterSpacing={-0.05} // Apply negative letter spacing
-            fontWeight={700} // Apply strong font weight
+            letterSpacing={-0.05}
+            fontWeight={700}
           >
-            {index + 1}. {product.name.toUpperCase()}
+            TOTAL CONSUMIDO:
           </Text>
           <Text
-            position={[2 * responsiveScale, 0, 0]}
-            fontSize={SMALL_FONT_SIZE * 0.8}
-            color="gray"
+            position={[-2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
+            fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
+            color="#FF008A" // neon-magenta
+            anchorX="left"
+            anchorY="middle"
+            outlineWidth={0.02 * responsiveScale}
+            outlineColor="#000000"
+            maxWidth={viewport.width * 0.4}
+            textAlign="left"
+            letterSpacing={-0.05}
+            fontWeight={900}
+          >
+            {totalLiters.toFixed(1)} L
+          </Text>
+          {/* Simple visual for total liters */}
+          <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
+            <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
+          </Cylinder>
+
+          {/* Dominant Beer Category */}
+          <Text
+            position={[2.5 * responsiveScale, 1.2 * responsiveScale, 0]}
+            fontSize={BASE_FONT_SIZE * 1.5}
+            color="white"
             anchorX="right"
             anchorY="middle"
-            maxWidth={viewport.width * 0.1}
+            maxWidth={viewport.width * 0.4}
             textAlign="right"
-            letterSpacing={-0.05} // Apply negative letter spacing
-            fontWeight={400} // Apply normal font weight
+            letterSpacing={-0.05}
+            fontWeight={700}
           >
-            {product.liters.toFixed(1)} L
+            CERVEZA DOMINANTE:
           </Text>
-          <ProgressBar
-            value={product.liters}
-            maxValue={Math.max(...top5Products.map(p => p.liters), 1)}
-            color={product.color}
-            position={[-0.2 * responsiveScale, -0.15 * responsiveScale, 0]} // Position relative to the group
-            scaleFactor={2.2 * responsiveScale} // Max width of the progress bar
-            responsiveScale={responsiveScale}
-          />
-        </group>
-      ))}
+          <Text
+            position={[2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
+            fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
+            color="#00FF66" // neon-green
+            anchorX="right"
+            anchorY="middle"
+            outlineWidth={0.02 * responsiveScale}
+            outlineColor="#000000"
+            maxWidth={viewport.width * 0.4}
+            textAlign="right"
+            letterSpacing={-0.05}
+            fontWeight={900}
+          >
+            {dominantBeerCategory.toUpperCase()}
+          </Text>
+          {/* Simple visual for dominant beer */}
+          <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, 0.8 * responsiveScale, 0]}>
+            <meshBasicMaterial color="#00FF66" emissive="#00FF66" emissiveIntensity={0.5} />
+          </Box>
 
-      {/* Total Visits */}
-      <Text
-        position={[2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 1.2}
-        color="white"
-        anchorX="right"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.4}
-        textAlign="right"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-      >
-        VISITAS:
-      </Text>
-      <Text
-        position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-        color="#FF008A" // neon-magenta
-        anchorX="right"
-        anchorY="middle"
-        outlineWidth={0.02 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.4}
-        textAlign="right"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {totalVisits}
-      </Text>
-      {/* Simple visual for visits */}
-      <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>
-        <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
-      </Box>
+          {/* Top 5 Products */}
+          <Text
+            position={[-2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
+            fontSize={BASE_FONT_SIZE * 1.2}
+            color="white"
+            anchorX="left"
+            anchorY="middle"
+            maxWidth={viewport.width * 0.4}
+            textAlign="left"
+            letterSpacing={-0.05}
+            fontWeight={700}
+          >
+            TOP 5 PRODUCTOS:
+          </Text>
+          {top5Products.map((product, index) => (
+            <group key={product.name} position={[-2.5 * responsiveScale, -0.6 * responsiveScale - index * LINE_HEIGHT, 0]}>
+              <Text
+                fontSize={SMALL_FONT_SIZE}
+                color="white"
+                anchorX="left"
+                anchorY="middle"
+                maxWidth={viewport.width * 0.3}
+                textAlign="left"
+                letterSpacing={-0.05}
+                fontWeight={700}
+              >
+                {index + 1}. {product.name.toUpperCase()}
+              </Text>
+              <Text
+                position={[2 * responsiveScale, 0, 0]}
+                fontSize={SMALL_FONT_SIZE * 0.8}
+                color="gray"
+                anchorX="right"
+                anchorY="middle"
+                maxWidth={viewport.width * 0.1}
+                textAlign="right"
+                letterSpacing={-0.05}
+                fontWeight={400}
+              >
+                {product.liters.toFixed(1)} L
+              </Text>
+              <ProgressBar
+                value={product.liters}
+                maxValue={Math.max(...top5Products.map(p => p.liters), 1)}
+                color={product.color}
+                position={[-0.2 * responsiveScale, -0.15 * responsiveScale, 0]} // Position relative to the group
+                scaleFactor={2.2 * responsiveScale} // Max width of the progress bar
+                responsiveScale={responsiveScale}
+              />
+            </group>
+          ))}
+
+          {/* Total Visits */}
+          <Text
+            position={[2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
+            fontSize={BASE_FONT_SIZE * 1.2}
+            color="white"
+            anchorX="right"
+            anchorY="middle"
+            maxWidth={viewport.width * 0.4}
+            textAlign="right"
+            letterSpacing={-0.05}
+            fontWeight={700}
+          >
+            VISITAS:
+          </Text>
+          <Text
+            position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
+            fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
+            color="#FF008A" // neon-magenta
+            anchorX="right"
+            anchorY="middle"
+            outlineWidth={0.02 * responsiveScale}
+            outlineColor="#000000"
+            maxWidth={viewport.width * 0.4}
+            textAlign="right"
+            letterSpacing={-0.05}
+            fontWeight={900}
+          >
+            {totalVisits}
+          </Text>
+          {/* Simple visual for visits */}
+          <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>
+            <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
+          </Box>
+        </group>
+      )}
     </group>
   );
 };

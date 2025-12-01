@@ -7,12 +7,12 @@ import { useDb } from "@/hooks/useDb";
 import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
 import { ResponsiveCamera } from "@/components/ResponsiveCamera";
 import { PostProcessingEffects } from "@/components/PostProcessingEffects";
-import { Button } from "@/components/ui/button"; // Keep Button import for now, might be removed if not used elsewhere
-import { Loader2, ChevronLeft, ChevronRight, Download } from "lucide-react"; // Keep icons for loading spinner
+import { Button } from "@/components/ui/button";
+import { Loader2, Download } from "lucide-react";
 import { WrappedOverlay } from "@/components/WrappedOverlay";
-import { ViewMode } from "@/components/CameraAnimator"; // Import ViewMode
-import { StoryInteractionZone } from "@/components/StoryInteractionZone"; // New import
-import { StoryProgressBar } from "@/components/StoryProgressBar"; // New import
+import { ViewMode } from "@/components/CameraAnimator";
+import { StoryInteractionZone } from "@/components/StoryInteractionZone";
+import { StoryProgressBar } from "@/components/StoryProgressBar";
 
 // Import story components
 import { IntroStory } from "@/components/stories/IntroStory";
@@ -52,7 +52,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'intro',
     component: IntroStory,
-    duration: 7000,
+    duration: 5000, // Adjusted duration
     cameraViewMode: 'intro',
     title: 'Introducción',
     downloadFileName: 'Historia_Intro',
@@ -60,7 +60,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalConsumption',
     component: TotalConsumptionStory,
-    duration: 7000,
+    duration: 5000, // Adjusted duration
     cameraViewMode: 'totalConsumption',
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
@@ -68,7 +68,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'dominantBeer',
     component: DominantBeerStory,
-    duration: 7000,
+    duration: 5000, // Adjusted duration
     cameraViewMode: 'dominantBeer',
     title: 'Cerveza Dominante',
     downloadFileName: 'Historia_CervezaDominante',
@@ -76,7 +76,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'top5',
     component: Top5Story,
-    duration: 7000,
+    duration: 5000, // Adjusted duration
     cameraViewMode: 'top5',
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
@@ -98,7 +98,7 @@ const WrappedDashboard = () => {
   const [toastId, setToastId] = useState<string | number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false); // New state for pause
+  const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentStory = STORY_SCENES[currentStoryIndex];
@@ -139,7 +139,7 @@ const WrappedDashboard = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentStoryIndex, wrappedData, isPaused]); // Re-run effect when story changes, data loads, or pause state changes
+  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]); // Added currentStory.duration to dependencies
 
   const handleNextStory = useCallback(() => {
     setCurrentStoryIndex((prevIndex) =>
@@ -193,7 +193,7 @@ const WrappedDashboard = () => {
   if (loading && !wrappedData) {
     return (
       <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
-        <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" /> {/* Using neon-magenta for spinner */}
+        <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" />
       </div>
     );
   }
@@ -207,7 +207,7 @@ const WrappedDashboard = () => {
   }
 
   if (!wrappedData) {
-    return null; // Or a more specific loading state if needed
+    return null;
   }
 
   const StoryComponent = currentStory.component;
@@ -254,6 +254,7 @@ const WrappedDashboard = () => {
             top5Products={wrappedData.top5Products}
             totalVisits={wrappedData.totalVisits}
             categoryVolumes={wrappedData.categoryVolumes}
+            isPaused={isPaused} // Pass isPaused to story components
           />
 
           <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
@@ -261,9 +262,9 @@ const WrappedDashboard = () => {
 
         {/* Chin Chin Logo */}
         <img
-          src="/Logo.png" // Path to the logo
+          src="/Logo.png"
           alt="Chin Chin Logo"
-          className="absolute bottom-4 right-4 z-10 w-[8vw] max-w-[60px] p-1" // Responsive width, max-width, and padding
+          className="absolute bottom-4 right-4 z-10 w-[8vw] max-w-[60px] p-1"
         />
 
         {/* Interaction Zone */}
@@ -275,7 +276,7 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {/* Download Button (moved to top-right for accessibility, as navigation buttons are removed) */}
+        {/* Download Button (only for SummaryInfographic) */}
         {currentStory.id === 'summaryInfographic' && (
           <Button
             onClick={handleDownloadScreenshot}

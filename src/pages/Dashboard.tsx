@@ -15,7 +15,7 @@ import { DatePickerWithRange } from "@/components/DatePicker";
 type ViewMode = "meter" | "spectrum" | "balance" | "loyalty";
 
 const Dashboard = () => {
-  const { consumptionMetrics, flavorData, varietyMetrics, loyaltyMetrics, loading, error, processData } = useDb();
+  const { consumptionMetrics, flavorData, varietyMetrics, loyaltyMetrics, rankedBeers, loading, error, processData } = useDb();
   const [viewMode, setViewMode] = useState<ViewMode>("meter");
   const [dbBuffer, setDbBuffer] = useState<Uint8Array | null>(null);
   const [date, setDate] = useState<DateRange | undefined>({
@@ -37,7 +37,7 @@ const Dashboard = () => {
   const renderVisualization = () => {
     switch (viewMode) {
       case "meter":
-        return <BeerVisualizer {...consumptionMetrics} />;
+        return <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} />;
       case "spectrum":
         return <FlavorSpectrum flavorData={flavorData} />;
       case "balance":

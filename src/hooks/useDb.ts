@@ -86,12 +86,29 @@ const categorizeBeer = (itemName: string): string => {
   return "Other";
 };
 
+const BEER_CATEGORY_COLORS: { [key: string]: string } = {
+  IPA: "#FF6347",
+  Lager: "#FFD700",
+  Stout: "#4B0082",
+  Porter: "#8B4513",
+  Pilsner: "#F0E68C",
+  Ale: "#D2691E",
+  Other: "#A9A9A9",
+};
+
 export function useDb() {
-  const [data, setData] = useState({
+  const [data, setData] = useState<{
+    consumptionMetrics: { liters: number };
+    flavorData: { [key: string]: number };
+    varietyMetrics: { totalLiters: number; uniqueProducts: number };
+    loyaltyMetrics: { topCustomers: { name: string; liters: number }[] };
+    rankedBeers: { name: string; liters: number; color: string }[];
+  }>({
     consumptionMetrics: { liters: 0 },
     flavorData: {},
     varietyMetrics: { totalLiters: 0, uniqueProducts: 0 },
     loyaltyMetrics: { topCustomers: [] },
+    rankedBeers: [],
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -150,11 +167,26 @@ export function useDb() {
         .sort((a, b) => b.liters - a.liters);
       const topCustomers = sortedCustomers.slice(0, 5);
 
+      const rankedBeers = spectrumData
+        .map(item => {
+          const volume = extractVolumeMl(item.ItemName, item.ItemDescription);
+          const category = categorizeBeer(item.ItemName);
+          return {
+            name: item.ItemName,
+            liters: (item.TotalQuantity * volume) / 1000,
+            color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
+          };
+        })
+        .filter(beer => beer.liters > 0.1)
+        .sort((a, b) => b.liters - a.liters)
+        .slice(0, 7);
+
       setData({
         consumptionMetrics: { liters: totalLiters },
         flavorData: flavorMl,
         varietyMetrics,
         loyaltyMetrics: { topCustomers },
+        rankedBeers,
       });
     } catch (e: any) {
       console.error("Error processing database:", e);

@@ -132,7 +132,7 @@ function AestheticBubbles({ liquidHeight, viewportWidth }: { liquidHeight: numbe
   );
 }
 
-export function BeerVisualizer({ liters, rankedBeers }: { liters: number; rankedBeers: RankedBeer[] }) {
+export function BeerVisualizer({ liters, rankedBeers, ...props }: { liters: number; rankedBeers: RankedBeer[] } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
   const liquidRef = useRef<THREE.Mesh>(null!);
   const liquidMaterialRef = useRef<any>(null!);
@@ -172,7 +172,7 @@ export function BeerVisualizer({ liters, rankedBeers }: { liters: number; ranked
   }, [rankedBeers]);
 
   return (
-    <>
+    <group {...props}>
       <ambientLight intensity={0.7} />
       <directionalLight position={[0, 5, 5]} intensity={1} />
 
@@ -206,6 +206,6 @@ export function BeerVisualizer({ liters, rankedBeers }: { liters: number; ranked
       >
         {`${liters.toFixed(2)} L`}
       </Text>
-    </>
+    </group>
   );
 }

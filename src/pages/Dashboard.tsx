@@ -114,11 +114,13 @@ const Dashboard = () => {
             <color attach="background" args={["#101010"]} />
             <fog attach="fog" args={["#101010", 5, 20]} />
             <Suspense fallback={null}>
-              {viewMode === "meter" && <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} />}
-              {viewMode === "spectrum" && <FlavorSpectrum flavorData={flavorData} />}
-              {viewMode === "balance" && <VarietyBalance varietyMetrics={varietyMetrics} />}
-              {viewMode === "loyalty" && <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} />}
+              <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} visible={viewMode === "meter"} />
+              <FlavorSpectrum flavorData={flavorData} visible={viewMode === "spectrum"} />
+              <VarietyBalance varietyMetrics={varietyMetrics} visible={viewMode === "balance"} />
+              <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} visible={viewMode === "loyalty"} />
+              
               <CameraAnimator viewMode={viewMode} />
+              
               <EffectComposer>
                 <Bloom
                   mipmapBlur

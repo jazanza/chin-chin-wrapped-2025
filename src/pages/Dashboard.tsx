@@ -1,19 +1,18 @@
 import { useState, Suspense, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useDb } from "@/hooks/useDb";
 import { BeerVisualizer } from "@/components/BeerVisualizer";
 import { ConsumptionRanking } from "@/components/ConsumptionRanking";
 import { VarietyBalance } from "@/components/VarietyBalance";
 import { LoyaltyConstellation } from "@/components/LoyaltyConstellation";
-import { FlavorSpectrum } from "@/components/FlavorSpectrum"; // Importar FlavorSpectrum
+import { FlavorSpectrum } from "@/components/FlavorSpectrum";
 import { CameraAnimator } from "@/components/CameraAnimator";
 import { FileUploader } from "@/components/FileUploader";
-import { DateRangeSelector } from "@/components/DateRangeSelector"; // Mantener import para ocultar
+import { DateRangeSelector } from "@/components/DateRangeSelector";
 import { SceneEffects } from "@/components/SceneEffects"; // Importar el nuevo componente
 
-type ViewMode = "meter" | "ranking" | "loyalty" | "balance" | "spectrum"; // Añadir 'spectrum'
-const VIEWS: ViewMode[] = ["meter", "ranking", "loyalty", "balance", "spectrum"]; // Actualizar VIEWS
+type ViewMode = "meter" | "ranking" | "loyalty" | "balance" | "spectrum";
+const VIEWS: ViewMode[] = ["meter", "ranking", "loyalty", "balance", "spectrum"];
 const VIEW_DURATION = 15000; // 15 segundos por vista
 
 const Dashboard = () => {
@@ -29,7 +28,7 @@ const Dashboard = () => {
   } = useDb();
   const [viewMode, setViewMode] = useState<ViewMode>("meter");
   const [dbBuffer, setDbBuffer] = useState<Uint8Array | null>(null);
-  const [rangeKey] = useState<string>("last_month"); // Rango por defecto 'last_month' sin UI
+  const [rangeKey] = useState<string>("last_month");
 
   useEffect(() => {
     if (!dbBuffer || loading) return;
@@ -50,8 +49,6 @@ const Dashboard = () => {
     await processData(buffer, rangeKey);
   };
 
-  // handleRangeChange y handleExport eliminados ya que la UI y la funcionalidad no son pasivas.
-
   if (!dbBuffer) {
     return (
       <div className="w-screen h-screen bg-black text-white flex flex-col items-center justify-center">
@@ -69,11 +66,10 @@ const Dashboard = () => {
 
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col font-mono">
-      {/* Ocultar la UI de selección de fechas y el botón de exportar */}
       <div className="absolute top-4 left-4 z-10 hidden">
         <DateRangeSelector
           selectedRange={rangeKey}
-          onRangeChange={() => {}} // No-op ya que la UI está oculta
+          onRangeChange={() => {}}
         />
       </div>
 
@@ -87,19 +83,18 @@ const Dashboard = () => {
           </p>
         )}
         {!loading && !error && (
-          <Canvas shadows camera={{ position: [0, 1, 7], fov: 50 }}>
-            <color attach="background" args={["#000000"]} /> {/* Fondo negro absoluto */}
+          <Canvas shadows camera={{ position: [0, 1, 7], fov: 50 }} dpr={[1, 2]}> {/* Añadido dpr */}
+            <color attach="background" args={["#000000"]} />
             <fog attach="fog" args={["#000000", 5, 20]} />
             <Suspense fallback={null}>
               <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} visible={viewMode === "meter"} />
               <ConsumptionRanking rankedBeers={rankedBeers} visible={viewMode === "ranking"} />
               <VarietyBalance varietyMetrics={varietyMetrics} visible={viewMode === "balance"} />
               <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} visible={viewMode === "loyalty"} />
-              <FlavorSpectrum flavorData={flavorData} visible={viewMode === "spectrum"} /> {/* Añadir FlavorSpectrum */}
+              <FlavorSpectrum flavorData={flavorData} visible={viewMode === "spectrum"} />
               
               <CameraAnimator viewMode={viewMode} />
               
-              {/* Usar el nuevo componente SceneEffects */}
               <SceneEffects />
             </Suspense>
           </Canvas>

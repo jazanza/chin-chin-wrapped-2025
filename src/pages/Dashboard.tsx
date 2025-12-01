@@ -32,6 +32,10 @@ const SCENE_PLAYLIST: Scene[] = [
   { viewMode: "meter", rangeKey: "this_year", title: "LITROS DE CERVEZA" },
   { viewMode: "meter", rangeKey: "last_year", title: "LITROS DE CERVEZA" },
   { viewMode: "meter", rangeKey: "all_time", title: "LITROS DE CERVEZA" },
+  { viewMode: "ranking", rangeKey: "all_time", title: "RANKING DE CERVEZAS" },
+  { viewMode: "balance", rangeKey: "all_time", title: "BALANCE DE VARIEDAD" },
+  { viewMode: "loyalty", rangeKey: "all_time", title: "CONSTELACIÓN DE LEALTAD" },
+  { viewMode: "spectrum", rangeKey: "all_time", title: "ESPECTRO DE SABORES" },
 ];
 
 const RANGE_MAP: { [key: string]: string } = {
@@ -62,31 +66,66 @@ const Dashboard = () => {
   } = useDb();
   const [dbBuffer, setDbBuffer] = useState<Uint8Array | null>(null);
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
+  const [previousViewMode, setPreviousViewMode] = useState<ViewMode | null>(null); // Nuevo estado para el modo de vista anterior
   const [isPlaying, setIsPlaying] = useState(true);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentScene = SCENE_PLAYLIST[currentSceneIndex];
   const { viewMode, rangeKey } = currentScene;
 
-  const advanceScene = useCallback((direction: 1 | -1) => {
-    setCurrentSceneIndex(prevIndex => {
-      const newIndex = prevIndex + direction;
-      if (newIndex >= SCENE_PLAYLIST.length) return 0;
-      if (newIndex < 0) return SCENE_PLAYLIST.length - 1;
-      return newIndex;
-    });
-  }, []);
+  // Función para seleccionar la siguiente escena aleatoria
+  const selectNextRandomScene = useCallback(() => {
+    if (!SCENE_PLAYLIST.length) return;
 
+    let nextIndex: number;
+    let attempts = 0;
+    const maxAttempts = 20; // Para evitar bucles infinitos
+
+    // Comprobar si hay al menos una escena que no sea 'meter' en la playlist
+    const hasNonMeterScenes = SCENE_PLAYLIST.some(s => s.viewMode !== "meter");
+
+    do {
+      nextIndex = Math.floor(Math.random() * SCENE_PLAYLIST.length);
+      attempts++;
+      const nextSceneViewMode = SCENE_PLAYLIST[nextIndex].viewMode;
+
+      // Condiciones para volver a intentar:
+      // 1. Si la siguiente escena es la misma que la actual (y hay otras opciones)
+      // 2. Si tanto la escena anterior como la siguiente son de tipo 'meter',
+      //    Y hay otras escenas que no son 'meter' disponibles para elegir.
+    } while (
+      attempts < maxAttempts &&
+      (nextIndex === currentSceneIndex ||
+       (previousViewMode === "meter" && nextSceneViewMode === "meter" && hasNonMeterScenes))
+    );
+
+    setCurrentSceneIndex(nextIndex);
+    setPreviousViewMode(SCENE_PLAYLIST[nextIndex].viewMode); // Actualizar el modo de vista anterior
+  }, [currentSceneIndex, previousViewMode, SCENE_PLAYLIST.length]);
+
+  // Efecto para inicializar la primera escena y el modo de vista anterior
+  useEffect(() => {
+    if (dbBuffer && SCENE_PLAYLIST.length > 0) {
+      // Seleccionar una escena inicial aleatoria
+      const initialIndex = Math.floor(Math.random() * SCENE_PLAYLIST.length);
+      setCurrentSceneIndex(initialIndex);
+      setPreviousViewMode(SCENE_PLAYLIST[initialIndex].viewMode);
+      setIsPlaying(true);
+    }
+  }, [dbBuffer]);
+
+  // Efecto para el temporizador de reproducción automática
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     if (isPlaying && dbBuffer) {
-      intervalRef.current = setInterval(() => advanceScene(1), VIEW_DURATION);
+      intervalRef.current = setInterval(selectNextRandomScene, VIEW_DURATION);
     }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isPlaying, dbBuffer, advanceScene, currentSceneIndex]);
+  }, [isPlaying, dbBuffer, selectNextRandomScene]);
 
+  // Efecto para procesar datos cuando cambia la escena
   useEffect(() => {
     if (dbBuffer) {
       processData(dbBuffer, rangeKey);
@@ -95,13 +134,22 @@ const Dashboard = () => {
 
   const handleFileLoaded = (buffer: Uint8Array) => {
     setDbBuffer(buffer);
-    setCurrentSceneIndex(0);
+    // Al cargar un nuevo archivo, reiniciamos la reproducción con una escena aleatoria
+    const initialIndex = Math.floor(Math.random() * SCENE_PLAYLIST.length);
+    setCurrentSceneIndex(initialIndex);
+    setPreviousViewMode(SCENE_PLAYLIST[initialIndex].viewMode);
     setIsPlaying(true);
   };
 
   const handlePlayPause = () => setIsPlaying(prev => !prev);
-  const handleNext = () => advanceScene(1);
-  const handlePrev = () => advanceScene(-1);
+  const handleNext = () => {
+    setIsPlaying(false); // Pausar la reproducción automática al saltar manualmente
+    selectNextRandomScene();
+  };
+  const handlePrev = () => {
+    setIsPlaying(false); // Pausar la reproducción automática al saltar manualmente
+    selectNextRandomScene(); // En modo aleatorio, "anterior" es simplemente otra escena aleatoria
+  };
 
   if (!dbBuffer) {
     return (
@@ -121,7 +169,7 @@ const Dashboard = () => {
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col relative">
       <NarrativeOverlay
-        key={currentSceneIndex}
+        key={currentSceneIndex} // Usar key para forzar la re-renderización y animación del overlay
         title={currentScene.title}
         range={RANGE_MAP[currentScene.rangeKey] || ""}
       />

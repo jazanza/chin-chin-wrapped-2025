@@ -98,18 +98,18 @@ const Dashboard = () => {
               <p className="text-xl text-red-500 text-center">Error: {error}</p>
             </Html>
           ) : (
-            <>
-              <Suspense fallback={null}>
-                <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} visible={viewMode === "meter"} />
-                <ConsumptionRanking rankedBeers={rankedBeers} visible={viewMode === "ranking"} />
-                <VarietyBalance varietyMetrics={varietyMetrics} visible={viewMode === "balance"} />
-                <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} visible={viewMode === "loyalty"} />
-                <FlavorSpectrum flavorData={flavorData} visible={viewMode === "spectrum"} />
-              </Suspense>
-              <CameraAnimator viewMode={viewMode} />
-              <SceneEffects />
-            </>
+            <Suspense fallback={null}>
+              <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} visible={viewMode === "meter"} />
+              <ConsumptionRanking rankedBeers={rankedBeers} visible={viewMode === "ranking"} />
+              <VarietyBalance varietyMetrics={varietyMetrics} visible={viewMode === "balance"} />
+              <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} visible={viewMode === "loyalty"} />
+              <FlavorSpectrum flavorData={flavorData} visible={viewMode === "spectrum"} />
+            </Suspense>
           )}
+
+          {/* SOLUCIÓN: Estos componentes ahora son hijos directos e incondicionales del Canvas */}
+          <CameraAnimator viewMode={viewMode} />
+          <SceneEffects />
         </Canvas>
       </div>
     </div>

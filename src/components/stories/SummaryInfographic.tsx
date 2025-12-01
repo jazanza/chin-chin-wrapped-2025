@@ -49,8 +49,8 @@ export const SummaryInfographic = ({
     setIsSubTitleTyped(false);
   }, [customerName, year]);
 
-  // Helper to get block position
-  const getBlockPosition = (row: number, col: number) => {
+  // Helper to get block position - Explicitly returning a tuple [number, number, number]
+  const getBlockPosition = (row: number, col: number): [number, number, number] => {
     // Calculate x relative to the center of the infographicWidth
     const x = (col === 1 ? -blockWidth / 2 : blockWidth / 2) - infographicWidth / 4;
     // Calculate y relative to the center of the infographicHeight
@@ -298,7 +298,9 @@ export const SummaryInfographic = ({
             <Image
               url="/Logo.png"
               position={[0, 0.2 * responsiveScale, 0.01]}
-              scale={[blockWidth * 0.5, blockWidth * 0.5 * (1000 / 1000), 1]} // Adjust scale based on image aspect ratio if needed
+              scale-x={blockWidth * 0.5} // Fixed: Using individual scale props
+              scale-y={blockWidth * 0.5 * (1000 / 1000)} // Fixed: Using individual scale props
+              scale-z={1} // Fixed: Using individual scale props
               transparent
             />
             <Text

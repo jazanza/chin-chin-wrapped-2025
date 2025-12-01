@@ -3,9 +3,9 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
-const PARTICLE_COUNT = 10000;
-const CYLINDER_RADIUS = 1.0; // Aumentado para ocupar más pantalla
-const MAX_LITERS_FOR_SCALE = 500;
+const PARTICLE_COUNT = 20000;
+const CYLINDER_RADIUS = 2.0; // Aumentado para ocupar más pantalla
+const MAX_LITERS_FOR_SCALE = 750;
 
 export function BeerVisualizer({ liters, visible, ...props }: { liters: number; visible: boolean } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();

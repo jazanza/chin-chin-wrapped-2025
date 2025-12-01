@@ -7,7 +7,7 @@ import { ConsumptionRanking } from "@/components/ConsumptionRanking";
 import { VarietyBalance } from "@/components/VarietyBalance";
 import { LoyaltyConstellation } from "@/components/LoyaltyConstellation";
 import { FlavorSpectrum } from "@/components/FlavorSpectrum";
-import { CameraAnimator } from "@/components/CameraAnimator";
+import { ResponsiveCamera } from "@/components/ResponsiveCamera"; // Importar el nuevo componente
 import { FileUploader } from "@/components/FileUploader";
 import { PostProcessingEffects } from "@/components/PostProcessingEffects";
 import { PlaybackControls } from "@/components/PlaybackControls";
@@ -149,8 +149,7 @@ const Dashboard = () => {
     return (
       <div className="w-screen h-screen bg-black text-white flex flex-col items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Chin Chin Data Art</h1> {/* Texto actualizado */}
-          {/* Texto eliminado: <p className="text-xl text-gray-400 mb-8">Carga tu archivo de base de datos Aronium (.db) para comenzar.</p> */}
+          <h1 className="text-4xl font-bold mb-4">Chin Chin Data Art</h1>
           <FileUploader onFileLoaded={handleFileLoaded} loading={loading} />
           {error && <p className="text-red-500 mt-4">Error: {error}</p>}
         </div>
@@ -169,7 +168,7 @@ const Dashboard = () => {
         <Canvas
           shadows
           camera={{ position: [0, 1, 7], fov: 50 }}
-          className="w-full h-full" // Asegura que el Canvas ocupe todo el espacio disponible
+          className="w-full h-full"
         >
           <color attach="background" args={["#000000"]} />
           <fog attach="fog" args={["#000000", 5, 20]} />
@@ -192,7 +191,7 @@ const Dashboard = () => {
             </Suspense>
           )}
 
-          <CameraAnimator viewMode={viewMode} />
+          <ResponsiveCamera viewMode={viewMode} /> {/* Usando el nuevo componente */}
           <PostProcessingEffects />
         </Canvas>
       </div>

@@ -4,7 +4,6 @@ import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
 const PARTICLE_COUNT = 50000;
-const CYLINDER_RADIUS = 3; // Aumentado para ocupar más pantalla
 const MAX_LITERS_FOR_SCALE = 15000;
 
 export function BeerVisualizer({ liters, visible, ...props }: { liters: number; visible: boolean } & JSX.IntrinsicElements['group']) {
@@ -16,6 +15,8 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
 
   const maxHeight = viewport.height * 1.2;
   const bottomY = -maxHeight / 2;
+  // Radio del cilindro dinámico basado en el ancho del viewport
+  const dynamicCylinderRadius = viewport.width * 0.3; // Ajusta el multiplicador según sea necesario para el tamaño deseado
 
   const [positions, initialColors] = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT * 3);
@@ -25,7 +26,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const y = bottomY + (i / PARTICLE_COUNT) * maxHeight;
       const angle = Math.random() * Math.PI * 2;
-      const radius = Math.sqrt(Math.random()) * CYLINDER_RADIUS;
+      const radius = Math.sqrt(Math.random()) * dynamicCylinderRadius; // Usa el radio dinámico
       
       pos[i * 3] = Math.cos(angle) * radius;
       pos[i * 3 + 1] = y;
@@ -37,7 +38,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       col[i * 3 + 2] = color.b;
     }
     return [pos, col];
-  }, [maxHeight, bottomY]);
+  }, [maxHeight, bottomY, dynamicCylinderRadius]); // Añade dynamicCylinderRadius a las dependencias
 
   useEffect(() => {
     if (visible) {

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { initDb, loadDb, queryData, type Database } from "@/lib/db";
+import { initDb, loadDb, queryData, type Database, type Statement } from "@/lib/db";
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 const EXCLUDED_PRODUCT_KEYWORDS = [
@@ -140,6 +140,15 @@ export function useDb() {
     setLoading(true);
     setError(null);
     try {
+      // Helper to build the exclusion clause
+      const buildExclusionClause = (tableAlias: string) => {
+        if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) {
+          return "";
+        }
+        const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
+        return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
+      };
+
       // Metric 5: Customer Name (fetched separately for overlay)
       const customerNameQuery = `SELECT Name FROM Customer WHERE Id = ? LIMIT 1;`;
       const customerNameResult = queryData(dbInstance, customerNameQuery, [customerId]);
@@ -164,6 +173,7 @@ export function useDb() {
         WHERE
             T1.CustomerId = ?
             AND STRFTIME('%Y', T1.Date) = ?
+            ${buildExclusionClause('T3')}
         GROUP BY
             T3.Id, T3.Name, T3.Description
         HAVING
@@ -238,7 +248,7 @@ export function useDb() {
         INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
         INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
         WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
-        AND NOT EXISTS (SELECT 1 FROM (VALUES ${EXCLUDED_PRODUCT_KEYWORDS.map(k => `('${k}')`).join(',')}) AS Excluded(Keyword) WHERE T3.Name LIKE '%' || Excluded.Keyword || '%');
+        ${buildExclusionClause('T3')};
       `;
       const uniqueVarieties2025Result = queryData(dbInstance, uniqueVarietiesCustomerQuery, [customerId, currentYear]);
       const uniqueVarieties2025 = uniqueVarieties2025Result.length > 0 ? uniqueVarieties2025Result[0].UniqueProducts : 0;
@@ -247,7 +257,8 @@ export function useDb() {
       const totalUniqueProductsDbQuery = `
         SELECT COUNT(DISTINCT Name) AS TotalUniqueProducts
         FROM Product
-        WHERE NOT EXISTS (SELECT 1 FROM (VALUES ${EXCLUDED_PRODUCT_KEYWORDS.map(k => `('${k}')`).join(',')}) AS Excluded(Keyword) WHERE Product.Name LIKE '%' || Excluded.Keyword || '%');
+        WHERE 1=1
+        ${buildExclusionClause('Product')};
       `;
       const totalVarietiesInDbResult = queryData(dbInstance, totalUniqueProductsDbQuery);
       const totalVarietiesInDb = totalVarietiesInDbResult.length > 0 ? totalVarietiesInDbResult[0].TotalUniqueProducts : 0;

@@ -22,11 +22,12 @@ interface Scene {
 }
 
 const SCENE_PLAYLIST: Scene[] = [
-  { viewMode: "meter", rangeKey: "last_month", title: "LITROS TOTALES" },
-  { viewMode: "ranking", rangeKey: "last_month", title: "TOP 10 CERVEZAS" },
-  { viewMode: "loyalty", rangeKey: "last_6_months", title: "CLIENTES LEALES" },
-  { viewMode: "ranking", rangeKey: "last_1_year", title: "TOP 10 ANUAL" },
-  { viewMode: "loyalty", rangeKey: "all_time", title: "LEALTAD HISTÓRICA" },
+  { viewMode: "meter", rangeKey: "last_month", title: "CONSUMO ÚLTIMO MES" },
+  { viewMode: "meter", rangeKey: "last_3_months", title: "CONSUMO ÚLTIMOS 3 MESES" },
+  { viewMode: "meter", rangeKey: "last_6_months", title: "CONSUMO ÚLTIMOS 6 MESES" },
+  { viewMode: "meter", rangeKey: "this_year", title: "CONSUMO AÑO ACTUAL" },
+  { viewMode: "meter", rangeKey: "last_year", title: "CONSUMO AÑO PASADO" },
+  { viewMode: "meter", rangeKey: "all_time", title: "CONSUMO HISTÓRICO" },
 ];
 
 const RANGE_MAP: { [key: string]: string } = {
@@ -38,6 +39,8 @@ const RANGE_MAP: { [key: string]: string } = {
   last_3_months: "ÚLTIMOS 3 MESES",
   last_6_months: "ÚLTIMOS 6 MESES",
   last_1_year: "ÚLTIMO AÑO",
+  this_year: "AÑO ACTUAL",
+  last_year: "AÑO PASADO",
   all_time: "HISTÓRICO",
 };
 

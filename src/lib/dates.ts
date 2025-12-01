@@ -7,6 +7,8 @@ import {
   startOfMonth,
   endOfMonth,
   subWeeks,
+  startOfYear,
+  endOfYear,
 } from "date-fns";
 import { DateRange } from "react-day-picker";
 
@@ -47,6 +49,15 @@ export const calculateDateRange = (
       break;
     case "last_1_year":
       from = subYears(now, 1);
+      break;
+    case "this_year":
+      from = startOfYear(now);
+      to = endOfYear(now);
+      break;
+    case "last_year":
+      const lastYear = subYears(now, 1);
+      from = startOfYear(lastYear);
+      to = endOfYear(lastYear);
       break;
     case "all_time":
       return undefined; // Special case for no date filter

@@ -21,37 +21,16 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
   const groupRef = useRef<THREE.Group>(null!);
 
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: "¡GRACIAS POR", color: textColor },
-    { text: "\nACOMPAÑARNOS", color: textColor },
-    { text: "\nESTE ", color: textColor },
-    { text: "2025!", color: highlightColor },
-    
-    { text: "\n\nPARA NOSOTROS,", color: textColor },
-    { text: "\nCADA VISITA TUYA", color: textColor },
-    { text: "\nES UN MOTIVO DE ALEGRÍA.", color: textColor },
-    
-    { text: "\n\nPOR LAS CERVEZAS", color: highlightColor },
-    { text: "\nQUE COMPARTIMOS,", color: highlightColor },
-    { text: "\nLOS NUEVOS AMIGOS", color: highlightColor },
-    { text: "\nQUE HICISTE,", color: highlightColor },
-    { text: `\nY POR ESOS ${totalVisits}`, color: highlightColor },
-    { text: "\nDÍAS INOLVIDABLES", color: highlightColor },
-    { text: "\nCON NOSOTROS.", color: highlightColor },
-    
-    { text: "\n\n(ESPERAMOS QUE NO HAYAS", color: textColor },
-    { text: "\nBORRADO CASSETTE...", color: textColor },
-    { text: "\n¡O SÍ! 😜)", color: textColor },
-    
-    { text: "\n\nGRACIAS POR ELEGIRNOS", color: textColor },
-    { text: "\nCOMO TU BARRA DE CERVEZAS", color: textColor },
-    { text: "\nFAVORITA.", color: textColor },
-    
-    { text: "\n\nAHORA, TE PRESENTAMOS", color: textColor },
-    { text: "\nTU CHIN CHIN 2025 WRAPPED.", color: highlightColor },
-    { text: "\n¡COMPÁRTELO EN REDES!", color: textColor }
+    { text: "¡GRACIAS POR\nACOMPAÑARNOS\nESTE 2025!", color: textColor },
+    { text: "\n\nPARA NOSOTROS,\nCADA VISITA TUYA\nES UN MOTIVO DE ALEGRÍA.", color: textColor },
+    { text: "\n\nPOR LAS CERVEZAS\nQUE COMPARTIMOS,", color: highlightColor },
+    { text: "\nLOS NUEVOS AMIGOS\nQUE HICISTE,", color: highlightColor },
+    { text: `\nY POR ESOS ${totalVisits}\nDÍAS INOLVIDABLES\nCON NOSOTROS.`, color: highlightColor },
+    { text: "\n\n(ESPERAMOS QUE NO HAYAS\nBORRADO CASSETTE...\n¡O SÍ! 😜)", color: textColor },
+    { text: "\n\nGRACIAS POR ELEGIRNOS\nCOMO TU BARRA DE CERVEZAS\nFAVORITA.", color: textColor },
+    { text: "\n\nAHORA, TE PRESENTAMOS\nTU CHIN CHIN 2025 WRAPPED.\n¡COMPÁRTELO EN REDES!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
-  // Maximize font size while respecting screen width
   const baseFontSize = Math.min(viewport.width * 0.06, 0.6) * responsiveScale;
   const maxTextWidth = viewport.width * 0.8;
 
@@ -72,11 +51,11 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
         speed={75}
         onComplete={onStoryFinished}
         isPaused={isPaused}
-        position={[0, 0, 0]} // Centered
+        position={[0, 0, 0]}
         fontSize={baseFontSize}
         anchorX="center"
         anchorY="middle"
-        maxWidth={maxTextWidth} // Use max width for wrapping
+        maxWidth={maxTextWidth}
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={700}

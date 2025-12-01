@@ -78,9 +78,6 @@ export const TypewriterText = ({
           currentLineIndex++; 
         }
       });
-      // If the segment ends with a space, the next segment should start on the same line.
-      // If the segment ends with a newline, currentLineIndex was already incremented.
-      // If the segment ends without a space or newline, the next segment continues on the same line.
     });
     allWordsRef.current = words;
     setTypedWords([]);
@@ -141,7 +138,8 @@ export const TypewriterText = ({
     if (typedWords.length === 0) return [];
 
     const linesMap = new Map<number, WordData[]>();
-    typedWords.forEach(wordData => {
+    // FIX: Filter out any potential undefined/falsy entries to prevent crash
+    typedWords.filter(Boolean).forEach(wordData => {
       if (!linesMap.has(wordData.lineIndex)) {
         linesMap.set(wordData.lineIndex, []);
       }
@@ -163,51 +161,39 @@ export const TypewriterText = ({
 
   let startY = 0;
   if (anchorY === 'middle') {
-    // Calculate the top edge of the block relative to the center (0,0)
-    // If totalLines=3, height=3.6, startY should be 3.6/2 - 0.6 = 1.2 (to position the first line correctly)
     startY = totalBlockHeight / 2 - fontSize * lineHeight / 2; 
   } else if (anchorY === 'bottom') {
     startY = totalBlockHeight - fontSize * lineHeight;
   }
-  // For 'top', startY remains 0 (or adjusted to top of the block)
 
   return (
     <group position={position}>
-      {lines.map((line, lineIndex) => {
-        let lineXOffset = 0;
-        if (textAlign === 'center') {
-          lineXOffset = -line.width / 2;
-        } else if (textAlign === 'right') {
-          lineXOffset = -line.width;
-        }
+      {lines.map((line, lineIndex) => (
+        <group key={lineIndex} position={[0, startY - lineIndex * fontSize * lineHeight, 0]}>
+          {line.words.map((wordData, wordIndex) => {
+            const wordPositionX = line.currentXOffset;
+            line.currentXOffset += (wordData.width || 0);
 
-        return (
-          <group key={lineIndex} position={[0, startY - lineIndex * fontSize * lineHeight, 0]}>
-            {line.words.map((wordData, wordIndex) => {
-              const wordPositionX = lineXOffset;
-              lineXOffset += (wordData.width || 0);
-
-              return (
-                <Text
-                  key={`${wordData.originalSegmentIndex}-${wordData.originalWordIndexInSegment}-${wordIndex}`}
-                  ref={el => textRefs.current[typedWords.indexOf(wordData)] = el} // Map back to original typedWords index
-                  position={[wordPositionX, 0, 0]}
-                  fontSize={fontSize}
-                  color={wordData.color}
-                  anchorX="left"
-                  anchorY="middle" // Each word is middle-anchored vertically within its line
-                  maxWidth={maxWidth}
-                  textAlign="left"
-                  letterSpacing={letterSpacing}
-                  fontWeight={fontWeight}
-                >
-                  {wordData.word}
-                </Text>
-              );
-            })}
-          </group>
-        );
-      })}
+            return (
+              <Text
+                key={`${wordData.originalSegmentIndex}-${wordData.originalWordIndexInSegment}-${wordIndex}`}
+                ref={el => textRefs.current[typedWords.indexOf(wordData)] = el}
+                position={[wordPositionX, 0, 0]}
+                fontSize={fontSize}
+                color={wordData.color}
+                anchorX="left"
+                anchorY="middle"
+                maxWidth={maxWidth}
+                textAlign="left"
+                letterSpacing={letterSpacing}
+                fontWeight={fontWeight}
+              >
+                {wordData.word}
+              </Text>
+            );
+          })}
+        </group>
+      ))}
     </group>
   );
 };

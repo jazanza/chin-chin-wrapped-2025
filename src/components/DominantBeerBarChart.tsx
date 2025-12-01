@@ -89,7 +89,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
   return (
     <group position={[positionX, 0, 0]}>
       <Box ref={meshRef} args={[BAR_WIDTH, 1, BAR_WIDTH * 0.5]} scale-y={0.01}> {/* Initial scale-y 0.01 for animation */}
-        <meshStandardMaterial color={barColor} /> {/* Emissive removed */}
+        <meshBasicMaterial color={barColor} /> {/* Changed to meshBasicMaterial */}
       </Box>
       <Text
         position={[0, MAX_BAR_HEIGHT + 0.2, 0]}

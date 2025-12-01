@@ -56,7 +56,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // Slide 0
     component: IntroFunStory,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
@@ -64,7 +64,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalVisits', // Slide 1
     component: TotalVisitsStory,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Visitas del Año',
     downloadFileName: 'Historia_Visitas',
@@ -72,7 +72,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveMonth', // Slide 2
     component: MostActiveMonthStory,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Mes Más Activo',
     downloadFileName: 'Historia_MesActivo',
@@ -80,7 +80,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveDay', // Slide 3
     component: MostActiveDayStory,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Día Más Activo',
     downloadFileName: 'Historia_DiaActivo',
@@ -88,7 +88,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'dominantCategoryAndVarieties', // Slide 4
     component: DominantCategoryAndVarietiesStory,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Categoría y Variedades',
     downloadFileName: 'Historia_CategoriaVariedades',
@@ -96,7 +96,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'top5', // Slide 5
     component: Top5Story,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'top5',
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
@@ -104,7 +104,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalConsumption', // Slide 6 (Moved from 7)
     component: TotalConsumptionStory,
-    duration: 5000, // 5 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
@@ -112,7 +112,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'summaryInfographic', // Slide 7 (Moved from 6)
     component: SummaryInfographic,
-    duration: 9000, // 8 to 10 seconds, choosing 9 seconds
+    duration: 20000, // 20 seconds
     cameraViewMode: 'summaryInfographic',
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
@@ -334,8 +334,7 @@ const WrappedDashboard = () => {
           gl={{ preserveDrawingBuffer: true }}
         >
           <CanvasBackground />
-          <ambientLight intensity={0.5} color={0xFFFFFF} />
-          <pointLight position={[10, 10, 10]} color={0xFFFFFF} intensity={1} />
+          {/* Removed ambientLight and pointLight for brutalist style */}
           <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
           <PostProcessingEffects />
 

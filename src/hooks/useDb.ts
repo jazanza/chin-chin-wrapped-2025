@@ -139,18 +139,29 @@ export function useDb() {
     if (!dbInstance) {
       throw new Error("Database not loaded.");
     }
-    const query = `
-      SELECT Id, Name
+    // Check for common column name variations if 'PhoneNumber' fails
+    const customerQuery = `
+      SELECT Id, Name,
+             CASE
+                 WHEN EXISTS (SELECT 1 FROM pragma_table_info('Customer') WHERE name = 'PhoneNumber') THEN PhoneNumber
+                 WHEN EXISTS (SELECT 1 FROM pragma_table_info('Customer') WHERE name = 'Phone') THEN Phone
+                 ELSE NULL
+             END AS ContactNumber
       FROM Customer
-      WHERE Name LIKE '%' || ? || '%' OR PhoneNumber = ?
+      WHERE Name LIKE '%' || ? || '%' OR ContactNumber = ?
       LIMIT 1;
     `;
+
     try {
-      const results = queryData(dbInstance, query, [searchTerm, searchTerm]);
+      const results = queryData(dbInstance, customerQuery, [searchTerm, searchTerm]);
       return results.length > 0 ? results[0] : null;
     } catch (e: any) {
       console.error("Error executing findCustomer query:", e);
-      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, PhoneNumber columns) or search term.`);
+      // Provide a more specific error message if a column is missing
+      if (e.message.includes("no such column")) {
+        throw new Error(`Failed to execute customer search query: Column missing. Please check if 'Id', 'Name', 'PhoneNumber' or 'Phone' columns exist in your 'Customer' table. Original error: ${e.message}`);
+      }
+      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, PhoneNumber/Phone columns) or search term.`);
     }
   }, []);
 

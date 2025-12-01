@@ -68,30 +68,27 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
 
   return (
     <group ref={groupRef}>
-      <AnimatedBackgroundLines />
-      {lines().map((line, index) => {
-        const segments: TextSegment[] = [{ text: line.text, color: line.highlight ? highlightColor : textColor }];
-        return (
-          <React.Fragment key={index}>
-            {index <= lineIndex && (
-              <TypewriterText
-                segments={segments}
-                speed={75}
-                onComplete={index === lineIndex ? handleLineComplete : undefined}
-                isPaused={isPaused || index < lineIndex}
-                position={[0, 2.5 * responsiveScale - index * lineHeightOffset, 0]}
-                fontSize={baseFontSize}
-                anchorX="center"
-                anchorY="middle"
-                maxWidth={viewport.width * 0.8}
-                textAlign="center"
-                letterSpacing={-0.05}
-                fontWeight={700}
-              />
-            )}
-          </React.Fragment>
-        );
-      })}
+      <AnimatedBackgroundLines />{/* No whitespace after this component */}
+      {lines().map((line, index) => (
+        <React.Fragment key={index}>
+          {index <= lineIndex && (
+            <TypewriterText
+              segments={[{ text: line.text, color: line.highlight ? highlightColor : textColor }]}
+              speed={75}
+              onComplete={index === lineIndex ? handleLineComplete : undefined}
+              isPaused={isPaused || index < lineIndex}
+              position={[0, 2.5 * responsiveScale - index * lineHeightOffset, 0]}
+              fontSize={baseFontSize}
+              anchorX="center"
+              anchorY="middle"
+              maxWidth={viewport.width * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            />
+          )}
+        </React.Fragment>
+      ))}
     </group>
   );
 };

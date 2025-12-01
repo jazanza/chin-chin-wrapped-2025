@@ -13,6 +13,8 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
 
   const maxHeight = viewport.height * 0.8;
   const bottomY = -maxHeight / 2;
+  const BASE_REFERENCE_WIDTH = 12;
+  const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
   useFrame(() => {
     animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, totalLiters, 0.05);
@@ -22,7 +24,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
       textRef.current.fontSize = Math.min(1, viewport.width * 0.08);
       // Position text above the animated liquid level
       const currentLiquidHeight = (animatedLiters.current / MAX_LITERS_FOR_SCALE) * maxHeight;
-      textRef.current.position.y = bottomY + currentLiquidHeight + 0.5;
+      textRef.current.position.y = bottomY + currentLiquidHeight + 0.5 * responsiveScale;
     }
   });
 
@@ -32,21 +34,25 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
       <Text
         ref={textRef}
         position={[0, 0, 0]} // Se ajusta dinámicamente en useFrame
-        fontSize={1}
+        fontSize={1 * responsiveScale}
         color="white"
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.05}
+        outlineWidth={0.05 * responsiveScale}
         outlineColor="#000000"
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
       >
         {`${totalLiters.toFixed(2)} L`}
       </Text>
       <Text
-        position={[0, -maxHeight / 2 - 0.8, 0]}
-        fontSize={0.3}
+        position={[0, -maxHeight / 2 - 0.8 * responsiveScale, 0]}
+        fontSize={0.3 * responsiveScale}
         color="white"
         anchorX="center"
         anchorY="middle"
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
       >
         TOTAL CONSUMIDO
       </Text>

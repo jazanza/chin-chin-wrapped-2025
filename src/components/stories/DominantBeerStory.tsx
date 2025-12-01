@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from '@react-three/drei';
 import { DominantBeerBarChart } from '../DominantBeerBarChart'; // Import the new bar chart
+import { useThree } from '@react-three/fiber';
 
 interface DominantBeerStoryProps {
   dominantBeerCategory: string;
@@ -8,31 +9,39 @@ interface DominantBeerStoryProps {
 }
 
 export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: DominantBeerStoryProps) => {
+  const { viewport } = useThree();
+  const BASE_REFERENCE_WIDTH = 12;
+  const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
+
   return (
     <group>
       <Text
-        position={[0, 2.5, 0]}
-        fontSize={0.6}
+        position={[0, 2.5 * responsiveScale, 0]}
+        fontSize={0.6 * responsiveScale}
         color="#F654A9" // primary-glitch-pink
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.04}
+        outlineWidth={0.04 * responsiveScale}
         outlineColor="#000000"
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
       >
         TU CERVEZA DOMINANTE
       </Text>
       <Text
-        position={[0, 1.8, 0]}
-        fontSize={0.8}
+        position={[0, 1.8 * responsiveScale, 0]}
+        fontSize={0.8 * responsiveScale}
         color="#00FF99" // secondary-glitch-cyan
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.05}
+        outlineWidth={0.05 * responsiveScale}
         outlineColor="#000000"
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
       >
         {dominantBeerCategory.toUpperCase()}
       </Text>
-      <DominantBeerBarChart categoryVolumes={categoryVolumes} dominantBeerCategory={dominantBeerCategory} position={[0, -0.5, 0]} />
+      <DominantBeerBarChart categoryVolumes={categoryVolumes} dominantBeerCategory={dominantBeerCategory} position={[0, -0.5 * responsiveScale, 0]} />
     </group>
   );
 };

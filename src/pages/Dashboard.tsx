@@ -86,8 +86,6 @@ const Dashboard = () => {
           <Canvas
             shadows
             camera={{ position: [0, 1, 7], fov: 50 }}
-            dpr={[1, 2]}
-            gl={{ antialias: false }} // Añadido antialias: false
           >
             <color attach="background" args={["#000000"]} />
             <fog attach="fog" args={["#000000", 5, 20]} />

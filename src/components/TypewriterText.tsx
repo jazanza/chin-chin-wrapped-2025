@@ -89,7 +89,7 @@ export const TypewriterText = ({
     <Text
       position={position}
       fontSize={fontSize}
-      color={segments[0]?.color || 'white'} // Fallback color, actual color handled by HTML
+      // Removed 'color' prop to avoid conflict with inline HTML styles
       anchorX={anchorX}
       anchorY={anchorY}
       maxWidth={maxWidth}

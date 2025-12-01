@@ -162,7 +162,7 @@ const WrappedDashboard = () => {
   const [isCapturing, setIsCapturing] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Removed timeoutRef as auto-advance is disabled
 
   const currentStory = STORY_SCENES[currentStoryIndex];
 
@@ -187,23 +187,22 @@ const WrappedDashboard = () => {
     fetchWrappedData();
   }, [customerId, dbLoaded]);
 
-  // Story navigation logic
-  useEffect(() => {
-    // Only auto-advance if the current story has a defined duration > 0
-    if (wrappedData && currentStory.duration > 0 && !isPaused) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = setTimeout(() => {
-        handleNextStory();
-      }, currentStory.duration);
-    }
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]);
+  // Story navigation logic - Removed auto-advance useEffect
+  // useEffect(() => {
+  //   if (wrappedData && currentStory.duration > 0 && !isPaused) {
+  //     if (timeoutRef.current) {
+  //       clearTimeout(timeoutRef.current);
+  //     }
+  //     timeoutRef.current = setTimeout(() => {
+  //       handleNextStory();
+  //     }, currentStory.duration);
+  //   }
+  //   return () => {
+  //     if (timeoutRef.current) {
+  //       clearTimeout(timeoutRef.current);
+  //     }
+  //   };
+  // }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]);
 
   const handleNextStory = useCallback(() => {
     setCurrentStoryIndex((prevIndex) =>
@@ -219,9 +218,7 @@ const WrappedDashboard = () => {
 
   const handlePauseStory = useCallback(() => {
     setIsPaused(true);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    // No need to clear timeoutRef.current here as auto-advance is disabled
   }, []);
 
   const handleResumeStory = useCallback(() => {

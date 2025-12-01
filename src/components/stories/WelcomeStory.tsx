@@ -65,54 +65,34 @@ export const WelcomeStory = ({ customerName, year, totalVisits, isPaused }: Welc
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
   const [isTitleTyped, setIsTitleTyped] = useState(false);
-  const [isSubTitleTyped, setIsSubTitleTyped] = useState(false);
+  // Removed isSubTitleTyped as the first title is removed
 
   useEffect(() => {
     // Reset animation states when story changes
     setIsTitleTyped(false);
-    setIsSubTitleTyped(false);
   }, [customerName, year, totalVisits]); // Added year to dependencies
 
   return (
     <group>
       <AnimatedBackgroundLines />
+      {/* Removed the first TypewriterText for "¡HOLA, ${customerName.toUpperCase()}!" */}
       <TypewriterText
-        text={`¡HOLA, ${customerName.toUpperCase()}!`}
+        text={`ESTE FUE TU ${year} EN CHIN CHIN`}
         speed={75} // Increased typewriter speed
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
-        position={[0, 1.5 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale}
+        position={[0, 0.5 * responsiveScale, 0]} // Adjusted position
+        fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
         color="#FFFFFF" // White
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.05 * responsiveScale}
-        outlineColor="#000000"
+        // Removed outlineWidth and outlineColor
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={900}
       />
       {isTitleTyped && (
-        <TypewriterText
-          text={`ESTE FUE TU ${year} EN CHIN CHIN`}
-          speed={75} // Increased typewriter speed
-          onComplete={() => setIsSubTitleTyped(true)}
-          isPaused={isPaused}
-          position={[0, 0 * responsiveScale, 0]}
-          fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
-          color="#FFFFFF" // White
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.03 * responsiveScale}
-          outlineColor="#000000"
-          maxWidth={viewport.width * 0.8}
-          textAlign="center"
-          letterSpacing={-0.05}
-          fontWeight={900}
-        />
-      )}
-      {isSubTitleTyped && (
         <group>
           <Text
             position={[0, -1.5 * responsiveScale, 0]}
@@ -124,6 +104,7 @@ export const WelcomeStory = ({ customerName, year, totalVisits, isPaused }: Welc
             textAlign="center"
             letterSpacing={-0.05}
             fontWeight={700}
+            // Removed outlineWidth and outlineColor
           >
             NOS VISITASTE {totalVisits} VECES
           </Text>

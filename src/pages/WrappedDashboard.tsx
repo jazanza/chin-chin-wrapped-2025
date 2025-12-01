@@ -220,9 +220,10 @@ const WrappedDashboard = () => {
     return null;
   }
 
+  const isIntroStory = currentStory.id === 'introFun' || currentStory.id === 'welcome';
+
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
-      {/* Removed max-w-[420px] to make it fully responsive */}
       <div className="relative w-full h-full overflow-hidden bg-black">
         {/* Story Progress Bar */}
         <StoryProgressBar
@@ -232,7 +233,7 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {currentStory.id !== 'summaryInfographic' && (
+        {!isIntroStory && currentStory.id !== 'summaryInfographic' && ( // Only show WrappedOverlay if not an intro story and not the infographic
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}

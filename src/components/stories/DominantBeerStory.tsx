@@ -35,8 +35,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes, isPau
         color="#FFFFFF" // White
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.04 * responsiveScale}
-        outlineColor="#000000"
+        // Removed outlineWidth and outlineColor
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05}
@@ -53,8 +52,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes, isPau
           color="#FFFFFF" // White
           anchorX="center"
           anchorY="middle"
-          outlineWidth={0.05 * responsiveScale}
-          outlineColor="#000000"
+          // Removed outlineWidth and outlineColor
           maxWidth={viewport.width * 0.8}
           textAlign="center"
           letterSpacing={-0.05}

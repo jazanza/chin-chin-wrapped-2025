@@ -13,8 +13,6 @@ interface TypewriterTextProps {
   color: string;
   anchorX?: 'left' | 'center' | 'right';
   anchorY?: 'top' | 'middle' | 'bottom';
-  outlineWidth?: number;
-  outlineColor?: string;
   maxWidth?: number;
   textAlign?: 'left' | 'center' | 'right';
   letterSpacing?: number;

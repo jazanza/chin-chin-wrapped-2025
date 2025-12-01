@@ -8,7 +8,7 @@ const MAX_LITERS_FOR_SCALE = 15000; // Max liters for visual scaling
 
 export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
-  const textRef = useRef<any>(null!);
+  // Removed textRef as the Text component is now removed
   const animatedLiters = useRef(0);
 
   const maxHeight = viewport.height * 0.8;
@@ -19,38 +19,13 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
   useFrame(() => {
     animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, totalLiters, 0.05);
 
-    if (textRef.current) {
-      textRef.current.text = `${animatedLiters.current.toFixed(1)} L`; // Changed to 1 decimal place
-      // Oversize de Datos: font-size: 18vw; font-weight: 900;
-      // Simulate 18vw with responsiveScale, capping at a reasonable max
-      textRef.current.fontSize = Math.min(viewport.width * 0.18, 2.5); // Max 2.5 for desktop, scales down for mobile
-      // Position text above the animated liquid level
-      const currentLiquidHeight = (animatedLiters.current / MAX_LITERS_FOR_SCALE) * maxHeight;
-      textRef.current.position.y = bottomY + currentLiquidHeight + 0.5 * responsiveScale;
-      textRef.current.fontWeight = 900; // Apply extreme font weight
-    }
+    // Removed textRef logic as the Text component is now removed
   });
 
   return (
     <group {...props}>
       <BeerVisualizer liters={totalLiters} visible={true} /> {/* Use BeerVisualizer here */}
-      <Text
-        ref={textRef}
-        position={[0, 0, 0]} // Se ajusta dinámicamente en useFrame
-        fontSize={1 * responsiveScale} // Initial value, will be updated in useFrame
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.05 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        {`${totalLiters.toFixed(1)} L`}
-      </Text>
-      {/* Removed redundant "TOTAL CONSUMIDO" text, as it's handled by the parent story component */}
+      {/* Removed the redundant Text component that displayed total liters */}
     </group>
   );
 }

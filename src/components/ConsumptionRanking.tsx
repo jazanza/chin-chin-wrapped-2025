@@ -10,8 +10,8 @@ interface RankedBeer {
 }
 
 const PARTICLE_COUNT_PER_COLUMN = 5000;
-const COLUMN_WIDTH = 0.8;
-const MAX_COLUMN_HEIGHT = 5;
+const COLUMN_WIDTH = 0.7; // Increased from 0.5
+const MAX_COLUMN_HEIGHT = 3; // Increased from 2
 const BASE_TEXT_FONT_SIZE = 0.2; // Tamaño de fuente base para el texto
 
 const BeerColumn = ({ beer, index, maxLiters, responsiveScale }: { beer: RankedBeer; index: number; maxLiters: number; responsiveScale: number }) => {
@@ -73,6 +73,7 @@ const BeerColumn = ({ beer, index, maxLiters, responsiveScale }: { beer: RankedB
         anchorX="center"
         maxWidth={1}
         textAlign="center"
+        // Removed outlineWidth and outlineColor
       >
         {beer.name}
       </Text>

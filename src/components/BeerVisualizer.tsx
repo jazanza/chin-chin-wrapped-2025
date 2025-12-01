@@ -127,8 +127,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
         color="white"
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.1}
-        outlineColor="#000000"
+        // Removed outlineWidth and outlineColor
       >
         {`0.00 L`}
       </Text>

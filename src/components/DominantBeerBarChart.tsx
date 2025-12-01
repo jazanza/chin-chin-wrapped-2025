@@ -100,6 +100,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
         fontWeight={700} // Apply strong font weight
+        // Removed outlineWidth and outlineColor
       >
         {data.category}
       </Text>
@@ -112,6 +113,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
         fontWeight={400} // Apply normal font weight
+        // Removed outlineWidth and outlineColor
       >
         {`${data.liters.toFixed(1)} L`}
       </Text>

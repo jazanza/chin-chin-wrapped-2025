@@ -69,6 +69,7 @@ export function WrappedSpectrum({ flavorData, ...props }: { flavorData: { [key: 
         color="white"
         anchorX="center"
         anchorY="middle"
+        // Removed outlineWidth and outlineColor
       >
         Dominante
       </Text>

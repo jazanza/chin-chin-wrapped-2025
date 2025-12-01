@@ -73,6 +73,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
         fontWeight={700} // Apply strong font weight
+        // Removed outlineWidth and outlineColor
       >
         {product.name.toUpperCase()}
       </Text>
@@ -85,6 +86,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
         fontWeight={400} // Apply normal font weight
+        // Removed outlineWidth and outlineColor
       >
         {`${product.liters.toFixed(1)} L`}
       </Text>

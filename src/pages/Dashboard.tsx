@@ -22,12 +22,17 @@ interface Scene {
 }
 
 const SCENE_PLAYLIST: Scene[] = [
-  { viewMode: "meter", rangeKey: "last_month", title: "LITROS DE CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_3_months", title: "LITROS DE CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_6_months", title: "LITROS DE CERVEZA" },
-  { viewMode: "meter", rangeKey: "this_year", title: "LITROS DE CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_year", title: "LITROS DE CERVEZA" },
-  { viewMode: "meter", rangeKey: "all_time", title: "LITROS DE CERVEZA" },
+  { viewMode: "meter", rangeKey: "this_week", title: "CONSUMO ESTA SEMANA" },
+  { viewMode: "meter", rangeKey: "last_week", title: "CONSUMO SEMANA PASADA" },
+  { viewMode: "meter", rangeKey: "last_15_days", title: "CONSUMO ÚLTIMOS 15 DÍAS" },
+  { viewMode: "meter", rangeKey: "this_month", title: "CONSUMO ESTE MES" },
+  { viewMode: "meter", rangeKey: "last_month", title: "CONSUMO ÚLTIMO MES" },
+  { viewMode: "meter", rangeKey: "last_3_months", title: "CONSUMO ÚLTIMOS 3 MESES" },
+  { viewMode: "meter", rangeKey: "last_6_months", title: "CONSUMO ÚLTIMOS 6 MESES" },
+  { viewMode: "meter", rangeKey: "last_1_year", title: "CONSUMO ÚLTIMO AÑO" },
+  { viewMode: "meter", rangeKey: "this_year", title: "CONSUMO AÑO ACTUAL" },
+  { viewMode: "meter", rangeKey: "last_year", title: "CONSUMO AÑO PASADO" },
+  { viewMode: "meter", rangeKey: "all_time", title: "CONSUMO HISTÓRICO" },
 ];
 
 const RANGE_MAP: { [key: string]: string } = {
@@ -35,11 +40,11 @@ const RANGE_MAP: { [key: string]: string } = {
   last_week: "SEMANA PASADA",
   last_15_days: "ÚLTIMOS 15 DÍAS",
   this_month: "ESTE MES",
-  last_month: "MES ANTERIOR",
+  last_month: "ÚLTIMO MES",
   last_3_months: "ÚLTIMOS 3 MESES",
   last_6_months: "ÚLTIMOS 6 MESES",
   last_1_year: "ÚLTIMO AÑO",
-  this_year: "ESTE AÑO",
+  this_year: "AÑO ACTUAL",
   last_year: "AÑO PASADO",
   all_time: "HISTÓRICO",
 };

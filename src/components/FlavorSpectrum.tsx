@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
-import { ZALANDO_FONT_URL } from "@/lib/constants";
 
 const COLORS: { [key: string]: string } = {
   IPA: "var(--primary-glitch-pink)",
@@ -46,7 +45,7 @@ export function FlavorSpectrum({ flavorData, ...props }: { flavorData: { [key: s
   if (totalMl === 0) {
     return (
       <group {...props}>
-        <Text position={[0, 0, 0]} fontSize={0.3} color="white" font={ZALANDO_FONT_URL}>No flavor data available</Text>
+        <Text position={[0, 0, 0]} fontSize={0.3} color="white">No flavor data available</Text>
       </group>
     );
   }
@@ -74,7 +73,7 @@ export function FlavorSpectrum({ flavorData, ...props }: { flavorData: { [key: s
         return (
           <group key={`group-${category}`}>
             {segment}
-            <Text position={[textX, textY, 0]} fontSize={0.15} color="white" font={ZALANDO_FONT_URL}>
+            <Text position={[textX, textY, 0]} fontSize={0.15} color="white">
               {`${category} (${(percentage * 100).toFixed(1)}%)`}
             </Text>
           </group>

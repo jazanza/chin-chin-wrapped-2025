@@ -15,7 +15,7 @@ export const PostProcessingEffects = () => {
     <EffectComposer key={key}>
       {/* Bloom effect removed for flat aesthetic */}
       {/* Adding empty children to satisfy TypeScript */}
-      <></>
+      {/* Removed all post-processing effects for stability and brutalist aesthetic */}
     </EffectComposer>
   );
 };

@@ -88,4 +88,4 @@ export function FlavorSpectrum({ flavorData, ...props }: { flavorData: { [key: s
       })}
     </group>
   );
-}
+};

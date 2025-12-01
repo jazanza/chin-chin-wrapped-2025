@@ -169,25 +169,15 @@ export const SummaryInfographic = ({
             </p>
           </Block>
 
-          {/* Row 3, Column 2: Mes Más Activo */}
+          {/* Row 3, Column 2: Logo */}
           <Block bgColor="bg-white">
-            <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              EL MES DE LA SED
-            </p>
-            <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
-              {mostActiveMonth.toUpperCase()}
-            </p>
+            <img
+              src="/Logo.png"
+              alt="Chin Chin Logo"
+              className="w-[15vw] max-w-[100px] p-1" // Ajustar tamaño del logo para la celda
+            />
           </Block>
         </div>
-      )}
-
-      {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
-      {isTitleTyped && (
-        <img
-          src="/Logo.png"
-          alt="Chin Chin Logo"
-          className="mt-4 w-[9.6vw] max-w-[72px] p-1" // 8vw * 1.2 = 9.6vw, 60px * 1.2 = 72px
-        />
       )}
     </div>
   );

@@ -339,7 +339,7 @@ const WrappedDashboard = () => {
           <Canvas
             camera={{ position: [0, 0, 8], fov: 75 }}
             className="w-full h-full"
-            gl={{ preserveDrawingBuffer: true }}
+            gl={{ preserveDrawingBuffer: true, antialias: false }} // Desactivar Antialias para reducir carga
           >
             <CanvasBackground />
             {/* Removed ambientLight and pointLight for brutalist style */}
@@ -357,7 +357,7 @@ const WrappedDashboard = () => {
         <img
           src="/Logo.png"
           alt="Chin Chin Logo"
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[9.6vw] max-w-[72px] p-1"
+          className="absolute bottom-4 right-4 z-10 w-[9.6vw] max-w-[72px] p-1" // CORREGIDO: Posición en la esquina inferior derecha
         />
 
         {/* Interaction Zone */}

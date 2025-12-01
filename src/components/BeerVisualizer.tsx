@@ -64,7 +64,12 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       // 🌊 Efecto Líquido Ondulante (Marea)
       const waveX = Math.sin(y * 2 + time) * 0.2;
       const waveZ = Math.cos(y * 2 + time) * 0.2;
-      posAttr.setXYZ(i, positions[i * 3] + waveX, y, positions[i * 3 + 2] + waveZ);
+      
+      // A. Calcular waveY
+      const waveY = Math.sin(positions[i * 3] * 0.5 + time) * 0.1;
+
+      // B. Aplicar waveY
+      posAttr.setXYZ(i, positions[i * 3] + waveX, y + waveY, positions[i * 3 + 2] + waveZ);
 
       // 🌈 Animación de Color Global
       const hue = (time * 0.1 + (y - bottomY) / maxHeight * 0.1) % 1;

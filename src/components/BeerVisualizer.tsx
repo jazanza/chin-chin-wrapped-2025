@@ -4,7 +4,8 @@ import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
 const PARTICLE_COUNT = 25000;
-const CYLINDER_RADIUS = 3.0; //
+const CYLINDER_RADIUS = 3.0; // Aumentado para ocupar más pantalla
+const MAX_LITERS_FOR_SCALE = 500;
 
 export function BeerVisualizer({ liters, visible, ...props }: { liters: number; visible: boolean } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
@@ -80,7 +81,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
 
     if (textRef.current) {
       const topOfLiquid = bottomY + (targetParticleCount / PARTICLE_COUNT) * maxHeight;
-      textRef.current.position.y = topOfLiquid + 0.3;
+      textRef.current.position.y = topOfLiquid + 2;
       textRef.current.text = `${animatedLiters.current.toFixed(2)} L`;
     }
   });

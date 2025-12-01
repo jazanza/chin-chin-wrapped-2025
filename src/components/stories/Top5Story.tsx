@@ -12,21 +12,21 @@ interface Product {
 
 interface Top5StoryProps {
   top5Products: Product[];
-  isPaused: boolean;
+  // isPaused: boolean; // REMOVED
   textColor: string;
   highlightColor: string;
 }
 
-export const Top5Story = ({ top5Products, isPaused, textColor, highlightColor }: Top5StoryProps) => {
+export const Top5Story = ({ top5Products, textColor, highlightColor }: Top5StoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [isTitleTyped, setIsTitleTyped] = useState(false);
+  // const [isTitleTyped, setIsTitleTyped] = useState(false); // REMOVED
 
-  useEffect(() => {
-    setIsTitleTyped(false);
-  }, [top5Products]);
+  // useEffect(() => { // REMOVED
+  //   setIsTitleTyped(false);
+  // }, [top5Products]);
 
   const titleSegments: TextSegment[] = useMemo(() => [
     { text: "TU TOP 5\nDE CERVEZAS", color: textColor },
@@ -36,11 +36,8 @@ export const Top5Story = ({ top5Products, isPaused, textColor, highlightColor }:
     <group>
       <TypewriterText
         segments={titleSegments}
-        speed={75}
-        onComplete={() => setIsTitleTyped(true)}
-        isPaused={isPaused}
         position={[0, 3 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale} // Multiplicador aumentado de 0.06 a 0.15, max de 0.6 a 1.0
+        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale}
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
@@ -49,14 +46,14 @@ export const Top5Story = ({ top5Products, isPaused, textColor, highlightColor }:
         fontWeight={900}
         lineHeight={1.2}
       />
-      {isTitleTyped && (
+      {/* {isTitleTyped && ( */}
         <WrappedTop5
           top5Products={top5Products}
           position={[0, -1 * responsiveScale, 0]}
           textColor={textColor}
           highlightColor={highlightColor}
         />
-      )}
+      {/* )} */}
     </group>
   );
 };

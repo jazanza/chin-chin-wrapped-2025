@@ -9,7 +9,7 @@ interface TotalVisitsStoryProps {
   year: string;
   totalVisits: number;
   totalVisits2024: number;
-  isPaused: boolean;
+  // isPaused: boolean; // REMOVED
   textColor: string;
   highlightColor: string;
 }
@@ -21,7 +21,7 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor, p
     return (
       <group position={position}>
         <Text
-          fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale} // Multiplicador aumentado de 0.02 a 0.05, max de 0.1 a 0.3
+          fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
           color={textColor}
           anchorX="center"
           anchorY="middle"
@@ -40,12 +40,12 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor, p
   const diff = current - previous;
   const percentage = (diff / previous) * 100;
   const isPositive = percentage >= 0;
-  const color = isPositive ? "#00FF00" : "#FF0000"; // Green for up, Red for down
+  const color = isPositive ? "#00FF00" : "#FF0000";
 
   return (
     <group position={position}>
       <Text
-        fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale} // Multiplicador aumentado de 0.02 a 0.05, max de 0.1 a 0.3
+        fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
         color={color}
         anchorX="center"
         anchorY="middle"
@@ -61,16 +61,16 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor, p
   );
 };
 
-export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, isPaused, textColor, highlightColor }: TotalVisitsStoryProps) => {
+export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, textColor, highlightColor }: TotalVisitsStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [isVisitsTyped, setIsVisitsTyped] = useState(false);
+  // const [isVisitsTyped, setIsVisitsTyped] = useState(false); // REMOVED
 
-  useEffect(() => {
-    setIsVisitsTyped(false);
-  }, [customerName, year, totalVisits, totalVisits2024]);
+  // useEffect(() => { // REMOVED
+  //   setIsVisitsTyped(false);
+  // }, [customerName, year, totalVisits, totalVisits2024]);
 
   const storySegments: TextSegment[] = useMemo(() => [
     { text: `¡${customerName.toUpperCase()},`, color: highlightColor },
@@ -84,11 +84,8 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
       <AnimatedBackgroundLines />
       <TypewriterText
         segments={storySegments}
-        speed={75}
-        onComplete={() => setIsVisitsTyped(true)}
-        isPaused={isPaused}
         position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale} // Multiplicador aumentado de 0.08 a 0.2, max de 0.8 a 1.2
+        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale}
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
@@ -97,16 +94,16 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
         fontWeight={900}
         lineHeight={1.2}
       />
-      {isVisitsTyped && (
+      {/* {isVisitsTyped && ( */}
         <ComparisonText
           current={totalVisits}
           previous={totalVisits2024}
           responsiveScale={responsiveScale}
           year={year}
           textColor={textColor}
-          position={[0, -2.5 * responsiveScale, 0]} // Adjusted position below main text
+          position={[0, -2.5 * responsiveScale, 0]}
         />
-      )}
+      {/* )} */}
     </group>
   );
 };

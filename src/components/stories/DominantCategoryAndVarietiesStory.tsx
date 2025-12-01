@@ -8,7 +8,7 @@ interface DominantCategoryAndVarietiesStoryProps {
   dominantBeerCategory: string;
   uniqueVarieties2025: number;
   totalVarietiesInDb: number;
-  isPaused: boolean;
+  // isPaused: boolean; // REMOVED
   textColor: string;
   highlightColor: string;
 }
@@ -17,7 +17,6 @@ export const DominantCategoryAndVarietiesStory = ({
   dominantBeerCategory,
   uniqueVarieties2025,
   totalVarietiesInDb,
-  isPaused,
   textColor,
   highlightColor,
 }: DominantCategoryAndVarietiesStoryProps) => {
@@ -25,11 +24,11 @@ export const DominantCategoryAndVarietiesStory = ({
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [isVarietiesTyped, setIsVarietiesTyped] = useState(false);
+  // const [isVarietiesTyped, setIsVarietiesTyped] = useState(false); // REMOVED
 
-  useEffect(() => {
-    setIsVarietiesTyped(false);
-  }, [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb]);
+  // useEffect(() => { // REMOVED
+  //   setIsVarietiesTyped(false);
+  // }, [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb]);
 
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "TU CATEGORÍA\nDOMINANTE ES...", color: textColor },
@@ -46,11 +45,8 @@ export const DominantCategoryAndVarietiesStory = ({
       <AnimatedBackgroundLines />
       <TypewriterText
         segments={storySegments}
-        speed={75}
-        onComplete={() => setIsVarietiesTyped(true)}
-        isPaused={isPaused}
         position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale} // Multiplicador aumentado de 0.06 a 0.15, max de 0.6 a 1.0
+        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale}
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}

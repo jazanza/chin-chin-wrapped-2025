@@ -6,21 +6,21 @@ import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
 
 interface MostActiveDayStoryProps {
   mostActiveDay: string;
-  isPaused: boolean;
+  // isPaused: boolean; // REMOVED
   textColor: string;
   highlightColor: string;
 }
 
-export const MostActiveDayStory = ({ mostActiveDay, isPaused, textColor, highlightColor }: MostActiveDayStoryProps) => {
+export const MostActiveDayStory = ({ mostActiveDay, textColor, highlightColor }: MostActiveDayStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [isDayTyped, setIsDayTyped] = useState(false);
+  // const [isDayTyped, setIsDayTyped] = useState(false); // REMOVED
 
-  useEffect(() => {
-    setIsDayTyped(false);
-  }, [mostActiveDay]);
+  // useEffect(() => { // REMOVED
+  //   setIsDayTyped(false);
+  // }, [mostActiveDay]);
 
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "TU DÍA MÁS\nCHIN CHIN FUE...", color: textColor },
@@ -32,11 +32,8 @@ export const MostActiveDayStory = ({ mostActiveDay, isPaused, textColor, highlig
       <AnimatedBackgroundLines />
       <TypewriterText
         segments={storySegments}
-        speed={75}
-        onComplete={() => setIsDayTyped(true)}
-        isPaused={isPaused}
         position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale} // Multiplicador aumentado de 0.08 a 0.2, max de 0.8 a 1.2
+        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale}
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}

@@ -7,13 +7,13 @@ import * as THREE from 'three';
 
 interface IntroFunStoryProps {
   totalVisits: number;
-  isPaused: boolean;
+  // isPaused: boolean; // REMOVED
   onStoryFinished: () => void;
   textColor: string;
   highlightColor: string;
 }
 
-export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColor, highlightColor }: IntroFunStoryProps) => {
+export const IntroFunStory = ({ totalVisits, onStoryFinished, textColor, highlightColor }: IntroFunStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
@@ -29,8 +29,7 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
     { text: "\n\nAHORA, TE PRESENTAMOS\nTU CHIN CHIN 2025 WRAPPED.\n¡COMPÁRTELO EN REDES!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
-  // Aumentar el tamaño de fuente base para mayor legibilidad
-  const baseFontSize = Math.min(viewport.width * 0.15, 1.0) * responsiveScale; // Multiplicador aumentado de 0.06 a 0.15, max de 0.6 a 1.0
+  const baseFontSize = Math.min(viewport.width * 0.15, 1.0) * responsiveScale;
   const maxTextWidth = viewport.width * 0.8;
 
   useFrame(({ clock }) => {
@@ -47,9 +46,6 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
       <AnimatedBackgroundLines />
       <TypewriterText
         segments={introSegments}
-        speed={75}
-        onComplete={onStoryFinished}
-        isPaused={isPaused}
         position={[0, 0, 0]}
         fontSize={baseFontSize}
         anchorX="center"

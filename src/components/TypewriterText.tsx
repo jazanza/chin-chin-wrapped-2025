@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
 
 export interface TextSegment {
   text: string;
@@ -10,18 +9,15 @@ export interface TextSegment {
 
 interface TypewriterTextProps {
   segments: TextSegment[];
-  speed?: number; // milliseconds per word
-  onComplete?: () => void;
-  isPaused?: boolean;
-  position: [number, number, number]; // Overall position of the entire text block
+  position: [number, number, number];
   fontSize: number;
-  anchorX?: 'left' | 'center' | 'right'; // This will now apply to the overall block, not individual words
-  anchorY?: 'top' | 'middle' | 'bottom'; // This will now apply to the overall block, not individual words
-  maxWidth?: number; // Max width for a single line
-  textAlign?: 'left' | 'center' | 'right'; // This will now apply to the overall block, not individual words
+  anchorX?: 'left' | 'center' | 'right';
+  anchorY?: 'top' | 'middle' | 'bottom';
+  maxWidth?: number;
+  textAlign?: 'left' | 'center' | 'right';
   letterSpacing?: number;
   fontWeight?: number;
-  lineHeight?: number; // New prop for line spacing
+  lineHeight?: number;
 }
 
 interface WordData {
@@ -35,27 +31,20 @@ interface WordData {
 
 export const TypewriterText = ({
   segments,
-  speed = 50,
-  onComplete,
-  isPaused = false,
   position,
   fontSize,
   anchorX = 'center',
   anchorY = 'middle',
   maxWidth,
-  textAlign = 'center', // Default to center for poster style
+  textAlign = 'center',
   letterSpacing,
   fontWeight,
-  lineHeight = 1.2, // Default line height multiplier
+  lineHeight = 1.2,
 }: TypewriterTextProps) => {
-  const [typedWords, setTypedWords] = useState<WordData[]>([]);
-  const allWordsRef = useRef<WordData[]>([]);
-  const currentWordIndexRef = useRef(0);
-  const animationFrameRef = useRef<number>();
-  const lastTimeRef = useRef<number>(0);
-  const textRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const allWordsWithRefs = useRef<WordData[]>([]);
+  const textMeshes = useRef<(THREE.Mesh | null)[]>([]);
 
-  // Process segments into words, handling newlines
+  // 1. Process segments into words and store them
   useEffect(() => {
     const words: WordData[] = [];
     let currentLineIndex = 0;
@@ -66,84 +55,47 @@ export const TypewriterText = ({
         const lineWords = line.split(/\s+/).filter(Boolean);
         lineWords.forEach((word, wordIndexInLine) => {
           words.push({
-            word: word + (wordIndexInLine < lineWords.length - 1 ? ' ' : ''), // Add space back if not last word in line
+            word: word + (wordIndexInLine < lineWords.length - 1 ? ' ' : ''),
             color: segment.color,
             lineIndex: currentLineIndex,
             originalSegmentIndex: segmentIndex,
             originalWordIndexInSegment: wordIndexInLine,
           });
         });
-        // Only increment line index if there was an explicit newline in the source segment
         if (lineIndexInSegment < linesInSegment.length - 1) {
-          currentLineIndex++; 
+          currentLineIndex++;
         }
       });
     });
-    allWordsRef.current = words;
-    setTypedWords([]);
-    currentWordIndexRef.current = 0;
-    lastTimeRef.current = performance.now();
-    cancelAnimationFrame(animationFrameRef.current!);
-    animationFrameRef.current = requestAnimationFrame(animateTyping);
+    allWordsWithRefs.current = words;
+    textMeshes.current = new Array(words.length).fill(null); // Initialize refs array
+  }, [segments]);
 
-    return () => {
-      cancelAnimationFrame(animationFrameRef.current!);
-    };
-  }, [segments, speed, isPaused]);
-
-  // Measure widths of newly typed words
-  useEffect(() => {
-    if (typedWords.length > 0) {
-      const lastTypedWordIndex = typedWords.length - 1;
-      const textMesh = textRefs.current[lastTypedWordIndex];
+  // 2. Measure widths after all words are rendered and refs are available
+  const wordsWithMeasuredWidths = useMemo(() => {
+    // This effect runs after the initial render where all Text components are mounted
+    // and their refs are populated.
+    return allWordsWithRefs.current.map((wordData, index) => {
+      const textMesh = textMeshes.current[index];
       if (textMesh && textMesh.geometry) {
         textMesh.geometry.computeBoundingBox();
         const width = textMesh.geometry.boundingBox?.max.x - textMesh.geometry.boundingBox?.min.x;
-        if (width !== undefined && typedWords[lastTypedWordIndex].width === undefined) {
-          setTypedWords(prev => {
-            const newTypedWords = [...prev];
-            newTypedWords[lastTypedWordIndex] = { ...newTypedWords[lastTypedWordIndex], width: width };
-            return newTypedWords;
-          });
-        }
+        return { ...wordData, width: width !== undefined ? width : 0 };
       }
-    }
-  }, [typedWords]);
+      return { ...wordData, width: 0 };
+    });
+  }, [allWordsWithRefs.current, textMeshes.current]);
 
-  const animateTyping = useCallback((currentTime: number) => {
-    if (isPaused) {
-      lastTimeRef.current = currentTime;
-      animationFrameRef.current = requestAnimationFrame(animateTyping);
-      return;
-    }
-
-    if (currentTime - lastTimeRef.current > speed) {
-      if (currentWordIndexRef.current < allWordsRef.current.length) {
-        setTypedWords(prev => [...prev, allWordsRef.current[currentWordIndexRef.current]]);
-        currentWordIndexRef.current++;
-        lastTimeRef.current = currentTime;
-      } else {
-        cancelAnimationFrame(animationFrameRef.current!);
-        if (onComplete) {
-          onComplete();
-        }
-        return;
-      }
-    }
-    animationFrameRef.current = requestAnimationFrame(animateTyping);
-  }, [speed, isPaused, onComplete]);
-
-  // Group typed words by line and calculate layout
+  // 3. Group words by line and calculate layout based on measured widths
   const lines = useMemo(() => {
-    // Ensure all typedWords have a defined lineIndex before processing
-    const validTypedWords = typedWords.filter(
+    const validWords = wordsWithMeasuredWidths.filter(
       (word): word is WordData => word && typeof word.lineIndex === 'number'
     );
 
-    if (validTypedWords.length === 0) return [];
+    if (validWords.length === 0) return [];
 
     const linesMap = new Map<number, WordData[]>();
-    validTypedWords.forEach(wordData => {
+    validWords.forEach(wordData => {
       if (!linesMap.has(wordData.lineIndex)) {
         linesMap.set(wordData.lineIndex, []);
       }
@@ -154,7 +106,7 @@ export const TypewriterText = ({
     Array.from(linesMap.keys()).sort((a, b) => a - b).forEach(lineIndex => {
       const wordsInLine = linesMap.get(lineIndex)!;
       const lineWidth = wordsInLine.reduce((sum, wordData) => sum + (wordData.width || 0), 0);
-      
+
       let lineGroupOffsetX = 0;
       if (textAlign === 'center') {
         lineGroupOffsetX = -lineWidth / 2;
@@ -165,7 +117,7 @@ export const TypewriterText = ({
       lineLayouts.push({ words: wordsInLine, width: lineWidth, currentXOffset: 0, lineGroupOffsetX });
     });
     return lineLayouts;
-  }, [typedWords, textAlign]);
+  }, [wordsWithMeasuredWidths, textAlign]);
 
   // Calculate overall block dimensions for centering
   const totalLines = lines.length;
@@ -173,7 +125,7 @@ export const TypewriterText = ({
 
   let startY = 0;
   if (anchorY === 'middle') {
-    startY = totalBlockHeight / 2 - fontSize * lineHeight / 2; 
+    startY = totalBlockHeight / 2 - fontSize * lineHeight / 2;
   } else if (anchorY === 'bottom') {
     startY = totalBlockHeight - fontSize * lineHeight;
   }
@@ -186,10 +138,21 @@ export const TypewriterText = ({
             const wordPositionX = line.currentXOffset;
             line.currentXOffset += (wordData.width || 0);
 
+            const originalWordIndex = allWordsWithRefs.current.findIndex(
+              w => w.originalSegmentIndex === wordData.originalSegmentIndex &&
+                   w.originalWordIndexInSegment === wordData.originalWordIndexInSegment &&
+                   w.lineIndex === wordData.lineIndex &&
+                   w.word === wordData.word
+            );
+
             return (
               <Text
                 key={`${wordData.originalSegmentIndex}-${wordData.originalWordIndexInSegment}-${wordIndex}`}
-                ref={el => textRefs.current[typedWords.indexOf(wordData)] = el}
+                ref={el => {
+                  if (originalWordIndex !== -1) {
+                    textMeshes.current[originalWordIndex] = el;
+                  }
+                }}
                 position={[wordPositionX, 0, 0]}
                 fontSize={fontSize}
                 color={wordData.color}

@@ -6,21 +6,21 @@ import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
 
 interface MostActiveMonthStoryProps {
   mostActiveMonth: string;
-  isPaused: boolean;
+  // isPaused: boolean; // REMOVED
   textColor: string;
   highlightColor: string;
 }
 
-export const MostActiveMonthStory = ({ mostActiveMonth, isPaused, textColor, highlightColor }: MostActiveMonthStoryProps) => {
+export const MostActiveMonthStory = ({ mostActiveMonth, textColor, highlightColor }: MostActiveMonthStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [isMonthTyped, setIsMonthTyped] = useState(false);
+  // const [isMonthTyped, setIsMonthTyped] = useState(false); // REMOVED
 
-  useEffect(() => {
-    setIsMonthTyped(false);
-  }, [mostActiveMonth]);
+  // useEffect(() => { // REMOVED
+  //   setIsMonthTyped(false);
+  // }, [mostActiveMonth]);
 
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "EL MES DE\nLA SED FUE...", color: textColor },
@@ -32,11 +32,8 @@ export const MostActiveMonthStory = ({ mostActiveMonth, isPaused, textColor, hig
       <AnimatedBackgroundLines />
       <TypewriterText
         segments={storySegments}
-        speed={75}
-        onComplete={() => setIsMonthTyped(true)}
-        isPaused={isPaused}
         position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale} // Multiplicador aumentado de 0.08 a 0.2, max de 0.8 a 1.2
+        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale}
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}

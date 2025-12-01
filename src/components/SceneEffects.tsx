@@ -11,10 +11,10 @@ export const SceneEffects = () => {
   }
 
   return (
-    <EffectComposer gl={gl} size={size}>
+    <EffectComposer gl={gl} size={size} skipRender> {/* Añadido skipRender */}
       <Bloom
         mipmapBlur
-        luminanceThreshold={0.8}
+        luminanceThreshold={1} // Ajustado a 1 como se sugirió
         luminanceSmoothing={0.025}
         intensity={1.5}
       />

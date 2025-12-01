@@ -135,6 +135,7 @@ export const TypewriterText = ({
 
   // Group typed words by line and calculate layout
   const lines = useMemo(() => {
+    // Ensure all typedWords have a defined lineIndex before processing
     const validTypedWords = typedWords.filter(
       (word): word is WordData => word && typeof word.lineIndex === 'number'
     );

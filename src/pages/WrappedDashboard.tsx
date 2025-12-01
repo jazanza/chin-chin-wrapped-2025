@@ -6,7 +6,7 @@ import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useDb } from "@/hooks/useDb";
 import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
 import { ResponsiveCamera } from "@/components/ResponsiveCamera";
-import { PostProcessingEffects } from "@/components/PostProcessingEffects";
+// import { PostProcessingEffects } from "@/components/PostProcessingEffects"; // Removed PostProcessingEffects
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
 import { WrappedOverlay } from "@/components/WrappedOverlay";
@@ -344,7 +344,7 @@ const WrappedDashboard = () => {
             <CanvasBackground />
             {/* Removed ambientLight and pointLight for brutalist style */}
             <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
-            <PostProcessingEffects />
+            {/* Removed PostProcessingEffects */}
 
             {/* Render current story component using dynamic component and spread props */}
             <StoryComponent {...storyProps} />

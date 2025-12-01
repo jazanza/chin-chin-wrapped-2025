@@ -287,6 +287,28 @@ const WrappedDashboard = () => {
 
   const isIntroStory = currentStory.id === 'introFun'; // Only IntroFunStory is considered intro for overlay logic
 
+  const StoryComponent = currentStory.component;
+
+  // Props mapping for the current story component
+  const storyProps = {
+    customerName: wrappedData.customerName,
+    year: wrappedData.year,
+    totalLiters: wrappedData.totalLiters,
+    dominantBeerCategory: wrappedData.dominantBeerCategory,
+    top5Products: wrappedData.top5Products,
+    totalVisits: wrappedData.totalVisits,
+    totalVisits2024: wrappedData.totalVisits2024,
+    totalLiters2024: wrappedData.totalLiters2024,
+    uniqueVarieties2025: wrappedData.uniqueVarieties2025,
+    totalVarietiesInDb: wrappedData.totalVarietiesInDb,
+    mostActiveDay: wrappedData.mostActiveDay,
+    mostActiveMonth: wrappedData.mostActiveMonth,
+    isPaused: isPaused,
+    textColor: currentTextColor,
+    highlightColor: currentHighlightColor,
+    onStoryFinished: handleNextStory, // Only used by IntroFunStory
+  };
+
   return (
     <div className="w-screen h-screen relative font-sans flex items-center justify-center">
       <div className="relative w-full h-full overflow-hidden">
@@ -311,95 +333,14 @@ const WrappedDashboard = () => {
           className="w-full h-full"
           gl={{ preserveDrawingBuffer: true }}
         >
-          <CanvasBackground /> {/* Dynamic background */}
-          {/* Simplified Lighting: Hard white light */}
+          <CanvasBackground />
           <ambientLight intensity={0.5} color={0xFFFFFF} />
           <pointLight position={[10, 10, 10]} color={0xFFFFFF} intensity={1} />
           <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
           <PostProcessingEffects />
 
-          {/* Render current story component conditionally */}
-          {currentStory.id === 'introFun' && (
-            <IntroFunStory
-              totalVisits={wrappedData.totalVisits}
-              isPaused={isPaused}
-              onStoryFinished={handleNextStory}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'totalVisits' && (
-            <TotalVisitsStory
-              customerName={wrappedData.customerName}
-              year={wrappedData.year}
-              totalVisits={wrappedData.totalVisits}
-              totalVisits2024={wrappedData.totalVisits2024}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'mostActiveMonth' && (
-            <MostActiveMonthStory
-              mostActiveMonth={wrappedData.mostActiveMonth}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'mostActiveDay' && (
-            <MostActiveDayStory
-              mostActiveDay={wrappedData.mostActiveDay}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'dominantCategoryAndVarieties' && (
-            <DominantCategoryAndVarietiesStory
-              dominantBeerCategory={wrappedData.dominantBeerCategory}
-              uniqueVarieties2025={wrappedData.uniqueVarieties2025}
-              totalVarietiesInDb={wrappedData.totalVarietiesInDb}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'top5' && (
-            <Top5Story
-              top5Products={wrappedData.top5Products}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'totalConsumption' && (
-            <TotalConsumptionStory
-              totalLiters={wrappedData.totalLiters}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'summaryInfographic' && (
-            <SummaryInfographic
-              customerName={wrappedData.customerName}
-              year={wrappedData.year}
-              totalLiters={wrappedData.totalLiters}
-              dominantBeerCategory={wrappedData.dominantBeerCategory}
-              top5Products={wrappedData.top5Products}
-              totalVisits={wrappedData.totalVisits}
-              totalVisits2024={wrappedData.totalVisits2024}
-              totalLiters2024={wrappedData.totalLiters2024}
-              uniqueVarieties2025={wrappedData.uniqueVarieties2025}
-              totalVarietiesInDb={wrappedData.totalVarietiesInDb}
-              mostActiveDay={wrappedData.mostActiveDay}
-              mostActiveMonth={wrappedData.mostActiveMonth}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
+          {/* Render current story component using dynamic component and spread props */}
+          <StoryComponent {...storyProps} />
 
           <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
         </Canvas>

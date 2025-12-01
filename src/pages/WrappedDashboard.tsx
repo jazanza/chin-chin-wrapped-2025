@@ -216,8 +216,8 @@ const WrappedDashboard = () => {
 
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
-      {/* Fixed aspect ratio container for the Canvas */}
-      <div className="relative w-full h-full max-w-[calc(100vh*9/16)] max-h-screen aspect-[9/16]">
+      {/* The Canvas will now take 100% width and height of its parent, adapting to any screen size. */}
+      <div className="relative w-full h-full">
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}

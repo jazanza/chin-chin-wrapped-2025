@@ -1,4 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+/*
+  Note: "Zalando Sans" is a proprietary font.
+  To use it, you would typically need to:
+  1. Obtain the font files (e.g., .woff, .woff2).
+  2. Place them in a public directory (e.g., public/fonts).
+  3. Define @font-face rules in this CSS file to load them.
+  
+  For this demonstration, I'm including a placeholder import and font-family definition.
+  If Zalando Sans is not available via a public CDN or local files,
+  the browser will fall back to 'sans-serif'.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap'); /* Keeping Oswald as a fallback/example */
+/* If Zalando Sans is available via a CDN, you would import it here: */
+/* @import url('URL_TO_ZALANDO_SANS_CDN'); */
 
 @tailwind base;
 @tailwind components;
@@ -96,8 +109,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans; /* Aplicar fuente y fondo */
-    /* Textura de ruido raster sutil */
+    /* Using 'Zalando' as the primary font, with Oswald and generic sans-serif as fallbacks */
+    @apply bg-background text-foreground font-sans;
     background-image: url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M0 0h3v3H0V0zm3 3h3v3H3V3z'/%3E%3C/g%3E%3C/svg%3E");
   }
 }

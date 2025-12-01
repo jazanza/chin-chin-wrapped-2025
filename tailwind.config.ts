@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Oswald", "sans-serif"],
+        sans: ["Zalando", "Oswald", "sans-serif"], // Prioritize Zalando, then Oswald, then generic sans-serif
       },
       colors: {
         border: "hsl(var(--border))",

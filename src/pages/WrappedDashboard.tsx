@@ -222,8 +222,8 @@ const WrappedDashboard = () => {
 
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
-      {/* Mobile mockup container without border */}
-      <div className="relative w-full h-full max-w-[420px] overflow-hidden bg-black">
+      {/* Removed max-w-[420px] to make it fully responsive */}
+      <div className="relative w-full h-full overflow-hidden bg-black">
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}

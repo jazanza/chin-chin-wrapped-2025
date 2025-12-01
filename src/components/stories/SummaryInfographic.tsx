@@ -33,11 +33,12 @@ export const SummaryInfographic = ({
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  // Define overall infographic dimensions in 3D units, maintaining 9:16 aspect ratio
-  const infographicWidth = 4 * responsiveScale;
-  const infographicHeight = infographicWidth * (16 / 9);
+  // Define overall infographic dimensions based on viewport, not fixed ratio
+  // Let's aim for a layout that fills the screen but respects padding/margins
+  const infographicWidth = viewport.width * 0.8; // Use 80% of viewport width
+  const infographicHeight = viewport.height * 0.8; // Use 80% of viewport height
 
-  // Calculate block dimensions
+  // Calculate block dimensions for a 2x3 grid
   const blockWidth = infographicWidth / 2;
   const blockHeight = infographicHeight / 3;
 
@@ -298,9 +299,9 @@ export const SummaryInfographic = ({
             <Image
               url="/Logo.png"
               position={[0, 0.2 * responsiveScale, 0.01]}
-              scale-x={blockWidth * 0.5} // Fixed: Using individual scale props
-              scale-y={blockWidth * 0.5 * (1000 / 1000)} // Fixed: Using individual scale props
-              scale-z={1} // Fixed: Using individual scale props
+              scale-x={blockWidth * 0.5}
+              scale-y={blockWidth * 0.5 * (1000 / 1000)}
+              scale-z={1}
               transparent
             />
             <Text

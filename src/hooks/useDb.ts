@@ -12,86 +12,80 @@ const EXCLUDED_PRODUCT_KEYWORDS = [
 
 let dbInstance: any = null; // Global instance for the database
 
-const createQuery = (baseQuery: string, dateRange?: DateRange): string => {
-  let whereClause = "WHERE T1.DocumentTypeId = 2"; // Assuming DocumentTypeId 2 is for sales
-  if (dateRange?.from) {
-    const fromDate = format(dateRange.from, "yyyy-MM-dd 00:00:00");
-    const toDate = dateRange.to
-      ? format(dateRange.to, "yyyy-MM-dd 23:59:59")
-      : format(new Date(), "yyyy-MM-dd 23:59:59");
-    whereClause += ` AND T1.DateCreated BETWEEN '${fromDate}' AND '${toDate}'`;
+// Initializes the sql.js WASM module
+export async function initDb(): Promise<void> {
+  if (!SQL) {
+    SQL = await initSqlJs({
+      locateFile: (file) => `https://sql.js.org/dist/${file}`,
+    });
   }
+}
 
-  const excludedCustomersString = EXCLUDED_CUSTOMERS.map(name => `'${name.replace(/'/g, "''")}'`).join(',');
-
-  // Adjusting table aliases for consistency with Aronium schema
-  if (baseQuery.includes("LEFT JOIN Customer AS T4")) {
-    whereClause += ` AND (T4.Name IS NULL OR T4.Name NOT IN (${excludedCustomersString}))`;
-  } else if (baseQuery.includes("INNER JOIN Customer AS T4")) {
-    whereClause += ` AND T4.Name NOT IN (${excludedCustomersString})`;
+// Loads the database from a buffer
+export function loadDb(buffer: ArrayBuffer | Uint8Array): Database {
+  if (!SQL) {
+    throw new Error("SQL.js has not been initialized. Call initDb() first.");
   }
+  return new SQL.Database(buffer);
+}
 
-  return baseQuery.replace("{{WHERE_CLAUSE}}", whereClause);
-};
+// Executes a query and returns the results as an array of objects
+// Modified to accept optional parameters
+export function queryData(db: Database, query: string, params: any[] = []): any[] {
+  const results = [];
+  let stmt: Statement | null = null;
 
-// Corrected queries using Aronium table/column names
-const VOLUME_QUERY_BASE = `
-  SELECT T2.Quantity, T3.Name AS ItemName, T3.Description AS ItemDescription
-  FROM Document AS T1
-  INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
-  INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
-  LEFT JOIN Customer AS T4 ON T1.CustomerId = T4.Id
-  {{WHERE_CLAUSE}};
-`;
-
-const SPECTRUM_QUERY_BASE = `
-  SELECT T3.Name as ItemName, T3.Description AS ItemDescription, SUM(T2.Quantity) as TotalQuantity
-  FROM Document AS T1
-  INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
-  INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
-  LEFT JOIN Customer AS T4 ON T1.CustomerId = T4.Id
-  {{WHERE_CLAUSE}}
-  GROUP BY T3.Name, T3.Description;
-`;
-
-const LOYALTY_QUERY_BASE = `
-  SELECT
-    T4.Name AS CustomerName,
-    T3.Name AS ItemName,
-    T3.Description AS ItemDescription,
-    SUM(T2.Quantity) AS TotalQuantity
-  FROM Document AS T1
-  INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
-  INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
-  INNER JOIN Customer AS T4 ON T1.CustomerId = T4.Id
-  {{WHERE_CLAUSE}} AND T4.Name IS NOT NULL
-  GROUP BY T4.Name, T3.Name, T3.Description
-  ORDER BY SUM(T2.Quantity) DESC;
-`;
+  try {
+    stmt = db.prepare(query);
+    if (params.length > 0) {
+      stmt.bind(params);
+    }
+    while (stmt.step()) {
+      results.push(stmt.getAsObject());
+    }
+  } finally {
+    if (stmt) {
+      stmt.free();
+    }
+  }
+  return results;
+}
 
 const NON_LIQUID_KEYWORDS = ["snack", "jamon", "sandwich", "pin", "camiseta", "gorra", "vaso", "merchandising", "comida", "accesorio"];
 
 const extractVolumeMl = (name: string, description: string | null): number => {
   const textToSearch = `${name} ${description || ""}`.toLowerCase();
 
-  // Excluir productos no líquidos
+  // Excluir productos no líquidos o por palabras clave
   if (NON_LIQUID_KEYWORDS.some(keyword => textToSearch.includes(keyword))) {
+    return 0;
+  }
+  if (EXCLUDED_PRODUCT_KEYWORDS.some(keyword => textToSearch.includes(keyword.toLowerCase()))) {
     return 0;
   }
 
   const volumeRegex = /(\d+)\s*ml/i;
-  const match = textToSearch.match(volumeRegex);
+  let match = textToSearch.match(volumeRegex);
 
   if (match && match[1]) {
     return parseInt(match[1], 10);
   }
 
+  // Check for common beer volumes
   if (textToSearch.includes("pinta")) return 473;
   if (textToSearch.includes("caña")) return 200;
   if (textToSearch.includes("botella")) return 330;
   if (textToSearch.includes("lata")) return 330;
 
-  console.warn(`Could not determine volume for item: ${name}. Defaulting to 0.`);
+  // Fallback for descriptions if name doesn't yield results
+  if (description) {
+    const descToSearch = description.toLowerCase();
+    match = descToSearch.match(volumeRegex);
+    if (match && match[1]) {
+      return parseInt(match[1], 10);
+    }
+  }
+
   return 0;
 };
 
@@ -115,6 +109,10 @@ const BEER_CATEGORY_COLORS: { [key: string]: string } = {
   Ale: "#FF008A",    // neon-magenta (reusing for variety)
   Other: "#FFFFFF",
 };
+
+const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
 
 export function useDb() {
   const [dbLoaded, setDbLoaded] = useState(false);
@@ -176,8 +174,6 @@ export function useDb() {
     }
   }, []);
 
-  // Removed verifyCustomer as its logic is now handled in ClientLogin.tsx
-
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
       throw new Error("Database not loaded.");
@@ -190,10 +186,15 @@ export function useDb() {
       const customerNameResult = queryData(dbInstance, customerNameQuery, [customerId]);
       const customerName = customerNameResult.length > 0 ? customerNameResult[0].Name : "Cliente Desconocido";
 
-      // Metric 1 & 3: Total Consumed and Top 5 Products
-      const totalConsumedAndRankingQuery = `
+      // --- Data for current year (2025) ---
+      const currentYear = year; // Use the passed year, which is '2025'
+      const previousYear = (parseInt(year, 10) - 1).toString();
+
+      // Query for product data (name, description, quantity) for a given customer and year
+      const productDataQuery = `
         SELECT
             T3.Name AS ProductName,
+            T3.Description AS ProductDescription,
             SUM(T2.Quantity) AS TotalQuantity
         FROM
             Document AS T1
@@ -205,30 +206,23 @@ export function useDb() {
             T1.CustomerId = ?
             AND STRFTIME('%Y', T1.Date) = ?
         GROUP BY
-            T3.Id, T3.Name
+            T3.Id, T3.Name, T3.Description
         HAVING
-            TotalQuantity > 0
-        ORDER BY
-            TotalQuantity DESC;
+            TotalQuantity > 0;
       `;
-      const rawProductData = queryData(dbInstance, totalConsumedAndRankingQuery, [customerId, year]);
 
-      // Filter out non-liquid products before calculating volumes
-      const filteredProductData = rawProductData.filter(item => {
-          const name = item.ProductName.toLowerCase();
-          return !EXCLUDED_PRODUCT_KEYWORDS.some(keyword => name.includes(keyword.toLowerCase()));
-      });
+      // Fetch product data for current year
+      const rawProductDataCurrentYear = queryData(dbInstance, productDataQuery, [customerId, currentYear]);
 
       let totalLiters = 0;
       const categoryVolumes: { [key: string]: number } = {};
       const productLiters: { name: string; liters: number; color: string }[] = [];
 
-      for (const item of filteredProductData) { // Use filtered data here
-        const volumeMl = extractVolumeMl(item.ProductName, null); // Assuming description is not needed here
+      for (const item of rawProductDataCurrentYear) {
+        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
         const liters = (item.TotalQuantity * volumeMl) / 1000;
         totalLiters += liters;
 
-        // Solo categorizar y añadir a productLiters si el volumen es mayor que 0
         if (liters > 0) {
           const category = categorizeBeer(item.ProductName);
           categoryVolumes[category] = (categoryVolumes[category] || 0) + liters;
@@ -241,7 +235,7 @@ export function useDb() {
         }
       }
 
-      // Metric 2: Dominant Beer
+      // Metric 2: Dominant Beer for current year
       let dominantBeerCategory = "N/A";
       let maxCategoryLiters = 0;
       for (const category in categoryVolumes) {
@@ -251,23 +245,78 @@ export function useDb() {
         }
       }
 
-      // Metric 3: Top 5 Products
+      // Metric 3: Top 5 Products for current year
       const top5Products = productLiters
         .sort((a, b) => b.liters - a.liters)
         .slice(0, 5);
 
-      // Metric 4: Frequency/Loyalty (Total Visits)
+      // Metric 4: Frequency/Loyalty (Total Visits) for current year
       const totalVisitsQuery = `
-        SELECT
-            COUNT(DISTINCT T1.Date) AS TotalVisits
-        FROM
-            Document AS T1
-        WHERE
-            T1.CustomerId = ?
-            AND STRFTIME('%Y', T1.Date) = ?;
+        SELECT COUNT(DISTINCT T1.Date) AS TotalVisits
+        FROM Document AS T1
+        WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?;
       `;
-      const totalVisitsResult = queryData(dbInstance, totalVisitsQuery, [customerId, year]);
+      const totalVisitsResult = queryData(dbInstance, totalVisitsQuery, [customerId, currentYear]);
       const totalVisits = totalVisitsResult.length > 0 ? totalVisitsResult[0].TotalVisits : 0;
+
+      // --- Data for previous year (2024) for comparison ---
+      const rawProductDataPreviousYear = queryData(dbInstance, productDataQuery, [customerId, previousYear]);
+      let totalLiters2024 = 0;
+      for (const item of rawProductDataPreviousYear) {
+        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+        totalLiters2024 += (item.TotalQuantity * volumeMl) / 1000;
+      }
+
+      const totalVisitsPreviousYearResult = queryData(dbInstance, totalVisitsQuery, [customerId, previousYear]);
+      const totalVisits2024 = totalVisitsPreviousYearResult.length > 0 ? totalVisitsPreviousYearResult[0].TotalVisits : 0;
+
+      // --- New Infographic Metrics for current year (2025) ---
+
+      // Unique Varieties for customer in current year
+      const uniqueVarietiesCustomerQuery = `
+        SELECT COUNT(DISTINCT T3.Name) AS UniqueProducts
+        FROM Document AS T1
+        INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
+        INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
+        WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
+        AND NOT EXISTS (SELECT 1 FROM (VALUES ${EXCLUDED_PRODUCT_KEYWORDS.map(k => `('${k}')`).join(',')}) AS Excluded(Keyword) WHERE T3.Name LIKE '%' || Excluded.Keyword || '%');
+      `;
+      const uniqueVarieties2025Result = queryData(dbInstance, uniqueVarietiesCustomerQuery, [customerId, currentYear]);
+      const uniqueVarieties2025 = uniqueVarieties2025Result.length > 0 ? uniqueVarieties2025Result[0].UniqueProducts : 0;
+
+      // Total Unique Varieties in DB (excluding non-liquid/excluded)
+      const totalUniqueProductsDbQuery = `
+        SELECT COUNT(DISTINCT Name) AS TotalUniqueProducts
+        FROM Product
+        WHERE NOT EXISTS (SELECT 1 FROM (VALUES ${EXCLUDED_PRODUCT_KEYWORDS.map(k => `('${k}')`).join(',')}) AS Excluded(Keyword) WHERE Product.Name LIKE '%' || Excluded.Keyword || '%');
+      `;
+      const totalVarietiesInDbResult = queryData(dbInstance, totalUniqueProductsDbQuery);
+      const totalVarietiesInDb = totalVarietiesInDbResult.length > 0 ? totalVarietiesInDbResult[0].TotalUniqueProducts : 0;
+
+      // Most Active Day 2025
+      const mostActiveDayQuery = `
+        SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(*) AS DayCount
+        FROM Document AS T1
+        WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
+        GROUP BY DayOfWeek
+        ORDER BY DayCount DESC
+        LIMIT 1;
+      `;
+      const mostActiveDayResult = queryData(dbInstance, mostActiveDayQuery, [customerId, currentYear]);
+      const mostActiveDay = mostActiveDayResult.length > 0 ? DAY_NAMES[mostActiveDayResult[0].DayOfWeek] : "N/A";
+
+      // Most Active Month 2025
+      const mostActiveMonthQuery = `
+        SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(*) AS MonthCount
+        FROM Document AS T1
+        WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
+        GROUP BY MonthOfYear
+        ORDER BY MonthCount DESC
+        LIMIT 1;
+      `;
+      const mostActiveMonthResult = queryData(dbInstance, mostActiveMonthQuery, [customerId, currentYear]);
+      const mostActiveMonth = mostActiveMonthResult.length > 0 ? MONTH_NAMES[parseInt(mostActiveMonthResult[0].MonthOfYear, 10) - 1] : "N/A";
+
 
       return {
         customerName,
@@ -276,7 +325,13 @@ export function useDb() {
         dominantBeerCategory,
         top5Products,
         totalVisits,
-        categoryVolumes, // Add categoryVolumes to the returned data for WrappedSpectrum
+        categoryVolumes,
+        totalVisits2024,
+        totalLiters2024,
+        uniqueVarieties2025,
+        totalVarietiesInDb,
+        mostActiveDay,
+        mostActiveMonth,
       };
     } catch (e: any) {
       console.error("Error getting wrapped data:", e);

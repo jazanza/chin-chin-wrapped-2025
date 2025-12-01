@@ -18,7 +18,61 @@ interface SummaryInfographicProps {
   top5Products: Product[];
   totalVisits: number;
   isPaused: boolean;
+  // New props for infographic
+  totalVisits2024: number;
+  totalLiters2024: number;
+  uniqueVarieties2025: number;
+  totalVarietiesInDb: number;
+  mostActiveDay: string;
+  mostActiveMonth: string;
 }
+
+// Helper for comparison text and arrow
+const ComparisonText = ({ current, previous, responsiveScale, year }: { current: number; previous: number; responsiveScale: number; year: string }) => {
+  const { viewport } = useThree(); // Access viewport for responsive font sizing
+
+  if (previous === 0) {
+    return (
+      <Text
+        fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
+        color="#888888"
+        anchorX="center"
+        anchorY="middle"
+        position={[0, -0.4 * responsiveScale, 0.03]}
+        maxWidth={viewport.width * 0.8} // Use viewport width for max width
+        textAlign="center"
+        letterSpacing={-0.05}
+        fontWeight={400}
+      >
+        No data for {parseInt(year) - 1}
+      </Text>
+    );
+  }
+
+  const diff = current - previous;
+  const percentage = (diff / previous) * 100;
+  const isPositive = percentage >= 0;
+  const color = isPositive ? "#00FF00" : "#FF0000"; // Green for up, Red for down
+
+  return (
+    <group position={[0, -0.4 * responsiveScale, 0.03]}>
+      <Text
+        fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
+        color={color}
+        anchorX="center"
+        anchorY="middle"
+        position={[0, 0, 0]}
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
+        letterSpacing={-0.05}
+        fontWeight={700}
+      >
+        {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
+      </Text>
+    </group>
+  );
+};
+
 
 export const SummaryInfographic = ({
   customerName,
@@ -28,13 +82,19 @@ export const SummaryInfographic = ({
   top5Products,
   totalVisits,
   isPaused,
+  // New props
+  totalVisits2024,
+  totalLiters2024,
+  uniqueVarieties2025,
+  totalVarietiesInDb,
+  mostActiveDay,
+  mostActiveMonth,
 }: SummaryInfographicProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
   // Define overall infographic dimensions based on viewport, not fixed ratio
-  // Let's aim for a layout that fills the screen but respects padding/margins
   const infographicWidth = viewport.width * 0.8; // Use 80% of viewport width
   const infographicHeight = viewport.height * 0.8; // Use 80% of viewport height
 
@@ -75,7 +135,6 @@ export const SummaryInfographic = ({
         color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
-        // Removed outlineWidth and outlineColor
         maxWidth={infographicWidth * 0.9}
         textAlign="center"
         letterSpacing={-0.05}
@@ -92,7 +151,6 @@ export const SummaryInfographic = ({
           color="#FFFFFF"
           anchorX="center"
           anchorY="middle"
-          // Removed outlineWidth and outlineColor
           maxWidth={infographicWidth * 0.9}
           textAlign="center"
           letterSpacing={-0.05}
@@ -102,7 +160,7 @@ export const SummaryInfographic = ({
 
       {isSubTitleTyped && (
         <group position={[0, -0.5 * responsiveScale, 0]}> {/* Adjust group position to center the grid */}
-          {/* Row 1, Column 1: Customer Name */}
+          {/* Row 1, Column 1: Total Visitas */}
           <Block
             position={getBlockPosition(1, 1)}
             width={blockWidth}
@@ -112,21 +170,35 @@ export const SummaryInfographic = ({
             responsiveScale={responsiveScale}
           >
             <Text
-              fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
               color="#FFFFFF"
               anchorX="center"
               anchorY="middle"
+              position={[0, 0.3 * responsiveScale, 0.03]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              VISITAS {year}
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0.05 * responsiveScale, 0.03]}
               maxWidth={blockWidth * 0.8}
               textAlign="center"
               letterSpacing={-0.05}
               fontWeight={900}
-              position={[0, 0, 0.03]} // Ensure text is in front of the block
             >
-              {customerName.toUpperCase()}
+              {totalVisits}
             </Text>
+            <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} />
           </Block>
 
-          {/* Row 1, Column 2: Total Visits */}
+          {/* Row 1, Column 2: Total Litros */}
           <Block
             position={getBlockPosition(1, 2)}
             width={blockWidth}
@@ -136,34 +208,35 @@ export const SummaryInfographic = ({
             responsiveScale={responsiveScale}
           >
             <Text
-              fontSize={Math.min(viewport.width * 0.1, 0.8) * responsiveScale}
-              color="#000000"
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.2 * responsiveScale, 0.03]} // Ensure text is in front of the block
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
-              {totalVisits}
-            </Text>
-            <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
               color="#000000"
               anchorX="center"
               anchorY="middle"
-              position={[0, -0.2 * responsiveScale, 0.03]} // Ensure text is in front of the block
+              position={[0, 0.3 * responsiveScale, 0.03]}
               maxWidth={blockWidth * 0.8}
               textAlign="center"
               letterSpacing={-0.05}
               fontWeight={700}
             >
-              DÍAS DE LEALTAD
+              LITROS CONSUMIDOS
             </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0.05 * responsiveScale, 0.03]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {totalLiters.toFixed(1)} L
+            </Text>
+            <ComparisonText current={totalLiters} previous={totalLiters2024} responsiveScale={responsiveScale} year={year} />
           </Block>
 
-          {/* Row 2, Column 1: Total Liters */}
+          {/* Row 2, Column 1: Top 5 Cervezas */}
           <Block
             position={getBlockPosition(2, 1)}
             width={blockWidth}
@@ -173,34 +246,37 @@ export const SummaryInfographic = ({
             responsiveScale={responsiveScale}
           >
             <Text
-              fontSize={Math.min(viewport.width * 0.1, 0.8) * responsiveScale}
-              color="#FFFFFF"
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.2 * responsiveScale, 0.03]} // Ensure text is in front of the block
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
-              {totalLiters.toFixed(1)}
-            </Text>
-            <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
               color="#FFFFFF"
               anchorX="center"
               anchorY="middle"
-              position={[0, -0.2 * responsiveScale, 0.03]} // Ensure text is in front of the block
+              position={[0, 0.4 * responsiveScale, 0.03]}
               maxWidth={blockWidth * 0.8}
               textAlign="center"
               letterSpacing={-0.05}
               fontWeight={700}
             >
-              LITROS CONSUMIDOS
+              TUS 5 FAVORITAS
             </Text>
+            {top5Products.slice(0, 5).map((product, idx) => (
+              <Text
+                key={idx}
+                fontSize={idx === 0 ? Math.min(viewport.width * 0.04, 0.25) * responsiveScale : Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
+                color="#FFFFFF"
+                anchorX="center"
+                anchorY="middle"
+                position={[0, 0.2 * responsiveScale - idx * 0.15 * responsiveScale, 0.03]}
+                maxWidth={blockWidth * 0.8}
+                textAlign="center"
+                letterSpacing={-0.05}
+                fontWeight={idx === 0 ? 900 : 700}
+              >
+                {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
+              </Text>
+            ))}
           </Block>
 
-          {/* Row 2, Column 2: Dominant Beer Category */}
+          {/* Row 2, Column 2: Variedades Probadas */}
           <Block
             position={getBlockPosition(2, 2)}
             width={blockWidth}
@@ -210,34 +286,47 @@ export const SummaryInfographic = ({
             responsiveScale={responsiveScale}
           >
             <Text
-              fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
-              color="#000000"
-              anchorX="center"
-              anchorY="middle"
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-              position={[0, 0.1 * responsiveScale, 0.03]} // Ensure text is in front of the block
-            >
-              {dominantBeerCategory.toUpperCase()}
-            </Text>
-            <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
               color="#000000"
               anchorX="center"
               anchorY="middle"
-              position={[0, -0.3 * responsiveScale, 0.03]} // Ensure text is in front of the block
+              position={[0, 0.3 * responsiveScale, 0.03]}
               maxWidth={blockWidth * 0.8}
               textAlign="center"
               letterSpacing={-0.05}
               fontWeight={700}
             >
-              CERVEZA DOMINANTE
+              COLECCIONISTA DE SABORES
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0 * responsiveScale, 0.03]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {`${uniqueVarieties2025} / ${totalVarietiesInDb}`}
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.2 * responsiveScale, 0.03]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              VARIEDADES PROBADAS
             </Text>
           </Block>
 
-          {/* Row 3, Column 1: Top 1 Cerveza */}
+          {/* Row 3, Column 1: Día Más Activo */}
           <Block
             position={getBlockPosition(3, 1)}
             width={blockWidth}
@@ -247,47 +336,34 @@ export const SummaryInfographic = ({
             responsiveScale={responsiveScale}
           >
             <Text
-              fontSize={Math.min(viewport.width * 0.04, 0.25) * responsiveScale}
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
               color="#FFFFFF"
               anchorX="center"
               anchorY="middle"
-              position={[0, 0.2 * responsiveScale, 0.03]} // Ensure text is in front of the block
+              position={[0, 0.3 * responsiveScale, 0.03]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              DÍA MÁS CHIN CHIN
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0 * responsiveScale, 0.03]}
               maxWidth={blockWidth * 0.8}
               textAlign="center"
               letterSpacing={-0.05}
               fontWeight={900}
             >
-              {top1Product.name.toUpperCase()}
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#FFFFFF"
-              anchorX="center"
-              anchorY="middle"
-              position={[0, -0.1 * responsiveScale, 0.03]} // Ensure text is in front of the block
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
-              {top1Product.liters.toFixed(1)} L
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
-              color="#FFFFFF"
-              anchorX="center"
-              anchorY="middle"
-              position={[0, -0.3 * responsiveScale, 0.03]} // Ensure text is in front of the block
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
-              TU TOP 1
+              {mostActiveDay.toUpperCase()}
             </Text>
           </Block>
 
-          {/* Row 3, Column 2: Logo + Year */}
+          {/* Row 3, Column 2: Mes Más Activo */}
           <Block
             position={getBlockPosition(3, 2)}
             width={blockWidth}
@@ -296,26 +372,31 @@ export const SummaryInfographic = ({
             textColor="#000000"
             responsiveScale={responsiveScale}
           >
-            <Image
-              url="/Logo.png"
-              position={[0, 0.2 * responsiveScale, 0.03]} // Ensure image is in front of the block
-              scale-x={blockWidth * 0.6} // Increased scale
-              scale-y={blockWidth * 0.6 * (1000 / 1000)} // Increased scale
-              scale-z={1}
-              transparent
-            />
             <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.2) * responsiveScale}
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
               color="#000000"
               anchorX="center"
               anchorY="middle"
-              position={[0, -0.3 * responsiveScale, 0.03]} // Ensure text is in front of the block
+              position={[0, 0.3 * responsiveScale, 0.03]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              EL MES DE LA SED
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0 * responsiveScale, 0.03]}
               maxWidth={blockWidth * 0.8}
               textAlign="center"
               letterSpacing={-0.05}
               fontWeight={900}
             >
-              {year} WRAPPED
+              {mostActiveMonth.toUpperCase()}
             </Text>
           </Block>
         </group>

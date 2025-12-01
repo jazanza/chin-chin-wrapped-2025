@@ -100,4 +100,4 @@ export function WrappedSpectrum({ flavorData, ...props }: { flavorData: { [key: 
       })}
     </group>
   );
-}
+};

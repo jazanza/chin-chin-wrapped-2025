@@ -295,6 +295,13 @@ const WrappedDashboard = () => {
               dominantBeerCategory={wrappedData.dominantBeerCategory}
               top5Products={wrappedData.top5Products}
               totalVisits={wrappedData.totalVisits}
+              // Pass new data for infographic
+              totalVisits2024={wrappedData.totalVisits2024}
+              totalLiters2024={wrappedData.totalLiters2024}
+              uniqueVarieties2025={wrappedData.uniqueVarieties2025}
+              totalVarietiesInDb={wrappedData.totalVarietiesInDb}
+              mostActiveDay={wrappedData.mostActiveDay}
+              mostActiveMonth={wrappedData.mostActiveMonth}
               isPaused={isPaused}
             />
           )}

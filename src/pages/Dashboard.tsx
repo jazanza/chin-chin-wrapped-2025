@@ -10,6 +10,7 @@ import { FlavorSpectrum } from "@/components/FlavorSpectrum"; // Importar Flavor
 import { CameraAnimator } from "@/components/CameraAnimator";
 import { FileUploader } from "@/components/FileUploader";
 import { DateRangeSelector } from "@/components/DateRangeSelector"; // Mantener import para ocultar
+import { SceneEffects } from "@/components/SceneEffects"; // Importar el nuevo componente
 
 type ViewMode = "meter" | "ranking" | "loyalty" | "balance" | "spectrum"; // Añadir 'spectrum'
 const VIEWS: ViewMode[] = ["meter", "ranking", "loyalty", "balance", "spectrum"]; // Actualizar VIEWS
@@ -98,14 +99,8 @@ const Dashboard = () => {
               
               <CameraAnimator viewMode={viewMode} />
               
-              <EffectComposer>
-                <Bloom
-                  mipmapBlur
-                  luminanceThreshold={0.8}
-                  luminanceSmoothing={0.025}
-                  intensity={1.5} // Aumentar intensidad para efecto glitch
-                />
-              </EffectComposer>
+              {/* Usar el nuevo componente SceneEffects */}
+              <SceneEffects />
             </Suspense>
           </Canvas>
         )}

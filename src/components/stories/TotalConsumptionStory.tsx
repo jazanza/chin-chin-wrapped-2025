@@ -1,49 +1,41 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { WrappedMeter } from '../WrappedMeter';
-import { Text } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
+import React, { useMemo } from 'react';
+// import { WrappedMeter } from '../WrappedMeter'; // REMOVED
+// import { Text } from '@react-three/drei'; // REMOVED
+// import { useThree } from '@react-three/fiber'; // REMOVED
 import { TypewriterText, TextSegment } from '../TypewriterText';
-import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
+// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface TotalConsumptionStoryProps {
   totalLiters: number;
   // isPaused: boolean; // REMOVED
-  textColor: string;
-  highlightColor: string;
+  textColor: string; // Tailwind CSS class
+  highlightColor: string; // Tailwind CSS class
 }
 
 export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor }: TotalConsumptionStoryProps) => {
-  const { viewport } = useThree();
-  const responsiveScale = Math.min(1, viewport.width / 12);
-
-  // const [isTitleTyped, setIsTitleTyped] = useState(false); // REMOVED
-
-  // useEffect(() => { // REMOVED
-  //   setIsTitleTyped(false);
-  // }, [totalLiters]);
-
   const titleSegments: TextSegment[] = useMemo(() => [
     { text: "TU CONSUMO\nTOTAL", color: textColor },
   ], [textColor]);
 
   return (
-    <group>
-      <AnimatedBackgroundLines />
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+      {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={titleSegments}
-        position={[0, 3 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale}
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={900}
-        lineHeight={1.2}
+        fontSize="text-[min(10vw,4rem)] md:text-[min(8vw,3rem)] lg:text-[min(7vw,2.5rem)]" // Responsive font size
+        maxWidth="max-w-md"
+        textAlign="text-center"
+        letterSpacing="tracking-tight"
+        fontWeight="font-black"
+        lineHeight="leading-tight"
+        className="mb-8" // Add margin bottom
       />
-      {/* {isTitleTyped && ( */}
-        <WrappedMeter totalLiters={totalLiters} position={[0, -0.5 * responsiveScale, 0]} textColor={textColor} highlightColor={highlightColor} />
-      {/* )} */}
-    </group>
+      <div className={`text-center ${highlightColor} border-2 border-white p-4`}>
+        <p className="text-[min(15vw,6rem)] md:text-[min(12vw,5rem)] lg:text-[min(10vw,4rem)] font-black leading-none">
+          {totalLiters.toFixed(1)} L
+        </p>
+      </div>
+      {/* WrappedMeter REMOVED, replaced by simple text display */}
+    </div>
   );
 };

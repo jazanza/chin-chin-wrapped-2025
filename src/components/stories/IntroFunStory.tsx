@@ -1,27 +1,18 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { Text } from '@react-three/drei';
-import { useThree, useFrame } from '@react-three/fiber';
+import React, { useMemo } from 'react';
 import { TypewriterText, TextSegment } from '../TypewriterText';
-import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
-import * as THREE from 'three';
+// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface IntroFunStoryProps {
   totalVisits: number;
   // isPaused: boolean; // REMOVED
-  onStoryFinished: () => void;
-  textColor: string;
-  highlightColor: string;
+  // onStoryFinished: () => void; // REMOVED
+  textColor: string; // Tailwind CSS class
+  highlightColor: string; // Tailwind CSS class
 }
 
-export const IntroFunStory = ({ totalVisits, onStoryFinished, textColor, highlightColor }: IntroFunStoryProps) => {
-  const { viewport } = useThree();
-  const BASE_REFERENCE_WIDTH = 12;
-  const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
-
-  const groupRef = useRef<THREE.Group>(null!);
-
+export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroFunStoryProps) => {
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: "¡GRACIAS POR\nACOMPAÑARNOS\nESTE 2025!", color: textColor },
+    { text: "¡GRACIAS POR\nACOMPAÑARNOS\nESTE 2025!", color: highlightColor }, // Changed to highlight for impact
     { text: "\n\nPARA NOSOTROS,\nCADA VISITA TUYA\nES UN MOTIVO DE ALEGRÍA.", color: textColor },
     { text: `\n\nPOR LAS CERVEZAS\nQUE COMPARTIMOS,\nLOS NUEVOS AMIGOS\nQUE HICISTE,\nY POR ESOS ${totalVisits}\nDÍAS INOLVIDABLES\nCON NOSOTROS.`, color: highlightColor },
     { text: "\n\n(ESPERAMOS QUE NO HAYAS\nBORRADO CASSETTE... ¡O SÍ!)", color: textColor },
@@ -29,33 +20,18 @@ export const IntroFunStory = ({ totalVisits, onStoryFinished, textColor, highlig
     { text: "\n\nAHORA, TE PRESENTAMOS\nTU CHIN CHIN 2025 WRAPPED.\n¡COMPÁRTELO EN REDES!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
-  const baseFontSize = Math.min(viewport.width * 0.15, 1.0) * responsiveScale;
-  const maxTextWidth = viewport.width * 0.8;
-
-  useFrame(({ clock }) => {
-    if (groupRef.current) {
-      const time = clock.getElapsedTime();
-      groupRef.current.rotation.z = Math.sin(time * 0.1) * 0.02;
-      groupRef.current.position.x = Math.sin(time * 0.5) * 0.05 * responsiveScale;
-      groupRef.current.position.y = Math.cos(time * 0.4) * 0.05 * responsiveScale;
-    }
-  });
-
   return (
-    <group ref={groupRef}>
-      <AnimatedBackgroundLines />
+    <div className="absolute inset-0 flex items-center justify-center p-4">
+      {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={introSegments}
-        position={[0, 0, 0]}
-        fontSize={baseFontSize}
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={maxTextWidth}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={700}
-        lineHeight={1.2}
+        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Responsive font size
+        maxWidth="max-w-md"
+        textAlign="text-center"
+        letterSpacing="tracking-tight"
+        fontWeight="font-black"
+        lineHeight="leading-tight"
       />
-    </group>
+    </div>
   );
 };

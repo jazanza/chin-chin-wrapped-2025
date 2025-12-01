@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Text } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
+import React, { useMemo } from 'react';
+// import { Text } from '@react-three/drei'; // REMOVED
+// import { useThree } from '@react-three/fiber'; // REMOVED
 import { TypewriterText, TextSegment } from '../TypewriterText';
-import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
+// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface TotalVisitsStoryProps {
   customerName: string;
@@ -10,68 +10,32 @@ interface TotalVisitsStoryProps {
   totalVisits: number;
   totalVisits2024: number;
   // isPaused: boolean; // REMOVED
-  textColor: string;
-  highlightColor: string;
+  textColor: string; // Tailwind CSS class
+  highlightColor: string; // Tailwind CSS class
 }
 
-const ComparisonText = ({ current, previous, responsiveScale, year, textColor, position }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string; position: [number, number, number] }) => {
-  const { viewport } = useThree();
-
+const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
   if (previous === 0) {
     return (
-      <group position={position}>
-        <Text
-          fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
-          color={textColor}
-          anchorX="center"
-          anchorY="middle"
-          position={[0, 0, 0.03]}
-          maxWidth={viewport.width * 0.8}
-          textAlign="center"
-          letterSpacing={-0.05}
-          fontWeight={400}
-        >
-          No data for {parseInt(year) - 1}
-        </Text>
-      </group>
+      <p className={`text-sm md:text-base lg:text-lg font-normal text-center ${textColor}`}>
+        No data for {parseInt(year) - 1}
+      </p>
     );
   }
 
   const diff = current - previous;
   const percentage = (diff / previous) * 100;
   const isPositive = percentage >= 0;
-  const color = isPositive ? "#00FF00" : "#FF0000";
+  const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red
 
   return (
-    <group position={position}>
-      <Text
-        fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
-        color={color}
-        anchorX="center"
-        anchorY="middle"
-        position={[0, 0, 0]}
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={700}
-      >
-        {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
-      </Text>
-    </group>
+    <p className={`text-sm md:text-base lg:text-lg font-bold text-center ${colorClass}`}>
+      {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
+    </p>
   );
 };
 
 export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, textColor, highlightColor }: TotalVisitsStoryProps) => {
-  const { viewport } = useThree();
-  const BASE_REFERENCE_WIDTH = 12;
-  const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
-
-  // const [isVisitsTyped, setIsVisitsTyped] = useState(false); // REMOVED
-
-  // useEffect(() => { // REMOVED
-  //   setIsVisitsTyped(false);
-  // }, [customerName, year, totalVisits, totalVisits2024]);
-
   const storySegments: TextSegment[] = useMemo(() => [
     { text: `¡${customerName.toUpperCase()},`, color: highlightColor },
     { text: "\nNOS VISITASTE...", color: textColor },
@@ -80,30 +44,24 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
   ], [customerName, totalVisits, textColor, highlightColor]);
 
   return (
-    <group>
-      <AnimatedBackgroundLines />
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+      {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={storySegments}
-        position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale}
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={900}
-        lineHeight={1.2}
+        fontSize="text-[min(10vw,4rem)] md:text-[min(8vw,3rem)] lg:text-[min(7vw,2.5rem)]" // Responsive font size
+        maxWidth="max-w-md"
+        textAlign="text-center"
+        letterSpacing="tracking-tight"
+        fontWeight="font-black"
+        lineHeight="leading-tight"
+        className="mb-4" // Add margin bottom to separate from comparison text
       />
-      {/* {isVisitsTyped && ( */}
-        <ComparisonText
-          current={totalVisits}
-          previous={totalVisits2024}
-          responsiveScale={responsiveScale}
-          year={year}
-          textColor={textColor}
-          position={[0, -2.5 * responsiveScale, 0]}
-        />
-      {/* )} */}
-    </group>
+      <ComparisonText
+        current={totalVisits}
+        previous={totalVisits2024}
+        year={year}
+        textColor={textColor}
+      />
+    </div>
   );
 };

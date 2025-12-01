@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Text } from '@react-three/drei';
-import { useThree } from '@react-three/fiber';
+import React, { useMemo } from 'react';
+// import { Text } from '@react-three/drei'; // REMOVED
+// import { useThree } from '@react-three/fiber'; // REMOVED
 import { TypewriterText, TextSegment } from '../TypewriterText';
-import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
+// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface DominantCategoryAndVarietiesStoryProps {
   dominantBeerCategory: string;
   uniqueVarieties2025: number;
   totalVarietiesInDb: number;
   // isPaused: boolean; // REMOVED
-  textColor: string;
-  highlightColor: string;
+  textColor: string; // Tailwind CSS class
+  highlightColor: string; // Tailwind CSS class
 }
 
 export const DominantCategoryAndVarietiesStory = ({
@@ -20,16 +20,6 @@ export const DominantCategoryAndVarietiesStory = ({
   textColor,
   highlightColor,
 }: DominantCategoryAndVarietiesStoryProps) => {
-  const { viewport } = useThree();
-  const BASE_REFERENCE_WIDTH = 12;
-  const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
-
-  // const [isVarietiesTyped, setIsVarietiesTyped] = useState(false); // REMOVED
-
-  // useEffect(() => { // REMOVED
-  //   setIsVarietiesTyped(false);
-  // }, [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb]);
-
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "TU CATEGORÍA\nDOMINANTE ES...", color: textColor },
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
@@ -41,20 +31,17 @@ export const DominantCategoryAndVarietiesStory = ({
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor]);
 
   return (
-    <group>
-      <AnimatedBackgroundLines />
+    <div className="absolute inset-0 flex items-center justify-center p-4">
+      {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={storySegments}
-        position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale}
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={900}
-        lineHeight={1.2}
+        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Responsive font size
+        maxWidth="max-w-md"
+        textAlign="text-center"
+        letterSpacing="tracking-tight"
+        fontWeight="font-black"
+        lineHeight="leading-tight"
       />
-    </group>
+    </div>
   );
 };

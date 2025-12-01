@@ -2,19 +2,18 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useDb } from "@/hooks/useDb";
 import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
-import { ResponsiveCamera } from "@/components/ResponsiveCamera";
-// import { PostProcessingEffects } from "@/components/PostProcessingEffects"; // Removed PostProcessingEffects
+// import { ResponsiveCamera } from "@/components/ResponsiveCamera"; // REMOVED
+// import { PostProcessingEffects } from "@/components/PostProcessingEffects"; // REMOVED
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
 import { WrappedOverlay } from "@/components/WrappedOverlay";
-import { ViewMode } from "@/components/CameraAnimator";
+// import { ViewMode } from "@/components/CameraAnimator"; // REMOVED
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
 import { StoryProgressBar } from "@/components/StoryProgressBar";
 
-// Import story components
+// Import story components (now all 2D)
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
 import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
 import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
@@ -24,40 +23,39 @@ import { Top5Story } from "@/components/stories/Top5Story";
 import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
 import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; // This will become a 2D component
 
-// Componente auxiliar para la captura de pantalla
-const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
-  const { gl } = useThree();
-  const captureScreenshot = useCallback(() => {
-    const dataUrl = gl.domElement.toDataURL('image/png');
-    onScreenshotReady(dataUrl);
-  }, [gl, onScreenshotReady]);
+// No longer needed for 2D screenshot
+// const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
+//   const { gl } = useThree();
+//   const captureScreenshot = useCallback(() => {
+//     const dataUrl = gl.domElement.toDataURL('image/png');
+//     onScreenshotReady(dataUrl);
+//   }, [gl, onScreenshotReady]);
 
-  useEffect(() => {
-    (window as any).captureWrappedScreenshot = captureScreenshot;
-    return () => {
-      delete (window as any).captureWrappedScreenshot;
-    };
-  }, [captureScreenshot]);
+//   useEffect(() => {
+//     (window as any).captureWrappedScreenshot = captureScreenshot;
+//     return () => {
+//       delete (window as any).captureWrappedScreenshot;
+//     };
+//   }, [captureScreenshot]);
 
-  return null;
-};
+//   return null;
+// };
 
 interface StoryScene {
   id: string;
   component: React.ElementType;
   duration: number; // in milliseconds
-  cameraViewMode: ViewMode;
+  // cameraViewMode: ViewMode; // REMOVED
   title: string;
   downloadFileName: string;
 }
 
-// MODIFICACIÓN CRÍTICA EN STORY_SCENES:
 const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // Slide 0
     component: IntroFunStory,
     duration: 15000, // 15 segundos para lectura de texto largo
-    cameraViewMode: 'intro',
+    // cameraViewMode: 'intro', // REMOVED
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
   },
@@ -65,7 +63,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'totalVisits', // Slide 1
     component: TotalVisitsStory,
     duration: 15000, // 15 seconds
-    cameraViewMode: 'totalConsumption',
+    // cameraViewMode: 'totalConsumption', // REMOVED
     title: 'Visitas del Año',
     downloadFileName: 'Historia_Visitas',
   },
@@ -73,7 +71,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'mostActiveMonth', // Slide 2
     component: MostActiveMonthStory,
     duration: 15000, // 15 seconds
-    cameraViewMode: 'dominantBeer',
+    // cameraViewMode: 'dominantBeer', // REMOVED
     title: 'Mes Más Activo',
     downloadFileName: 'Historia_MesActivo',
   },
@@ -81,7 +79,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'mostActiveDay', // Slide 3
     component: MostActiveDayStory,
     duration: 15000, // 15 seconds
-    cameraViewMode: 'dominantBeer',
+    // cameraViewMode: 'dominantBeer', // REMOVED
     title: 'Día Más Activo',
     downloadFileName: 'Historia_DiaActivo',
   },
@@ -89,7 +87,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'dominantCategoryAndVarieties', // Slide 4
     component: DominantCategoryAndVarietiesStory,
     duration: 15000, // 15 seconds
-    cameraViewMode: 'dominantBeer',
+    // cameraViewMode: 'dominantBeer', // REMOVED
     title: 'Categoría y Variedades',
     downloadFileName: 'Historia_CategoriaVariedades',
   },
@@ -97,7 +95,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'top5', // Slide 5
     component: Top5Story,
     duration: 15000, // 15 seconds
-    cameraViewMode: 'top5',
+    // cameraViewMode: 'top5', // REMOVED
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
   },
@@ -105,7 +103,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'totalConsumption', // Slide 6
     component: TotalConsumptionStory,
     duration: 15000, // 15 seconds
-    cameraViewMode: 'totalConsumption',
+    // cameraViewMode: 'totalConsumption', // REMOVED
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
   },
@@ -113,7 +111,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'summaryInfographic', // Slide 7
     component: SummaryInfographic,
     duration: 15000, // 15 segundos para dar tiempo a descargar
-    cameraViewMode: 'summaryInfographic',
+    // cameraViewMode: 'summaryInfographic', // REMOVED
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
   },
@@ -121,36 +119,36 @@ const STORY_SCENES: StoryScene[] = [
 
 // REVISIÓN CRÍTICA DE COLORES BRUTALISTAS
 const BACKGROUND_COLORS = [
-  0x000000, // Slide 0: Intro (Negro)
-  0xFFFFFF, // Slide 1: Visitas (Blanco)
-  0x000000, // Slide 2: Mes Activo (Negro)
-  0xFFFFFF, // Slide 3: Día Activo (Blanco)
-  0x000000, // Slide 4: Categorías/Variedades (Negro)
-  0xFFFFFF, // Slide 5: Top 5 Cervezas (Blanco)
-  0x000000, // Slide 6: Total Litros (Negro)
-  0xFFFFFF, // Slide 7: Infografía Final (Blanco)
+  "bg-black", // Slide 0: Intro (Negro)
+  "bg-white", // Slide 1: Visitas (Blanco)
+  "bg-black", // Slide 2: Mes Activo (Negro)
+  "bg-white", // Slide 3: Día Activo (Blanco)
+  "bg-black", // Slide 4: Categorías/Variedades (Negro)
+  "bg-white", // Slide 5: Top 5 Cervezas (Blanco)
+  "bg-black", // Slide 6: Total Litros (Negro)
+  "bg-white", // Slide 7: Infografía Final (Blanco)
 ];
 
 const TEXT_COLORS = [
-  "#FFFFFF", // Slide 0: Intro (Blanco)
-  "#000000", // Slide 1: Visitas (Negro)
-  "#FFFFFF", // Slide 2: Mes Activo (Blanco)
-  "#000000", // Slide 3: Día Activo (Negro)
-  "#FFFFFF", // Slide 4: Categorías/Variedades (Blanco)
-  "#000000", // Slide 5: Top 5 Cervezas (Negro)
-  "#FFFFFF", // Slide 6: Total Litros (Blanco)
-  "#000000", // Slide 7: Infografía Final (Negro)
+  "text-white", // Slide 0: Intro (Blanco)
+  "text-black", // Slide 1: Visitas (Negro)
+  "text-white", // Slide 2: Mes Activo (Blanco)
+  "text-black", // Slide 3: Día Activo (Negro)
+  "text-white", // Slide 4: Categorías/Variedades (Blanco)
+  "text-black", // Slide 5: Top 5 Cervezas (Negro)
+  "text-white", // Slide 6: Total Litros (Blanco)
+  "text-black", // Slide 7: Infografía Final (Negro)
 ];
 
 const HIGHLIGHT_COLORS = [
-  "#FFFFFF", // Slide 0: Highlight (Blanco)
-  "#000000", // Slide 1: Highlight (Negro)
-  "#FFFFFF", // Slide 2: Highlight (Blanco)
-  "#000000", // Slide 3: Highlight (Negro)
-  "#FFFFFF", // Slide 4: Highlight (Blanco)
-  "#000000", // Slide 5: Highlight (Negro)
-  "#FFFFFF", // Slide 6: Highlight (Blanco)
-  "#000000", // Slide 7: Highlight (Negro)
+  "text-white", // Slide 0: Highlight (Blanco)
+  "text-black", // Slide 1: Highlight (Negro)
+  "text-white", // Slide 2: Highlight (Blanco)
+  "text-black", // Slide 3: Highlight (Negro)
+  "text-white", // Slide 4: Highlight (Blanco)
+  "text-black", // Slide 5: Highlight (Negro)
+  "text-white", // Slide 6: Highlight (Blanco)
+  "text-black", // Slide 7: Highlight (Negro)
 ];
 
 
@@ -163,6 +161,7 @@ const WrappedDashboard = () => {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null); // Reintroduced timeoutRef
+  const storyContainerRef = useRef<HTMLDivElement>(null); // Ref for the main story container for screenshot
 
   const currentStory = STORY_SCENES[currentStoryIndex];
 
@@ -227,31 +226,39 @@ const WrappedDashboard = () => {
     setIsPaused(false);
   }, []);
 
-  const handleDownloadScreenshot = () => {
-    if (!wrappedData) {
+  const handleDownloadScreenshot = async () => {
+    if (!wrappedData || !storyContainerRef.current) {
       showError("Espera a que se carguen los datos para descargar.");
       return;
     }
     setIsCapturing(true);
-    const captureFunc = (window as any).captureWrappedScreenshot;
-    if (captureFunc) {
-      captureFunc();
-    } else {
-      showError("Error al preparar la captura de pantalla.");
+    showLoading("Preparando descarga...");
+
+    try {
+      // Dynamically import html2canvas
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(storyContainerRef.current, {
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null, // Let the background be captured as rendered
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = `ChinChin_Wrapped_${wrappedData?.customerName || 'Cliente'}_2025_${currentStory.downloadFileName}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showSuccess("¡Descarga completada!");
+    } catch (error) {
+      console.error("Error capturing screenshot:", error);
+      showError("Error al capturar la imagen. Intenta de nuevo.");
+    } finally {
+      dismissToast(toastId);
       setIsCapturing(false);
     }
   };
-
-  const onScreenshotReady = useCallback((dataUrl: string) => {
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = `ChinChin_Wrapped_${wrappedData?.customerName || 'Cliente'}_2025_${currentStory.downloadFileName}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showSuccess("¡Descarga completada!");
-    setIsCapturing(false);
-  }, [wrappedData, currentStory]);
 
   if (loading && !wrappedData) {
     return (
@@ -273,19 +280,9 @@ const WrappedDashboard = () => {
     return null;
   }
 
-  // Dynamic background color for the Canvas
   const currentBackgroundColor = BACKGROUND_COLORS[currentStoryIndex];
   const currentTextColor = TEXT_COLORS[currentStoryIndex];
   const currentHighlightColor = HIGHLIGHT_COLORS[currentStoryIndex];
-
-  // Set clear color for the canvas
-  const CanvasBackground = () => {
-    const { gl } = useThree();
-    useFrame(() => {
-      gl.setClearColor(currentBackgroundColor);
-    });
-    return null;
-  };
 
   const isIntroStory = currentStory.id === 'introFun';
   const isSummaryInfographicStory = currentStory.id === 'summaryInfographic';
@@ -309,12 +306,12 @@ const WrappedDashboard = () => {
     isPaused: isPaused,
     textColor: currentTextColor,
     highlightColor: currentHighlightColor,
-    onStoryFinished: handleNextStory, // Only used by IntroFunStory
+    // onStoryFinished: handleNextStory, // No longer needed with static text
   };
 
   return (
-    <div className="w-screen h-screen relative font-sans flex items-center justify-center">
-      <div className="relative w-full h-full overflow-hidden">
+    <div className={`w-screen h-screen relative font-sans flex items-center justify-center ${currentBackgroundColor}`}>
+      <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex items-center justify-center">
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}
@@ -323,45 +320,21 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {!isIntroStory && !isSummaryInfographicStory && ( // Only show WrappedOverlay if not an intro story and not the infographic
+        {!isIntroStory && !isSummaryInfographicStory && (
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
-            // ELIMINAR ESTA PROP: dominantBeerCategory={wrappedData.dominantBeerCategory}
           />
         )}
 
-        {isSummaryInfographicStory ? (
-          // Render SummaryInfographic as a 2D HTML/CSS component outside the Canvas
-          <SummaryInfographic {...storyProps} />
-        ) : (
-          // Render other stories inside the Canvas
-          <Canvas
-            camera={{ position: [0, 0, 8], fov: 75 }}
-            className="w-full h-full"
-            gl={{ 
-              preserveDrawingBuffer: true, 
-              antialias: false, // Desactivar Antialias para reducir carga
-              powerPreference: 'low-power' // Pedir al navegador que use menos recursos
-            }} 
-          >
-            <CanvasBackground />
-            {/* Removed ambientLight and pointLight for brutalist style */}
-            <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
-            {/* Removed PostProcessingEffects */}
-
-            {/* Render current story component using dynamic component and spread props */}
-            <StoryComponent {...storyProps} />
-
-            <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
-          </Canvas>
-        )}
+        {/* Render current story component directly as 2D */}
+        <StoryComponent {...storyProps} />
 
         {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
         <img
           src="/Logo.png"
           alt="Chin Chin Logo"
-          className="absolute bottom-4 right-4 z-10 w-[9.6vw] max-w-[72px] p-1" // CORREGIDO: Posición en la esquina inferior derecha
+          className="absolute bottom-4 right-4 z-10 w-[9.6vw] max-w-[72px] p-1"
         />
 
         {/* Interaction Zone */}

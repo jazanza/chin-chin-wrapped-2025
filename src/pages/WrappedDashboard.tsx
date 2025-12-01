@@ -15,7 +15,8 @@ import { StoryInteractionZone } from "@/components/StoryInteractionZone";
 import { StoryProgressBar } from "@/components/StoryProgressBar";
 
 // Import story components
-import { IntroStory } from "@/components/stories/IntroStory";
+import { IntroFunStory } from "@/components/stories/IntroFunStory"; // New intro story
+import { WelcomeStory } from "@/components/stories/WelcomeStory"; // Renamed from IntroStory
 import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
 import { DominantBeerStory } from "@/components/stories/DominantBeerStory";
 import { Top5Story } from "@/components/stories/Top5Story";
@@ -50,9 +51,17 @@ interface StoryScene {
 
 const STORY_SCENES: StoryScene[] = [
   {
-    id: 'intro',
-    component: IntroStory,
-    duration: 5000, // Adjusted duration
+    id: 'introFun', // New intro story
+    component: IntroFunStory,
+    duration: 8000, // 8 seconds for multi-line typewriter
+    cameraViewMode: 'intro',
+    title: 'Bienvenida Divertida',
+    downloadFileName: 'Historia_Bienvenida',
+  },
+  {
+    id: 'welcome', // Renamed from intro
+    component: WelcomeStory,
+    duration: 5000,
     cameraViewMode: 'intro',
     title: 'Introducción',
     downloadFileName: 'Historia_Intro',
@@ -60,7 +69,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalConsumption',
     component: TotalConsumptionStory,
-    duration: 5000, // Adjusted duration
+    duration: 5000,
     cameraViewMode: 'totalConsumption',
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
@@ -68,7 +77,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'dominantBeer',
     component: DominantBeerStory,
-    duration: 5000, // Adjusted duration
+    duration: 5000,
     cameraViewMode: 'dominantBeer',
     title: 'Cerveza Dominante',
     downloadFileName: 'Historia_CervezaDominante',
@@ -76,7 +85,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'top5',
     component: Top5Story,
-    duration: 5000, // Adjusted duration
+    duration: 5000,
     cameraViewMode: 'top5',
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
@@ -243,33 +252,39 @@ const WrappedDashboard = () => {
 
           {/* Render current story component conditionally */}
           {currentStoryIndex === 0 && (
-            <IntroStory
+            <IntroFunStory
+              totalVisits={wrappedData.totalVisits}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStoryIndex === 1 && (
+            <WelcomeStory
               customerName={wrappedData.customerName}
               year={wrappedData.year}
               totalVisits={wrappedData.totalVisits}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 1 && (
+          {currentStoryIndex === 2 && (
             <TotalConsumptionStory
               totalLiters={wrappedData.totalLiters}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 2 && (
+          {currentStoryIndex === 3 && (
             <DominantBeerStory
               dominantBeerCategory={wrappedData.dominantBeerCategory}
               categoryVolumes={wrappedData.categoryVolumes}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 3 && (
+          {currentStoryIndex === 4 && (
             <Top5Story
               top5Products={wrappedData.top5Products}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 4 && (
+          {currentStoryIndex === 5 && (
             <SummaryInfographic
               customerName={wrappedData.customerName}
               year={wrappedData.year}

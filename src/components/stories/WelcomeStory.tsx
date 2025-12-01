@@ -4,14 +4,14 @@ import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { TypewriterText } from '../TypewriterText'; // Import the new component
 
-interface IntroStoryProps {
+interface WelcomeStoryProps {
   customerName: string;
   year: string; // Added year prop
   totalVisits: number;
   isPaused: boolean; // Added isPaused prop
 }
 
-const AnimatedBackgroundLines = () => {
+export const AnimatedBackgroundLines = () => {
   const groupRef = React.useRef<THREE.Group>(null!);
   const lineCount = 10;
   const lineLength = 10;
@@ -59,7 +59,7 @@ const AnimatedBackgroundLines = () => {
   );
 };
 
-export const IntroStory = ({ customerName, year, totalVisits, isPaused }: IntroStoryProps) => {
+export const WelcomeStory = ({ customerName, year, totalVisits, isPaused }: WelcomeStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);

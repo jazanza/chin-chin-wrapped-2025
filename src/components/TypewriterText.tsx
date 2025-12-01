@@ -73,10 +73,14 @@ export const TypewriterText = ({
             originalWordIndexInSegment: wordIndexInLine,
           });
         });
+        // Only increment line index if there was an explicit newline in the source segment
         if (lineIndexInSegment < linesInSegment.length - 1) {
-          currentLineIndex++; // Increment line index for actual newlines
+          currentLineIndex++; 
         }
       });
+      // If the segment ends with a space, the next segment should start on the same line.
+      // If the segment ends with a newline, currentLineIndex was already incremented.
+      // If the segment ends without a space or newline, the next segment continues on the same line.
     });
     allWordsRef.current = words;
     setTypedWords([]);
@@ -134,6 +138,8 @@ export const TypewriterText = ({
 
   // Group typed words by line and calculate layout
   const lines = useMemo(() => {
+    if (typedWords.length === 0) return [];
+
     const linesMap = new Map<number, WordData[]>();
     typedWords.forEach(wordData => {
       if (!linesMap.has(wordData.lineIndex)) {
@@ -157,7 +163,9 @@ export const TypewriterText = ({
 
   let startY = 0;
   if (anchorY === 'middle') {
-    startY = totalBlockHeight / 2 - fontSize * lineHeight / 2; // Adjust to center the entire block
+    // Calculate the top edge of the block relative to the center (0,0)
+    // If totalLines=3, height=3.6, startY should be 3.6/2 - 0.6 = 1.2 (to position the first line correctly)
+    startY = totalBlockHeight / 2 - fontSize * lineHeight / 2; 
   } else if (anchorY === 'bottom') {
     startY = totalBlockHeight - fontSize * lineHeight;
   }

@@ -149,8 +149,8 @@ export function useDb() {
       const results = queryData(dbInstance, query, [searchTerm, searchTerm]);
       return results.length > 0 ? results[0] : null;
     } catch (e: any) {
-      console.error("Error finding customer:", e);
-      throw new Error("Failed to find customer.");
+      console.error("Error executing findCustomer query:", e);
+      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, PhoneNumber columns) or search term.`);
     }
   }, []);
 
@@ -243,11 +243,12 @@ export function useDb() {
         dominantBeerCategory,
         top5Products,
         totalVisits,
+        categoryVolumes, // Add categoryVolumes to the returned data for WrappedSpectrum
       };
     } catch (e: any) {
       console.error("Error getting wrapped data:", e);
       setError(e.message);
-      throw new Error("Failed to retrieve wrapped data.");
+      throw new Error(`Failed to retrieve wrapped data: ${e.message}. Please check database schema or customer ID.`);
     } finally {
       setLoading(false);
     }

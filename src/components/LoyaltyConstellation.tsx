@@ -69,8 +69,8 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false, responsiveScale
     }
   });
 
-  // Reemplazar variables CSS con valores hexadecimales de la nueva paleta
-  const color = isSun ? "#FF008A" : "#00FF66"; // neon-magenta : neon-green
+  // Brutalist: Use White and Dark Gray
+  const color = isSun ? "#FFFFFF" : "#333333"; 
 
   return (
     <group ref={groupRef}>
@@ -90,7 +90,7 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false, responsiveScale
         <Line
           ref={lineRef}
           points={[sunPosition, position]}
-          color="#FF008A" // neon-magenta
+          color="#FFFFFF" // White line
           lineWidth={1}
           transparent
           opacity={0.3}

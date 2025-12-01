@@ -20,7 +20,8 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
   const animatedHeight = useRef(0);
   
   const targetHeight = maxLiters > 0 ? (product.liters / maxLiters) * MAX_COLUMN_HEIGHT : 0;
-  const color = product.color; // This color comes from BEER_CATEGORY_COLORS in useDb.ts, which is now hex.
+  // Brutalist: Force color to white
+  const color = "#FFFFFF"; 
 
   const originalPositions = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT_PER_COLUMN * 3);
@@ -102,7 +103,7 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
       <Text
         position={[0, MAX_COLUMN_HEIGHT + 0.5, 0]}
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale} // Simulating 6vw
-        color="#FF008A" // neon-magenta
+        color="#FFFFFF" // White
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04 * responsiveScale}

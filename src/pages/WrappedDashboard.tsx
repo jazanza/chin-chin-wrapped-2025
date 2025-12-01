@@ -193,7 +193,7 @@ const WrappedDashboard = () => {
   if (loading && !wrappedData) {
     return (
       <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
-        <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" />
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
       </div>
     );
   }
@@ -214,10 +214,9 @@ const WrappedDashboard = () => {
 
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
-      {/* Mobile mockup container with border */}
-      <div className="relative w-full h-full max-w-[420px] border-[4px] border-black rounded-lg overflow-hidden">
-        {/* Spike Burst Effect */}
-        <div className="burst-effect" />
+      {/* Mobile mockup container with border - Brutalist: Black background, White border, no rounded corners */}
+      <div className="relative w-full h-full max-w-[420px] border-[4px] border-white rounded-none overflow-hidden bg-black">
+        {/* Spike Burst Effect removed */}
 
         {/* Story Progress Bar */}
         <StoryProgressBar
@@ -240,8 +239,9 @@ const WrappedDashboard = () => {
           className="w-full h-full"
           gl={{ preserveDrawingBuffer: true }}
         >
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} />
+          {/* Simplified Lighting: Hard white light */}
+          <ambientLight intensity={0.5} color={0xFFFFFF} />
+          <pointLight position={[10, 10, 10]} color={0xFFFFFF} intensity={1} />
           <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
           <PostProcessingEffects />
 
@@ -276,11 +276,12 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {/* Download Button (only for SummaryInfographic) */}
+        {/* Download Button (only for SummaryInfographic) - Brutalist styling */}
         {currentStory.id === 'summaryInfographic' && (
           <Button
             onClick={handleDownloadScreenshot}
-            className="absolute top-4 right-4 z-30 bg-neon-yellow hover:bg-neon-yellow/80 text-black font-bold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+            // Brutalist Button: White background, Black text, Black border, no rounded corners, simple hover inverse
+            className="absolute top-4 right-4 z-30 bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
             disabled={isCapturing}
           >
             {isCapturing ? (

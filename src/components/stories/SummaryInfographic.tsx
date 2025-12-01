@@ -35,11 +35,13 @@ const ProgressBar = ({ value, maxValue, color, position, scaleFactor = 1, respon
 
   return (
     <group>
+      {/* Background bar: Dark Gray */}
       <Box args={[scaleFactor, 0.05 * responsiveScale, 0.01]} position={[position[0] + scaleFactor / 2, position[1], position[2]]}>
-        <meshBasicMaterial color="#333333" transparent opacity={0.5} /> {/* Background bar */}
+        <meshBasicMaterial color="#333333" transparent opacity={0.5} /> 
       </Box>
+      {/* Foreground bar: White */}
       <Box ref={barRef} args={[1, 0.05 * responsiveScale, 0.02]} position={[position[0], position[1], position[2] + 0.01]} scale-x={0.01}>
-        <meshBasicMaterial color={color} emissive={color} emissiveIntensity={0.8} />
+        <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.8} />
       </Box>
     </group>
   );
@@ -72,13 +74,21 @@ export const SummaryInfographic = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Background Panel - Applying a subtle stacked card effect */}
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.1]} rotation-z={-0.04}>
-        <meshBasicMaterial color="#1a1a1a" transparent opacity={0.7} />
+      {/* Background Panel - Brutalist: Black/Dark Gray blocks with hard shadows */}
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0.04 * responsiveScale, -0.04 * responsiveScale, -0.1]} rotation-z={-0.04}>
+        <meshBasicMaterial color="#333333" transparent opacity={0.7} />
       </Box>
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.15]} rotation-z={0.03}>
-        <meshBasicMaterial color="#0a0a0a" transparent opacity={0.8} />
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[-0.03 * responsiveScale, 0.03 * responsiveScale, -0.15]} rotation-z={0.03}>
+        <meshBasicMaterial color="#111111" transparent opacity={0.8} />
       </Box>
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.05]} position={[0, 0, 0]}>
+        <meshBasicMaterial color="#000000" transparent opacity={0.9} />
+      </Box>
+      {/* White Border Outline */}
+      <Box args={[8 * responsiveScale + 0.05, 6 * responsiveScale + 0.05, 0.01]} position={[0, 0, 0.03]}>
+        <meshBasicMaterial color="#FFFFFF" wireframe={true} />
+      </Box>
+
 
       {/* Title */}
       <TypewriterText
@@ -88,7 +98,7 @@ export const SummaryInfographic = ({
         isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 2) * responsiveScale}
-        color="#FF008A" // neon-magenta
+        color="#FFFFFF" // White
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.02 * responsiveScale}
@@ -106,7 +116,7 @@ export const SummaryInfographic = ({
           isPaused={isPaused}
           position={[0, 2.1 * responsiveScale, 0]}
           fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 1.2) * responsiveScale}
-          color="#00FF66" // neon-green
+          color="#FFFFFF" // White
           anchorX="center"
           anchorY="middle"
           outlineWidth={0.01 * responsiveScale}
@@ -137,7 +147,7 @@ export const SummaryInfographic = ({
           <Text
             position={[-2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
             fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-            color="#FF008A" // neon-magenta
+            color="#FFFFFF" // White
             anchorX="left"
             anchorY="middle"
             outlineWidth={0.02 * responsiveScale}
@@ -149,9 +159,9 @@ export const SummaryInfographic = ({
           >
             {totalLiters.toFixed(1)} L
           </Text>
-          {/* Simple visual for total liters */}
+          {/* Simple visual for total liters - White Cylinder */}
           <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
-            <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
+            <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} />
           </Cylinder>
 
           {/* Dominant Beer Category */}
@@ -171,7 +181,7 @@ export const SummaryInfographic = ({
           <Text
             position={[2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
             fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-            color="#00FF66" // neon-green
+            color="#FFFFFF" // White
             anchorX="right"
             anchorY="middle"
             outlineWidth={0.02 * responsiveScale}
@@ -183,9 +193,9 @@ export const SummaryInfographic = ({
           >
             {dominantBeerCategory.toUpperCase()}
           </Text>
-          {/* Simple visual for dominant beer */}
+          {/* Simple visual for dominant beer - White Box */}
           <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, 0.8 * responsiveScale, 0]}>
-            <meshBasicMaterial color="#00FF66" emissive="#00FF66" emissiveIntensity={0.5} />
+            <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} />
           </Box>
 
           {/* Top 5 Products */}
@@ -232,7 +242,7 @@ export const SummaryInfographic = ({
               <ProgressBar
                 value={product.liters}
                 maxValue={Math.max(...top5Products.map(p => p.liters), 1)}
-                color={product.color}
+                color="#FFFFFF" // White progress bar
                 position={[-0.2 * responsiveScale, -0.15 * responsiveScale, 0]} // Position relative to the group
                 scaleFactor={2.2 * responsiveScale} // Max width of the progress bar
                 responsiveScale={responsiveScale}
@@ -257,7 +267,7 @@ export const SummaryInfographic = ({
           <Text
             position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
             fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-            color="#FF008A" // neon-magenta
+            color="#FFFFFF" // White
             anchorX="right"
             anchorY="middle"
             outlineWidth={0.02 * responsiveScale}
@@ -269,9 +279,9 @@ export const SummaryInfographic = ({
           >
             {totalVisits}
           </Text>
-          {/* Simple visual for visits */}
+          {/* Simple visual for visits - White Box */}
           <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>
-            <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
+            <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} />
           </Box>
         </group>
       )}

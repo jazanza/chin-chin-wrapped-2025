@@ -35,7 +35,7 @@ export const Top5Story = ({ top5Products, isPaused }: Top5StoryProps) => {
         isPaused={isPaused}
         position={[0, 3 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
-        color="#FF008A" // neon-magenta
+        color="#FFFFFF" // White
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04 * responsiveScale}

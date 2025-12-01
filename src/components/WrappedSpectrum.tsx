@@ -3,15 +3,16 @@ import { Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 
+// Brutalist: All colors are white, distinction is purely geometric/textual
 const COLORS: { [key: string]: string } = {
-  IPA: "#FF008A",    // neon-magenta
-  Lager: "#00FF66",  // neon-green
-  Stout: "#00E6FF",  // neon-cyan
-  Porter: "#FF9A00", // neon-orange
-  Pilsner: "#FFEB3B", // neon-yellow
-  Ale: "#FF008A",    // neon-magenta (reusing for variety)
+  IPA: "#FFFFFF",
+  Lager: "#FFFFFF",
+  Stout: "#FFFFFF",
+  Porter: "#FFFFFF",
+  Pilsner: "#FFFFFF",
+  Ale: "#FFFFFF",
   Other: "#FFFFFF",
-  "N/A": "#A9A9A9", // Color for no data
+  "N/A": "#A9A9A9", // Gray for no data
 };
 
 const PARTICLE_COUNT_PER_SEGMENT = 1000;

@@ -59,27 +59,31 @@ export function VarietyBalance({ varietyMetrics, ...props }: { varietyMetrics: {
 
   return (
     <group position={[0, -1, 0]} {...props} scale={responsiveScale}> {/* Aplicar escala responsiva */}
+      {/* Base Stand */}
       <Cylinder args={[0.2, 0.2, 2, 8]}>
-        <meshBasicMaterial color="gray" wireframe={true} />
+        <meshBasicMaterial color="#333333" wireframe={true} />
       </Cylinder>
       <Cylinder args={[1, 1, 0.1, 16]}>
-        <meshBasicMaterial color="darkgray" wireframe={true} />
+        <meshBasicMaterial color="#555555" wireframe={true} />
       </Cylinder>
 
       <group ref={balanceRef} position={[0, 2.1, 0]}>
+        {/* Balance Beam */}
         <Cylinder args={[0.05, 0.05, 4, 8]} rotation-z={Math.PI / 2}>
-          <meshBasicMaterial color="silver" wireframe={true} />
+          <meshBasicMaterial color="#FFFFFF" wireframe={true} />
         </Cylinder>
 
+        {/* Volume Side (White Particles) */}
         <group position={[-2, 0.5, 0]}>
-          <PulsingParticles color="#FF008A" weight={totalLiters} /> {/* neon-magenta */}
+          <PulsingParticles color="#FFFFFF" weight={totalLiters} /> 
           <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Volume</Text>
           <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${totalLiters.toFixed(1)} L`}</Text>
         </group>
 
+        {/* Variety Side (White Torus) */}
         <group position={[2, 0.5, 0]}>
           <Torus args={[0.5, 0.1, 8, 32]}>
-            <meshBasicMaterial color="#00FF66" wireframe={true} /> {/* neon-green */}
+            <meshBasicMaterial color="#FFFFFF" wireframe={true} /> 
           </Torus>
           <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Variety</Text>
           <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${uniqueProducts} Products`}</Text>

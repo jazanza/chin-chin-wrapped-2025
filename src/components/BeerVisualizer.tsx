@@ -33,8 +33,8 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       pos[i * 3 + 1] = y;
       pos[i * 3 + 2] = Math.sin(angle) * radius;
 
-      // Color ámbar/naranja para el líquido
-      color.setHSL(0.1 + (y - bottomY) / maxHeight * 0.1, 1.0, 0.5); // Hue de naranja a ámbar
+      // Color Blanco Puro para el líquido
+      color.set(0xFFFFFF); 
       col[i * 3] = color.r;
       col[i * 3 + 1] = color.g;
       col[i * 3 + 2] = color.b;
@@ -54,7 +54,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
     if (!visible || !pointsRef.current) return;
 
     // Anima el número de litros
-    animatedLiters.current = THREE.MathUtils.lerp(animatedLeters.current, liters, 0.05);
+    animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, liters, 0.05);
     const targetParticleCount = Math.floor((animatedLiters.current / MAX_LITERS_FOR_SCALE) * PARTICLE_COUNT);
 
     const geometry = pointsRef.current.geometry as THREE.BufferGeometry;
@@ -71,9 +71,9 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       const waveZ = Math.cos(y * 2 + time) * 0.1;
       const waveY = Math.sin(positions[i * 3] * 0.5 + time) * 0.1;
       posAttr.setXYZ(i, positions[i * 3] + waveX, y + waveY, positions[i * 3 + 2] + waveZ);
-      // Color ámbar/naranja para el líquido
-      const hue = (0.1 + (y - bottomY) / maxHeight * 0.1 + time * 0.05) % 1; // Ligeras variaciones de color
-      color.setHSL(hue, 1.0, 0.5);
+      
+      // Mantener color blanco
+      color.set(0xFFFFFF);
       colors.setXYZ(i, color.r, color.g, color.b);
     }
     posAttr.needsUpdate = true;
@@ -98,17 +98,17 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
 
   return (
     <group {...props} visible={visible}>
-      {/* Vaso de cerveza fotorrealista */}
+      {/* Vaso de cerveza fotorrealista (ahora Brutalista: forma simple, color blanco/transparente) */}
       <mesh ref={glassRef} position={[0, bottomY, 0]} scale-y={0.01}> {/* Inicia vacío */}
         <cylinderGeometry args={[dynamicCylinderRadius, dynamicCylinderRadius, maxHeight, 32, 1, true]} />
         <meshPhysicalMaterial
-          color="#FFD700" // Color ámbar para el líquido
+          color="#FFFFFF" // Color Blanco para el líquido
           roughness={0.2}
           metalness={0.1}
-          transmission={0.9} // Transparencia para el líquido
+          transmission={0.9} // Transparencia
           thickness={0.1}
-          ior={1.33} // Índice de refracción del agua/cerveza
-          emissive={new THREE.Color(0x000000)} // Explicitly set emissive to black
+          ior={1.33}
+          emissive={new THREE.Color(0x000000)}
         />
       </mesh>
 

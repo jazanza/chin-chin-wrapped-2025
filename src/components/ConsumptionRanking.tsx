@@ -20,8 +20,8 @@ const BeerColumn = ({ beer, index, maxLiters, responsiveScale }: { beer: RankedB
   const animatedHeight = useRef(0);
   
   const targetHeight = maxLiters > 0 ? (beer.liters / maxLiters) * MAX_COLUMN_HEIGHT : 0;
-  // Reemplazar variables CSS con valores hexadecimales de la nueva paleta
-  const color = index % 2 === 0 ? "#FF008A" : "#00FF66"; // neon-magenta : neon-green
+  // Brutalist: Use White
+  const color = "#FFFFFF"; 
 
   const originalPositions = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT_PER_COLUMN * 3);

@@ -57,8 +57,8 @@ export const StoryProgressBar = ({
         <div
           key={index}
           className={cn(
-            "h-1 flex-1 rounded-full bg-gray-700 overflow-hidden",
-            index < currentStoryIndex && "bg-white", // Completed stories
+            "h-1 flex-1 bg-gray-700 overflow-hidden", // Removed rounded-full
+            index < currentStoryIndex && "bg-white", // Completed stories are white
           )}
         >
           {index === currentStoryIndex && (

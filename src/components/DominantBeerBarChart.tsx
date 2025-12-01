@@ -23,19 +23,14 @@ export function DominantBeerBarChart({ categoryVolumes, dominantBeerCategory, ..
     const totalLiters = Object.values(categoryVolumes).reduce((sum, v) => sum + v, 0);
     if (totalLiters === 0) return [];
 
-    // Use new accent colors for bars, alternating
-    const accentColors = ["#00FF66", "#FF008A", "#FF9A00", "#00E6FF"]; // neon-green, neon-magenta, neon-orange, neon-cyan
-    let colorIndex = 0;
+    // All bars are white in Brutalist mode
+    const WHITE = "#FFFFFF"; 
 
     return Object.entries(categoryVolumes).map(([category, liters]) => {
-      const color = category === dominantBeerCategory ? "#00FF66" : accentColors[colorIndex % accentColors.length]; // Dominant is neon-green
-      if (category !== dominantBeerCategory) {
-        colorIndex++;
-      }
       return {
         category,
         liters,
-        color,
+        color: WHITE,
         isDominant: category === dominantBeerCategory,
       };
     }).sort((a, b) => b.liters - a.liters); // Sort by liters descending
@@ -80,6 +75,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
 
   // Convert hex color strings to THREE.Color objects
   const barColor = useMemo(() => new THREE.Color(data.color), [data.color]);
+  // Dominant bar gets a slight emissive glow to distinguish it, but still white
   const emissiveColor = useMemo(() => data.isDominant ? new THREE.Color(data.color) : new THREE.Color(0x000000), [data.isDominant, data.color]);
 
   useFrame(() => {
@@ -93,7 +89,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
   return (
     <group position={[positionX, 0, 0]}>
       <Box ref={meshRef} args={[BAR_WIDTH, 1, BAR_WIDTH * 0.5]} scale-y={0.01}> {/* Initial scale-y 0.01 for animation */}
-        <meshStandardMaterial color={barColor} emissive={emissiveColor} emissiveIntensity={data.isDominant ? 1.5 : 0} />
+        <meshStandardMaterial color={barColor} emissive={emissiveColor} emissiveIntensity={data.isDominant ? 0.8 : 0} />
       </Box>
       <Text
         position={[0, MAX_BAR_HEIGHT + 0.2, 0]}

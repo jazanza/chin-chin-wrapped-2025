@@ -252,14 +252,12 @@ const ClientLogin = () => {
     <div className="w-screen h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 font-sans">
       <div className="text-center max-w-md w-full">
         <h1 
-          className="text-[min(8vw,4rem)] font-bold mb-8 glitch-text text-neon-magenta"
-          data-text="Chin Chin 2025 Wrapped"
+          className="text-[min(8vw,4rem)] font-bold mb-8 uppercase tracking-widest"
         >
           Chin Chin 2025 Wrapped
         </h1>
         <p 
-          className="text-[min(4vw,1.5rem)] mb-8 glitch-text text-neon-cyan"
-          data-text="Descubre tu año cervecero."
+          className="text-[min(4vw,1.5rem)] mb-8 uppercase tracking-wide"
         >
           Descubre tu año cervecero.
         </p>
@@ -275,7 +273,8 @@ const ClientLogin = () => {
               placeholder="Tu nombre, teléfono, RFC o email"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-neon-magenta focus:border-neon-magenta"
+              // Brutalist Input: Black background, White text, White border, no rounded corners
+              className="bg-black border-white text-white placeholder-gray-500 focus:ring-white focus:border-white border-2 rounded-none"
               disabled={loading || !dbLoaded}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
@@ -286,7 +285,8 @@ const ClientLogin = () => {
             <Button
               onClick={handleSearch}
               size="lg"
-              className="w-full bg-neon-yellow hover:bg-neon-yellow/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              // Brutalist Button: White background, Black text, Black border, no rounded corners, simple hover inverse
+              className="w-full bg-white text-black font-bold py-3 px-6 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
               disabled={loading || !dbLoaded}
             >
               {loading ? "Buscando..." : "Buscar mi Wrapped"}
@@ -301,29 +301,23 @@ const ClientLogin = () => {
             </h2>
             <RadioGroup
               onValueChange={handleCustomerSelection}
-              className="flex flex-col space-y-2"
+              className="flex flex-col space-y-2 p-4 border-2 border-white" // Brutalist container
             >
               {searchResults.map((customer) => (
                 <div key={customer.Id} className="flex items-center space-x-2">
-                  <RadioGroupItem value={customer.Id.toString()} id={`customer-${customer.Id}`} />
+                  <RadioGroupItem value={customer.Id.toString()} id={`customer-${customer.Id}`} className="border-white text-white focus:ring-white" />
                   <Label htmlFor={`customer-${customer.Id}`} className="text-white text-lg cursor-pointer">
                     {customer.Name}
                   </Label>
                 </div>
               ))}
             </RadioGroup>
-            <Button
-              onClick={() => { /* This button is now handled by RadioGroup onValueChange */ }}
-              size="lg"
-              className="w-full bg-neon-yellow hover:bg-neon-yellow/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-              disabled={!selectedCustomer || loading}
-            >
-              Continuar
-            </Button>
+            {/* Removed redundant 'Continuar' button, selection handles navigation */}
             <Button
               onClick={handleBackToSearch}
               variant="ghost"
-              className="w-full text-gray-400 hover:text-white"
+              // Brutalist Ghost Button: Black background, White text, White border on hover
+              className="w-full text-white border-2 border-transparent hover:border-white hover:bg-black rounded-none"
             >
               Volver a buscar
             </Button>
@@ -335,16 +329,16 @@ const ClientLogin = () => {
             <h2 className="text-[min(5vw,2rem)] font-bold text-white mb-4">
               Verifica tu identidad
             </h2>
-            <p className="text-lg text-neon-cyan mb-4">
+            <p className="text-lg text-white mb-4 border-2 border-white p-2">
               {kbaQuestion.question}
             </p>
             <RadioGroup
               onValueChange={handleKbaAnswer}
-              className="flex flex-col space-y-2"
+              className="flex flex-col space-y-2 p-4 border-2 border-white" // Brutalist container
             >
               {kbaQuestion.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option} id={`kba-option-${index}`} />
+                  <RadioGroupItem value={option} id={`kba-option-${index}`} className="border-white text-white focus:ring-white" />
                   <Label htmlFor={`kba-option-${index}`} className="text-white text-lg cursor-pointer">
                     {option}
                   </Label>
@@ -357,22 +351,22 @@ const ClientLogin = () => {
             <Button
               onClick={handleBackToSelect}
               variant="ghost"
-              className="w-full text-gray-400 hover:text-white"
+              className="w-full text-white border-2 border-transparent hover:border-white hover:bg-black rounded-none"
             >
               Volver a la selección
             </Button>
             <Button
               onClick={handleBackToSearch}
               variant="ghost"
-              className="w-full text-gray-400 hover:text-white"
+              className="w-full text-white border-2 border-transparent hover:border-white hover:bg-black rounded-none"
             >
               Reiniciar búsqueda
             </Button>
           </div>
         )}
 
-        {!dbLoaded && (
-          <p className="mt-4 text-gray-400 text-sm">Cargando base de datos...</p>
+        {!dbLoaded && step === "search" && (
+          <p className="mt-4 text-white text-sm border-2 border-white p-2">Cargando base de datos...</p>
         )}
       </div>
     </div>

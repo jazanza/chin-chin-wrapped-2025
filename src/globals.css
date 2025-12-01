@@ -19,90 +19,88 @@
 
 @layer base {
   :root {
-    --background: 260 100% 33%; /* Morado Eléctrico: #5900A8 */
-    --foreground: 210 40% 98%;
+    /* Brutalist Monochromatic Palette: Black and White */
+    --background: 0 0% 0%; /* Black */
+    --foreground: 0 0% 100%; /* White */
 
     --card: 0 0% 0%;
-    --card-foreground: 210 40% 98%;
+    --card-foreground: 0 0% 100%;
 
     --popover: 0 0% 0%;
-    --popover-foreground: 210 40% 98%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 0 0% 100%; /* White for primary elements */
+    --primary-foreground: 0 0% 0%; /* Black text on white */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 0 0% 20%; /* Dark Gray for subtle accents/borders */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 10%; /* Very dark gray */
+    --muted-foreground: 0 0% 70%; /* Light gray text */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%; /* Keep red for errors */
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 100%; /* White border */
+    --input: 0 0% 10%;
+    --ring: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --radius: 0rem; /* Hard edges */
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar variables (if used) adjusted to B/W */
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 0 0% 100%;
 
-    /* Nuevas variables para gama neon */
-    --neon-magenta: 328 100% 60%; /* #FF008A */
-    --neon-green: 140 100% 50%;   /* #00FF66 */
-    --neon-cyan: 185 100% 55%;    /* #00E6FF */
-    --neon-orange: 39 100% 55%;   /* #FF9A00 */
-    --neon-yellow: 54 100% 62%;   /* #FFEB3B */
-    --bg-deep-violet: 270 100% 25%; /* #8000FF - Púrpura Principal */
+    /* Removed Neon/Glitch variables */
+    --bg-deep-violet: 0 0% 0%;
   }
 
   .dark {
-    --background: 260 100% 33%; /* Morado Eléctrico: #5900A8 */
-    --foreground: 210 40% 98%;
+    /* In Brutalism, dark mode is often the default/only mode */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
     --card: 0 0% 0%;
-    --card-foreground: 210 40% 98%;
+    --card-foreground: 0 0% 100%;
 
     --popover: 0 0% 0%;
-    --popover-foreground: 210 40% 98%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 20%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 70%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 0 0% 100%;
+    --input: 0 0% 10%;
+    --ring: 0 0% 100%;
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 0 0% 100%;
   }
 }
 
@@ -112,92 +110,33 @@
   }
 
   body {
-    /* Fondo sólido Púrpura Principal */
-    background-color: hsl(var(--bg-deep-violet));
+    /* Fondo sólido Negro Principal */
+    background-color: hsl(var(--background));
     background-attachment: fixed;
     @apply text-foreground font-sans;
   }
 }
 
 @layer utilities {
-  /* Efecto Glitch Tipográfico Mejorado */
-  @keyframes glitch-shift {
-    0% { transform: translate(0,0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(2px, -2px); }
-    60% { transform: translate(-3px, 3px); }
-    100% { transform: translate(0,0); }
-  }
+  /* Eliminating Glitch and Burst effects */
 
-  .glitch-text {
-    position: relative;
-    animation: glitch-shift 0.4s steps(2, end);
-  }
-
-  .glitch-text::before,
-  .glitch-text::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0.8;
-    mix-blend-mode: screen;
-  }
-
-  .glitch-text::before {
-    color: hsl(var(--neon-magenta));
-    transform: translate(2px, -2px);
-  }
-
-  .glitch-text::after {
-    color: hsl(var(--neon-cyan));
-    transform: translate(-2px, 2px);
-  }
-
-  /* "Burst" con mayor volumen visual */
-  .burst-effect {
-    position: absolute;
-    inset: 0; /* Usar inset: 0 para cubrir completamente el padre */
-    transform: translate(-50%, -50%) scale(1.8) rotate(15deg); /* Base rotation of 15deg */
-    clip-path: polygon(
-      50% 0%, 65% 30%, 100% 35%, 70% 60%, 80% 100%, 
-      50% 75%, 20% 100%, 30% 60%, 0% 35%, 35% 30%
-    );
-    background: conic-gradient(
-      from 0deg,
-      hsl(var(--neon-magenta)),
-      hsl(var(--neon-green)),
-      hsl(var(--neon-cyan)),
-      hsl(var(--neon-orange)),
-      hsl(var(--neon-magenta))
-    );
-    opacity: 0.35;
-    filter: blur(6px) brightness(1.5);
-    animation: burst-spin 12s linear infinite;
-    pointer-events: none; /* Ensure it doesn't block interactions */
-  }
-  @keyframes burst-spin {
-    from { transform: translate(-50%, -50%) scale(1.8) rotate(15deg); } /* Start with base rotation */
-    to { transform: translate(-50%, -50%) scale(1.8) rotate(375deg); } /* 360 + 15 */
-  }
-
-  /* Stacked-Cards con efecto físico */
+  /* Stacked-Cards con efecto físico (Adjusted for B/W and hard shadows) */
   .card-stack > * {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card-stack > *:nth-child(1) {
     transform: rotate(-4deg) scale(1.00);
-    box-shadow: 0 0 20px rgba(0,0,0,0.25); /* Stronger shadow, less blur */
+    box-shadow: 4px 4px 0px hsl(var(--foreground)); /* Hard shadow */
   }
 
   .card-stack > *:nth-child(2) {
     transform: rotate(3deg) scale(1.04);
-    box-shadow: 0 0 20px rgba(0,0,0,0.25); /* Stronger shadow, less blur */
+    box-shadow: 4px 4px 0px hsl(var(--foreground)); /* Hard shadow */
   }
 
   .card-stack > *:nth-child(3) {
     transform: rotate(-2deg) scale(1.07);
-    box-shadow: 0 0 20px rgba(0,0,0,0.25); /* Stronger shadow, less blur */
+    box-shadow: 4px 4px 0px hsl(var(--foreground)); /* Hard shadow */
   }
 }

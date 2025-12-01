@@ -1,8 +1,6 @@
 import { useThree } from "@react-three/fiber";
-import { useEffect } from "react"; // useEffect is used here
-import { CameraAnimator } from "./CameraAnimator"; // Correctly import CameraAnimator
-
-type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum" | "wrapped"; // Define ViewMode here for clarity, or import from CameraAnimator if preferred
+import { useEffect } from "react";
+import { CameraAnimator, ViewMode } from "./CameraAnimator"; // Import ViewMode from CameraAnimator
 
 export function ResponsiveCamera({ viewMode }: { viewMode: ViewMode }) {
   const { camera, viewport } = useThree();

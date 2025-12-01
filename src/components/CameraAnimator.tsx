@@ -1,8 +1,8 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { useMemo } from "react"; // Ensure useMemo is imported
+import { useMemo } from "react";
 
-type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum" | "wrapped"; // Add 'wrapped'
+export type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum" | "wrapped" | "intro" | "totalConsumption" | "dominantBeer" | "top5" | "summaryInfographic";
 
 const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: THREE.Vector3 } } = {
   meter: {
@@ -25,9 +25,29 @@ const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: TH
     position: new THREE.Vector3(0, 0, 5),
     lookAt: new THREE.Vector3(0, 0, 0),
   },
-  wrapped: { // New preset for the WrappedDashboard
-    position: new THREE.Vector3(0, 0, 8), // Adjusted for a good overview of all three components
+  wrapped: { // General wrapped view, might be overridden by specific story views
+    position: new THREE.Vector3(0, 0, 8),
     lookAt: new THREE.Vector3(0, -0.5, 0),
+  },
+  intro: {
+    position: new THREE.Vector3(0, 0, 5),
+    lookAt: new THREE.Vector3(0, 0, 0),
+  },
+  totalConsumption: {
+    position: new THREE.Vector3(0, 0, 8),
+    lookAt: new THREE.Vector3(0, 0, 0),
+  },
+  dominantBeer: {
+    position: new THREE.Vector3(0, 0, 5),
+    lookAt: new THREE.Vector3(0, 0, 0),
+  },
+  top5: {
+    position: new THREE.Vector3(0, -1, 8),
+    lookAt: new THREE.Vector3(0, -1, 0),
+  },
+  summaryInfographic: {
+    position: new THREE.Vector3(0, 0, 10), // Wider view for the infographic
+    lookAt: new THREE.Vector3(0, 0, 0),
   },
 };
 
@@ -40,17 +60,14 @@ export function CameraAnimator({ viewMode }: { viewMode: ViewMode }) {
     const targetPosition = preset.position.clone();
     const targetLookAt = preset.lookAt.clone();
 
-    if (viewMode === 'loyalty') {
+    if (viewMode === 'loyalty') { // Keep existing loyalty animation
       const time = clock.getElapsedTime() * 0.08;
       targetPosition.x = 8 * Math.cos(time);
       targetPosition.z = 8 * Math.sin(time);
       targetPosition.y = 3 + Math.sin(time * 0.5);
     }
 
-    // Decreased lerp factor for smoother transitions
     camera.position.lerp(targetPosition, 0.05);
-
-    // Lerp lookAt as well for a slightly less jarring rotation change
     currentLookAt.lerp(targetLookAt, 0.05);
     camera.lookAt(currentLookAt);
   });

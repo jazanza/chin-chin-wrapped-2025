@@ -47,6 +47,9 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
   useFrame(({ clock }) => {
     if (!visible || !pointsRef.current) return;
 
+    // 🔄 Rotación Lenta
+    pointsRef.current.rotation.y += 0.001;
+
     animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, liters, 0.05);
     const targetParticleCount = Math.floor((animatedLiters.current / MAX_LITERS_FOR_SCALE) * PARTICLE_COUNT);
 
@@ -82,13 +85,19 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
   });
 
   return (
-    <group {...props} visible={visible}>
+    <group {...props} visible={visible} position={[0, viewport.height * 0.1, 0]}>
       <points ref={pointsRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT} array={positions} itemSize={3} />
           <bufferAttribute attach="attributes-color" count={PARTICLE_COUNT} array={initialColors} itemSize={3} />
         </bufferGeometry>
-        <pointsMaterial size={0.3} vertexColors={true} transparent={true} opacity={0.7} />
+        <pointsMaterial
+          size={0.3}
+          vertexColors={true}
+          transparent={true}
+          opacity={0.7}
+          alphaTest={0.5}
+        />
       </points>
 
       <Text

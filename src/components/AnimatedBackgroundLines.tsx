@@ -36,8 +36,7 @@ export const AnimatedBackgroundLines = () => {
   });
 
   return (
-    <group ref={groupRef}>
-      {lines.map((line, i) => (
+    <group ref={groupRef}>{lines.map((line, i) => (
         <Line
           key={i}
           points={[line.start, line.end]}
@@ -46,7 +45,6 @@ export const AnimatedBackgroundLines = () => {
           transparent
           opacity={0.3}
         />
-      ))}
-    </group>
+      ))}</group>
   );
 };

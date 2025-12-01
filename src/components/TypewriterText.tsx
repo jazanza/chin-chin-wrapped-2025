@@ -200,6 +200,7 @@ export const TypewriterText = ({
                 letterSpacing={letterSpacing}
                 fontWeight={fontWeight}
               >
+                <meshBasicMaterial attach="material" color={wordData.color} />
                 {wordData.word}
               </Text>
             );

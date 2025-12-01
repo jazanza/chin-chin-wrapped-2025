@@ -327,7 +327,7 @@ const WrappedDashboard = () => {
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
-            dominantBeerCategory={wrappedData.dominantBeerCategory}
+            // ELIMINAR ESTA PROP: dominantBeerCategory={wrappedData.dominantBeerCategory}
           />
         )}
 

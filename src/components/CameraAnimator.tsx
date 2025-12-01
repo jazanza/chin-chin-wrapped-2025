@@ -1,8 +1,8 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { useMemo } from "react";
+import { useMemo } from "react"; // Ensure useMemo is imported
 
-type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum";
+type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum" | "wrapped"; // Add 'wrapped'
 
 const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: THREE.Vector3 } } = {
   meter: {
@@ -24,6 +24,10 @@ const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: TH
   spectrum: {
     position: new THREE.Vector3(0, 0, 5),
     lookAt: new THREE.Vector3(0, 0, 0),
+  },
+  wrapped: { // New preset for the WrappedDashboard
+    position: new THREE.Vector3(0, 0, 8), // Adjusted for a good overview of all three components
+    lookAt: new THREE.Vector3(0, -0.5, 0),
   },
 };
 

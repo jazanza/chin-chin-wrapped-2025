@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Text } from "@react-three/drei";
-import * => THREE from "three";
+import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 
 const COLORS: { [key: string]: string } = {

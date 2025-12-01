@@ -70,6 +70,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         anchorX="center"
         maxWidth={0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {product.name.toUpperCase()}
       </Text>
@@ -80,6 +81,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         anchorX="center"
         maxWidth={0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {`${product.liters.toFixed(1)} L`}
       </Text>
@@ -101,8 +103,11 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
         color="#FF00FF" // primary-glitch-pink
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.04}
+        outlineWidth={0.04 * responsiveScale}
         outlineColor="#000000"
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         TU TOP 5 DE CERVEZAS
       </Text>

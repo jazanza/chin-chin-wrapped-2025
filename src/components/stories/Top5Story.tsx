@@ -30,8 +30,9 @@ export const Top5Story = ({ top5Products }: Top5StoryProps) => {
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
-        Tu Top 5 de Cervezas
+        TU TOP 5 DE CERVEZAS
       </Text>
       <WrappedTop5 top5Products={top5Products} position={[0, -1 * responsiveScale, 0]} />
     </group>

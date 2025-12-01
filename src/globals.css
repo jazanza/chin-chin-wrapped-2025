@@ -62,6 +62,12 @@
     --primary-glitch-pink: 320 100% 65%; /* #F654A9 */
     --secondary-glitch-cyan: 160 100% 49%; /* #00FF99 */
     --button-highlight: 54 100% 60%; /* #FFEB3B */
+
+    /* Nuevos colores de acento */
+    --accent-green: 140 100% 50%; /* #00FF66 */
+    --accent-magenta: 328 100% 62%; /* #FF007A */
+    --accent-orange: 39 100% 50%; /* #FFA800 */
+    --accent-cyan: 185 100% 50%; /* #00D8FF */
   }
 
   .dark {
@@ -142,5 +148,43 @@
 
   .animate-text-glitch-in {
     animation: text-glitch-in 0.5s forwards;
+  }
+
+  /* Spike Burst Effect */
+  .burst-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.5) rotate(0deg);
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(
+      50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+    );
+    background: conic-gradient(from 0deg at 50% 50%, hsl(var(--accent-magenta)), hsl(var(--accent-green)), hsl(var(--accent-cyan)), hsl(var(--accent-orange)), hsl(var(--accent-magenta)));
+    opacity: 0.3;
+    filter: blur(5px);
+    animation: burst-animate 10s infinite linear;
+    pointer-events: none; /* Ensure it doesn't block interactions */
+  }
+
+  @keyframes burst-animate {
+    0% { transform: translate(-50%, -50%) scale(1.5) rotate(0deg); }
+    50% { transform: translate(-50%, -50%) scale(1.6) rotate(180deg); }
+    100% { transform: translate(-50%, -50%) scale(1.5) rotate(360deg); }
+  }
+
+  /* Stacked Cards Effect (for 2D elements, e.g., in SummaryInfographic overlay) */
+  .card-stack-layer-1 {
+    transform: rotate(-2deg) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  }
+  .card-stack-layer-2 {
+    transform: rotate(2deg) scale(1.04);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  }
+  .card-stack-layer-3 {
+    transform: rotate(-1deg) scale(1.06);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
   }
 }

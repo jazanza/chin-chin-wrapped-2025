@@ -61,8 +61,11 @@ export const SummaryInfographic = ({
 
   return (
     <group position={[0, 0, 0]}>
-      {/* Background Panel */}
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.1]}>
+      {/* Background Panel - Applying a subtle stacked card effect */}
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.1]} rotation-z={-0.02}>
+        <meshBasicMaterial color="#1a1a1a" transparent opacity={0.7} />
+      </Box>
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.15]} rotation-z={0.02}>
         <meshBasicMaterial color="#0a0a0a" transparent opacity={0.8} />
       </Box>
 
@@ -77,6 +80,7 @@ export const SummaryInfographic = ({
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {customerName.toUpperCase()}
       </Text>
@@ -90,6 +94,7 @@ export const SummaryInfographic = ({
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {year} WRAPPED
       </Text>
@@ -103,12 +108,13 @@ export const SummaryInfographic = ({
         anchorY="middle"
         maxWidth={viewport.width * 0.4}
         textAlign="left"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         TOTAL CONSUMIDO:
       </Text>
       <Text
         position={[-2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 2}
+        fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
         color="#F654A9" // primary-glitch-pink
         anchorX="left"
         anchorY="middle"
@@ -116,6 +122,7 @@ export const SummaryInfographic = ({
         outlineColor="#000000"
         maxWidth={viewport.width * 0.4}
         textAlign="left"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {totalLiters.toFixed(1)} L
       </Text>
@@ -133,12 +140,13 @@ export const SummaryInfographic = ({
         anchorY="middle"
         maxWidth={viewport.width * 0.4}
         textAlign="right"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         CERVEZA DOMINANTE:
       </Text>
       <Text
         position={[2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 2}
+        fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
         color="#00FF99" // secondary-glitch-cyan
         anchorX="right"
         anchorY="middle"
@@ -146,6 +154,7 @@ export const SummaryInfographic = ({
         outlineColor="#000000"
         maxWidth={viewport.width * 0.4}
         textAlign="right"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {dominantBeerCategory.toUpperCase()}
       </Text>
@@ -163,6 +172,7 @@ export const SummaryInfographic = ({
         anchorY="middle"
         maxWidth={viewport.width * 0.4}
         textAlign="left"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         TOP 5 PRODUCTOS:
       </Text>
@@ -175,6 +185,7 @@ export const SummaryInfographic = ({
             anchorY="middle"
             maxWidth={viewport.width * 0.3}
             textAlign="left"
+            letterSpacing={-0.05} // Apply negative letter spacing
           >
             {index + 1}. {product.name.toUpperCase()}
           </Text>
@@ -186,6 +197,7 @@ export const SummaryInfographic = ({
             anchorY="middle"
             maxWidth={viewport.width * 0.1}
             textAlign="right"
+            letterSpacing={-0.05} // Apply negative letter spacing
           >
             {product.liters.toFixed(1)} L
           </Text>
@@ -209,12 +221,13 @@ export const SummaryInfographic = ({
         anchorY="middle"
         maxWidth={viewport.width * 0.4}
         textAlign="right"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         VISITAS:
       </Text>
       <Text
         position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 1.5}
+        fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
         color="#F654A9" // primary-glitch-pink
         anchorX="right"
         anchorY="middle"
@@ -222,6 +235,7 @@ export const SummaryInfographic = ({
         outlineColor="#000000"
         maxWidth={viewport.width * 0.4}
         textAlign="right"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {totalVisits}
       </Text>

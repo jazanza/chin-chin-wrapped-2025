@@ -23,12 +23,22 @@ export function DominantBeerBarChart({ categoryVolumes, dominantBeerCategory, ..
     const totalLiters = Object.values(categoryVolumes).reduce((sum, v) => sum + v, 0);
     if (totalLiters === 0) return [];
 
-    return Object.entries(categoryVolumes).map(([category, liters]) => ({
-      category,
-      liters,
-      color: category === dominantBeerCategory ? "#00FF99" : "#F654A9", // Green for dominant, pink for others
-      isDominant: category === dominantBeerCategory,
-    })).sort((a, b) => b.liters - a.liters); // Sort by liters descending
+    // Use new accent colors for bars, alternating
+    const accentColors = ["#00FF66", "#FF007A", "#FFA800", "#00D8FF"]; // Green, Magenta, Orange, Cyan
+    let colorIndex = 0;
+
+    return Object.entries(categoryVolumes).map(([category, liters]) => {
+      const color = category === dominantBeerCategory ? "#00FF99" : accentColors[colorIndex % accentColors.length];
+      if (category !== dominantBeerCategory) {
+        colorIndex++;
+      }
+      return {
+        category,
+        liters,
+        color,
+        isDominant: category === dominantBeerCategory,
+      };
+    }).sort((a, b) => b.liters - a.liters); // Sort by liters descending
   }, [categoryVolumes, dominantBeerCategory]);
 
   const maxLiters = Math.max(...processedData.map(d => d.liters), 1);
@@ -88,6 +98,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
         anchorX="center"
         maxWidth={BAR_WIDTH * 1.5}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {data.category}
       </Text>
@@ -98,6 +109,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
         anchorX="center"
         maxWidth={BAR_WIDTH * 1.5}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {`${data.liters.toFixed(1)} L`}
       </Text>

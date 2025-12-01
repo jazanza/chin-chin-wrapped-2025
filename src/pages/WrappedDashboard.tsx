@@ -108,7 +108,8 @@ const WrappedDashboard = () => {
 
     const fetchWrappedData = async () => {
       if (toastId) dismissToast(toastId);
-      setToastId(showLoading("Cargando tu Wrapped..."));
+      // Removed the "Cargando tu Wrapped..." text toast for immediate transition
+      // setToastId(showLoading("Cargando tu Wrapped...")); 
       try {
         const data = await getWrappedData(Number(customerId), '2025'); // Hardcoded year 2025
         setWrappedData(data);
@@ -195,7 +196,7 @@ const WrappedDashboard = () => {
     return (
       <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
         <Loader2 className="h-8 w-8 animate-spin text-primary-glitch-pink" />
-        <p className="ml-4 text-lg text-secondary-glitch-cyan">Cargando tu Wrapped...</p>
+        {/* Removed the text part of the loading state */}
       </div>
     );
   }
@@ -216,8 +217,11 @@ const WrappedDashboard = () => {
 
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
-      {/* The Canvas will now take 100% width and height of its parent, adapting to any screen size. */}
-      <div className="relative w-full h-full">
+      {/* Mobile mockup container with border */}
+      <div className="relative w-full h-full max-w-[420px] border-[4px] border-black rounded-lg overflow-hidden">
+        {/* Spike Burst Effect */}
+        <div className="burst-effect" />
+
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}
@@ -257,6 +261,13 @@ const WrappedDashboard = () => {
 
           <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
         </Canvas>
+
+        {/* Chin Chin Logo */}
+        <img
+          src="/Logo.png" // Path to the logo
+          alt="Chin Chin Logo"
+          className="absolute bottom-4 right-4 z-10 w-[8vw] max-w-[60px] p-1" // Responsive width, max-width, and padding
+        />
 
         {/* Interaction Zone */}
         <StoryInteractionZone

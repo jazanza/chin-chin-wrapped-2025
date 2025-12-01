@@ -20,8 +20,10 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
     animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, totalLiters, 0.05);
 
     if (textRef.current) {
-      textRef.current.text = `${animatedLiters.current.toFixed(2)} L`;
-      textRef.current.fontSize = Math.min(1, viewport.width * 0.08);
+      textRef.current.text = `${animatedLiters.current.toFixed(1)} L`; // Changed to 1 decimal place
+      // Oversize de Datos: font-size: 18vw; font-weight: 900;
+      // Simulate 18vw with responsiveScale, capping at a reasonable max
+      textRef.current.fontSize = Math.min(viewport.width * 0.18, 2.5); // Max 2.5 for desktop, scales down for mobile
       // Position text above the animated liquid level
       const currentLiquidHeight = (animatedLiters.current / MAX_LITERS_FOR_SCALE) * maxHeight;
       textRef.current.position.y = bottomY + currentLiquidHeight + 0.5 * responsiveScale;
@@ -34,7 +36,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
       <Text
         ref={textRef}
         position={[0, 0, 0]} // Se ajusta dinámicamente en useFrame
-        fontSize={1 * responsiveScale}
+        fontSize={1 * responsiveScale} // Initial value, will be updated in useFrame
         color="white"
         anchorX="center"
         anchorY="middle"
@@ -42,8 +44,9 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
-        {`${totalLiters.toFixed(2)} L`}
+        {`${totalLiters.toFixed(1)} L`}
       </Text>
       <Text
         position={[0, -maxHeight / 2 - 0.8 * responsiveScale, 0]}
@@ -53,6 +56,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         TOTAL CONSUMIDO
       </Text>

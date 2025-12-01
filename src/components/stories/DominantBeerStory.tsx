@@ -25,6 +25,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         TU CERVEZA DOMINANTE
       </Text>
@@ -38,6 +39,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
       >
         {dominantBeerCategory.toUpperCase()}
       </Text>

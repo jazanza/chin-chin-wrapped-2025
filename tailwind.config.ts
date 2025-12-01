@@ -69,6 +69,11 @@ export default {
         'primary-glitch-pink': 'hsl(var(--primary-glitch-pink))',
         'secondary-glitch-cyan': 'hsl(var(--secondary-glitch-cyan))',
         'button-highlight': 'hsl(var(--button-highlight))',
+        // Nuevos colores de acento
+        'accent-green': 'hsl(var(--accent-green))',
+        'accent-magenta': 'hsl(var(--accent-magenta))',
+        'accent-orange': 'hsl(var(--accent-orange))',
+        'accent-cyan': 'hsl(var(--accent-cyan))',
       },
       borderRadius: {
         lg: "var(--radius)",

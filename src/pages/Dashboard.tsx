@@ -42,11 +42,11 @@ const SCENE_PLAYLIST: Scene[] = [
 const RANGE_MAP: { [key: string]: string } = {
   this_week: "Servidos esta semana",
   last_week: "Servidos la semana pasada",
-  last_15_days: "Servidos en las últimas dos semanas",
+  last_15_days: "Servidos en las útimas dos semanas",
   this_month: "Servidos este mes",
   last_month: "Servidos el mes pasado",
-  last_3_months: "Servidos en los últimos 3 meses",
-  last_6_months: "Servidos en los últimos 6 meses",
+  last_3_months: "Servidos en los útimos 3 meses",
+  last_6_months: "Servidos en los útimos 6 meses",
   this_year: "Servidos este año",
   last_year: "Servidos el año pasado",
   all_time: "Servidos históricamente",
@@ -79,7 +79,7 @@ const Dashboard = () => {
     if (!SCENE_PLAYLIST.length) return;
 
     let nextIndex: number;
-    let nextSceneViewMode: ViewMode; // Declarada aquí para que esté en el ámbito correcto
+    let nextSceneViewMode: ViewMode;
     let attempts = 0;
     const maxAttempts = 20;
 
@@ -87,7 +87,7 @@ const Dashboard = () => {
 
     do {
       nextIndex = Math.floor(Math.random() * SCENE_PLAYLIST.length);
-      nextSceneViewMode = SCENE_PLAYLIST[nextIndex].viewMode; // Asignada aquí
+      nextSceneViewMode = SCENE_PLAYLIST[nextIndex].viewMode;
       attempts++;
     } while (
       attempts < maxAttempts &&
@@ -102,7 +102,6 @@ const Dashboard = () => {
   // Efecto para inicializar la primera escena y el modo de vista anterior
   useEffect(() => {
     if (dbBuffer && SCENE_PLAYLIST.length > 0) {
-      // Seleccionar una escena inicial aleatoria
       const initialIndex = Math.floor(Math.random() * SCENE_PLAYLIST.length);
       setCurrentSceneIndex(initialIndex);
       setPreviousViewMode(SCENE_PLAYLIST[initialIndex].viewMode);
@@ -130,7 +129,6 @@ const Dashboard = () => {
 
   const handleFileLoaded = (buffer: Uint8Array) => {
     setDbBuffer(buffer);
-    // Al cargar un nuevo archivo, reiniciamos la reproducción con una escena aleatoria
     const initialIndex = Math.floor(Math.random() * SCENE_PLAYLIST.length);
     setCurrentSceneIndex(initialIndex);
     setPreviousViewMode(SCENE_PLAYLIST[initialIndex].viewMode);
@@ -139,22 +137,20 @@ const Dashboard = () => {
 
   const handlePlayPause = () => setIsPlaying(prev => !prev);
   const handleNext = () => {
-    setIsPlaying(false); // Pausar la reproducción automática al saltar manualmente
+    setIsPlaying(false);
     selectNextRandomScene();
   };
   const handlePrev = () => {
-    setIsPlaying(false); // Pausar la reproducción automática al saltar manualmente
-    selectNextRandomScene(); // En modo aleatorio, "anterior" es simplemente otra escena aleatoria
+    setIsPlaying(false);
+    selectNextRandomScene();
   };
 
   if (!dbBuffer) {
     return (
       <div className="w-screen h-screen bg-black text-white flex flex-col items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Visualizador de Cervecería</h1>
-          <p className="text-xl text-gray-400 mb-8">
-            Carga tu archivo de base de datos Aronium (.db) para comenzar.
-          </p>
+          <h1 className="text-4xl font-bold mb-4">Chin Chin Data Art</h1> {/* Texto actualizado */}
+          {/* Texto eliminado: <p className="text-xl text-gray-400 mb-8">Carga tu archivo de base de datos Aronium (.db) para comenzar.</p> */}
           <FileUploader onFileLoaded={handleFileLoaded} loading={loading} />
           {error && <p className="text-red-500 mt-4">Error: {error}</p>}
         </div>
@@ -165,7 +161,7 @@ const Dashboard = () => {
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col relative">
       <NarrativeOverlay
-        key={currentSceneIndex} // Usar key para forzar la re-renderización y animación del overlay
+        key={currentSceneIndex}
         title={currentScene.title}
         range={RANGE_MAP[currentScene.rangeKey] || ""}
       />
@@ -173,6 +169,7 @@ const Dashboard = () => {
         <Canvas
           shadows
           camera={{ position: [0, 1, 7], fov: 50 }}
+          className="w-full h-full" // Asegura que el Canvas ocupe todo el espacio disponible
         >
           <color attach="background" args={["#000000"]} />
           <fog attach="fog" args={["#000000", 5, 20]} />

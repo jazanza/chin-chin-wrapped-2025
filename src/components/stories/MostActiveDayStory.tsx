@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
-import { AnimatedBackgroundLines } from './WelcomeStory'; // Reusing background lines
+import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // Reusing background lines
 
 interface MostActiveDayStoryProps {
   mostActiveDay: string;

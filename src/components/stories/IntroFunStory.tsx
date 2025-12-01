@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree, useFrame } from '@react-three/fiber';
 import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
-import { AnimatedBackgroundLines } from './WelcomeStory';
+import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // Updated import path
 import * as THREE from 'three';
 
 interface IntroFunStoryProps {

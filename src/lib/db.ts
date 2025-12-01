@@ -40,3 +40,5 @@ export function queryData(db: Database, query: string, params: any[] = []): any[
   }
   return results;
 }
+
+export type { Database, Statement };

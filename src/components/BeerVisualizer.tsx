@@ -20,7 +20,8 @@ export function BeerVisualizer({
   const textRef = useRef<any>(null!);
   const animatedLiters = useRef(0);
 
-  const cylinderRadius = Math.min(viewport.width, viewport.height) * 0.4;
+  // 1. Cálculo Dinámico de Constantes
+  const cylinderRadius = viewport.width * 0.25;
   const maxHeight = viewport.height * 1.2;
   const bottomY = -maxHeight / 2;
 
@@ -36,6 +37,7 @@ export function BeerVisualizer({
 
       pos[i * 3] = Math.cos(angle) * radius;
       pos[i * 3 + 1] = y;
+      // 2. Profundidad Inicial
       pos[i * 3 + 2] = Math.sin(angle) * radius;
 
       col[i * 3] = color.r;
@@ -76,18 +78,27 @@ export function BeerVisualizer({
 
     const baseHue = 0.5;
     const baseSaturation = 1.0;
-    const animatedLuminosity = 0.4 + Math.sin(time * 2) * 0.3;
 
     for (let i = 0; i < targetParticleCount; i++) {
       const originalY = positions[i * 3 + 1];
       const originalX = positions[i * 3];
+      const originalZ = positions[i * 3 + 2];
 
       const verticalWave = Math.sin(time + originalX * 0.5) * 0.8;
       const newY = originalY + verticalWave;
 
-      posAttr.setXYZ(i, positions[i * 3], newY, positions[i * 3 + 2]);
+      // 2. Movimiento en Z (Parallax)
+      const zWave = Math.cos(time + originalX * 0.5) * 0.2;
+      const newZ = originalZ + zWave;
 
-      color.setHSL(baseHue, baseSaturation, animatedLuminosity);
+      // 3. Animación de Color y Profundidad
+      const depthFactor = 1 - Math.abs(originalZ) / cylinderRadius;
+      const finalLuminosity =
+        (0.4 + Math.sin(time * 2) * 0.3) * (0.5 + depthFactor * 0.5);
+
+      posAttr.setXYZ(i, positions[i * 3], newY, newZ);
+
+      color.setHSL(baseHue, baseSaturation, finalLuminosity);
       colors.setXYZ(i, color.r, color.g, color.b);
     }
     posAttr.needsUpdate = true;

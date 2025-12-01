@@ -53,7 +53,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // New intro story
     component: IntroFunStory,
-    duration: 12000, // Increased duration for multi-line typewriter and pauses
+    duration: 0, // Duration now controlled by the component itself
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
@@ -94,7 +94,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'summaryInfographic',
     component: SummaryInfographic,
     duration: 0, // Static, no auto-advance
-    cameraViewMode: 'summaryInfographic', // Ensure this view mode is appropriate for the new layout
+    cameraViewMode: 'summaryInfographic',
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
   },
@@ -135,6 +135,7 @@ const WrappedDashboard = () => {
 
   // Story navigation logic
   useEffect(() => {
+    // Only auto-advance if the current story has a defined duration > 0
     if (wrappedData && currentStory.duration > 0 && !isPaused) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -148,7 +149,7 @@ const WrappedDashboard = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]); // Added currentStory.duration to dependencies
+  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]);
 
   const handleNextStory = useCallback(() => {
     setCurrentStoryIndex((prevIndex) =>
@@ -255,6 +256,7 @@ const WrappedDashboard = () => {
             <IntroFunStory
               totalVisits={wrappedData.totalVisits}
               isPaused={isPaused}
+              onStoryFinished={handleNextStory} // Pass callback for dynamic duration
             />
           )}
           {currentStoryIndex === 1 && (
@@ -331,7 +333,7 @@ const WrappedDashboard = () => {
             ) : (
               <>
                 <Download className="mr-2 h-4 w-4" />
-                Descargar Infografía
+                Descargar y Compartir
               </>
             )}
           </Button>

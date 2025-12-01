@@ -51,7 +51,9 @@ export const SummaryInfographic = ({
 
   // Helper to get block position
   const getBlockPosition = (row: number, col: number) => {
+    // Calculate x relative to the center of the infographicWidth
     const x = (col === 1 ? -blockWidth / 2 : blockWidth / 2) - infographicWidth / 4;
+    // Calculate y relative to the center of the infographicHeight
     const y = (row === 1 ? infographicHeight / 3 : row === 2 ? 0 : -infographicHeight / 3) + infographicHeight / 6;
     return [x, y, 0];
   };

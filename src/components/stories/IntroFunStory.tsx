@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { TypewriterText } from '../TypewriterText';
@@ -7,14 +7,16 @@ import { AnimatedBackgroundLines } from './WelcomeStory'; // Reusing background 
 interface IntroFunStoryProps {
   totalVisits: number;
   isPaused: boolean;
+  onStoryFinished: () => void; // New callback for when the story is fully displayed
 }
 
-export const IntroFunStory = ({ totalVisits, isPaused }: IntroFunStoryProps) => {
+export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished }: IntroFunStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
   const [lineIndex, setLineIndex] = useState(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const lines = useCallback(() => [
     "¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!",
@@ -29,18 +31,29 @@ export const IntroFunStory = ({ totalVisits, isPaused }: IntroFunStoryProps) => 
 
   useEffect(() => {
     setLineIndex(0); // Reset line index when component mounts or totalVisits changes
+    // Clear any pending timeouts if the story is reset
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
   }, [totalVisits]);
 
   const handleLineComplete = useCallback(() => {
     if (lineIndex < lines().length - 1) {
-      setTimeout(() => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
         setLineIndex((prev) => prev + 1);
       }, 750); // Increased pause between lines
+    } else {
+      // This is the last line, call onStoryFinished after its pause
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        onStoryFinished();
+      }, 750); // Final pause before advancing to next story
     }
-  }, [lineIndex, lines]);
+  }, [lineIndex, lines, onStoryFinished]);
 
-  const baseFontSize = Math.min(viewport.width * 0.04, 0.3) * responsiveScale;
-  const lineHeightOffset = 0.5 * responsiveScale; // Vertical spacing between lines
+  const baseFontSize = Math.min(viewport.width * 0.06, 0.6) * responsiveScale; // Increased base font size
+  const lineHeightOffset = 0.7 * responsiveScale; // Increased vertical spacing between lines
 
   return (
     <group>
@@ -53,7 +66,7 @@ export const IntroFunStory = ({ totalVisits, isPaused }: IntroFunStoryProps) => 
               speed={75} // Increased typewriter speed
               onComplete={index === lineIndex ? handleLineComplete : undefined}
               isPaused={isPaused || index < lineIndex} // Pause if overall story is paused, or if it's a previous line
-              position={[0, 2 * responsiveScale - index * lineHeightOffset, 0]}
+              position={[0, 2.5 * responsiveScale - index * lineHeightOffset, 0]} // Adjusted starting position
               fontSize={baseFontSize}
               color="#FFFFFF"
               anchorX="center"

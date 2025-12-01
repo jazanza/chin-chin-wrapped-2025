@@ -46,7 +46,7 @@ const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: TH
     lookAt: new THREE.Vector3(0, -1, 0),
   },
   summaryInfographic: {
-    position: new THREE.Vector3(0, 0, 10), // Wider view for the infographic
+    position: new THREE.Vector3(0, 0, 6), // Closer view for the infographic
     lookAt: new THREE.Vector3(0, 0, 0),
   },
 };

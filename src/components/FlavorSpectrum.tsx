@@ -1,41 +1,22 @@
 import { useMemo } from "react";
 import { Text } from "@react-three/drei";
-import * as THREE from "three";
 
 const COLORS: { [key: string]: string } = {
-  IPA: "var(--primary-glitch-pink)",
-  Lager: "var(--secondary-glitch-cyan)",
-  Stout: "#8B008B",
-  Porter: "#FF4500",
-  Pilsner: "#00FF00",
-  Ale: "#FFFF00",
-  Other: "#FFFFFF",
+  IPA: "#FFC107",
+  Lager: "#03A9F4",
+  Stout: "#3F51B5",
+  Porter: "#795548",
+  Pilsner: "#8BC34A",
+  Ale: "#FF9800",
+  Other: "#9E9E9E",
 };
 
-const PARTICLE_COUNT_PER_SEGMENT = 2000;
-const INNER_RADIUS = 1.5;
-const OUTER_RADIUS = 2.0;
-
-const FlavorSegment = ({ startAngle, angle, color }: { startAngle: number; angle: number; color: string }) => {
-  const points = useMemo(() => {
-    const p = new Float32Array(PARTICLE_COUNT_PER_SEGMENT * 3);
-    for (let i = 0; i < PARTICLE_COUNT_PER_SEGMENT; i++) {
-      const currentAngle = startAngle + Math.random() * angle;
-      const radius = INNER_RADIUS + Math.random() * (OUTER_RADIUS - INNER_RADIUS);
-      p[i * 3] = Math.cos(currentAngle) * radius;
-      p[i * 3 + 1] = Math.sin(currentAngle) * radius;
-      p[i * 3 + 2] = (Math.random() - 0.5) * 0.2; // Give it some depth
-    }
-    return p;
-  }, [startAngle, angle]);
-
+const PieSegment = ({ startAngle, angle, color, radius, height }: { startAngle: number; angle: number; color: string; radius: number; height: number }) => {
   return (
-    <points>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT_PER_SEGMENT} array={points} itemSize={3} />
-      </bufferGeometry>
-      <pointsMaterial size={0.02} color={color} />
-    </points>
+    <mesh rotation={[0, startAngle, 0]}>
+      <cylinderGeometry args={[radius, radius, height, 32, 1, false, 0, angle]} />
+      <meshStandardMaterial color={color} />
+    </mesh>
   );
 };
 
@@ -45,7 +26,7 @@ export function FlavorSpectrum({ flavorData, ...props }: { flavorData: { [key: s
   if (totalMl === 0) {
     return (
       <group {...props}>
-        <Text position={[0, 0, 0]} fontSize={0.3} color="white">No flavor data available</Text>
+        <Text position={[0, 0, 0]} fontSize={0.3} color="#333">No flavor data available</Text>
       </group>
     );
   }
@@ -60,21 +41,21 @@ export function FlavorSpectrum({ flavorData, ...props }: { flavorData: { [key: s
         const color = COLORS[category] || COLORS["Other"];
 
         const segment = (
-          <FlavorSegment key={category} startAngle={accumulatedAngle} angle={angle} color={color} />
+          <PieSegment key={category} startAngle={accumulatedAngle} angle={angle} color={color} radius={2.5} height={0.5} />
         );
 
         const midAngle = accumulatedAngle + angle / 2;
-        const textRadius = OUTER_RADIUS + 0.3;
+        const textRadius = 3.0;
         const textX = Math.cos(midAngle) * textRadius;
-        const textY = Math.sin(midAngle) * textRadius;
+        const textZ = Math.sin(midAngle) * textRadius;
 
         accumulatedAngle += angle;
 
         return (
           <group key={`group-${category}`}>
             {segment}
-            <Text position={[textX, textY, 0]} fontSize={0.15} color="white">
-              {`${category} (${(percentage * 100).toFixed(1)}%)`}
+            <Text position={[textX, 0.5, textZ]} fontSize={0.2} color="#333" rotation={[-Math.PI / 2, 0, 0]}>
+              {`${category} (${(percentage * 100).toFixed(0)}%)`}
             </Text>
           </group>
         );

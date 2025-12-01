@@ -101,10 +101,10 @@ const Dashboard = () => {
 
   if (!dbBuffer) {
     return (
-      <div className="w-screen h-screen bg-black text-white flex flex-col items-center justify-center">
+      <div className="w-screen h-screen bg-background text-foreground flex flex-col items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Visualizador de Cervecería</h1>
-          <p className="text-xl text-gray-400 mb-8">
+          <p className="text-xl text-muted-foreground mb-8">
             Carga tu archivo de base de datos Aronium (.db) para comenzar.
           </p>
           <FileUploader onFileLoaded={handleFileLoaded} loading={loading} />
@@ -115,7 +115,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-black text-white flex flex-col font-mono relative">
+    <div className="w-screen h-screen bg-background text-foreground flex flex-col font-sans relative">
       <NarrativeOverlay
         key={currentSceneIndex}
         title={currentScene.title}
@@ -126,8 +126,9 @@ const Dashboard = () => {
           shadows
           camera={{ position: [0, 1, 7], fov: 50 }}
         >
-          <color attach="background" args={["#000000"]} />
-          <fog attach="fog" args={["#000000", 5, 20]} />
+          <color attach="background" args={["hsl(var(--background))"]} />
+          <ambientLight intensity={0.8} />
+          <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
           
           {loading ? (
             <Html center>

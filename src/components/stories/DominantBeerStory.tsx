@@ -1,6 +1,6 @@
 import React from 'react';
-import { WrappedSpectrum } from '../WrappedSpectrum';
 import { Text } from '@react-three/drei';
+import { DominantBeerBarChart } from '../DominantBeerBarChart'; // Import the new bar chart
 
 interface DominantBeerStoryProps {
   dominantBeerCategory: string;
@@ -19,7 +19,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         outlineWidth={0.04}
         outlineColor="#000000"
       >
-        Tu Cerveza Dominante
+        TU CERVEZA DOMINANTE
       </Text>
       <Text
         position={[0, 1.8, 0]}
@@ -30,9 +30,9 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         outlineWidth={0.05}
         outlineColor="#000000"
       >
-        {dominantBeerCategory}
+        {dominantBeerCategory.toUpperCase()}
       </Text>
-      <WrappedSpectrum flavorData={categoryVolumes} position={[0, -0.5, 0]} />
+      <DominantBeerBarChart categoryVolumes={categoryVolumes} dominantBeerCategory={dominantBeerCategory} position={[0, -0.5, 0]} />
     </group>
   );
 };

@@ -64,18 +64,17 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         <pointsMaterial size={0.02} color={color} />
       </points>
       <Text
-        ref={textRef}
-        position={[0, 0.2, 0]}
+        position={[0, MAX_COLUMN_HEIGHT + 0.2, 0]} // Position above the max height
         fontSize={BASE_TEXT_FONT_SIZE * responsiveScale}
         color="white"
         anchorX="center"
         maxWidth={0.8}
         textAlign="center"
       >
-        {product.name}
+        {product.name.toUpperCase()}
       </Text>
       <Text
-        position={[0, -0.2, 0]}
+        position={[0, MAX_COLUMN_HEIGHT, 0]} // Position slightly below the name
         fontSize={BASE_TEXT_FONT_SIZE * 0.8 * responsiveScale}
         color="gray"
         anchorX="center"
@@ -99,11 +98,13 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
       <Text
         position={[0, MAX_COLUMN_HEIGHT + 0.5, 0]}
         fontSize={BASE_TEXT_FONT_SIZE * 2 * responsiveScale}
-        color="white"
+        color="#FF00FF" // primary-glitch-pink
         anchorX="center"
         anchorY="middle"
+        outlineWidth={0.04}
+        outlineColor="#000000"
       >
-        Top 5 Productos
+        TU TOP 5 DE CERVEZAS
       </Text>
       {top5Products.map((product, index) => (
         <ProductColumn key={product.name} product={product} index={index} maxLiters={maxLiters} responsiveScale={responsiveScale} />

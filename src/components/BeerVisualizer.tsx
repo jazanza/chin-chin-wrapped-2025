@@ -12,6 +12,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
   const textRef = useRef<any>(null!);
   const animatedLiters = useRef(0);
   const animatedTextY = useRef(-viewport.height); // Inicia fuera de la pantalla
+  const glassRef = useRef<THREE.Mesh>(null!);
 
   const maxHeight = viewport.height * 1.2;
   const bottomY = -maxHeight / 2;
@@ -32,7 +33,8 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       pos[i * 3 + 1] = y;
       pos[i * 3 + 2] = Math.sin(angle) * radius;
 
-      color.setHSL((y - bottomY) / maxHeight, 1.0, 0.5);
+      // Color ámbar/naranja para el líquido
+      color.setHSL(0.1 + (y - bottomY) / maxHeight * 0.1, 1.0, 0.5); // Hue de naranja a ámbar
       col[i * 3] = color.r;
       col[i * 3 + 1] = color.g;
       col[i * 3 + 2] = color.b;
@@ -69,7 +71,8 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       const waveZ = Math.cos(y * 2 + time) * 0.1;
       const waveY = Math.sin(positions[i * 3] * 0.5 + time) * 0.1;
       posAttr.setXYZ(i, positions[i * 3] + waveX, y + waveY, positions[i * 3 + 2] + waveZ);
-      const hue = (time * 0.1 + (y - bottomY) / maxHeight * 0.1) % 1;
+      // Color ámbar/naranja para el líquido
+      const hue = (0.1 + (y - bottomY) / maxHeight * 0.1 + time * 0.05) % 1; // Ligeras variaciones de color
       color.setHSL(hue, 1.0, 0.5);
       colors.setXYZ(i, color.r, color.g, color.b);
     }
@@ -84,10 +87,30 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
       textRef.current.text = `${animatedLiters.current.toFixed(2)} L`;
       textRef.current.fontSize = Math.min(2, viewport.width * 0.15); // Escala la fuente con el ancho del viewport, con un máximo de 2
     }
+
+    // Animar el nivel del líquido en el vaso
+    if (glassRef.current) {
+      const targetScaleY = animatedLiters.current / MAX_LITERS_FOR_SCALE;
+      glassRef.current.scale.y = THREE.MathUtils.lerp(glassRef.current.scale.y, targetScaleY, 0.05);
+      glassRef.current.position.y = bottomY + (glassRef.current.scale.y * maxHeight / 2);
+    }
   });
 
   return (
     <group {...props} visible={visible}>
+      {/* Vaso de cerveza fotorrealista */}
+      <mesh ref={glassRef} position={[0, bottomY, 0]} scale-y={0.01}> {/* Inicia vacío */}
+        <cylinderGeometry args={[dynamicCylinderRadius, dynamicCylinderRadius, maxHeight, 32, 1, true]} />
+        <meshPhysicalMaterial
+          color="#FFD700" // Color ámbar para el líquido
+          roughness={0.2}
+          metalness={0.1}
+          transmission={0.9} // Transparencia para el líquido
+          thickness={0.1}
+          ior={1.33} // Índice de refracción del agua/cerveza
+        />
+      </mesh>
+
       <points ref={pointsRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT} array={positions} itemSize={3} />

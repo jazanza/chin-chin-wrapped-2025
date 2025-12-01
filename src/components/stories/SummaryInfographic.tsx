@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, Box, Cylinder } from '@react-three/drei'; // Import Cylinder
+import { Text, Box, Cylinder } from '@react-three/drei';
 import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
 
 interface Product {
   name: string;
@@ -16,6 +17,31 @@ interface SummaryInfographicProps {
   top5Products: Product[];
   totalVisits: number;
 }
+
+const ProgressBar = ({ value, maxValue, color, position, scaleFactor = 1 }: { value: number; maxValue: number; color: string; position: [number, number, number]; scaleFactor?: number }) => {
+  const barRef = useRef<THREE.Mesh>(null!);
+  const animatedScale = useRef(0);
+  const targetScale = maxValue > 0 ? (value / maxValue) : 0;
+
+  useFrame(() => {
+    animatedScale.current = THREE.MathUtils.lerp(animatedScale.current, targetScale, 0.05);
+    if (barRef.current) {
+      barRef.current.scale.x = animatedScale.current * scaleFactor;
+      barRef.current.position.x = position[0] + (barRef.current.scale.x / 2); // Adjust position to grow from left
+    }
+  });
+
+  return (
+    <group>
+      <Box args={[scaleFactor, 0.05, 0.01]} position={[position[0] + scaleFactor / 2, position[1], position[2]]}>
+        <meshBasicMaterial color="#333333" transparent opacity={0.5} /> {/* Background bar */}
+      </Box>
+      <Box ref={barRef} args={[1, 0.05, 0.02]} position={[position[0], position[1], position[2] + 0.01]} scale-x={0.01}>
+        <meshBasicMaterial color={color} emissive={color} emissiveIntensity={0.8} />
+      </Box>
+    </group>
+  );
+};
 
 export const SummaryInfographic = ({
   customerName,
@@ -46,7 +72,7 @@ export const SummaryInfographic = ({
         outlineWidth={0.02}
         outlineColor="#000000"
       >
-        {customerName}
+        {customerName.toUpperCase()}
       </Text>
       <Text
         position={[0, 2.1, 0]}
@@ -57,7 +83,7 @@ export const SummaryInfographic = ({
         outlineWidth={0.01}
         outlineColor="#000000"
       >
-        {year} Wrapped
+        {year} WRAPPED
       </Text>
 
       {/* Total Liters */}
@@ -68,7 +94,7 @@ export const SummaryInfographic = ({
         anchorX="left"
         anchorY="middle"
       >
-        Total Consumido:
+        TOTAL CONSUMIDO:
       </Text>
       <Text
         position={[-2.5, 0.8, 0]}
@@ -83,7 +109,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for total liters */}
       <Cylinder args={[0.3, 0.3, Math.min(totalLiters / 500, 1.5), 16]} position={[-1, 0.8, 0]} rotation-x={Math.PI / 2}>
-        <meshBasicMaterial color="#F654A9" />
+        <meshBasicMaterial color="#F654A9" emissive="#F654A9" emissiveIntensity={0.5} />
       </Cylinder>
 
       {/* Dominant Beer Category */}
@@ -94,7 +120,7 @@ export const SummaryInfographic = ({
         anchorX="right"
         anchorY="middle"
       >
-        Cerveza Dominante:
+        CERVEZA DOMINANTE:
       </Text>
       <Text
         position={[2.5, 0.8, 0]}
@@ -105,11 +131,11 @@ export const SummaryInfographic = ({
         outlineWidth={0.02}
         outlineColor="#000000"
       >
-        {dominantBeerCategory}
+        {dominantBeerCategory.toUpperCase()}
       </Text>
       {/* Simple visual for dominant beer */}
       <Box args={[0.5, 0.5, 0.1]} position={[1.5, 0.8, 0]}>
-        <meshBasicMaterial color="#00FF99" />
+        <meshBasicMaterial color="#00FF99" emissive="#00FF99" emissiveIntensity={0.5} />
       </Box>
 
       {/* Top 5 Products */}
@@ -120,7 +146,7 @@ export const SummaryInfographic = ({
         anchorX="left"
         anchorY="middle"
       >
-        Top 5 Productos:
+        TOP 5 PRODUCTOS:
       </Text>
       {top5Products.map((product, index) => (
         <group key={product.name} position={[-2.5, -0.6 - index * LINE_HEIGHT, 0]}>
@@ -130,7 +156,7 @@ export const SummaryInfographic = ({
             anchorX="left"
             anchorY="middle"
           >
-            {index + 1}. {product.name}
+            {index + 1}. {product.name.toUpperCase()}
           </Text>
           <Text
             position={[2, 0, 0]}
@@ -141,9 +167,13 @@ export const SummaryInfographic = ({
           >
             {product.liters.toFixed(1)} L
           </Text>
-          <Box args={[product.liters / 50, 0.05, 0.01]} position={[1.2, 0, 0]} anchorX="left">
-            <meshBasicMaterial color={product.color} />
-          </Box>
+          <ProgressBar
+            value={product.liters}
+            maxValue={Math.max(...top5Products.map(p => p.liters), 1)}
+            color={product.color}
+            position={[-0.2, -0.15, 0]} // Position relative to the group
+            scaleFactor={2.2} // Max width of the progress bar
+          />
         </group>
       ))}
 
@@ -155,7 +185,7 @@ export const SummaryInfographic = ({
         anchorX="right"
         anchorY="middle"
       >
-        Visitas:
+        VISITAS:
       </Text>
       <Text
         position={[2.5, -0.6, 0]}
@@ -170,7 +200,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for visits */}
       <Box args={[0.5, 0.5, 0.1]} position={[1.5, -0.6, 0]}>
-        <meshBasicMaterial color="#F654A9" />
+        <meshBasicMaterial color="#F654A9" emissive="#F654A9" emissiveIntensity={0.5} />
       </Box>
     </group>
   );

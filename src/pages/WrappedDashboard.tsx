@@ -201,74 +201,77 @@ const WrappedDashboard = () => {
   const StoryComponent = currentStory.component;
 
   return (
-    <div className="w-screen h-screen relative bg-background font-sans">
-      {currentStory.id !== 'summaryInfographic' && (
-        <WrappedOverlay
-          customerName={wrappedData.customerName}
-          year={wrappedData.year}
-          dominantBeerCategory={wrappedData.dominantBeerCategory}
-        />
-      )}
+    <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
+      {/* Fixed aspect ratio container for the Canvas */}
+      <div className="relative w-full h-full max-w-[calc(100vh*9/16)] max-h-screen aspect-[9/16]">
+        {currentStory.id !== 'summaryInfographic' && (
+          <WrappedOverlay
+            customerName={wrappedData.customerName}
+            year={wrappedData.year}
+            dominantBeerCategory={wrappedData.dominantBeerCategory}
+          />
+        )}
 
-      <Canvas
-        camera={{ position: [0, 0, 8], fov: 75 }}
-        className="w-full h-full"
-        gl={{ preserveDrawingBuffer: true }}
-      >
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
-        <PostProcessingEffects />
-
-        {/* Render current story component */}
-        <StoryComponent
-          customerName={wrappedData.customerName}
-          year={wrappedData.year}
-          totalLiters={wrappedData.totalLiters}
-          dominantBeerCategory={wrappedData.dominantBeerCategory}
-          top5Products={wrappedData.top5Products}
-          totalVisits={wrappedData.totalVisits}
-          categoryVolumes={wrappedData.categoryVolumes}
-        />
-
-        <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
-      </Canvas>
-
-      {/* Navigation and Download Buttons */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex space-x-4">
-        <Button
-          onClick={handlePrevStory}
-          disabled={currentStoryIndex === 0 || isCapturing}
-          className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+        <Canvas
+          camera={{ position: [0, 0, 8], fov: 75 }}
+          className="w-full h-full"
+          gl={{ preserveDrawingBuffer: true }}
         >
-          <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
-        </Button>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
+          <PostProcessingEffects />
 
-        <Button
-          onClick={handleDownloadScreenshot}
-          className="bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-          disabled={isCapturing}
-        >
-          {isCapturing ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Capturando...
-            </>
-          ) : (
-            <>
-              <Download className="mr-2 h-4 w-4" />
-              {currentStory.id === 'summaryInfographic' ? "Descargar Infografía" : "Descargar Story"}
-            </>
-          )}
-        </Button>
+          {/* Render current story component */}
+          <StoryComponent
+            customerName={wrappedData.customerName}
+            year={wrappedData.year}
+            totalLiters={wrappedData.totalLiters}
+            dominantBeerCategory={wrappedData.dominantBeerCategory}
+            top5Products={wrappedData.top5Products}
+            totalVisits={wrappedData.totalVisits}
+            categoryVolumes={wrappedData.categoryVolumes}
+          />
 
-        <Button
-          onClick={handleNextStory}
-          disabled={currentStoryIndex === STORY_SCENES.length - 1 || isCapturing}
-          className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-        >
-          Siguiente <ChevronRight className="ml-2 h-4 w-4" />
-        </Button>
+          <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
+        </Canvas>
+
+        {/* Navigation and Download Buttons */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex space-x-4">
+          <Button
+            onClick={handlePrevStory}
+            disabled={currentStoryIndex === 0 || isCapturing}
+            className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
+          </Button>
+
+          <Button
+            onClick={handleDownloadScreenshot}
+            className="bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+            disabled={isCapturing}
+          >
+            {isCapturing ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Capturando...
+              </>
+            ) : (
+              <>
+                <Download className="mr-2 h-4 w-4" />
+                {currentStory.id === 'summaryInfographic' ? "Descargar Infografía" : "Descargar Story"}
+              </>
+            )}
+          </Button>
+
+          <Button
+            onClick={handleNextStory}
+            disabled={currentStoryIndex === STORY_SCENES.length - 1 || isCapturing}
+            className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+          >
+            Siguiente <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

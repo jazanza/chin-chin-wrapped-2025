@@ -151,26 +151,51 @@ export function useDb() {
       throw new Error("Database not loaded.");
     }
 
-    let customerQuery = `SELECT Id, Name FROM Customer WHERE Name LIKE ? OR Name LIKE '%' || ? || '%'`;
-    const queryParams: any[] = [searchTerm, searchTerm];
+    // Normalize search term for SQL query
+    const normalizedSearchTerm = searchTerm.toUpperCase()
+      .replace(/Á/g, 'A')
+      .replace(/É/g, 'E')
+      .replace(/Í/g, 'I')
+      .replace(/Ó/g, 'O')
+      .replace(/Ú/g, 'U');
 
-    // Check if 'PhoneNumber' column exists
-    const columns = queryData(dbInstance, "PRAGMA table_info(Customer);");
-    const hasPhoneNumberColumn = columns.some((col: any) => col.name === 'PhoneNumber');
-
-    if (hasPhoneNumberColumn) {
-      customerQuery += ` OR PhoneNumber = ?`;
-      queryParams.push(searchTerm);
-    }
-
-    customerQuery += ` LIMIT 1;`;
+    let customerQuery = `
+      SELECT Id, Name, PhoneNumber
+      FROM Customer
+      WHERE
+        REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(Name), 'Á', 'A'), 'É', 'E'), 'Í', 'I'), 'Ó', 'O'), 'Ú', 'U') LIKE '%' || ? || '%'
+        OR PhoneNumber = ?
+      LIMIT 5;
+    `;
+    const queryParams: any[] = [normalizedSearchTerm, searchTerm]; // Use original searchTerm for phone number match
 
     try {
       const results = queryData(dbInstance, customerQuery, queryParams);
-      return results.length > 0 ? results[0] : null;
+      return results; // Return all potential matches
     } catch (e: any) {
       console.error("Error executing findCustomer query:", e);
-      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, and optionally PhoneNumber columns) or search term.`);
+      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, and PhoneNumber columns) or search term.`);
+    }
+  }, []);
+
+  const verifyCustomer = useCallback(async (customerId: number, phoneNumber: string) => {
+    if (!dbInstance) {
+      throw new Error("Database not loaded.");
+    }
+
+    const verifyQuery = `
+      SELECT Id
+      FROM Customer
+      WHERE Id = ? AND PhoneNumber = ?
+      LIMIT 1;
+    `;
+
+    try {
+      const results = queryData(dbInstance, verifyQuery, [customerId, phoneNumber]);
+      return results.length > 0; // True if customer and phone match
+    } catch (e: any) {
+      console.error("Error executing verifyCustomer query:", e);
+      throw new Error(`Failed to verify customer: ${e.message}. Please check database schema (Customer table, Id, PhoneNumber columns).`);
     }
   }, []);
 
@@ -283,5 +308,5 @@ export function useDb() {
     }
   }, []);
 
-  return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
+  return { dbLoaded, loading, error, findCustomer, verifyCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
 }

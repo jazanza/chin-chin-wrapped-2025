@@ -1,4 +1,4 @@
-import initSqlJs, { type Database } from "sql.js";
+import initSqlJs, { type Database, type Statement } from "sql.js";
 
 let SQL: any = null;
 
@@ -20,12 +20,23 @@ export function loadDb(buffer: ArrayBuffer | Uint8Array): Database {
 }
 
 // Executes a query and returns the results as an array of objects
-export function queryData(db: Database, query: string): any[] {
+// Modified to accept optional parameters
+export function queryData(db: Database, query: string, params: any[] = []): any[] {
   const results = [];
-  const stmt = db.prepare(query);
-  while (stmt.step()) {
-    results.push(stmt.getAsObject());
+  let stmt: Statement | null = null;
+
+  try {
+    stmt = db.prepare(query);
+    if (params.length > 0) {
+      stmt.bind(params);
+    }
+    while (stmt.step()) {
+      results.push(stmt.getAsObject());
+    }
+  } finally {
+    if (stmt) {
+      stmt.free();
+    }
   }
-  stmt.free();
   return results;
 }

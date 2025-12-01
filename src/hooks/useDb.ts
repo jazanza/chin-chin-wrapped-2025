@@ -137,20 +137,27 @@ export function useDb() {
     if (!dbInstance) {
       throw new Error("Database not loaded.");
     }
-    // Simplified query to only search by Name
-    const customerQuery = `
-      SELECT Id, Name
-      FROM Customer
-      WHERE Name LIKE '%' || ? || '%'
-      LIMIT 1;
-    `;
+
+    let customerQuery = `SELECT Id, Name FROM Customer WHERE Name LIKE ? OR Name LIKE '%' || ? || '%'`;
+    const queryParams: any[] = [searchTerm, searchTerm];
+
+    // Check if 'PhoneNumber' column exists
+    const columns = queryData(dbInstance, "PRAGMA table_info(Customer);");
+    const hasPhoneNumberColumn = columns.some((col: any) => col.name === 'PhoneNumber');
+
+    if (hasPhoneNumberColumn) {
+      customerQuery += ` OR PhoneNumber = ?`;
+      queryParams.push(searchTerm);
+    }
+
+    customerQuery += ` LIMIT 1;`;
 
     try {
-      const results = queryData(dbInstance, customerQuery, [searchTerm]);
+      const results = queryData(dbInstance, customerQuery, queryParams);
       return results.length > 0 ? results[0] : null;
     } catch (e: any) {
       console.error("Error executing findCustomer query:", e);
-      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name columns) or search term.`);
+      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, and optionally PhoneNumber columns) or search term.`);
     }
   }, []);
 

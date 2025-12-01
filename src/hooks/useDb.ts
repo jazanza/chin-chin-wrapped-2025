@@ -153,51 +153,30 @@ export function useDb() {
 
     // Normalize search term for SQL query
     const normalizedSearchTerm = searchTerm.toUpperCase()
-      .replace(/Á/g, 'A')
-      .replace(/É/g, 'E')
-      .replace(/Í/g, 'I')
-      .replace(/Ó/g, 'O')
-      .replace(/Ú/g, 'U');
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove accents
 
     let customerQuery = `
-      SELECT Id, Name, PhoneNumber
+      SELECT Id, Name, PhoneNumber, TaxNumber, Email
       FROM Customer
       WHERE
         REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(Name), 'Á', 'A'), 'É', 'E'), 'Í', 'I'), 'Ó', 'O'), 'Ú', 'U') LIKE '%' || ? || '%'
         OR PhoneNumber = ?
+        OR TaxNumber = ?
+        OR Email = ?
       LIMIT 5;
     `;
-    const queryParams: any[] = [normalizedSearchTerm, searchTerm]; // Use original searchTerm for phone number match
+    const queryParams: any[] = [normalizedSearchTerm, searchTerm, searchTerm, searchTerm];
 
     try {
       const results = queryData(dbInstance, customerQuery, queryParams);
       return results; // Return all potential matches
     } catch (e: any) {
       console.error("Error executing findCustomer query:", e);
-      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, and PhoneNumber columns) or search term.`);
+      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, PhoneNumber, TaxNumber, Email columns) or search term.`);
     }
   }, []);
 
-  const verifyCustomer = useCallback(async (customerId: number, phoneNumber: string) => {
-    if (!dbInstance) {
-      throw new Error("Database not loaded.");
-    }
-
-    const verifyQuery = `
-      SELECT Id
-      FROM Customer
-      WHERE Id = ? AND PhoneNumber = ?
-      LIMIT 1;
-    `;
-
-    try {
-      const results = queryData(dbInstance, verifyQuery, [customerId, phoneNumber]);
-      return results.length > 0; // True if customer and phone match
-    } catch (e: any) {
-      console.error("Error executing verifyCustomer query:", e);
-      throw new Error(`Failed to verify customer: ${e.message}. Please check database schema (Customer table, Id, PhoneNumber columns).`);
-    }
-  }, []);
+  // Removed verifyCustomer as its logic is now handled in ClientLogin.tsx
 
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
@@ -308,5 +287,5 @@ export function useDb() {
     }
   }, []);
 
-  return { dbLoaded, loading, error, findCustomer, verifyCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
+  return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
 }

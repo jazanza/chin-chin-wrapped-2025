@@ -1,29 +1,147 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import RadioGroup components
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useDb } from "@/hooks/useDb";
 import { showError } from "@/utils/toast";
 
 interface Customer {
   Id: number;
   Name: string;
-  PhoneNumber: string;
+  PhoneNumber: string | null;
+  TaxNumber: string | null; // Assuming TaxNumber for RFC
+  Email: string | null;
 }
 
+interface KBAQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  fieldType: 'PhoneNumber' | 'TaxNumber' | 'Email';
+}
+
+const MAX_KBA_ATTEMPTS = 3;
+
+// Helper to shuffle an array
+const shuffleArray = (array: any[]) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+};
+
+// Helper to generate fake phone numbers
+const generateFakePhoneNumber = (realPhone: string): string => {
+  if (!realPhone || realPhone.length < 2) return "0000000000";
+  const lastDigit = parseInt(realPhone[realPhone.length - 1], 10);
+  const secondLastDigit = parseInt(realPhone[realPhone.length - 2], 10);
+
+  let fake1 = realPhone.slice(0, -1) + ((lastDigit + 1) % 10).toString();
+  let fake2 = realPhone.slice(0, -2) + ((secondLastDigit + 1) % 10).toString() + lastDigit.toString();
+
+  // Ensure fakes are different from real and each other
+  if (fake1 === realPhone) fake1 = realPhone.slice(0, -1) + ((lastDigit + 2) % 10).toString();
+  if (fake2 === realPhone || fake2 === fake1) fake2 = realPhone.slice(0, -2) + ((secondLastDigit + 2) % 10).toString() + lastDigit.toString();
+  
+  return fake1; // Return one fake for now, will generate two in the KBA logic
+};
+
+// Helper to generate fake emails
+const generateFakeEmail = (realEmail: string): string => {
+  if (!realEmail || realEmail.indexOf('@') === -1) return "fake@example.com";
+  const [name, domain] = realEmail.split('@');
+  if (name.length < 2) return `x${name}@${domain}`;
+  const charToChange = name[Math.floor(name.length / 2)];
+  const newChar = String.fromCharCode(charToChange.charCodeAt(0) + 1);
+  return `${name.slice(0, Math.floor(name.length / 2))}${newChar}${name.slice(Math.floor(name.length / 2) + 1)}@${domain}`;
+};
+
+// Helper to generate fake TaxNumber (RFC)
+const generateFakeTaxNumber = (realTaxNumber: string): string => {
+  if (!realTaxNumber || realTaxNumber.length < 2) return "XXXX000000XXX";
+  const index = Math.floor(realTaxNumber.length / 2);
+  const charToChange = realTaxNumber[index];
+  let newChar = '';
+  if (/[A-Z]/.test(charToChange)) {
+    newChar = String.fromCharCode(((charToChange.charCodeAt(0) - 65 + 1) % 26) + 65);
+  } else if (/[0-9]/.test(charToChange)) {
+    newChar = ((parseInt(charToChange, 10) + 1) % 10).toString();
+  } else {
+    return realTaxNumber.slice(0, index) + 'X' + realTaxNumber.slice(index + 1);
+  }
+  return realTaxNumber.slice(0, index) + newChar + realTaxNumber.slice(index + 1);
+};
+
+
 const ClientLogin = () => {
-  const [step, setStep] = useState<"search" | "select" | "verify">("search");
+  const [step, setStep] = useState<"search" | "select" | "kba">("search");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<Customer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-  const [verificationPhone, setVerificationPhone] = useState("");
+  const [kbaQuestion, setKbaQuestion] = useState<KBAQuestion | null>(null);
+  const [kbaAttempts, setKbaAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { findCustomer, verifyCustomer, dbLoaded } = useDb();
+  const { findCustomer, dbLoaded } = useDb();
+
+  const generateKBAQuestion = useCallback((customer: Customer): KBAQuestion | null => {
+    const availableFields: { type: KBAQuestion['fieldType'], value: string }[] = [];
+    if (customer.PhoneNumber) availableFields.push({ type: 'PhoneNumber', value: customer.PhoneNumber });
+    if (customer.TaxNumber) availableFields.push({ type: 'TaxNumber', value: customer.TaxNumber });
+    if (customer.Email) availableFields.push({ type: 'Email', value: customer.Email });
+
+    if (availableFields.length === 0) {
+      showError("No hay datos de verificación disponibles para este cliente.");
+      return null;
+    }
+
+    const chosenField = availableFields[Math.floor(Math.random() * availableFields.length)];
+    const correctAnswer = chosenField.value;
+    let questionText = "";
+    let fakeOption1 = "";
+    let fakeOption2 = "";
+
+    switch (chosenField.type) {
+      case 'PhoneNumber':
+        questionText = "¿Cuál de estos es tu número de teléfono registrado?";
+        fakeOption1 = generateFakePhoneNumber(correctAnswer);
+        fakeOption2 = generateFakePhoneNumber(correctAnswer + "x"); // Generate a slightly different fake
+        break;
+      case 'TaxNumber':
+        questionText = "¿Cuál de estos es tu RFC/Número de Identificación Fiscal?";
+        fakeOption1 = generateFakeTaxNumber(correctAnswer);
+        fakeOption2 = generateFakeTaxNumber(correctAnswer + "x");
+        break;
+      case 'Email':
+        questionText = "¿Cuál de estos es tu correo electrónico registrado?";
+        fakeOption1 = generateFakeEmail(correctAnswer);
+        fakeOption2 = generateFakeEmail(correctAnswer + "x");
+        break;
+    }
+    
+    // Ensure fake options are distinct from the correct answer and each other
+    while (fakeOption1 === correctAnswer || fakeOption1 === fakeOption2) {
+      fakeOption1 = generateFakePhoneNumber(correctAnswer + "y"); // Re-generate if not unique
+    }
+    while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1) {
+      fakeOption2 = generateFakePhoneNumber(correctAnswer + "z"); // Re-generate if not unique
+    }
+
+
+    const options = shuffleArray([correctAnswer, fakeOption1, fakeOption2]);
+
+    return {
+      question: questionText,
+      options,
+      correctAnswer,
+      fieldType: chosenField.type,
+    };
+  }, []);
 
   const handleSearch = async () => {
     if (!dbLoaded) {
@@ -48,38 +166,49 @@ const ClientLogin = () => {
     }
   };
 
-  const handleVerify = async () => {
-    if (!selectedCustomer || !verificationPhone) {
-      showError("Por favor, selecciona un cliente e ingresa tu número de teléfono.");
-      return;
-    }
-    setLoading(true);
-    try {
-      const isVerified = await verifyCustomer(selectedCustomer.Id, verificationPhone);
-      if (isVerified) {
-        navigate(`/wrapped/${selectedCustomer.Id}`);
-      } else {
-        showError("Número de teléfono incorrecto. Por favor, inténtalo de nuevo.");
+  const handleCustomerSelection = (customerId: string) => {
+    const customer = searchResults.find((c) => c.Id.toString() === customerId);
+    if (customer) {
+      setSelectedCustomer(customer);
+      const kba = generateKBAQuestion(customer);
+      if (kba) {
+        setKbaQuestion(kba);
+        setKbaAttempts(0);
+        setStep("kba");
       }
-    } catch (error: any) {
-      console.error("Error verifying customer:", error);
-      showError(error.message || "Ocurrió un error durante la verificación.");
-    } finally {
-      setLoading(false);
+    }
+  };
+
+  const handleKbaAnswer = (selectedOption: string) => {
+    if (!kbaQuestion || !selectedCustomer) return;
+
+    if (selectedOption === kbaQuestion.correctAnswer) {
+      navigate(`/wrapped/${selectedCustomer.Id}`);
+    } else {
+      setKbaAttempts((prev) => prev + 1);
+      if (kbaAttempts + 1 >= MAX_KBA_ATTEMPTS) {
+        showError("Demasiados intentos fallidos. Por favor, reinicia la búsqueda.");
+        handleBackToSearch();
+      } else {
+        showError(`Respuesta incorrecta. Te quedan ${MAX_KBA_ATTEMPTS - (kbaAttempts + 1)} intentos.`);
+      }
     }
   };
 
   const handleBackToSearch = () => {
     setStep("search");
+    setSearchTerm("");
     setSearchResults([]);
     setSelectedCustomer(null);
-    setVerificationPhone("");
+    setKbaQuestion(null);
+    setKbaAttempts(0);
   };
 
   const handleBackToSelect = () => {
     setStep("select");
     setSelectedCustomer(null);
-    setVerificationPhone("");
+    setKbaQuestion(null);
+    setKbaAttempts(0);
   };
 
   return (
@@ -101,7 +230,7 @@ const ClientLogin = () => {
             <Input
               id="customer-search"
               type="text"
-              placeholder="Tu nombre o número de teléfono"
+              placeholder="Tu nombre, teléfono, RFC o email"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-primary-glitch-pink focus:border-primary-glitch-pink"
@@ -129,12 +258,7 @@ const ClientLogin = () => {
               ¿Quién eres?
             </h2>
             <RadioGroup
-              onValueChange={(value) => {
-                const customer = searchResults.find((c) => c.Id.toString() === value);
-                if (customer) {
-                  setSelectedCustomer(customer);
-                }
-              }}
+              onValueChange={handleCustomerSelection}
               className="flex flex-col space-y-2"
             >
               {searchResults.map((customer) => (
@@ -147,7 +271,7 @@ const ClientLogin = () => {
               ))}
             </RadioGroup>
             <Button
-              onClick={() => setStep("verify")}
+              onClick={() => { /* This button is now handled by RadioGroup onValueChange */ }}
               size="lg"
               className="w-full bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
               disabled={!selectedCustomer || loading}
@@ -164,42 +288,43 @@ const ClientLogin = () => {
           </div>
         )}
 
-        {step === "verify" && selectedCustomer && (
+        {step === "kba" && selectedCustomer && kbaQuestion && (
           <div className="space-y-4">
             <h2 className="text-[min(5vw,2rem)] font-bold text-white mb-4">
               Verifica tu identidad
             </h2>
             <p className="text-lg text-secondary-glitch-cyan mb-4">
-              Ingresa el número de teléfono asociado a {selectedCustomer.Name}:
+              {kbaQuestion.question}
             </p>
-            <Input
-              id="verification-phone"
-              type="tel" // Use type="tel" for phone numbers
-              placeholder="Tu número de teléfono"
-              value={verificationPhone}
-              onChange={(e) => setVerificationPhone(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-primary-glitch-pink focus:border-primary-glitch-pink"
-              disabled={loading}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleVerify();
-                }
-              }}
-            />
-            <Button
-              onClick={handleVerify}
-              size="lg"
-              className="w-full bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-              disabled={loading || !verificationPhone}
+            <RadioGroup
+              onValueChange={handleKbaAnswer}
+              className="flex flex-col space-y-2"
             >
-              {loading ? "Verificando..." : "Ver mi Wrapped"}
-            </Button>
+              {kbaQuestion.options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option} id={`kba-option-${index}`} />
+                  <Label htmlFor={`kba-option-${index}`} className="text-white text-lg cursor-pointer">
+                    {option}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+            <p className="text-sm text-gray-400 mt-2">
+              Intentos restantes: {MAX_KBA_ATTEMPTS - kbaAttempts}
+            </p>
             <Button
               onClick={handleBackToSelect}
               variant="ghost"
               className="w-full text-gray-400 hover:text-white"
             >
               Volver a la selección
+            </Button>
+            <Button
+              onClick={handleBackToSearch}
+              variant="ghost"
+              className="w-full text-gray-400 hover:text-white"
+            >
+              Reiniciar búsqueda
             </Button>
           </div>
         )}

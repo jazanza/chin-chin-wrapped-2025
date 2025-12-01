@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { WrappedOverlay } from "@/components/WrappedOverlay";
 import { ViewMode } from "@/components/CameraAnimator"; // Import ViewMode
+import { StoryInteractionZone } from "@/components/StoryInteractionZone"; // New import
+import { StoryProgressBar } from "@/components/StoryProgressBar"; // New import
 
 // Import story components
 import { IntroStory } from "@/components/stories/IntroStory";
@@ -96,6 +98,7 @@ const WrappedDashboard = () => {
   const [toastId, setToastId] = useState<string | number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // New state for pause
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentStory = STORY_SCENES[currentStoryIndex];
@@ -124,7 +127,7 @@ const WrappedDashboard = () => {
 
   // Story navigation logic
   useEffect(() => {
-    if (wrappedData && currentStory.duration > 0) {
+    if (wrappedData && currentStory.duration > 0 && !isPaused) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -137,7 +140,7 @@ const WrappedDashboard = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentStoryIndex, wrappedData]); // Re-run effect when story changes or data loads
+  }, [currentStoryIndex, wrappedData, isPaused]); // Re-run effect when story changes, data loads, or pause state changes
 
   const handleNextStory = useCallback(() => {
     setCurrentStoryIndex((prevIndex) =>
@@ -149,6 +152,17 @@ const WrappedDashboard = () => {
     setCurrentStoryIndex((prevIndex) =>
       Math.max(prevIndex - 1, 0)
     );
+  }, []);
+
+  const handlePauseStory = useCallback(() => {
+    setIsPaused(true);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }, []);
+
+  const handleResumeStory = useCallback(() => {
+    setIsPaused(false);
   }, []);
 
   const handleDownloadScreenshot = () => {
@@ -204,6 +218,14 @@ const WrappedDashboard = () => {
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
       {/* Fixed aspect ratio container for the Canvas */}
       <div className="relative w-full h-full max-w-[calc(100vh*9/16)] max-h-screen aspect-[9/16]">
+        {/* Story Progress Bar */}
+        <StoryProgressBar
+          currentStoryIndex={currentStoryIndex}
+          totalStories={STORY_SCENES.length}
+          storyDuration={currentStory.duration}
+          isPaused={isPaused}
+        />
+
         {currentStory.id !== 'summaryInfographic' && (
           <WrappedOverlay
             customerName={wrappedData.customerName}
@@ -235,6 +257,15 @@ const WrappedDashboard = () => {
 
           <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
         </Canvas>
+
+        {/* Interaction Zone */}
+        <StoryInteractionZone
+          onNext={handleNextStory}
+          onPrev={handlePrevStory}
+          onPause={handlePauseStory}
+          onResume={handleResumeStory}
+          isPaused={isPaused}
+        />
 
         {/* Navigation and Download Buttons */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex space-x-4">

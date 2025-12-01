@@ -1,7 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
-import { initDb, loadDb, queryData } from "@/lib/db";
+import { initDb, loadDb, queryData, type Database } from "@/lib/db";
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 const EXCLUDED_PRODUCT_KEYWORDS = [
@@ -10,46 +8,7 @@ const EXCLUDED_PRODUCT_KEYWORDS = [
     "Letrero", "Gorra", "Tapas Mix", "Nachos", "Lanyard"
 ];
 
-let dbInstance: any = null; // Global instance for the database
-
-// Initializes the sql.js WASM module
-export async function initDb(): Promise<void> {
-  if (!SQL) {
-    SQL = await initSqlJs({
-      locateFile: (file) => `https://sql.js.org/dist/${file}`,
-    });
-  }
-}
-
-// Loads the database from a buffer
-export function loadDb(buffer: ArrayBuffer | Uint8Array): Database {
-  if (!SQL) {
-    throw new Error("SQL.js has not been initialized. Call initDb() first.");
-  }
-  return new SQL.Database(buffer);
-}
-
-// Executes a query and returns the results as an array of objects
-// Modified to accept optional parameters
-export function queryData(db: Database, query: string, params: any[] = []): any[] {
-  const results = [];
-  let stmt: Statement | null = null;
-
-  try {
-    stmt = db.prepare(query);
-    if (params.length > 0) {
-      stmt.bind(params);
-    }
-    while (stmt.step()) {
-      results.push(stmt.getAsObject());
-    }
-  } finally {
-    if (stmt) {
-      stmt.free();
-    }
-  }
-  return results;
-}
+let dbInstance: Database | null = null; // Global instance for the database, correctly typed
 
 const NON_LIQUID_KEYWORDS = ["snack", "jamon", "sandwich", "pin", "camiseta", "gorra", "vaso", "merchandising", "comida", "accesorio"];
 
@@ -124,14 +83,14 @@ export function useDb() {
       setLoading(true);
       setError(null);
       try {
-        await initDb();
+        await initDb(); // Call the imported initDb
         // Static load from public/data/bbdd.db
         const response = await fetch('/data/bbdd.db');
         if (!response.ok) {
           throw new Error(`Failed to fetch database: ${response.statusText}`);
         }
         const buffer = await response.arrayBuffer();
-        dbInstance = loadDb(new Uint8Array(buffer));
+        dbInstance = loadDb(new Uint8Array(buffer)); // Call the imported loadDb
         setDbLoaded(true);
         console.log("Database loaded successfully from static path.");
       } catch (e: any) {

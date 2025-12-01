@@ -54,7 +54,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
     if (!visible || !pointsRef.current) return;
 
     // Anima el número de litros
-    animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, liters, 0.05);
+    animatedLiters.current = THREE.MathUtils.lerp(animatedLeters.current, liters, 0.05);
     const targetParticleCount = Math.floor((animatedLiters.current / MAX_LITERS_FOR_SCALE) * PARTICLE_COUNT);
 
     const geometry = pointsRef.current.geometry as THREE.BufferGeometry;
@@ -108,6 +108,7 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
           transmission={0.9} // Transparencia para el líquido
           thickness={0.1}
           ior={1.33} // Índice de refracción del agua/cerveza
+          emissive={new THREE.Color(0x000000)} // Explicitly set emissive to black
         />
       </mesh>
 

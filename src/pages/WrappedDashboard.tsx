@@ -132,25 +132,25 @@ const BACKGROUND_COLORS = [
 ];
 
 const TEXT_COLORS = [
-  "#FFFFFF", // Slide 0: Intro (Blanco)
-  "#000000", // Slide 1: Visitas (Negro)
-  "#FFFFFF", // Slide 2: Mes Activo (Blanco)
-  "#000000", // Slide 3: Día Activo (Negro)
-  "#FFFFFF", // Slide 4: Categorías/Variedades (Blanco)
-  "#000000", // Slide 5: Top 5 Cervezas (Negro)
-  "#FFFFFF", // Slide 6: Total Litros (Blanco)
-  "#000000", // Slide 7: Infografía Final (Negro)
+  "#FFFFFF", // Slide 0: Intro (Blanco) - OK for Black background
+  "#000000", // Slide 1: Visitas (Negro) - OK for White background
+  "#FFFFFF", // Slide 2: Mes Activo (Blanco) - OK for Black background
+  "#000000", // Slide 3: Día Activo (Negro) - OK for White background
+  "#FFFFFF", // Slide 4: Categorías/Variedades (Blanco) - OK for Black background
+  "#000000", // Slide 5: Top 5 Cervezas (Negro) - OK for White background
+  "#FFFFFF", // Slide 6: Total Litros (Blanco) - OK for Black background
+  "#000000", // Slide 7: Infografía Final (Negro) - OK for White background
 ];
 
 const HIGHLIGHT_COLORS = [
-  "#FFD700", // Slide 0: Intro (Amarillo Saturado)
-  "#DC143C", // Slide 1: Visitas (Rojo Saturado)
-  "#FFD700", // Slide 2: Mes Activo (Amarillo Saturado)
-  "#DC143C", // Slide 3: Día Activo (Rojo Saturado)
-  "#FFD700", // Slide 4: Categorías/Variedades (Amarillo Saturado)
-  "#DC143C", // Slide 5: Top 5 Cervezas (Rojo Saturado)
-  "#FFD700", // Slide 6: Total Litros (Amarillo Saturado)
-  "#DC143C", // Slide 7: Infografía Final (Rojo Saturado)
+  "#FFD700", // Slide 0: Intro (Amarillo Saturado) - OK for Black background
+  "#DC143C", // Slide 1: Visitas (Rojo Saturado) - OK for White background
+  "#FFD700", // Slide 2: Mes Activo (Amarillo Saturado) - OK for Black background
+  "#DC143C", // Slide 3: Día Activo (Rojo Saturado) - OK for White background
+  "#FFD700", // Slide 4: Categorías/Variedades (Amarillo Saturado) - OK for Black background
+  "#DC143C", // Slide 5: Top 5 Cervezas (Rojo Saturado) - OK for White background
+  "#FFD700", // Slide 6: Total Litros (Amarillo Saturado) - OK for Black background
+  "#DC143C", // Slide 7: Infografía Final (Rojo Saturado) - OK for White background
 ];
 
 

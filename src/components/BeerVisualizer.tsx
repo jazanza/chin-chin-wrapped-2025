@@ -98,17 +98,11 @@ export function BeerVisualizer({ liters, visible, textColor, highlightColor, ...
 
   return (
     <group {...props} visible={visible}>
-      {/* Vaso de cerveza fotorrealista (ahora Brutalista: forma simple, color blanco/transparente) */}
+      {/* Vaso de cerveza Brutalista: forma simple, color blanco sólido */}
       <mesh ref={glassRef} position={[0, bottomY, 0]} scale-y={0.01}> {/* Inicia vacío */}
         <cylinderGeometry args={[dynamicCylinderRadius, dynamicCylinderRadius, maxHeight, 32, 1, true]} />
-        <meshPhysicalMaterial
-          color="#FFFFFF" // Color Blanco para el líquido
-          roughness={0.2}
-          metalness={0.1}
-          transmission={0.9} // Transparencia
-          thickness={0.1}
-          ior={1.33}
-          emissive={new THREE.Color(0x000000)}
+        <meshBasicMaterial
+          color="#FFFFFF" // Color Blanco Sólido
         />
       </mesh>
 

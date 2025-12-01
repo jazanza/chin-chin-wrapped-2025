@@ -75,8 +75,8 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
 
   // Convert hex color strings to THREE.Color objects
   const barColor = useMemo(() => new THREE.Color(data.color), [data.color]);
-  // Dominant bar gets a slight emissive glow to distinguish it, but still white
-  const emissiveColor = useMemo(() => data.isDominant ? new THREE.Color(data.color) : new THREE.Color(0x000000), [data.isDominant, data.color]);
+  // Emissive properties removed for flat aesthetic
+  // const emissiveColor = useMemo(() => data.isDominant ? new THREE.Color(data.color) : new THREE.Color(0x000000), [data.isDominant, data.color]);
 
   useFrame(() => {
     animatedHeight.current = THREE.MathUtils.lerp(animatedHeight.current, targetHeight, 0.05);
@@ -89,7 +89,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
   return (
     <group position={[positionX, 0, 0]}>
       <Box ref={meshRef} args={[BAR_WIDTH, 1, BAR_WIDTH * 0.5]} scale-y={0.01}> {/* Initial scale-y 0.01 for animation */}
-        <meshStandardMaterial color={barColor} emissive={emissiveColor} emissiveIntensity={data.isDominant ? 0.8 : 0} />
+        <meshStandardMaterial color={barColor} /> {/* Emissive removed */}
       </Box>
       <Text
         position={[0, MAX_BAR_HEIGHT + 0.2, 0]}

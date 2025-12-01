@@ -1,5 +1,5 @@
 import { useThree } from "@react-three/fiber";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { EffectComposer } from "@react-three/postprocessing"; // Removed Bloom
 import { useMemo } from "react";
 
 export const PostProcessingEffects = () => {
@@ -13,12 +13,7 @@ export const PostProcessingEffects = () => {
 
   return (
     <EffectComposer key={key}>
-      <Bloom
-        mipmapBlur
-        luminanceThreshold={0.1}
-        luminanceSmoothing={0.025}
-        intensity={1.5}
-      />
+      {/* Bloom effect removed for flat aesthetic */}
     </EffectComposer>
   );
 };

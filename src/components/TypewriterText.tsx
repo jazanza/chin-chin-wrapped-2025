@@ -10,7 +10,7 @@ export interface TextSegment {
 
 interface TypewriterTextProps {
   segments: TextSegment[];
-  speed?: number; // milliseconds per character
+  speed?: number; // milliseconds per word
   onComplete?: () => void;
   isPaused?: boolean;
   position: [number, number, number];
@@ -23,9 +23,17 @@ interface TypewriterTextProps {
   fontWeight?: number;
 }
 
+interface WordData {
+  word: string;
+  color: string;
+  originalSegmentIndex: number;
+  originalWordIndexInSegment: number;
+  width?: number; // Will be calculated after rendering
+}
+
 export const TypewriterText = ({
   segments,
-  speed = 50,
+  speed = 50, // This speed will now apply per word
   onComplete,
   isPaused = false,
   position,
@@ -37,21 +45,30 @@ export const TypewriterText = ({
   letterSpacing,
   fontWeight,
 }: TypewriterTextProps) => {
-  const [displayedHtml, setDisplayedHtml] = useState<string>('');
-  const fullHtmlRef = useRef<string>('');
-  const charIndexRef = useRef(0); // Index in the fullHtml string
+  const [typedWords, setTypedWords] = useState<WordData[]>([]);
+  const allWordsRef = useRef<WordData[]>([]);
+  const currentWordIndexRef = useRef(0);
   const animationFrameRef = useRef<number>();
   const lastTimeRef = useRef<number>(0);
+  const textRefs = useRef<(THREE.Mesh | null)[]>([]); // Refs for each Text component to measure width
 
-  // Pre-calculate the full HTML string once and start the animation
+  // Pre-process all words from segments
   useEffect(() => {
-    let html = '';
-    segments.forEach(segment => {
-      html += `<span style="color: ${segment.color};">${segment.text}</span>`;
+    const words: WordData[] = [];
+    segments.forEach((segment, segmentIndex) => {
+      const segmentWords = segment.text.split(/\s+/).filter(Boolean); // Split by space, remove empty strings
+      segmentWords.forEach((word, wordIndexInSegment) => {
+        words.push({
+          word: word + (wordIndexInSegment < segmentWords.length - 1 ? ' ' : ''), // Add space back if not last word in segment
+          color: segment.color,
+          originalSegmentIndex: segmentIndex,
+          originalWordIndexInSegment: wordIndexInSegment,
+        });
+      });
     });
-    fullHtmlRef.current = html;
-    setDisplayedHtml(''); // Reset displayed text
-    charIndexRef.current = 0; // Reset character index
+    allWordsRef.current = words;
+    setTypedWords([]);
+    currentWordIndexRef.current = 0;
     lastTimeRef.current = performance.now();
     cancelAnimationFrame(animationFrameRef.current!);
     animationFrameRef.current = requestAnimationFrame(animateTyping);
@@ -59,7 +76,28 @@ export const TypewriterText = ({
     return () => {
       cancelAnimationFrame(animationFrameRef.current!);
     };
-  }, [segments, speed, isPaused]); // Re-run if segments change
+  }, [segments, speed, isPaused]);
+
+  // Measure widths of newly typed words
+  useEffect(() => {
+    if (typedWords.length > 0) {
+      const lastTypedWordIndex = typedWords.length - 1;
+      const textMesh = textRefs.current[lastTypedWordIndex];
+      if (textMesh && textMesh.geometry) {
+        // Ensure geometry is computed for bounding box
+        textMesh.geometry.computeBoundingBox();
+        const width = textMesh.geometry.boundingBox?.max.x - textMesh.geometry.boundingBox?.min.x;
+        if (width !== undefined && typedWords[lastTypedWordIndex].width === undefined) {
+          setTypedWords(prev => {
+            const newTypedWords = [...prev];
+            newTypedWords[lastTypedWordIndex] = { ...newTypedWords[lastTypedWordIndex], width: width };
+            return newTypedWords;
+          });
+        }
+      }
+    }
+  }, [typedWords]);
+
 
   const animateTyping = useCallback((currentTime: number) => {
     if (isPaused) {
@@ -69,12 +107,12 @@ export const TypewriterText = ({
     }
 
     if (currentTime - lastTimeRef.current > speed) {
-      if (charIndexRef.current < fullHtmlRef.current.length) {
-        charIndexRef.current++;
-        setDisplayedHtml(fullHtmlRef.current.substring(0, charIndexRef.current));
+      if (currentWordIndexRef.current < allWordsRef.current.length) {
+        setTypedWords(prev => [...prev, allWordsRef.current[currentWordIndexRef.current]]);
+        currentWordIndexRef.current++;
         lastTimeRef.current = currentTime;
       } else {
-        // All characters typed
+        // All words typed
         cancelAnimationFrame(animationFrameRef.current!);
         if (onComplete) {
           onComplete();
@@ -83,21 +121,43 @@ export const TypewriterText = ({
       }
     }
     animationFrameRef.current = requestAnimationFrame(animateTyping);
-  }, [speed, isPaused, onComplete]); // Dependencies for useCallback
+  }, [speed, isPaused, onComplete]);
+
+  // Calculate total width of all typed words for centering
+  const totalTypedWidth = typedWords.reduce((sum, wordData) => sum + (wordData.width || 0), 0);
+
+  let currentXOffset = 0;
+  if (textAlign === 'center' || anchorX === 'center') {
+    currentXOffset = -totalTypedWidth / 2;
+  } else if (textAlign === 'right' || anchorX === 'right') {
+    currentXOffset = -totalTypedWidth;
+  }
 
   return (
-    <Text
-      position={position}
-      fontSize={fontSize}
-      // Removed 'color' prop to avoid conflict with inline HTML styles
-      anchorX={anchorX}
-      anchorY={anchorY}
-      maxWidth={maxWidth}
-      textAlign={textAlign}
-      letterSpacing={letterSpacing}
-      fontWeight={fontWeight}
-    >
-      {displayedHtml}
-    </Text>
+    <group position={position}>
+      {typedWords.map((wordData, index) => {
+        const wordPositionX = currentXOffset;
+        currentXOffset += (wordData.word.trim().length > 0 ? (wordData.width || 0) : 0); // Update offset for next word, handle trailing space
+
+        return (
+          <Text
+            key={`${wordData.originalSegmentIndex}-${wordData.originalWordIndexInSegment}-${index}`}
+            ref={el => textRefs.current[index] = el}
+            position={[wordPositionX, 0, 0]} // Position relative to the group
+            fontSize={fontSize}
+            color={wordData.color}
+            anchorX="left" // Each word is anchored left relative to its own position
+            anchorY={anchorY}
+            maxWidth={maxWidth} // Apply maxWidth to individual words if needed, but usually for the whole block
+            textAlign="left" // Each word is left-aligned
+            letterSpacing={letterSpacing}
+            fontWeight={fontWeight}
+            // sync // Use sync to ensure geometry is computed for bounding box
+          >
+            {wordData.word}
+          </Text>
+        );
+      })}
+    </group>
   );
 };

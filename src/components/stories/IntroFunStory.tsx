@@ -25,7 +25,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
       {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={introSegments}
-        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Responsive font size
+        fontSize="text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)]" // Adjusted font size
         maxWidth="max-w-md"
         textAlign="text-center"
         letterSpacing="tracking-tight"

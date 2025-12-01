@@ -170,7 +170,7 @@ export const SummaryInfographic = ({
           </Block>
 
           {/* Row 3, Column 2: Logo */}
-          <Block bgColor="bg-white">
+          <Block bgColor="bg-black"> {/* Changed to bg-black */}
             <img
               src="/Logo.png"
               alt="Chin Chin Logo"

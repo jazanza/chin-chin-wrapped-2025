@@ -270,7 +270,7 @@ const ClientLogin = () => {
             <Input
               id="customer-search"
               type="text"
-              placeholder="Tu nombre, teléfono, RFC o email"
+              placeholder="Tu nombre y apellido o cédula" // Updated placeholder
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               // Brutalist Input: Black background, White text, White border, no rounded corners
@@ -289,7 +289,7 @@ const ClientLogin = () => {
               className="w-full bg-white text-black font-bold py-3 px-6 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
               disabled={loading || !dbLoaded}
             >
-              {loading ? "Buscando..." : "Buscar mi Wrapped"}
+              {loading ? "Buscando..." : "Siguiente"} {/* Updated button text */}
             </Button>
           </div>
         )}

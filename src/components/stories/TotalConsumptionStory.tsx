@@ -22,7 +22,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor }
       {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={titleSegments}
-        fontSize="text-[min(10vw,4rem)] md:text-[min(8vw,3rem)] lg:text-[min(7vw,2.5rem)]" // Responsive font size
+        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Adjusted font size
         maxWidth="max-w-md"
         textAlign="text-center"
         letterSpacing="tracking-tight"
@@ -31,7 +31,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor }
         className="mb-8" // Add margin bottom
       />
       <div className={`text-center ${highlightColor} border-2 border-white p-4`}>
-        <p className="text-[min(15vw,6rem)] md:text-[min(12vw,5rem)] lg:text-[min(10vw,4rem)] font-black leading-none">
+        <p className="text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)] font-black leading-none">
           {totalLiters.toFixed(1)} L
         </p>
       </div>

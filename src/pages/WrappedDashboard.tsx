@@ -303,6 +303,8 @@ const WrappedDashboard = () => {
     totalVarietiesInDb: wrappedData.totalVarietiesInDb,
     mostActiveDay: wrappedData.mostActiveDay,
     mostActiveMonth: wrappedData.mostActiveMonth,
+    dailyVisits: wrappedData.dailyVisits, // Pass daily visits
+    monthlyVisits: wrappedData.monthlyVisits, // Pass monthly visits
     isPaused: isPaused,
     textColor: currentTextColor,
     highlightColor: currentHighlightColor,

@@ -26,7 +26,7 @@ export const Top5Story = ({ top5Products, textColor, highlightColor }: Top5Story
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <TypewriterText
         segments={titleSegments}
-        fontSize="text-[min(10vw,4rem)] md:text-[min(8vw,3rem)] lg:text-[min(7vw,2.5rem)]" // Responsive font size
+        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Adjusted font size
         maxWidth="max-w-md"
         textAlign="text-center"
         letterSpacing="tracking-tight"
@@ -36,7 +36,7 @@ export const Top5Story = ({ top5Products, textColor, highlightColor }: Top5Story
       />
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-2 p-4 border-2 border-white">
         {top5Products.slice(0, 5).map((product, idx) => (
-          <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-2xl md:text-3xl lg:text-4xl font-black' : 'text-lg md:text-xl lg:text-2xl font-bold'}`}>
+          <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-[min(4vw,1.5rem)] md:text-[min(3.5vw,1.4rem)] lg:text-[min(3vw,1.2rem)] font-black' : 'text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold'}`}>
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
           </p>
         ))}

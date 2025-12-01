@@ -17,7 +17,7 @@ interface TotalVisitsStoryProps {
 const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
   if (previous === 0) {
     return (
-      <p className={`text-sm md:text-base lg:text-lg font-normal text-center ${textColor}`}>
+      <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-normal text-center ${textColor}`}>
         No data for {parseInt(year) - 1}
       </p>
     );
@@ -29,7 +29,7 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
   const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red
 
   return (
-    <p className={`text-sm md:text-base lg:text-lg font-bold text-center ${colorClass}`}>
+    <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center ${colorClass}`}>
       {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
     </p>
   );
@@ -48,7 +48,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
       {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={storySegments}
-        fontSize="text-[min(10vw,4rem)] md:text-[min(8vw,3rem)] lg:text-[min(7vw,2.5rem)]" // Responsive font size
+        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Adjusted font size
         maxWidth="max-w-md"
         textAlign="text-center"
         letterSpacing="tracking-tight"

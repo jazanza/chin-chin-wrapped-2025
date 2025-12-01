@@ -1,5 +1,5 @@
 import { useThree } from "@react-three/fiber";
-import { EffectComposer } from "@react-three/postprocessing"; // Removed Bloom
+import { EffectComposer } from "@react-three/postprocessing";
 import { useMemo } from "react";
 
 export const PostProcessingEffects = () => {
@@ -14,6 +14,8 @@ export const PostProcessingEffects = () => {
   return (
     <EffectComposer key={key}>
       {/* Bloom effect removed for flat aesthetic */}
+      {/* Adding empty children to satisfy TypeScript */}
+      <></>
     </EffectComposer>
   );
 };

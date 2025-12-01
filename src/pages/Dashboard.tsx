@@ -22,12 +22,12 @@ interface Scene {
 }
 
 const SCENE_PLAYLIST: Scene[] = [
-  { viewMode: "meter", rangeKey: "last_month", title: "LITROS CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_3_months", title: "LITROS CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_6_months", title: "LITROS CERVEZA" },
-  { viewMode: "meter", rangeKey: "this_year", title: "LITROS CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_year", title: "LITROS CERVEZA" },
-  { viewMode: "meter", rangeKey: "all_time", title: "LITROS CERVEZA" },
+  { viewMode: "meter", rangeKey: "last_month", title: "LITROS DE CERVEZA" },
+  { viewMode: "meter", rangeKey: "last_3_months", title: "LITROS DE CERVEZA" },
+  { viewMode: "meter", rangeKey: "last_6_months", title: "LITROS DE CERVEZA" },
+  { viewMode: "meter", rangeKey: "this_year", title: "LITROS DE CERVEZA" },
+  { viewMode: "meter", rangeKey: "last_year", title: "LITROS DE CERVEZA" },
+  { viewMode: "meter", rangeKey: "all_time", title: "LITROS DE CERVEZA" },
 ];
 
 const RANGE_MAP: { [key: string]: string } = {

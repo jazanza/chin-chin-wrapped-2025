@@ -2,13 +2,13 @@ import { useRef, useMemo, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
+import "./LiquidMaterial"; // Importar el material para que se registre
 
 function Bubbles({ liquidHeight, viewportWidth }: { liquidHeight: number; viewportWidth: number }) {
   const pointsRef = useRef<THREE.Points>(null!);
   const { viewport } = useThree();
   const bottomY = -viewport.height / 2;
 
-  // El número de burbujas es proporcional a la altura del líquido.
   const count = Math.min(Math.floor(liquidHeight * 200), 5000);
 
   const particles = useMemo(() => {
@@ -28,9 +28,9 @@ function Bubbles({ liquidHeight, viewportWidth }: { liquidHeight: number; viewpo
     const topY = bottomY + liquidHeight;
 
     for (let i = 1; i < positions.length; i += 3) {
-      positions[i] += 0.01; // Velocidad de subida
+      positions[i] += 0.01;
       if (positions[i] > topY) {
-        positions[i] = bottomY; // Reiniciar abajo
+        positions[i] = bottomY;
       }
     }
     pointsRef.current.geometry.attributes.position.needsUpdate = true;
@@ -62,30 +62,31 @@ function Bubbles({ liquidHeight, viewportWidth }: { liquidHeight: number; viewpo
 export function BeerVisualizer({ liters }: { liters: number }) {
   const { viewport } = useThree();
   const liquidRef = useRef<THREE.Mesh>(null!);
+  const liquidMaterialRef = useRef<any>(null!);
   const textRef = useRef<any>(null!);
   const animatedHeight = useRef(0);
 
-  // Normalizamos los litros a una altura en la pantalla.
-  // Por ejemplo, 1000 litros llenan el 80% de la pantalla.
   const MAX_LITERS_FOR_SCALE = 1000;
   const targetHeight = (liters / MAX_LITERS_FOR_SCALE) * (viewport.height * 0.8);
 
-  useFrame(() => {
-    // Animar suavemente la altura del líquido (lerp)
+  useFrame(({ clock }) => {
     animatedHeight.current = THREE.MathUtils.lerp(animatedHeight.current, targetHeight, 0.05);
     
     if (liquidRef.current) {
       liquidRef.current.scale.y = animatedHeight.current;
     }
 
+    if (liquidMaterialRef.current) {
+      // Actualizar el tiempo en el shader para animar las olas
+      liquidMaterialRef.current.uTime = clock.getElapsedTime();
+    }
+
     if (textRef.current) {
-      // Posicionar el texto justo encima de la superficie del líquido
       const topOfLiquid = -viewport.height / 2 + animatedHeight.current;
       textRef.current.position.y = topOfLiquid + 0.3;
     }
   });
   
-  // Reiniciar la animación si los litros cambian a 0
   useEffect(() => {
     if (liters === 0) {
       animatedHeight.current = 0;
@@ -97,21 +98,14 @@ export function BeerVisualizer({ liters }: { liters: number }) {
       <ambientLight intensity={0.7} />
       <directionalLight position={[0, 5, 5]} intensity={1} />
 
-      {/* Barra de líquido */}
       <mesh ref={liquidRef} position={[0, -viewport.height / 2, 0]} scale-y={0}>
-        <planeGeometry args={[viewport.width, 1]} />
-        <meshStandardMaterial
-          color="#FFD700"
-          metalness={0.4}
-          roughness={0.3}
-          transparent
-          opacity={0.85}
-        />
+        {/* Aumentamos los segmentos para que las olas se vean suaves */}
+        <planeGeometry args={[viewport.width, 1, 64, 64]} />
+        <liquidMaterial ref={liquidMaterialRef} transparent />
       </mesh>
 
       <Bubbles liquidHeight={animatedHeight.current} viewportWidth={viewport.width} />
 
-      {/* Texto con los litros */}
       <Text
         ref={textRef}
         position={[0, -viewport.height / 2 + 0.3, 0]}

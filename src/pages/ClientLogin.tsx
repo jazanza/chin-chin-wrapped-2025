@@ -35,46 +35,86 @@ const shuffleArray = (array: any[]) => {
   return array;
 };
 
-// Helper to generate fake phone numbers
+// Helper to generate a fake phone number, guaranteed to be different from realPhone
 const generateFakePhoneNumber = (realPhone: string): string => {
-  if (!realPhone || realPhone.length < 2) return "0000000000";
-  const lastDigit = parseInt(realPhone[realPhone.length - 1], 10);
-  const secondLastDigit = parseInt(realPhone[realPhone.length - 2], 10);
+  if (!realPhone || realPhone.length === 0) return "0000000000";
+  let fakePhone = realPhone;
+  let attempts = 0;
+  // Try to change a digit at a random position, ensuring it's different
+  while (fakePhone === realPhone && attempts < 10) {
+    const indexToChange = Math.floor(Math.random() * realPhone.length);
+    const originalDigit = parseInt(realPhone[indexToChange], 10);
+    let newDigit = ((originalDigit + 1 + Math.floor(Math.random() * 8)) % 10).toString(); // Change by 1-9
+    
+    // Ensure newDigit is different from originalDigit
+    if (newDigit === originalDigit.toString()) {
+      newDigit = ((originalDigit + 2) % 10).toString(); // Try changing by 2
+    }
 
-  let fake1 = realPhone.slice(0, -1) + ((lastDigit + 1) % 10).toString();
-  let fake2 = realPhone.slice(0, -2) + ((secondLastDigit + 1) % 10).toString() + lastDigit.toString();
-
-  // Ensure fakes are different from real and each other
-  if (fake1 === realPhone) fake1 = realPhone.slice(0, -1) + ((lastDigit + 2) % 10).toString();
-  if (fake2 === realPhone || fake2 === fake1) fake2 = realPhone.slice(0, -2) + ((secondLastDigit + 2) % 10).toString() + lastDigit.toString();
-  
-  return fake1; // Return one fake for now, will generate two in the KBA logic
+    fakePhone = realPhone.substring(0, indexToChange) + newDigit + realPhone.substring(indexToChange + 1);
+    attempts++;
+  }
+  return fakePhone;
 };
 
-// Helper to generate fake emails
+// Helper to generate a fake email, guaranteed to be different from realEmail
 const generateFakeEmail = (realEmail: string): string => {
   if (!realEmail || realEmail.indexOf('@') === -1) return "fake@example.com";
-  const [name, domain] = realEmail.split('@');
-  if (name.length < 2) return `x${name}@${domain}`;
-  const charToChange = name[Math.floor(name.length / 2)];
-  const newChar = String.fromCharCode(charToChange.charCodeAt(0) + 1);
-  return `${name.slice(0, Math.floor(name.length / 2))}${newChar}${name.slice(Math.floor(name.length / 2) + 1)}@${domain}`;
+  let fakeEmail = realEmail;
+  let attempts = 0;
+  while (fakeEmail === realEmail && attempts < 10) {
+    const [name, domain] = realEmail.split('@');
+    if (name.length === 0) return `x@${domain}`; // Fallback for very short names
+
+    const indexToChange = Math.floor(Math.random() * name.length);
+    const originalChar = name[indexToChange];
+    let newChar = originalChar;
+
+    if (/[a-zA-Z]/.test(originalChar)) {
+      const baseCharCode = originalChar.toLowerCase() === originalChar ? 97 : 65; // 'a' or 'A'
+      newChar = String.fromCharCode(((originalChar.charCodeAt(0) - baseCharCode + 1 + Math.floor(Math.random() * 24)) % 26) + baseCharCode);
+    } else if (/[0-9]/.test(originalChar)) {
+      newChar = ((parseInt(originalChar, 10) + 1 + Math.floor(Math.random() * 8)) % 10).toString();
+    } else {
+      newChar = String.fromCharCode(originalChar.charCodeAt(0) + 1);
+    }
+    
+    if (newChar === originalChar) {
+        newChar = String.fromCharCode(originalChar.charCodeAt(0) + 2);
+    }
+
+    fakeEmail = `${name.substring(0, indexToChange)}${newChar}${name.substring(indexToChange + 1)}@${domain}`;
+    attempts++;
+  }
+  return fakeEmail;
 };
 
-// Helper to generate fake TaxNumber (RFC)
+// Helper to generate a fake TaxNumber (RFC), guaranteed to be different from realTaxNumber
 const generateFakeTaxNumber = (realTaxNumber: string): string => {
-  if (!realTaxNumber || realTaxNumber.length < 2) return "XXXX000000XXX";
-  const index = Math.floor(realTaxNumber.length / 2);
-  const charToChange = realTaxNumber[index];
-  let newChar = '';
-  if (/[A-Z]/.test(charToChange)) {
-    newChar = String.fromCharCode(((charToChange.charCodeAt(0) - 65 + 1) % 26) + 65);
-  } else if (/[0-9]/.test(charToChange)) {
-    newChar = ((parseInt(charToChange, 10) + 1) % 10).toString();
-  } else {
-    return realTaxNumber.slice(0, index) + 'X' + realTaxNumber.slice(index + 1);
+  if (!realTaxNumber || realTaxNumber.length === 0) return "XXXX000000XXX";
+  let fakeTaxNumber = realTaxNumber;
+  let attempts = 0;
+  while (fakeTaxNumber === realTaxNumber && attempts < 10) {
+    const indexToChange = Math.floor(Math.random() * realTaxNumber.length);
+    const originalChar = realTaxNumber[indexToChange];
+    let newChar = originalChar;
+
+    if (/[A-Z]/.test(originalChar)) {
+      newChar = String.fromCharCode(((originalChar.charCodeAt(0) - 65 + 1 + Math.floor(Math.random() * 24)) % 26) + 65);
+    } else if (/[0-9]/.test(originalChar)) {
+      newChar = ((parseInt(originalChar, 10) + 1 + Math.floor(Math.random() * 8)) % 10).toString();
+    } else {
+      newChar = String.fromCharCode(originalChar.charCodeAt(0) + 1);
+    }
+
+    if (newChar === originalChar) {
+        newChar = String.fromCharCode(originalChar.charCodeAt(0) + 2);
+    }
+
+    fakeTaxNumber = realTaxNumber.substring(0, indexToChange) + newChar + realTaxNumber.substring(indexToChange + 1);
+    attempts++;
   }
-  return realTaxNumber.slice(0, index) + newChar + realTaxNumber.slice(index + 1);
+  return fakeTaxNumber;
 };
 
 
@@ -110,29 +150,26 @@ const ClientLogin = () => {
       case 'PhoneNumber':
         questionText = "¿Cuál de estos es tu número de teléfono registrado?";
         fakeOption1 = generateFakePhoneNumber(correctAnswer);
-        fakeOption2 = generateFakePhoneNumber(correctAnswer + "x"); // Generate a slightly different fake
+        do {
+          fakeOption2 = generateFakePhoneNumber(correctAnswer);
+        } while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1);
         break;
       case 'TaxNumber':
         questionText = "¿Cuál de estos es tu RFC/Número de Identificación Fiscal?";
         fakeOption1 = generateFakeTaxNumber(correctAnswer);
-        fakeOption2 = generateFakeTaxNumber(correctAnswer + "x");
+        do {
+          fakeOption2 = generateFakeTaxNumber(correctAnswer);
+        } while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1);
         break;
       case 'Email':
         questionText = "¿Cuál de estos es tu correo electrónico registrado?";
         fakeOption1 = generateFakeEmail(correctAnswer);
-        fakeOption2 = generateFakeEmail(correctAnswer + "x");
+        do {
+          fakeOption2 = generateFakeEmail(correctAnswer);
+        } while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1);
         break;
     }
     
-    // Ensure fake options are distinct from the correct answer and each other
-    while (fakeOption1 === correctAnswer || fakeOption1 === fakeOption2) {
-      fakeOption1 = generateFakePhoneNumber(correctAnswer + "y"); // Re-generate if not unique
-    }
-    while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1) {
-      fakeOption2 = generateFakePhoneNumber(correctAnswer + "z"); // Re-generate if not unique
-    }
-
-
     const options = shuffleArray([correctAnswer, fakeOption1, fakeOption2]);
 
     return {

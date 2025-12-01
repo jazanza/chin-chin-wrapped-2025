@@ -16,7 +16,7 @@ import { StoryProgressBar } from "@/components/StoryProgressBar";
 
 // Import story components
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
-import { WelcomeStory } from "@/components/stories/WelcomeStory"; // This component is now unused in the main flow
+// import { WelcomeStory } from "@/components/stories/WelcomeStory"; // This component is now unused in the main flow
 import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
 import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
 import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
@@ -285,7 +285,7 @@ const WrappedDashboard = () => {
     const { gl } = useThree();
     useFrame(() => {
       gl.setClearColor(currentBackgroundColor);
-    }, []);
+    }); // Removed dependency array
     return null;
   };
 

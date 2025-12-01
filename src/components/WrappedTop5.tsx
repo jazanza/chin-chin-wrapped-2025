@@ -12,7 +12,7 @@ interface Product {
 const PARTICLE_COUNT_PER_COLUMN = 2000;
 const COLUMN_WIDTH = 0.5;
 const MAX_COLUMN_HEIGHT = 2;
-const BASE_TEXT_FONT_SIZE = 0.1;
+const BASE_TEXT_FONT_SIZE = 0.25; // Aumentado de 0.1 a 0.25
 
 const ProductColumn = ({ product, index, maxLiters, responsiveScale, textColor, highlightColor }: { product: Product; index: number; maxLiters: number; totalBars: number; responsiveScale: number; textColor: string; highlightColor: string }) => {
   const pointsRef = useRef<THREE.Points>(null!);
@@ -66,7 +66,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale, textColor, 
       </points>
       <Text
         position={[0, MAX_COLUMN_HEIGHT + 0.2, 0]} // Position above the max height
-        fontSize={BASE_TEXT_FONT_SIZE * responsiveScale}
+        fontSize={BASE_TEXT_FONT_SIZE * responsiveScale} // Usa el nuevo BASE_TEXT_FONT_SIZE
         color={highlightColor} // Use highlightColor for product name
         anchorX="center"
         maxWidth={0.8}
@@ -78,7 +78,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale, textColor, 
       </Text>
       <Text
         position={[0, MAX_COLUMN_HEIGHT, 0]} // Position slightly below the name
-        fontSize={BASE_TEXT_FONT_SIZE * 0.8 * responsiveScale}
+        fontSize={BASE_TEXT_FONT_SIZE * 0.8 * responsiveScale} // Usa el nuevo BASE_TEXT_FONT_SIZE
         color={textColor} // Use textColor for liters
         anchorX="center"
         maxWidth={0.8}

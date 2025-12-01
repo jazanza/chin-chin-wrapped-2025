@@ -10,8 +10,8 @@ interface Customer {
 }
 
 const noise3D = createNoise3D(Math.random);
-const BASE_TEXT_FONT_SIZE_NAME = 0.12;
-const BASE_TEXT_FONT_SIZE_LITERS = 0.1;
+const BASE_TEXT_FONT_SIZE_NAME = 0.25; // Aumentado de 0.12 a 0.25
+const BASE_TEXT_FONT_SIZE_LITERS = 0.2; // Aumentado de 0.1 a 0.2
 
 const CustomerCluster = ({ customer, sunPosition, isSun = false, responsiveScale }: { customer: Customer; sunPosition: THREE.Vector3; isSun?: boolean; responsiveScale: number }) => {
   const groupRef = useRef<THREE.Group>(null!);

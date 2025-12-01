@@ -13,7 +13,7 @@ interface CategoryVolume {
 const MAX_BAR_HEIGHT = 2.5;
 const BAR_WIDTH = 0.6;
 const BAR_GAP = 0.2;
-const BASE_TEXT_FONT_SIZE = 0.15;
+const BASE_TEXT_FONT_SIZE = 0.3; // Aumentado de 0.15 a 0.3
 
 export function DominantBeerBarChart({ categoryVolumes, dominantBeerCategory, ...props }: { categoryVolumes: { [key: string]: number }; dominantBeerCategory: string } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
@@ -93,7 +93,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
       </Box>
       <Text
         position={[0, MAX_BAR_HEIGHT + 0.2, 0]}
-        fontSize={BASE_TEXT_FONT_SIZE * responsiveScale}
+        fontSize={BASE_TEXT_FONT_SIZE * responsiveScale} // Usa el nuevo BASE_TEXT_FONT_SIZE
         color="white"
         anchorX="center"
         maxWidth={BAR_WIDTH * 1.5}
@@ -106,7 +106,7 @@ const Bar = ({ data, index, maxLiters, totalBars, responsiveScale }: { data: Cat
       </Text>
       <Text
         position={[0, MAX_BAR_HEIGHT + 0.05, 0]}
-        fontSize={BASE_TEXT_FONT_SIZE * 0.8 * responsiveScale}
+        fontSize={BASE_TEXT_FONT_SIZE * 0.8 * responsiveScale} // Usa el nuevo BASE_TEXT_FONT_SIZE
         color="gray"
         anchorX="center"
         maxWidth={BAR_WIDTH * 1.5}

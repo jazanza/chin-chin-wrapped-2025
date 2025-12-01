@@ -35,7 +35,7 @@ export const TotalConsumptionStory = ({ totalLiters, isPaused, textColor, highli
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 3 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.15, 1.0) * responsiveScale} // Multiplicador aumentado de 0.06 a 0.15, max de 0.6 a 1.0
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}

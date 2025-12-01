@@ -36,7 +36,7 @@ export const MostActiveDayStory = ({ mostActiveDay, isPaused, textColor, highlig
         onComplete={() => setIsDayTyped(true)}
         isPaused={isPaused}
         position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.08, 0.8) * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale} // Multiplicador aumentado de 0.08 a 0.2, max de 0.8 a 1.2
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}

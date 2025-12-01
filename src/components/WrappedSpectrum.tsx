@@ -18,8 +18,8 @@ const COLORS: { [key: string]: string } = {
 const PARTICLE_COUNT_PER_SEGMENT = 1000;
 const INNER_RADIUS = 0.8;
 const OUTER_RADIUS = 1.2;
-const BASE_TEXT_FONT_SIZE_LARGE = 0.3;
-const BASE_TEXT_FONT_SIZE_SMALL = 0.15;
+const BASE_TEXT_FONT_SIZE_LARGE = 0.5; // Aumentado de 0.3 a 0.5
+const BASE_TEXT_FONT_SIZE_SMALL = 0.25; // Aumentado de 0.15 a 0.25
 
 const FlavorSegment = ({ startAngle, angle, color }: { startAngle: number; angle: number; color: string }) => {
   const points = useMemo(() => {

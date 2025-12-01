@@ -21,7 +21,7 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor, p
     return (
       <group position={position}>
         <Text
-          fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
+          fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale} // Multiplicador aumentado de 0.02 a 0.05, max de 0.1 a 0.3
           color={textColor}
           anchorX="center"
           anchorY="middle"
@@ -45,7 +45,7 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor, p
   return (
     <group position={position}>
       <Text
-        fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale} // Multiplicador aumentado de 0.02 a 0.05, max de 0.1 a 0.3
         color={color}
         anchorX="center"
         anchorY="middle"
@@ -88,7 +88,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
         onComplete={() => setIsVisitsTyped(true)}
         isPaused={isPaused}
         position={[0, 0, 0]} // Centered
-        fontSize={Math.min(viewport.width * 0.08, 0.8) * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.2, 1.2) * responsiveScale} // Multiplicador aumentado de 0.08 a 0.2, max de 0.8 a 1.2
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}

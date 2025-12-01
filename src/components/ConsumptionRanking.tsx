@@ -12,7 +12,7 @@ interface RankedBeer {
 const PARTICLE_COUNT_PER_COLUMN = 5000;
 const COLUMN_WIDTH = 0.7; // Increased from 0.5
 const MAX_COLUMN_HEIGHT = 3; // Increased from 2
-const BASE_TEXT_FONT_SIZE = 0.2; // Tamaño de fuente base para el texto
+const BASE_TEXT_FONT_SIZE = 0.4; // Aumentado de 0.2 a 0.4
 
 const BeerColumn = ({ beer, index, maxLiters, responsiveScale }: { beer: RankedBeer; index: number; maxLiters: number; responsiveScale: number }) => {
   const pointsRef = useRef<THREE.Points>(null!);
@@ -95,4 +95,4 @@ export function ConsumptionRanking({ rankedBeers, ...props }: { rankedBeers: Ran
       ))}
     </group>
   );
-}
+};

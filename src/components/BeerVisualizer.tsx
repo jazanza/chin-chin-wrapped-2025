@@ -85,7 +85,7 @@ export function BeerVisualizer({ liters, visible, textColor, highlightColor, ...
     if (textRef.current) {
       textRef.current.position.y = animatedTextY.current; // Usa la posición Y animada
       textRef.current.text = `${animatedLiters.current.toFixed(2)} L`;
-      textRef.current.fontSize = Math.min(2, viewport.width * 0.15); // Escala la fuente con el ancho del viewport, con un máximo de 2
+      textRef.current.fontSize = Math.min(2.5, viewport.width * 0.2); // Aumentado de 2 a 2.5 y de 0.15 a 0.2
     }
 
     // Animar el nivel del líquido en el vaso
@@ -117,7 +117,7 @@ export function BeerVisualizer({ liters, visible, textColor, highlightColor, ...
       <Text
         ref={textRef}
         position={[0, -viewport.height, 0]} // Posición inicial fuera de la pantalla
-        fontSize={2} // Valor inicial, se actualizará en useFrame
+        fontSize={2.5} // Valor inicial, se actualizará en useFrame
         color={highlightColor} // Use highlightColor for the main liters text
         anchorX="center"
         anchorY="middle"

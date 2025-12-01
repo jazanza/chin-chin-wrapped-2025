@@ -76,8 +76,8 @@ export function VarietyBalance({ varietyMetrics, ...props }: { varietyMetrics: {
         {/* Volume Side (White Particles) */}
         <group position={[-2, 0.5, 0]}>
           <PulsingParticles color="#FFFFFF" weight={totalLiters} /> 
-          <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Volume</Text>
-          <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${totalLiters.toFixed(1)} L`}</Text>
+          <Text position={[0, -0.8, 0]} fontSize={0.4 * responsiveScale} color="white">Volume</Text> {/* Aumentado de 0.2 a 0.4 */}
+          <Text position={[0, -1.1, 0]} fontSize={0.3 * responsiveScale} color="white">{`${totalLiters.toFixed(1)} L`}</Text> {/* Aumentado de 0.15 a 0.3 */}
         </group>
 
         {/* Variety Side (White Torus) */}
@@ -85,8 +85,8 @@ export function VarietyBalance({ varietyMetrics, ...props }: { varietyMetrics: {
           <Torus args={[0.5, 0.1, 8, 32]}>
             <meshBasicMaterial color="#FFFFFF" wireframe={true} /> 
           </Torus>
-          <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Variety</Text>
-          <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${uniqueProducts} Products`}</Text>
+          <Text position={[0, -0.8, 0]} fontSize={0.4 * responsiveScale} color="white">Variety</Text> {/* Aumentado de 0.2 a 0.4 */}
+          <Text position={[0, -1.1, 0]} fontSize={0.3 * responsiveScale} color="white">{`${uniqueProducts} Products`}</Text> {/* Aumentado de 0.15 a 0.3 */}
         </group>
       </group>
     </group>

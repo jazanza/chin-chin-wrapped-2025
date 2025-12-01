@@ -29,7 +29,8 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
     { text: "\n\nAHORA, TE PRESENTAMOS\nTU CHIN CHIN 2025 WRAPPED.\n¡COMPÁRTELO EN REDES!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
-  const baseFontSize = Math.min(viewport.width * 0.06, 0.6) * responsiveScale;
+  // Aumentar el tamaño de fuente base para mayor legibilidad
+  const baseFontSize = Math.min(viewport.width * 0.15, 1.0) * responsiveScale; // Multiplicador aumentado de 0.06 a 0.15, max de 0.6 a 1.0
   const maxTextWidth = viewport.width * 0.8;
 
   useFrame(({ clock }) => {

@@ -57,7 +57,7 @@ const BeerColumn = ({ beer, index, maxLiters }: { beer: RankedBeer; index: numbe
 
   return (
     <group position={[(index - 4.5) * 1.2, 0, 0]}>
-      <points ref={pointsRef}>
+      <points ref={pointsRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT_PER_COLUMN} array={originalPositions.slice()} itemSize={3} />
         </bufferGeometry>

@@ -61,7 +61,7 @@ export function BeerVisualizer({ liters, ...props }: { liters: number } & JSX.In
 
   return (
     <group {...props}>
-      <points ref={pointsRef}>
+      <points ref={pointsRef} frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT} array={positions} itemSize={3} />
           <bufferAttribute attach="attributes-color" count={PARTICLE_COUNT} array={colors} itemSize={3} />

@@ -11,6 +11,7 @@ import { CameraAnimator } from "@/components/CameraAnimator";
 import { FileUploader } from "@/components/FileUploader";
 import { PostProcessingEffects } from "@/components/PostProcessingEffects";
 import { PlaybackControls } from "@/components/PlaybackControls";
+import { NarrativeOverlay } from "@/components/NarrativeOverlay";
 
 type ViewMode = "meter" | "ranking" | "loyalty" | "balance" | "spectrum";
 
@@ -21,14 +22,26 @@ interface Scene {
 }
 
 const SCENE_PLAYLIST: Scene[] = [
-  { viewMode: "meter", rangeKey: "last_month", title: "Consumo Mensual" },
-  { viewMode: "ranking", rangeKey: "last_month", title: "Top 10 Mensual" },
-  { viewMode: "loyalty", rangeKey: "last_6_months", title: "Lealtad (6 Meses)" },
-  { viewMode: "balance", rangeKey: "all_time", title: "Balance Histórico" },
-  { viewMode: "spectrum", rangeKey: "last_1_year", title: "Espectro Anual" },
-  { viewMode: "ranking", rangeKey: "last_1_year", title: "Top 10 Anual" },
-  { viewMode: "loyalty", rangeKey: "all_time", title: "Lealtad Histórica" },
+  { viewMode: "meter", rangeKey: "last_month", title: "LITROS TOTALES" },
+  { viewMode: "ranking", rangeKey: "last_month", title: "TOP 10 CERVEZAS" },
+  { viewMode: "loyalty", rangeKey: "last_6_months", title: "CLIENTES LEALES" },
+  { viewMode: "balance", rangeKey: "all_time", title: "BALANCE: VOLUMEN VS VARIEDAD" },
+  { viewMode: "spectrum", rangeKey: "last_1_year", title: "ESPECTRO DE SABOR" },
+  { viewMode: "ranking", rangeKey: "last_1_year", title: "TOP 10 ANUAL" },
+  { viewMode: "loyalty", rangeKey: "all_time", title: "LEALTAD HISTÓRICA" },
 ];
+
+const RANGE_MAP: { [key: string]: string } = {
+  this_week: "ESTA SEMANA",
+  last_week: "SEMANA PASADA",
+  last_15_days: "ÚLTIMOS 15 DÍAS",
+  this_month: "ESTE MES",
+  last_month: "ÚLTIMO MES",
+  last_3_months: "ÚLTIMOS 3 MESES",
+  last_6_months: "ÚLTIMOS 6 MESES",
+  last_1_year: "ÚLTIMO AÑO",
+  all_time: "HISTÓRICO",
+};
 
 const VIEW_DURATION = 15000; // 15 seconds
 
@@ -103,9 +116,11 @@ const Dashboard = () => {
 
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col font-mono relative">
-      <div className="absolute top-4 left-4 text-lg z-10 p-2 bg-black/50 rounded">
-        <p>{currentScene.title}</p>
-      </div>
+      <NarrativeOverlay
+        key={currentSceneIndex}
+        title={currentScene.title}
+        range={RANGE_MAP[currentScene.rangeKey] || ""}
+      />
       <div className="flex-grow">
         <Canvas
           shadows

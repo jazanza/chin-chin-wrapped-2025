@@ -71,7 +71,7 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false }: { customer: C
 
   return (
     <group ref={groupRef}>
-      <points>
+      <points frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" count={particleCount} array={points} itemSize={3} />
         </bufferGeometry>

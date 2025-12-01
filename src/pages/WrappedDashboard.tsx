@@ -16,14 +16,13 @@ import { StoryProgressBar } from "@/components/StoryProgressBar";
 
 // Import story components
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
-// import { WelcomeStory } from "@/components/stories/WelcomeStory"; // This component is now unused in the main flow
 import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
 import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
 import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
 import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory";
 import { Top5Story } from "@/components/stories/Top5Story";
-import { SummaryInfographic } from "@/components/stories/SummaryInfographic";
-import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
+import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory"; // Now Slide 6
+import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; // Now Slide 7
 
 // Componente auxiliar para la captura de pantalla
 const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
@@ -57,7 +56,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // Slide 0
     component: IntroFunStory,
-    duration: 0, // Controlled by component
+    duration: 5000, // 5 seconds
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
@@ -65,7 +64,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalVisits', // Slide 1
     component: TotalVisitsStory,
-    duration: 5000,
+    duration: 5000, // 5 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Visitas del Año',
     downloadFileName: 'Historia_Visitas',
@@ -73,7 +72,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveMonth', // Slide 2
     component: MostActiveMonthStory,
-    duration: 5000,
+    duration: 5000, // 5 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Mes Más Activo',
     downloadFileName: 'Historia_MesActivo',
@@ -81,7 +80,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveDay', // Slide 3
     component: MostActiveDayStory,
-    duration: 5000,
+    duration: 5000, // 5 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Día Más Activo',
     downloadFileName: 'Historia_DiaActivo',
@@ -89,7 +88,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'dominantCategoryAndVarieties', // Slide 4
     component: DominantCategoryAndVarietiesStory,
-    duration: 6000,
+    duration: 5000, // 5 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Categoría y Variedades',
     downloadFileName: 'Historia_CategoriaVariedades',
@@ -97,30 +96,30 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'top5', // Slide 5
     component: Top5Story,
-    duration: 5000,
+    duration: 5000, // 5 seconds
     cameraViewMode: 'top5',
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
   },
   {
-    id: 'summaryInfographic', // Slide 6
-    component: SummaryInfographic,
-    duration: 0, // Static, no auto-advance
-    cameraViewMode: 'summaryInfographic',
-    title: 'Infografía Final',
-    downloadFileName: 'Infografia_Final',
-  },
-  {
-    id: 'totalConsumption', // Slide 7
+    id: 'totalConsumption', // Slide 6 (Moved from 7)
     component: TotalConsumptionStory,
-    duration: 5000,
+    duration: 5000, // 5 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
   },
+  {
+    id: 'summaryInfographic', // Slide 7 (Moved from 6)
+    component: SummaryInfographic,
+    duration: 9000, // 8 to 10 seconds, choosing 9 seconds
+    cameraViewMode: 'summaryInfographic',
+    title: 'Infografía Final',
+    downloadFileName: 'Infografia_Final',
+  },
 ];
 
-// Color definitions based on the user's table
+// Color definitions based on the user's table (updated to match new order)
 const BACKGROUND_COLORS = [
   0x000000, // Slide 0: Intro (Negro)
   0xFFFFFF, // Slide 1: Visitas (Blanco)
@@ -128,8 +127,8 @@ const BACKGROUND_COLORS = [
   0xFFFFFF, // Slide 3: Día Activo (Blanco)
   0x000000, // Slide 4: Categorías/Variedades (Negro)
   0xFFFFFF, // Slide 5: Top 5 Cervezas (Blanco)
-  0x000000, // Slide 6: Infografía Final (Negro)
-  0xFFFFFF, // Slide 7: Litros Consumidos (Blanco)
+  0x000000, // Slide 6: Total Litros (Negro)
+  0xFFFFFF, // Slide 7: Infografía Final (Blanco)
 ];
 
 const TEXT_COLORS = [
@@ -139,8 +138,8 @@ const TEXT_COLORS = [
   "#000000", // Slide 3: Día Activo (Negro)
   "#FFFFFF", // Slide 4: Categorías/Variedades (Blanco)
   "#000000", // Slide 5: Top 5 Cervezas (Negro)
-  "#FFFFFF", // Slide 6: Infografía Final (Blanco)
-  "#000000", // Slide 7: Litros Consumidos (Negro)
+  "#FFFFFF", // Slide 6: Total Litros (Blanco)
+  "#000000", // Slide 7: Infografía Final (Negro)
 ];
 
 const HIGHLIGHT_COLORS = [
@@ -150,8 +149,8 @@ const HIGHLIGHT_COLORS = [
   "#DC143C", // Slide 3: Día Activo (Rojo Saturado)
   "#FFD700", // Slide 4: Categorías/Variedades (Amarillo Saturado)
   "#DC143C", // Slide 5: Top 5 Cervezas (Rojo Saturado)
-  "#FFD700", // Slide 6: Infografía Final (Amarillo Saturado)
-  "#DC143C", // Slide 7: Litros Consumidos (Rojo Saturado)
+  "#FFD700", // Slide 6: Total Litros (Amarillo Saturado)
+  "#DC143C", // Slide 7: Infografía Final (Rojo Saturado)
 ];
 
 
@@ -285,7 +284,7 @@ const WrappedDashboard = () => {
     const { gl } = useThree();
     useFrame(() => {
       gl.setClearColor(currentBackgroundColor);
-    }); // Removed dependency array
+    });
     return null;
   };
 
@@ -377,6 +376,14 @@ const WrappedDashboard = () => {
               highlightColor={currentHighlightColor}
             />
           )}
+          {currentStory.id === 'totalConsumption' && (
+            <TotalConsumptionStory
+              totalLiters={wrappedData.totalLiters}
+              isPaused={isPaused}
+              textColor={currentTextColor}
+              highlightColor={currentHighlightColor}
+            />
+          )}
           {currentStory.id === 'summaryInfographic' && (
             <SummaryInfographic
               customerName={wrappedData.customerName}
@@ -391,14 +398,6 @@ const WrappedDashboard = () => {
               totalVarietiesInDb={wrappedData.totalVarietiesInDb}
               mostActiveDay={wrappedData.mostActiveDay}
               mostActiveMonth={wrappedData.mostActiveMonth}
-              isPaused={isPaused}
-              textColor={currentTextColor}
-              highlightColor={currentHighlightColor}
-            />
-          )}
-          {currentStory.id === 'totalConsumption' && (
-            <TotalConsumptionStory
-              totalLiters={wrappedData.totalLiters}
               isPaused={isPaused}
               textColor={currentTextColor}
               highlightColor={currentHighlightColor}

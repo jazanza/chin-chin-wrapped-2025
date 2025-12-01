@@ -3,6 +3,7 @@ import { WrappedMeter } from '../WrappedMeter';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
+import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // Reusing background lines
 
 interface TotalConsumptionStoryProps {
   totalLiters: number;
@@ -27,6 +28,7 @@ export const TotalConsumptionStory = ({ totalLiters, isPaused, textColor, highli
 
   return (
     <group>
+      <AnimatedBackgroundLines />
       <TypewriterText
         segments={titleSegments}
         speed={75}

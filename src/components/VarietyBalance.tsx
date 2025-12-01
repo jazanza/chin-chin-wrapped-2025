@@ -72,14 +72,14 @@ export function VarietyBalance({ varietyMetrics, ...props }: { varietyMetrics: {
         </Cylinder>
 
         <group position={[-2, 0.5, 0]}>
-          <PulsingParticles color="var(--primary-glitch-pink)" weight={totalLiters} />
+          <PulsingParticles color="#FF00FF" weight={totalLiters} /> {/* var(--primary-glitch-pink) */}
           <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Volume</Text>
           <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${totalLiters.toFixed(1)} L`}</Text>
         </group>
 
         <group position={[2, 0.5, 0]}>
           <Torus args={[0.5, 0.1, 8, 32]}>
-            <meshBasicMaterial color="var(--secondary-glitch-cyan)" wireframe={true} />
+            <meshBasicMaterial color="#00FFFF" wireframe={true} /> {/* var(--secondary-glitch-cyan) */}
           </Torus>
           <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Variety</Text>
           <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${uniqueProducts} Products`}</Text>

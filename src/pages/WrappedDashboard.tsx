@@ -18,7 +18,8 @@ import { WrappedTop5 } from "@/components/WrappedTop5";
 const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
   const { gl } = useThree();
   const captureScreenshot = useCallback(() => {
-    gl.render(gl.scene, gl.camera); // Asegura que la escena esté renderizada antes de capturar
+    // No es necesario llamar a gl.render(gl.scene, gl.camera); aquí.
+    // El canvas ya contiene la imagen renderizada del último frame.
     const dataUrl = gl.domElement.toDataURL('image/png');
     onScreenshotReady(dataUrl);
   }, [gl, onScreenshotReady]);

@@ -20,7 +20,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
   const animatedHeight = useRef(0);
   
   const targetHeight = maxLiters > 0 ? (product.liters / maxLiters) * MAX_COLUMN_HEIGHT : 0;
-  const color = product.color;
+  const color = product.color; // This color comes from BEER_CATEGORY_COLORS in useDb.ts, which is now hex.
 
   const originalPositions = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT_PER_COLUMN * 3);

@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 import { Text } from "@react-three/drei";
-import * as THREE from "three";
+import * => THREE from "three";
 import { useThree } from "@react-three/fiber";
 
 const COLORS: { [key: string]: string } = {
-  IPA: "var(--primary-glitch-pink)",
-  Lager: "var(--secondary-glitch-cyan)",
+  IPA: "#FF00FF", // var(--primary-glitch-pink)
+  Lager: "#00FFFF", // var(--secondary-glitch-cyan)
   Stout: "#8B008B",
   Porter: "#FF4500",
   Pilsner: "#00FF00",

@@ -64,8 +64,16 @@ const LOYALTY_QUERY_BASE = `
   ORDER BY SUM(T2.Quantity) DESC;
 `;
 
+const NON_LIQUID_KEYWORDS = ["snack", "jamon", "sandwich", "pin", "camiseta", "gorra", "vaso", "merchandising", "comida", "accesorio"];
+
 const extractVolumeMl = (name: string, description: string | null): number => {
   const textToSearch = `${name} ${description || ""}`.toLowerCase();
+
+  // Excluir productos no líquidos
+  if (NON_LIQUID_KEYWORDS.some(keyword => textToSearch.includes(keyword))) {
+    return 0;
+  }
+
   const volumeRegex = /(\d+)\s*ml/i;
   const match = textToSearch.match(volumeRegex);
 
@@ -94,13 +102,13 @@ const categorizeBeer = (itemName: string): string => {
 };
 
 const BEER_CATEGORY_COLORS: { [key: string]: string } = {
-  IPA: "#FF6347",
-  Lager: "#FFD700",
-  Stout: "#4B0082",
-  Porter: "#8B4513",
-  Pilsner: "#F0E68C",
-  Ale: "#D2691E",
-  Other: "#A9A9A9",
+  IPA: "#FF00FF", // primary-glitch-pink
+  Lager: "#00FFFF", // secondary-glitch-cyan
+  Stout: "#8B008B",
+  Porter: "#FF4500",
+  Pilsner: "#00FF00",
+  Ale: "#FFFF00",
+  Other: "#FFFFFF",
 };
 
 export function useDb() {
@@ -205,14 +213,17 @@ export function useDb() {
         const liters = (item.TotalQuantity * volumeMl) / 1000;
         totalLiters += liters;
 
-        const category = categorizeBeer(item.ProductName);
-        categoryVolumes[category] = (categoryVolumes[category] || 0) + liters;
-        
-        productLiters.push({
-          name: item.ProductName,
-          liters: liters,
-          color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
-        });
+        // Solo categorizar y añadir a productLiters si el volumen es mayor que 0
+        if (liters > 0) {
+          const category = categorizeBeer(item.ProductName);
+          categoryVolumes[category] = (categoryVolumes[category] || 0) + liters;
+          
+          productLiters.push({
+            name: item.ProductName,
+            liters: liters,
+            color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
+          });
+        }
       }
 
       // Metric 2: Dominant Beer

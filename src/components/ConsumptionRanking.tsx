@@ -20,7 +20,8 @@ const BeerColumn = ({ beer, index, maxLiters, responsiveScale }: { beer: RankedB
   const animatedHeight = useRef(0);
   
   const targetHeight = maxLiters > 0 ? (beer.liters / maxLiters) * MAX_COLUMN_HEIGHT : 0;
-  const color = index % 2 === 0 ? "var(--primary-glitch-pink)" : "var(--secondary-glitch-cyan)";
+  // Reemplazar variables CSS con valores hexadecimales
+  const color = index % 2 === 0 ? "#FF00FF" : "#00FFFF"; // var(--primary-glitch-pink) : var(--secondary-glitch-cyan)
 
   const originalPositions = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT_PER_COLUMN * 3);

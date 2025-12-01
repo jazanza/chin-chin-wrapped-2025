@@ -23,7 +23,7 @@ export const TotalConsumptionStory = ({ totalLiters, isPaused }: TotalConsumptio
     <group>
       <TypewriterText
         text="TU CONSUMO TOTAL"
-        speed={50}
+        speed={75} // Increased typewriter speed
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 3 * responsiveScale, 0]}

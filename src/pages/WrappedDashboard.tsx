@@ -53,7 +53,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // New intro story
     component: IntroFunStory,
-    duration: 8000, // 8 seconds for multi-line typewriter
+    duration: 12000, // Increased duration for multi-line typewriter and pauses
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
@@ -221,8 +221,8 @@ const WrappedDashboard = () => {
 
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
-      {/* Mobile mockup container with border - Brutalist: Black background, White border, no rounded corners */}
-      <div className="relative w-full h-full max-w-[420px] border-[4px] border-white rounded-none overflow-hidden bg-black">
+      {/* Mobile mockup container without border */}
+      <div className="relative w-full h-full max-w-[420px] overflow-hidden bg-black">
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}

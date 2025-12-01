@@ -93,7 +93,7 @@ export const SummaryInfographic = ({
       {/* Title */}
       <TypewriterText
         text={customerName.toUpperCase()}
-        speed={50}
+        speed={75} // Increased typewriter speed
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
@@ -111,7 +111,7 @@ export const SummaryInfographic = ({
       {isTitleTyped && (
         <TypewriterText
           text={`${year} WRAPPED`}
-          speed={50}
+          speed={75} // Increased typewriter speed
           onComplete={() => setIsSubTitleTyped(true)}
           isPaused={isPaused}
           position={[0, 2.1 * responsiveScale, 0]}

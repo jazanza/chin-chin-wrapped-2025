@@ -27,7 +27,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes, isPau
     <group>
       <TypewriterText
         text="TU CERVEZA DOMINANTE"
-        speed={50}
+        speed={75} // Increased typewriter speed
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
@@ -45,7 +45,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes, isPau
       {isTitleTyped && (
         <TypewriterText
           text={dominantBeerCategory.toUpperCase()}
-          speed={50}
+          speed={75} // Increased typewriter speed
           onComplete={() => setIsCategoryTyped(true)}
           isPaused={isPaused}
           position={[0, 1.8 * responsiveScale, 0]}

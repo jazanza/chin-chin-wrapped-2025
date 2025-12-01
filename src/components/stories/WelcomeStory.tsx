@@ -78,7 +78,7 @@ export const WelcomeStory = ({ customerName, year, totalVisits, isPaused }: Welc
       <AnimatedBackgroundLines />
       <TypewriterText
         text={`¡HOLA, ${customerName.toUpperCase()}!`}
-        speed={50}
+        speed={75} // Increased typewriter speed
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 1.5 * responsiveScale, 0]}
@@ -96,7 +96,7 @@ export const WelcomeStory = ({ customerName, year, totalVisits, isPaused }: Welc
       {isTitleTyped && (
         <TypewriterText
           text={`ESTE FUE TU ${year} EN CHIN CHIN`}
-          speed={50}
+          speed={75} // Increased typewriter speed
           onComplete={() => setIsSubTitleTyped(true)}
           isPaused={isPaused}
           position={[0, 0 * responsiveScale, 0]}

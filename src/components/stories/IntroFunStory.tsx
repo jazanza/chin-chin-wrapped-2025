@@ -35,7 +35,7 @@ export const IntroFunStory = ({ totalVisits, isPaused }: IntroFunStoryProps) => 
     if (lineIndex < lines().length - 1) {
       setTimeout(() => {
         setLineIndex((prev) => prev + 1);
-      }, 500); // Short pause between lines
+      }, 750); // Increased pause between lines
     }
   }, [lineIndex, lines]);
 
@@ -50,7 +50,7 @@ export const IntroFunStory = ({ totalVisits, isPaused }: IntroFunStoryProps) => 
           {index <= lineIndex && (
             <TypewriterText
               text={line}
-              speed={30} // Slightly faster typing for multiple lines
+              speed={75} // Increased typewriter speed
               onComplete={index === lineIndex ? handleLineComplete : undefined}
               isPaused={isPaused || index < lineIndex} // Pause if overall story is paused, or if it's a previous line
               position={[0, 2 * responsiveScale - index * lineHeightOffset, 0]}

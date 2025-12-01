@@ -23,10 +23,8 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
   const introSegments: TextSegment[] = useMemo(() => [
     { text: "¡GRACIAS POR\nACOMPAÑARNOS\nESTE 2025!", color: textColor },
     { text: "\n\nPARA NOSOTROS,\nCADA VISITA TUYA\nES UN MOTIVO DE ALEGRÍA.", color: textColor },
-    { text: "\n\nPOR LAS CERVEZAS\nQUE COMPARTIMOS,", color: highlightColor },
-    { text: "\nLOS NUEVOS AMIGOS\nQUE HICISTE,", color: highlightColor },
-    { text: `\nY POR ESOS ${totalVisits}\nDÍAS INOLVIDABLES\nCON NOSOTROS.`, color: highlightColor },
-    { text: "\n\n(ESPERAMOS QUE NO HAYAS\nBORRADO CASSETTE...\n¡O SÍ! 😜)", color: textColor },
+    { text: `\n\nPOR LAS CERVEZAS\nQUE COMPARTIMOS,\nLOS NUEVOS AMIGOS\nQUE HICISTE,\nY POR ESOS ${totalVisits}\nDÍAS INOLVIDABLES\nCON NOSOTROS.`, color: highlightColor },
+    { text: "\n\n(ESPERAMOS QUE NO HAYAS\nBORRADO CASSETTE... ¡O SÍ!)", color: textColor },
     { text: "\n\nGRACIAS POR ELEGIRNOS\nCOMO TU BARRA DE CERVEZAS\nFAVORITA.", color: textColor },
     { text: "\n\nAHORA, TE PRESENTAMOS\nTU CHIN CHIN 2025 WRAPPED.\n¡COMPÁRTELO EN REDES!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);

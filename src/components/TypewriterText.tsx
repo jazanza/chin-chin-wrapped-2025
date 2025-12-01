@@ -135,15 +135,19 @@ export const TypewriterText = ({
 
   // Group typed words by line and calculate layout
   const lines = useMemo(() => {
-    if (typedWords.length === 0) return [];
+    // CRITICAL FIX: Add a robust filter to ensure every item in typedWords is a valid object with lineIndex.
+    const validTypedWords = typedWords.filter(
+      (word): word is WordData => word && typeof word.lineIndex === 'number'
+    );
+
+    if (validTypedWords.length === 0) return [];
 
     const linesMap = new Map<number, WordData[]>();
-    // FIX: Filter out any potential undefined/falsy entries to prevent crash
-    typedWords.filter(Boolean).forEach(wordData => {
+    validTypedWords.forEach(wordData => {
       if (!linesMap.has(wordData.lineIndex)) {
         linesMap.set(wordData.lineIndex, []);
       }
-      linesMap.get(wordData.lineIndex)?.push(wordData);
+      linesMap.get(wordData.lineIndex)!.push(wordData);
     });
 
     const lineLayouts: { words: WordData[]; width: number; currentXOffset: number }[] = [];

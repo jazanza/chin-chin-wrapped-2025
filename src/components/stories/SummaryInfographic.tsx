@@ -41,7 +41,7 @@ const ProgressBar = ({ value, maxValue, color, position, scaleFactor = 1, respon
       </Box>
       {/* Foreground bar: White */}
       <Box ref={barRef} args={[1, 0.05 * responsiveScale, 0.02]} position={[position[0], position[1], position[2] + 0.01]} scale-x={0.01}>
-        <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.8} />
+        <meshBasicMaterial color="#FFFFFF" />
       </Box>
     </group>
   );
@@ -161,7 +161,7 @@ export const SummaryInfographic = ({
           </Text>
           {/* Simple visual for total liters - White Cylinder */}
           <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
-            <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} />
+            <meshBasicMaterial color="#FFFFFF" />
           </Cylinder>
 
           {/* Dominant Beer Category */}
@@ -195,7 +195,7 @@ export const SummaryInfographic = ({
           </Text>
           {/* Simple visual for dominant beer - White Box */}
           <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, 0.8 * responsiveScale, 0]}>
-            <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} />
+            <meshBasicMaterial color="#FFFFFF" />
           </Box>
 
           {/* Top 5 Products */}
@@ -281,7 +281,7 @@ export const SummaryInfographic = ({
           </Text>
           {/* Simple visual for visits - White Box */}
           <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>
-            <meshBasicMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} />
+            <meshBasicMaterial color="#FFFFFF" />
           </Box>
         </group>
       )}

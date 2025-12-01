@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Text, Box, Image } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
+import { TypewriterText, TextSegment } from '../TypewriterText';
 
 interface Product {
   name: string;
@@ -30,24 +30,26 @@ interface SummaryInfographicProps {
 }
 
 // Helper for comparison text and arrow
-const ComparisonText = ({ current, previous, responsiveScale, year, textColor }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string }) => {
+const ComparisonText = ({ current, previous, responsiveScale, year, textColor, position }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string; position: [number, number, number] }) => {
   const { viewport } = useThree(); // Access viewport for responsive font sizing
 
   if (previous === 0) {
     return (
-      <Text
-        fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
-        color={textColor} // Use textColor for "No data"
-        anchorX="center"
-        anchorY="middle"
-        position={[0, -0.4 * responsiveScale, 0.03]}
-        maxWidth={viewport.width * 0.8} // Use viewport width for max width
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={400}
-      >
-        No data for {parseInt(year) - 1}
-      </Text>
+      <group position={position}>
+        <Text
+          fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
+          color={textColor} // Use textColor for "No data"
+          anchorX="center"
+          anchorY="middle"
+          position={[0, 0, 0.03]}
+          maxWidth={viewport.width * 0.8} // Use viewport width for max width
+          textAlign="center"
+          letterSpacing={-0.05}
+          fontWeight={400}
+        >
+          No data for {parseInt(year) - 1}
+        </Text>
+      </group>
     );
   }
 
@@ -57,7 +59,7 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor }:
   const color = isPositive ? "#00FF00" : "#FF0000"; // Green for up, Red for down
 
   return (
-    <group position={[0, -0.4 * responsiveScale, 0.03]}>
+    <group position={position}>
       <Text
         fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
         color={color}
@@ -107,11 +109,9 @@ export const SummaryInfographic = ({
   const blockHeight = infographicHeight / 3;
 
   const [isTitleTyped, setIsTitleTyped] = useState(false);
-  const [isSubTitleTyped, setIsSubTitleTyped] = useState(false);
 
   useEffect(() => {
     setIsTitleTyped(false);
-    setIsSubTitleTyped(false);
   }, [customerName, year]);
 
   // Helper to get block position - Explicitly returning a tuple [number, number, number]
@@ -126,18 +126,20 @@ export const SummaryInfographic = ({
   // Get the top 1 product, or a placeholder if none
   const top1Product = top5Products.length > 0 ? top5Products[0] : { name: "N/A", liters: 0 };
 
-  const customerNameSegments: TextSegment[] = [{ text: customerName.toUpperCase(), color: highlightColor }];
-  const yearWrappedSegments: TextSegment[] = [{ text: `${year} WRAPPED`, color: textColor }];
+  const mainTitleSegments: TextSegment[] = useMemo(() => [
+    { text: customerName.toUpperCase(), color: highlightColor },
+    { text: `\n${year} WRAPPED`, color: textColor },
+  ], [customerName, year, textColor, highlightColor]);
 
   return (
     <group position={[0, 0, 0]}>
       {/* Main Infographic Title */}
       <TypewriterText
-        segments={customerNameSegments}
+        segments={mainTitleSegments}
         speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
-        position={[0, infographicHeight / 2 + 0.5 * responsiveScale, 0]}
+        position={[0, infographicHeight / 2 + 0.3 * responsiveScale, 0]} // Adjust position for combined title
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
         anchorX="center"
         anchorY="middle"
@@ -145,25 +147,10 @@ export const SummaryInfographic = ({
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={900}
+        lineHeight={1.2}
       />
-      {isTitleTyped && (
-        <TypewriterText
-          segments={yearWrappedSegments}
-          speed={75}
-          onComplete={() => setIsSubTitleTyped(true)}
-          isPaused={isPaused}
-          position={[0, infographicHeight / 2 + 0.1 * responsiveScale, 0]}
-          fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
-          anchorX="center"
-          anchorY="middle"
-          maxWidth={infographicWidth * 0.9}
-          textAlign="center"
-          letterSpacing={-0.05}
-          fontWeight={900}
-        />
-      )}
 
-      {isSubTitleTyped && (
+      {isTitleTyped && (
         <group position={[0, -0.5 * responsiveScale, 0]}> {/* Adjust group position to center the grid */}
           {/* Row 1, Column 1: Total Visitas */}
           <Block
@@ -200,7 +187,7 @@ export const SummaryInfographic = ({
             >
               {totalVisits}
             </Text>
-            <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} textColor={textColor} />
+            <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} textColor={textColor} position={[0, -0.4 * responsiveScale, 0.03]} />
           </Block>
 
           {/* Row 1, Column 2: Total Litros */}
@@ -238,7 +225,7 @@ export const SummaryInfographic = ({
             >
               {totalLiters.toFixed(1)} L
             </Text>
-            <ComparisonText current={totalLiters} previous={totalLiters2024} responsiveScale={responsiveScale} year={year} textColor={textColor} />
+            <ComparisonText current={totalLiters} previous={totalLiters2024} responsiveScale={responsiveScale} year={year} textColor={textColor} position={[0, -0.4 * responsiveScale, 0.03]} />
           </Block>
 
           {/* Row 2, Column 1: Top 5 Cervezas */}

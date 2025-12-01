@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { WrappedTop5 } from '../WrappedTop5';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
+import { TypewriterText, TextSegment } from '../TypewriterText';
 
 interface Product {
   name: string;
@@ -28,9 +28,9 @@ export const Top5Story = ({ top5Products, isPaused, textColor, highlightColor }:
     setIsTitleTyped(false);
   }, [top5Products]);
 
-  const titleSegments: TextSegment[] = [
-    { text: "TU TOP 5 DE CERVEZAS", color: textColor },
-  ];
+  const titleSegments: TextSegment[] = useMemo(() => [
+    { text: "TU TOP 5\nDE CERVEZAS", color: textColor },
+  ], [textColor]);
 
   return (
     <group>
@@ -47,13 +47,14 @@ export const Top5Story = ({ top5Products, isPaused, textColor, highlightColor }:
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={900}
+        lineHeight={1.2}
       />
       {isTitleTyped && (
         <WrappedTop5
           top5Products={top5Products}
           position={[0, -1 * responsiveScale, 0]}
-          textColor={textColor} // Pass textColor
-          highlightColor={highlightColor} // Pass highlightColor
+          textColor={textColor}
+          highlightColor={highlightColor}
         />
       )}
     </group>

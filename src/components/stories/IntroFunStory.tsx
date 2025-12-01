@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree, useFrame } from '@react-three/fiber';
-import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
-import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // Updated import path
+import { TypewriterText, TextSegment } from '../TypewriterText';
+import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
 import * as THREE from 'three';
 
 interface IntroFunStoryProps {
@@ -18,44 +18,20 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [lineIndex, setLineIndex] = useState(0);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const groupRef = useRef<THREE.Group>(null!);
 
-  const lines = useCallback(() => [
-    { text: "¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!", highlight: false },
-    { text: "PARA NOSOTROS, CADA VISITA TUYA ES UN MOTIVO DE ALEGRÍA.", highlight: false },
-    { text: "POR LAS CERVEZAS QUE COMPARTIMOS,", highlight: true },
-    { text: "LOS NUEVOS AMIGOS QUE HICISTE,", highlight: true },
-    { text: `Y POR ESOS ${totalVisits} DÍAS INOLVIDABLES CON NOSOTROS.`, highlight: true },
-    { text: "(ESPERAMOS QUE NO HAYAS BORRADO CASSETTE... ¡O SÍ! 😜)", highlight: false },
-    { text: "GRACIAS POR ELEGIRNOS COMO TU BARRA DE CERVEZAS FAVORITA.", highlight: false },
-    { text: "AHORA, TE PRESENTAMOS TU CHIN CHIN 2025 WRAPPED. ¡COMPÁRTELO EN REDES!", highlight: false }
-  ], [totalVisits]);
-
-  useEffect(() => {
-    setLineIndex(0);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  }, [totalVisits]);
-
-  const handleLineComplete = useCallback(() => {
-    if (lineIndex < lines().length - 1) {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        setLineIndex((prev) => prev + 1);
-      }, 750);
-    } else {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        onStoryFinished();
-      }, 750);
-    }
-  }, [lineIndex, lines, onStoryFinished]);
+  const introSegments: TextSegment[] = useMemo(() => [
+    { text: "¡GRACIAS POR\nACOMPAÑARNOS\nESTE 2025!", color: textColor },
+    { text: "\n\nPARA NOSOTROS,\nCADA VISITA TUYA\nES UN MOTIVO DE ALEGRÍA.", color: textColor },
+    { text: "\n\nPOR LAS CERVEZAS\nQUE COMPARTIMOS,", color: highlightColor },
+    { text: "\nLOS NUEVOS AMIGOS\nQUE HICISTE,", color: highlightColor },
+    { text: `\nY POR ESOS ${totalVisits}\nDÍAS INOLVIDABLES\nCON NOSOTROS.`, color: highlightColor },
+    { text: "\n\n(ESPERAMOS QUE NO HAYAS\nBORRADO CASSETTE...\n¡O SÍ! 😜)", color: textColor },
+    { text: "\n\nGRACIAS POR ELEGIRNOS\nCOMO TU BARRA DE CERVEZAS\nFAVORITA.", color: textColor },
+    { text: "\n\nAHORA, TE PRESENTAMOS\nTU CHIN CHIN 2025 WRAPPED.\n¡COMPÁRTELO EN REDES!", color: textColor }
+  ], [totalVisits, textColor, highlightColor]);
 
   const baseFontSize = Math.min(viewport.width * 0.06, 0.6) * responsiveScale;
-  const lineHeightOffset = 0.7 * responsiveScale;
 
   useFrame(({ clock }) => {
     if (groupRef.current) {
@@ -68,27 +44,22 @@ export const IntroFunStory = ({ totalVisits, isPaused, onStoryFinished, textColo
 
   return (
     <group ref={groupRef}>
-      <AnimatedBackgroundLines />{/* No whitespace after this component */}
-      {lines().map((line, index) => (
-        <React.Fragment key={index}>
-          {index <= lineIndex && (
-            <TypewriterText
-              segments={[{ text: line.text, color: line.highlight ? highlightColor : textColor }]}
-              speed={75}
-              onComplete={index === lineIndex ? handleLineComplete : undefined}
-              isPaused={isPaused || index < lineIndex}
-              position={[0, 2.5 * responsiveScale - index * lineHeightOffset, 0]}
-              fontSize={baseFontSize}
-              anchorX="center"
-              anchorY="middle"
-              maxWidth={viewport.width * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            />
-          )}
-        </React.Fragment>
-      ))}
+      <AnimatedBackgroundLines />
+      <TypewriterText
+        segments={introSegments}
+        speed={75}
+        onComplete={onStoryFinished}
+        isPaused={isPaused}
+        position={[0, 0, 0]} // Centered
+        fontSize={baseFontSize}
+        anchorX="center"
+        anchorY="middle"
+        maxWidth={viewport.width * 0.8}
+        textAlign="center"
+        letterSpacing={-0.05}
+        fontWeight={700}
+        lineHeight={1.2}
+      />
     </group>
   );
 };

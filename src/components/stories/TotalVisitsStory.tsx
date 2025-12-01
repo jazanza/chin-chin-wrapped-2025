@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
-import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // Updated import path
+import { TypewriterText, TextSegment } from '../TypewriterText';
+import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines';
 
 interface TotalVisitsStoryProps {
   customerName: string;
@@ -14,24 +14,26 @@ interface TotalVisitsStoryProps {
   highlightColor: string;
 }
 
-const ComparisonText = ({ current, previous, responsiveScale, year, textColor }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string }) => {
+const ComparisonText = ({ current, previous, responsiveScale, year, textColor, position }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string; position: [number, number, number] }) => {
   const { viewport } = useThree();
 
   if (previous === 0) {
     return (
-      <Text
-        fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
-        color={textColor} // Use textColor for "No data"
-        anchorX="center"
-        anchorY="middle"
-        position={[0, -0.4 * responsiveScale, 0.03]}
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={400}
-      >
-        No data for {parseInt(year) - 1}
-      </Text>
+      <group position={position}>
+        <Text
+          fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
+          color={textColor}
+          anchorX="center"
+          anchorY="middle"
+          position={[0, 0, 0.03]}
+          maxWidth={viewport.width * 0.8}
+          textAlign="center"
+          letterSpacing={-0.05}
+          fontWeight={400}
+        >
+          No data for {parseInt(year) - 1}
+        </Text>
+      </group>
     );
   }
 
@@ -41,7 +43,7 @@ const ComparisonText = ({ current, previous, responsiveScale, year, textColor }:
   const color = isPositive ? "#00FF00" : "#FF0000"; // Green for up, Red for down
 
   return (
-    <group position={[0, -0.4 * responsiveScale, 0.03]}>
+    <group position={position}>
       <Text
         fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
         color={color}
@@ -64,60 +66,46 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const [isTitleTyped, setIsTitleTyped] = useState(false);
   const [isVisitsTyped, setIsVisitsTyped] = useState(false);
 
   useEffect(() => {
-    setIsTitleTyped(false);
     setIsVisitsTyped(false);
   }, [customerName, year, totalVisits, totalVisits2024]);
 
-  const titleSegments: TextSegment[] = [
-    { text: "¡", color: textColor },
-    { text: customerName.toUpperCase(), color: highlightColor },
-    { text: ", NOS VISITASTE...", color: textColor },
-  ];
-
-  const visitsSegments: TextSegment[] = [
-    { text: `${totalVisits}`, color: highlightColor },
+  const storySegments: TextSegment[] = useMemo(() => [
+    { text: `¡${customerName.toUpperCase()},`, color: highlightColor },
+    { text: "\nNOS VISITASTE...", color: textColor },
+    { text: `\n${totalVisits}`, color: highlightColor },
     { text: " VECES!", color: textColor },
-  ];
+  ], [customerName, totalVisits, textColor, highlightColor]);
 
   return (
     <group>
       <AnimatedBackgroundLines />
       <TypewriterText
-        segments={titleSegments}
+        segments={storySegments}
         speed={75}
-        onComplete={() => setIsTitleTyped(true)}
+        onComplete={() => setIsVisitsTyped(true)}
         isPaused={isPaused}
-        position={[0, 2.5 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
+        position={[0, 0, 0]} // Centered
+        fontSize={Math.min(viewport.width * 0.08, 0.8) * responsiveScale}
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={900}
+        lineHeight={1.2}
       />
-      {isTitleTyped && (
-        <TypewriterText
-          segments={visitsSegments}
-          speed={75}
-          onComplete={() => setIsVisitsTyped(true)}
-          isPaused={isPaused}
-          position={[0, 1.5 * responsiveScale, 0]}
-          fontSize={Math.min(viewport.width * 0.08, 0.8) * responsiveScale}
-          anchorX="center"
-          anchorY="middle"
-          maxWidth={viewport.width * 0.8}
-          textAlign="center"
-          letterSpacing={-0.05}
-          fontWeight={900}
-        />
-      )}
       {isVisitsTyped && (
-        <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} textColor={textColor} />
+        <ComparisonText
+          current={totalVisits}
+          previous={totalVisits2024}
+          responsiveScale={responsiveScale}
+          year={year}
+          textColor={textColor}
+          position={[0, -2.5 * responsiveScale, 0]} // Adjusted position below main text
+        />
       )}
     </group>
   );

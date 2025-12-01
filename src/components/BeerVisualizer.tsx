@@ -10,11 +10,12 @@ interface RankedBeer {
   color: string;
 }
 
-const DataBubble = ({ beer, liquidHeight, viewportWidth, maxLiters }: {
+const DataBubble = ({ beer, liquidHeight, viewportWidth, maxLiters, index }: {
   beer: RankedBeer;
   liquidHeight: number;
   viewportWidth: number;
   maxLiters: number;
+  index: number;
 }) => {
   const ref = useRef<THREE.Mesh>(null!);
   const { viewport } = useThree();
@@ -45,15 +46,20 @@ const DataBubble = ({ beer, liquidHeight, viewportWidth, maxLiters }: {
     }
   });
 
+  const geometryType = index % 3;
+
   return (
     <mesh ref={ref} position={initialPosition} scale={[size, size, size]}>
-      <sphereGeometry args={[1, 32, 32]} />
+      {geometryType === 0 && <icosahedronGeometry args={[1, 0]} />}
+      {geometryType === 1 && <torusGeometry args={[0.8, 0.3, 16, 100]} />}
+      {geometryType === 2 && <boxGeometry args={[1.2, 1.2, 1.2]} />}
+      
       <meshStandardMaterial
         color={beer.color}
         transparent
         opacity={0.85}
         emissive={beer.color}
-        emissiveIntensity={0.6}
+        emissiveIntensity={0.6 + size * 0.5}
         roughness={0.2}
         metalness={0.1}
       />
@@ -177,13 +183,14 @@ export function BeerVisualizer({ liters, rankedBeers }: { liters: number; ranked
 
       <AestheticBubbles liquidHeight={animatedHeight.current} viewportWidth={viewport.width} />
 
-      {animatedHeight.current > 0.1 && rankedBeers.map((beer) => (
+      {animatedHeight.current > 0.1 && rankedBeers.map((beer, index) => (
         <DataBubble
           key={beer.name}
           beer={beer}
           liquidHeight={animatedHeight.current}
           viewportWidth={viewport.width}
           maxLiters={maxLitersForBubbles}
+          index={index}
         />
       ))}
 

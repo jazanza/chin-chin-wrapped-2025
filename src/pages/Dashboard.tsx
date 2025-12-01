@@ -1,6 +1,5 @@
 import { useState, Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { Download } from "lucide-react";
 import { useDb } from "@/hooks/useDb";
@@ -8,6 +7,7 @@ import { BeerVisualizer } from "@/components/BeerVisualizer";
 import { FlavorSpectrum } from "@/components/FlavorSpectrum";
 import { VarietyBalance } from "@/components/VarietyBalance";
 import { LoyaltyConstellation } from "@/components/LoyaltyConstellation";
+import { CameraAnimator } from "@/components/CameraAnimator";
 import { Button } from "@/components/ui/button";
 import { FileUploader } from "@/components/FileUploader";
 import { DateRangeSelector } from "@/components/DateRangeSelector";
@@ -138,11 +138,13 @@ const Dashboard = () => {
           </p>
         )}
         {!loading && !error && (
-          <Canvas shadows camera={{ position: [0, 1, 5], fov: 50 }}>
+          <Canvas shadows camera={{ position: [0, 1, 7], fov: 50 }}>
             <color attach="background" args={["#101010"]} />
-            <fog attach="fog" args={["#101010", 5, 15]} />
-            <Suspense fallback={null}>{renderVisualization()}</Suspense>
-            <OrbitControls enableZoom={true} />
+            <fog attach="fog" args={["#101010", 5, 20]} />
+            <Suspense fallback={null}>
+              {renderVisualization()}
+              <CameraAnimator />
+            </Suspense>
             <EffectComposer>
               <Bloom
                 mipmapBlur

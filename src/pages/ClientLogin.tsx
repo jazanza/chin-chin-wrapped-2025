@@ -17,6 +17,7 @@ const ClientLogin = () => {
   const handleSearch = async () => {
     if (!dbLoaded) {
       showError("Database not loaded yet. Please wait.");
+      console.error("Attempted search before database was loaded.");
       return;
     }
     setLoading(true);
@@ -27,9 +28,9 @@ const ClientLogin = () => {
       } else {
         showError("Datos no encontrados. Intenta con otro nombre o número.");
       }
-    } catch (error) {
-      console.error("Error searching for customer:", error);
-      showError("Ocurrió un error al buscar el cliente.");
+    } catch (error: any) {
+      console.error("Error searching for customer:", error); // Log the full error object
+      showError(error.message || "Ocurrió un error al buscar el cliente."); // Show specific message if available
     } finally {
       setLoading(false);
     }

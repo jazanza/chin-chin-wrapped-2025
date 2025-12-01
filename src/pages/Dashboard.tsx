@@ -119,15 +119,15 @@ const Dashboard = () => {
               {viewMode === "balance" && <VarietyBalance varietyMetrics={varietyMetrics} />}
               {viewMode === "loyalty" && <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} />}
               <CameraAnimator viewMode={viewMode} />
+              <EffectComposer>
+                <Bloom
+                  mipmapBlur
+                  luminanceThreshold={0.8}
+                  luminanceSmoothing={0.025}
+                  intensity={1.2}
+                />
+              </EffectComposer>
             </Suspense>
-            <EffectComposer>
-              <Bloom
-                mipmapBlur
-                luminanceThreshold={0.8}
-                luminanceSmoothing={0.025}
-                intensity={1.2}
-              />
-            </EffectComposer>
           </Canvas>
         )}
       </div>

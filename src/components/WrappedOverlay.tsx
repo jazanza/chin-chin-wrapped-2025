@@ -6,7 +6,7 @@ interface WrappedOverlayProps {
 
 export const WrappedOverlay = ({ customerName, year, dominantBeerCategory }: WrappedOverlayProps) => {
   return (
-    <div className="absolute top-8 left-8 z-10 text-white pointer-events-none animate-text-glitch-in">
+    <div className="absolute top-8 left-8 z-10 text-white pointer-events-none animate-text-glitch-in font-sans">
       <h1
         className="text-[min(6vw,3.5rem)] font-bold text-[var(--primary-glitch-pink)] uppercase tracking-widest"
         style={{ textShadow: "2px 2px var(--secondary-glitch-cyan)" }}

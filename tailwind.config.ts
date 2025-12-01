@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["'Zalando Sans Expanded'", "sans-serif"],
+        sans: ["Oswald", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -65,6 +65,10 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // New custom colors for glitch theme
+        'primary-glitch-pink': 'hsl(var(--primary-glitch-pink))',
+        'secondary-glitch-cyan': 'hsl(var(--secondary-glitch-cyan))',
+        'button-highlight': 'hsl(var(--button-highlight))',
       },
       borderRadius: {
         lg: "var(--radius)",

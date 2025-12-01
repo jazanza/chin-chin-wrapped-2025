@@ -179,16 +179,16 @@ const WrappedDashboard = () => {
 
   if (loading && !wrappedData) {
     return (
-      <div className="w-screen h-screen bg-black text-white flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--primary-glitch-pink)]" />
-        <p className="ml-4 text-lg text-[var(--secondary-glitch-cyan)]">Cargando tu Wrapped...</p>
+      <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
+        <Loader2 className="h-8 w-8 animate-spin text-primary-glitch-pink" />
+        <p className="ml-4 text-lg text-secondary-glitch-cyan">Cargando tu Wrapped...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="w-screen h-screen bg-black text-white flex items-center justify-center">
+      <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
         <p className="text-lg text-red-500">Error: {error}</p>
       </div>
     );
@@ -201,7 +201,7 @@ const WrappedDashboard = () => {
   const StoryComponent = currentStory.component;
 
   return (
-    <div className="w-screen h-screen relative bg-black">
+    <div className="w-screen h-screen relative bg-background font-sans">
       {currentStory.id !== 'summaryInfographic' && (
         <WrappedOverlay
           customerName={wrappedData.customerName}
@@ -246,7 +246,7 @@ const WrappedDashboard = () => {
 
         <Button
           onClick={handleDownloadScreenshot}
-          className="bg-[var(--primary-glitch-pink)] hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+          className="bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
           disabled={isCapturing}
         >
           {isCapturing ? (

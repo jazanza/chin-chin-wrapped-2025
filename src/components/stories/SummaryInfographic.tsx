@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Box } from '@react-three/drei';
+import { Text, Box, Cylinder } from '@react-three/drei'; // Import Cylinder
 import * as THREE from 'three';
 
 interface Product {
@@ -40,7 +40,7 @@ export const SummaryInfographic = ({
       <Text
         position={[0, 2.5, 0]}
         fontSize={BASE_FONT_SIZE * 2}
-        color="#FF00FF" // primary-glitch-pink
+        color="#F654A9" // primary-glitch-pink
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.02}
@@ -51,7 +51,7 @@ export const SummaryInfographic = ({
       <Text
         position={[0, 2.1, 0]}
         fontSize={BASE_FONT_SIZE * 1.2}
-        color="#00FFFF" // secondary-glitch-cyan
+        color="#00FF99" // secondary-glitch-cyan
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.01}
@@ -73,7 +73,7 @@ export const SummaryInfographic = ({
       <Text
         position={[-2.5, 0.8, 0]}
         fontSize={BASE_FONT_SIZE * 2}
-        color="#FF00FF" // primary-glitch-pink
+        color="#F654A9" // primary-glitch-pink
         anchorX="left"
         anchorY="middle"
         outlineWidth={0.02}
@@ -83,7 +83,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for total liters */}
       <Cylinder args={[0.3, 0.3, Math.min(totalLiters / 500, 1.5), 16]} position={[-1, 0.8, 0]} rotation-x={Math.PI / 2}>
-        <meshBasicMaterial color="#FF00FF" />
+        <meshBasicMaterial color="#F654A9" />
       </Cylinder>
 
       {/* Dominant Beer Category */}
@@ -99,7 +99,7 @@ export const SummaryInfographic = ({
       <Text
         position={[2.5, 0.8, 0]}
         fontSize={BASE_FONT_SIZE * 2}
-        color="#00FFFF" // secondary-glitch-cyan
+        color="#00FF99" // secondary-glitch-cyan
         anchorX="right"
         anchorY="middle"
         outlineWidth={0.02}
@@ -109,7 +109,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for dominant beer */}
       <Box args={[0.5, 0.5, 0.1]} position={[1.5, 0.8, 0]}>
-        <meshBasicMaterial color="#00FFFF" />
+        <meshBasicMaterial color="#00FF99" />
       </Box>
 
       {/* Top 5 Products */}
@@ -160,7 +160,7 @@ export const SummaryInfographic = ({
       <Text
         position={[2.5, -0.6, 0]}
         fontSize={BASE_FONT_SIZE * 1.5}
-        color="#FF00FF" // primary-glitch-pink
+        color="#F654A9" // primary-glitch-pink
         anchorX="right"
         anchorY="middle"
         outlineWidth={0.02}
@@ -170,7 +170,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for visits */}
       <Box args={[0.5, 0.5, 0.1]} position={[1.5, -0.6, 0]}>
-        <meshBasicMaterial color="#FF00FF" />
+        <meshBasicMaterial color="#F654A9" />
       </Box>
     </group>
   );

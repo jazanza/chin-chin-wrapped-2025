@@ -16,7 +16,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}> {/* Added future flags */}
         <Routes>
           <Route path="/" element={<ClientLogin />} /> {/* New root route */}
           <Route path="/wrapped/:customerId" element={<WrappedDashboard />} /> {/* New wrapped route */}

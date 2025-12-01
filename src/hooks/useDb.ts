@@ -4,6 +4,11 @@ import { format } from "date-fns";
 import { initDb, loadDb, queryData } from "@/lib/db";
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
+const EXCLUDED_PRODUCT_KEYWORDS = [
+    "Snacks", "Sandwich", "Halls", "Marlboro", "Vozol", "Funda", "Brocheta", 
+    "Hamburguesa", "Pin", "Mallorca", "Trident", "Ruffles", "Kit Kat", "Papas Cholitas", 
+    "Letrero", "Gorra", "Tapas Mix", "Nachos", "Lanyard"
+];
 
 let dbInstance: any = null; // Global instance for the database
 
@@ -102,8 +107,8 @@ const categorizeBeer = (itemName: string): string => {
 };
 
 const BEER_CATEGORY_COLORS: { [key: string]: string } = {
-  IPA: "#FF00FF", // primary-glitch-pink
-  Lager: "#00FFFF", // secondary-glitch-cyan
+  IPA: "#F654A9", // primary-glitch-pink
+  Lager: "#00FF99", // secondary-glitch-cyan
   Stout: "#8B008B",
   Porter: "#FF4500",
   Pilsner: "#00FF00",
@@ -204,11 +209,17 @@ export function useDb() {
       `;
       const rawProductData = queryData(dbInstance, totalConsumedAndRankingQuery, [customerId, year]);
 
+      // Filter out non-liquid products before calculating volumes
+      const filteredProductData = rawProductData.filter(item => {
+          const name = item.ProductName.toLowerCase();
+          return !EXCLUDED_PRODUCT_KEYWORDS.some(keyword => name.includes(keyword.toLowerCase()));
+      });
+
       let totalLiters = 0;
       const categoryVolumes: { [key: string]: number } = {};
       const productLiters: { name: string; liters: number; color: string }[] = [];
 
-      for (const item of rawProductData) {
+      for (const item of filteredProductData) { // Use filtered data here
         const volumeMl = extractVolumeMl(item.ProductName, null); // Assuming description is not needed here
         const liters = (item.TotalQuantity * volumeMl) / 1000;
         totalLiters += liters;

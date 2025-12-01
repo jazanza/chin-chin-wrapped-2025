@@ -12,7 +12,7 @@ const ClientLogin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { findCustomer, dbLoaded } = useDb(); // Use dbLoaded to check if DB is ready
+  const { findCustomer, dbLoaded } = useDb();
 
   const handleSearch = async () => {
     if (!dbLoaded) {
@@ -29,21 +29,21 @@ const ClientLogin = () => {
         showError("Datos no encontrados. Intenta con otro nombre o número.");
       }
     } catch (error: any) {
-      console.error("Error searching for customer:", error); // Log the full error object
-      showError(error.message || "Ocurrió un error al buscar el cliente."); // Show specific message if available
+      console.error("Error searching for customer:", error);
+      showError(error.message || "Ocurrió un error al buscar el cliente.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-screen h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+    <div className="w-screen h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 font-sans">
       <div className="text-center max-w-md w-full">
-        <h1 className="text-[min(8vw,4rem)] font-bold mb-8 text-[var(--primary-glitch-pink)]"
+        <h1 className="text-[min(8vw,4rem)] font-bold mb-8 text-primary-glitch-pink"
             style={{ textShadow: "3px 3px var(--secondary-glitch-cyan)" }}>
           Chin Chin 2025 Wrapped
         </h1>
-        <p className="text-[min(4vw,1.5rem)] mb-8 text-[var(--secondary-glitch-cyan)]">
+        <p className="text-[min(4vw,1.5rem)] mb-8 text-secondary-glitch-cyan">
           Descubre tu año cervecero.
         </p>
         <div className="space-y-4">
@@ -56,7 +56,7 @@ const ClientLogin = () => {
             placeholder="Tu nombre o número de teléfono"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-[var(--primary-glitch-pink)] focus:border-[var(--primary-glitch-pink)]"
+            className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-primary-glitch-pink focus:border-primary-glitch-pink"
             disabled={loading || !dbLoaded}
             onKeyPress={(e) => {
               if (e.key === 'Enter') {
@@ -67,7 +67,7 @@ const ClientLogin = () => {
           <Button
             onClick={handleSearch}
             size="lg"
-            className="w-full bg-[var(--primary-glitch-pink)] hover:bg-pink-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="w-full bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
             disabled={loading || !dbLoaded}
           >
             {loading ? "Buscando..." : "Ver mi Wrapped"}

@@ -13,7 +13,7 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
       <Text
         position={[0, 1.5, 0]}
         fontSize={0.8}
-        color="#FF00FF" // primary-glitch-pink
+        color="#F654A9" // primary-glitch-pink
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.05}
@@ -24,7 +24,7 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
       <Text
         position={[0, 0, 0]}
         fontSize={0.4}
-        color="#00FFFF" // secondary-glitch-cyan
+        color="#00FF99" // secondary-glitch-cyan
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.03}
@@ -45,7 +45,7 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
       {Array.from({ length: Math.min(totalVisits, 10) }).map((_, i) => (
         <mesh key={i} position={[-2 + i * 0.4, -2.5, 0]}>
           <sphereGeometry args={[0.1, 16, 16]} />
-          <meshBasicMaterial color={i % 2 === 0 ? "#FF00FF" : "#00FFFF"} />
+          <meshBasicMaterial color={i % 2 === 0 ? "#F654A9" : "#00FF99"} />
         </mesh>
       ))}
     </group>

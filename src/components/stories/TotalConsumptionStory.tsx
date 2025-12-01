@@ -12,7 +12,7 @@ export const TotalConsumptionStory = ({ totalLiters }: TotalConsumptionStoryProp
       <Text
         position={[0, 3, 0]}
         fontSize={0.6}
-        color="#FF00FF" // primary-glitch-pink
+        color="#F654A9" // primary-glitch-pink
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04}

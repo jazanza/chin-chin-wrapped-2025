@@ -24,11 +24,11 @@ export function DominantBeerBarChart({ categoryVolumes, dominantBeerCategory, ..
     if (totalLiters === 0) return [];
 
     // Use new accent colors for bars, alternating
-    const accentColors = ["#00FF66", "#FF007A", "#FFA800", "#00D8FF"]; // Green, Magenta, Orange, Cyan
+    const accentColors = ["#00FF66", "#FF008A", "#FF9A00", "#00E6FF"]; // neon-green, neon-magenta, neon-orange, neon-cyan
     let colorIndex = 0;
 
     return Object.entries(categoryVolumes).map(([category, liters]) => {
-      const color = category === dominantBeerCategory ? "#00FF99" : accentColors[colorIndex % accentColors.length];
+      const color = category === dominantBeerCategory ? "#00FF66" : accentColors[colorIndex % accentColors.length]; // Dominant is neon-green
       if (category !== dominantBeerCategory) {
         colorIndex++;
       }

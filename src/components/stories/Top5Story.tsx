@@ -23,7 +23,7 @@ export const Top5Story = ({ top5Products }: Top5StoryProps) => {
       <Text
         position={[0, 3 * responsiveScale, 0]}
         fontSize={0.6 * responsiveScale}
-        color="#FF00FF" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04 * responsiveScale}

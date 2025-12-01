@@ -18,7 +18,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
       <Text
         position={[0, 2.5 * responsiveScale, 0]}
         fontSize={0.6 * responsiveScale}
-        color="#F654A9" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04 * responsiveScale}
@@ -32,7 +32,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
       <Text
         position={[0, 1.8 * responsiveScale, 0]}
         fontSize={0.8 * responsiveScale}
-        color="#00FF99" // secondary-glitch-cyan
+        color="#00FF66" // neon-green
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.05 * responsiveScale}

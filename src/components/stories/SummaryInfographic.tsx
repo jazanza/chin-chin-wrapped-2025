@@ -62,10 +62,10 @@ export const SummaryInfographic = ({
   return (
     <group position={[0, 0, 0]}>
       {/* Background Panel - Applying a subtle stacked card effect */}
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.1]} rotation-z={-0.02}>
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.1]} rotation-z={-0.04}>
         <meshBasicMaterial color="#1a1a1a" transparent opacity={0.7} />
       </Box>
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.15]} rotation-z={0.02}>
+      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0, 0, -0.15]} rotation-z={0.03}>
         <meshBasicMaterial color="#0a0a0a" transparent opacity={0.8} />
       </Box>
 
@@ -73,7 +73,7 @@ export const SummaryInfographic = ({
       <Text
         position={[0, 2.5 * responsiveScale, 0]}
         fontSize={BASE_FONT_SIZE * 2}
-        color="#F654A9" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.02 * responsiveScale}
@@ -87,7 +87,7 @@ export const SummaryInfographic = ({
       <Text
         position={[0, 2.1 * responsiveScale, 0]}
         fontSize={BASE_FONT_SIZE * 1.2}
-        color="#00FF99" // secondary-glitch-cyan
+        color="#00FF66" // neon-green
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.01 * responsiveScale}
@@ -115,7 +115,7 @@ export const SummaryInfographic = ({
       <Text
         position={[-2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-        color="#F654A9" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="left"
         anchorY="middle"
         outlineWidth={0.02 * responsiveScale}
@@ -128,7 +128,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for total liters */}
       <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
-        <meshBasicMaterial color="#F654A9" emissive="#F654A9" emissiveIntensity={0.5} />
+        <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
       </Cylinder>
 
       {/* Dominant Beer Category */}
@@ -147,7 +147,7 @@ export const SummaryInfographic = ({
       <Text
         position={[2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-        color="#00FF99" // secondary-glitch-cyan
+        color="#00FF66" // neon-green
         anchorX="right"
         anchorY="middle"
         outlineWidth={0.02 * responsiveScale}
@@ -160,7 +160,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for dominant beer */}
       <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, 0.8 * responsiveScale, 0]}>
-        <meshBasicMaterial color="#00FF99" emissive="#00FF99" emissiveIntensity={0.5} />
+        <meshBasicMaterial color="#00FF66" emissive="#00FF66" emissiveIntensity={0.5} />
       </Box>
 
       {/* Top 5 Products */}
@@ -228,7 +228,7 @@ export const SummaryInfographic = ({
       <Text
         position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-        color="#F654A9" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="right"
         anchorY="middle"
         outlineWidth={0.02 * responsiveScale}
@@ -241,7 +241,7 @@ export const SummaryInfographic = ({
       </Text>
       {/* Simple visual for visits */}
       <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>
-        <meshBasicMaterial color="#F654A9" emissive="#F654A9" emissiveIntensity={0.5} />
+        <meshBasicMaterial color="#FF008A" emissive="#FF008A" emissiveIntensity={0.5} />
       </Box>
     </group>
   );

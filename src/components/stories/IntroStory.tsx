@@ -26,7 +26,7 @@ const AnimatedBackgroundLines = () => {
         (Math.random() - 0.5) * lineLength,
         (Math.random() - 0.5) * 2
       ));
-      generatedLines.push({ start, end, color: i % 2 === 0 ? "#F654A9" : "#00FF99", speed: 0.5 + Math.random() * 0.5 });
+      generatedLines.push({ start, end, color: i % 2 === 0 ? "#FF008A" : "#00FF66", speed: 0.5 + Math.random() * 0.5 }); // neon-magenta : neon-green
     }
     return generatedLines;
   }, []);
@@ -66,7 +66,7 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
       <Text
         position={[0, 1.5, 0]}
         fontSize={0.8 * responsiveScale}
-        color="#F654A9" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.05 * responsiveScale}
@@ -79,7 +79,7 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
       <Text
         position={[0, 0, 0]}
         fontSize={0.4 * responsiveScale}
-        color="#00FF99" // secondary-glitch-cyan
+        color="#00FF66" // neon-green
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.03 * responsiveScale}
@@ -104,7 +104,7 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
       {Array.from({ length: Math.min(totalVisits, 10) }).map((_, i) => (
         <mesh key={i} position={[-2 + i * 0.4 * responsiveScale, -2.5 * responsiveScale, 0]}>
           <sphereGeometry args={[0.1 * responsiveScale, 16, 16]} />
-          <meshBasicMaterial color={i % 2 === 0 ? "#F654A9" : "#00FF99"} />
+          <meshBasicMaterial color={i % 2 === 0 ? "#FF008A" : "#00FF66"} /> {/* neon-magenta : neon-green */}
         </mesh>
       ))}
     </group>

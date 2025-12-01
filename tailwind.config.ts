@@ -65,15 +65,23 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // New custom colors for glitch theme
+        // New custom colors for glitch theme (old)
         'primary-glitch-pink': 'hsl(var(--primary-glitch-pink))',
         'secondary-glitch-cyan': 'hsl(var(--secondary-glitch-cyan))',
         'button-highlight': 'hsl(var(--button-highlight))',
-        // Nuevos colores de acento
+        // Nuevos colores de acento (old)
         'accent-green': 'hsl(var(--accent-green))',
         'accent-magenta': 'hsl(var(--accent-magenta))',
         'accent-orange': 'hsl(var(--accent-orange))',
         'accent-cyan': 'hsl(var(--accent-cyan))',
+        // Nuevos colores neon
+        neon: {
+          magenta: "hsl(var(--neon-magenta))",
+          green: "hsl(var(--neon-green))",
+          cyan: "hsl(var(--neon-cyan))",
+          orange: "hsl(var(--neon-orange))",
+          yellow: "hsl(var(--neon-yellow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

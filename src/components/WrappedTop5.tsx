@@ -100,7 +100,7 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
       <Text
         position={[0, MAX_COLUMN_HEIGHT + 0.5, 0]}
         fontSize={BASE_TEXT_FONT_SIZE * 2 * responsiveScale}
-        color="#FF00FF" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04 * responsiveScale}

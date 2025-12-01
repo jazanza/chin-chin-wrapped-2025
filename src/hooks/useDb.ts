@@ -107,12 +107,12 @@ const categorizeBeer = (itemName: string): string => {
 };
 
 const BEER_CATEGORY_COLORS: { [key: string]: string } = {
-  IPA: "#F654A9", // primary-glitch-pink
-  Lager: "#00FF99", // secondary-glitch-cyan
-  Stout: "#8B008B",
-  Porter: "#FF4500",
-  Pilsner: "#00FF00",
-  Ale: "#FFFF00",
+  IPA: "#FF008A",    // neon-magenta
+  Lager: "#00FF66",  // neon-green
+  Stout: "#00E6FF",  // neon-cyan
+  Porter: "#FF9A00", // neon-orange
+  Pilsner: "#FFEB3B", // neon-yellow
+  Ale: "#FF008A",    // neon-magenta (reusing for variety)
   Other: "#FFFFFF",
 };
 

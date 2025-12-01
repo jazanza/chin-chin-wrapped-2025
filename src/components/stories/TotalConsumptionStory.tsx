@@ -16,7 +16,7 @@ export const TotalConsumptionStory = ({ totalLiters }: TotalConsumptionStoryProp
       <Text
         position={[0, 3 * responsiveScale, 0]}
         fontSize={0.6 * responsiveScale}
-        color="#F654A9" // primary-glitch-pink
+        color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.04 * responsiveScale}

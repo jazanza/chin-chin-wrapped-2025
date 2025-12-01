@@ -251,11 +251,16 @@ const ClientLogin = () => {
   return (
     <div className="w-screen h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 font-sans">
       <div className="text-center max-w-md w-full">
-        <h1 className="text-[min(8vw,4rem)] font-bold mb-8 text-primary-glitch-pink"
-            style={{ textShadow: "3px 3px var(--secondary-glitch-cyan)" }}>
+        <h1 
+          className="text-[min(8vw,4rem)] font-bold mb-8 glitch-text text-neon-magenta"
+          data-text="Chin Chin 2025 Wrapped"
+        >
           Chin Chin 2025 Wrapped
         </h1>
-        <p className="text-[min(4vw,1.5rem)] mb-8 text-secondary-glitch-cyan">
+        <p 
+          className="text-[min(4vw,1.5rem)] mb-8 glitch-text text-neon-cyan"
+          data-text="Descubre tu año cervecero."
+        >
           Descubre tu año cervecero.
         </p>
 
@@ -270,7 +275,7 @@ const ClientLogin = () => {
               placeholder="Tu nombre, teléfono, RFC o email"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-primary-glitch-pink focus:border-primary-glitch-pink"
+              className="bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-neon-magenta focus:border-neon-magenta"
               disabled={loading || !dbLoaded}
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
@@ -281,7 +286,7 @@ const ClientLogin = () => {
             <Button
               onClick={handleSearch}
               size="lg"
-              className="w-full bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              className="w-full bg-neon-yellow hover:bg-neon-yellow/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
               disabled={loading || !dbLoaded}
             >
               {loading ? "Buscando..." : "Buscar mi Wrapped"}
@@ -310,7 +315,7 @@ const ClientLogin = () => {
             <Button
               onClick={() => { /* This button is now handled by RadioGroup onValueChange */ }}
               size="lg"
-              className="w-full bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+              className="w-full bg-neon-yellow hover:bg-neon-yellow/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
               disabled={!selectedCustomer || loading}
             >
               Continuar
@@ -330,7 +335,7 @@ const ClientLogin = () => {
             <h2 className="text-[min(5vw,2rem)] font-bold text-white mb-4">
               Verifica tu identidad
             </h2>
-            <p className="text-lg text-secondary-glitch-cyan mb-4">
+            <p className="text-lg text-neon-cyan mb-4">
               {kbaQuestion.question}
             </p>
             <RadioGroup

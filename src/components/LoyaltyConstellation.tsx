@@ -69,8 +69,8 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false, responsiveScale
     }
   });
 
-  // Reemplazar variables CSS con valores hexadecimales
-  const color = isSun ? "#F654A9" : "#00FF99"; // primary-glitch-pink : secondary-glitch-cyan
+  // Reemplazar variables CSS con valores hexadecimales de la nueva paleta
+  const color = isSun ? "#FF008A" : "#00FF66"; // neon-magenta : neon-green
 
   return (
     <group ref={groupRef}>
@@ -90,7 +90,7 @@ const CustomerCluster = ({ customer, sunPosition, isSun = false, responsiveScale
         <Line
           ref={lineRef}
           points={[sunPosition, position]}
-          color="#F654A9" // primary-glitch-pink
+          color="#FF008A" // neon-magenta
           lineWidth={1}
           transparent
           opacity={0.3}

@@ -6,23 +6,23 @@ interface WrappedOverlayProps {
 
 export const WrappedOverlay = ({ customerName, year, dominantBeerCategory }: WrappedOverlayProps) => {
   return (
-    <div className="absolute top-8 left-8 z-10 text-white pointer-events-none animate-text-glitch-in font-sans max-w-[80%]">
+    <div className="absolute top-8 left-8 z-10 text-white pointer-events-none font-sans max-w-[80%]">
       <h1
-        className="text-[min(6vw,3.5rem)] font-bold text-[var(--primary-glitch-pink)] uppercase tracking-widest"
-        style={{ textShadow: "2px 2px var(--secondary-glitch-cyan)" }}
+        className="text-[min(6vw,3.5rem)] font-bold glitch-text text-neon-magenta uppercase tracking-widest"
+        data-text={customerName}
       >
         {customerName}
       </h1>
       <p
-        className="text-[min(3vw,1.8rem)] font-bold text-[var(--secondary-glitch-cyan)] uppercase tracking-wide"
-        style={{ textShadow: "1px 1px var(--primary-glitch-pink)" }}
+        className="text-[min(3vw,1.8rem)] font-bold glitch-text text-neon-cyan uppercase tracking-wide"
+        data-text={`${year} Wrapped`}
       >
         {year} Wrapped
       </p>
       <p
         className="text-[min(2.5vw,1.5rem)] mt-2 text-gray-300"
       >
-        Tu cerveza dominante: <span className="font-bold text-[var(--primary-glitch-pink)]">{dominantBeerCategory}</span>
+        Tu cerveza dominante: <span className="font-bold text-neon-magenta">{dominantBeerCategory}</span>
       </p>
     </div>
   );

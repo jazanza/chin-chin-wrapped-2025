@@ -15,7 +15,7 @@ const PulsingParticles = ({ color, weight }: { color: string; weight: number }) 
       const theta = Math.random() * 2 * Math.PI;
       const phi = Math.acos(2 * Math.random() - 1);
       p[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      p[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      p[i * 3 + 1] = Math.sin(phi) * Math.sin(theta);
       p[i * 3 + 2] = r * Math.cos(phi);
     }
     return p;
@@ -72,14 +72,14 @@ export function VarietyBalance({ varietyMetrics, ...props }: { varietyMetrics: {
         </Cylinder>
 
         <group position={[-2, 0.5, 0]}>
-          <PulsingParticles color="#F654A9" weight={totalLiters} /> {/* primary-glitch-pink */}
+          <PulsingParticles color="#FF008A" weight={totalLiters} /> {/* neon-magenta */}
           <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Volume</Text>
           <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${totalLiters.toFixed(1)} L`}</Text>
         </group>
 
         <group position={[2, 0.5, 0]}>
           <Torus args={[0.5, 0.1, 8, 32]}>
-            <meshBasicMaterial color="#00FF99" wireframe={true} /> {/* secondary-glitch-cyan */}
+            <meshBasicMaterial color="#00FF66" wireframe={true} /> {/* neon-green */}
           </Torus>
           <Text position={[0, -0.8, 0]} fontSize={0.2 * responsiveScale} color="white">Variety</Text>
           <Text position={[0, -1.1, 0]} fontSize={0.15 * responsiveScale} color="white">{`${uniqueProducts} Products`}</Text>

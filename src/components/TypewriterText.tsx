@@ -135,7 +135,6 @@ export const TypewriterText = ({
 
   // Group typed words by line and calculate layout
   const lines = useMemo(() => {
-    // CRITICAL FIX: Add a robust filter to ensure every item in typedWords is a valid object with lineIndex.
     const validTypedWords = typedWords.filter(
       (word): word is WordData => word && typeof word.lineIndex === 'number'
     );
@@ -150,14 +149,22 @@ export const TypewriterText = ({
       linesMap.get(wordData.lineIndex)!.push(wordData);
     });
 
-    const lineLayouts: { words: WordData[]; width: number; currentXOffset: number }[] = [];
+    const lineLayouts: { words: WordData[]; width: number; currentXOffset: number; lineGroupOffsetX: number }[] = [];
     Array.from(linesMap.keys()).sort((a, b) => a - b).forEach(lineIndex => {
       const wordsInLine = linesMap.get(lineIndex)!;
       const lineWidth = wordsInLine.reduce((sum, wordData) => sum + (wordData.width || 0), 0);
-      lineLayouts.push({ words: wordsInLine, width: lineWidth, currentXOffset: 0 });
+      
+      let lineGroupOffsetX = 0;
+      if (textAlign === 'center') {
+        lineGroupOffsetX = -lineWidth / 2;
+      } else if (textAlign === 'right') {
+        lineGroupOffsetX = -lineWidth;
+      }
+
+      lineLayouts.push({ words: wordsInLine, width: lineWidth, currentXOffset: 0, lineGroupOffsetX });
     });
     return lineLayouts;
-  }, [typedWords]);
+  }, [typedWords, textAlign]);
 
   // Calculate overall block dimensions for centering
   const totalLines = lines.length;
@@ -173,7 +180,7 @@ export const TypewriterText = ({
   return (
     <group position={position}>
       {lines.map((line, lineIndex) => (
-        <group key={lineIndex} position={[0, startY - lineIndex * fontSize * lineHeight, 0]}>
+        <group key={lineIndex} position={[line.lineGroupOffsetX, startY - lineIndex * fontSize * lineHeight, 0]}>
           {line.words.map((wordData, wordIndex) => {
             const wordPositionX = line.currentXOffset;
             line.currentXOffset += (wordData.width || 0);

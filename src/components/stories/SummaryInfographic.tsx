@@ -1,13 +1,10 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { Text, Box, Image } from '@react-three/drei';
-import * as THREE from 'three';
-import { useFrame, useThree } from '@react-three/fiber';
-import { TypewriterText, TextSegment } from '../TypewriterText';
+import React, { useEffect, useState, useMemo } from 'react';
+import { cn } from '@/lib/utils'; // For Tailwind class merging
 
 interface Product {
   name: string;
   liters: number;
-  color: string;
+  color?: string; // Color is not used in 2D, but kept for type consistency
 }
 
 interface SummaryInfographicProps {
@@ -17,66 +14,53 @@ interface SummaryInfographicProps {
   dominantBeerCategory: string;
   top5Products: Product[];
   totalVisits: number;
-  isPaused: boolean;
-  // New props for infographic
+  isPaused: boolean; // Not directly used in 2D, but kept for consistency
   totalVisits2024: number;
   totalLiters2024: number;
   uniqueVarieties2025: number;
   totalVarietiesInDb: number;
   mostActiveDay: string;
   mostActiveMonth: string;
-  textColor: string;
-  highlightColor: string;
+  textColor: string; // Passed as Tailwind class color
+  highlightColor: string; // Passed as Tailwind class color
 }
 
-// Helper for comparison text and arrow
-const ComparisonText = ({ current, previous, responsiveScale, year, textColor, position }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string; position: [number, number, number] }) => {
-  const { viewport } = useThree(); // Access viewport for responsive font sizing
-
+// Helper for comparison text and arrow (2D HTML/CSS version)
+const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
   if (previous === 0) {
     return (
-      <group position={position}>
-        <Text
-          fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
-          color={textColor} // Use textColor for "No data"
-          anchorX="center"
-          anchorY="middle"
-          position={[0, 0, 0.03]}
-          maxWidth={viewport.width * 0.8} // Use viewport width for max width
-          textAlign="center"
-          letterSpacing={-0.05}
-          fontWeight={400}
-        >
-          No data for {parseInt(year) - 1}
-        </Text>
-      </group>
+      <p className={cn("text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] font-normal text-center", textColor)}>
+        No data for {parseInt(year) - 1}
+      </p>
     );
   }
 
   const diff = current - previous;
   const percentage = (diff / previous) * 100;
   const isPositive = percentage >= 0;
-  const color = isPositive ? "#00FF00" : "#FF0000"; // Green for up, Red for down
+  const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red for comparison
 
   return (
-    <group position={position}>
-      <Text
-        fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
-        color={color}
-        anchorX="center"
-        anchorY="middle"
-        position={[0, 0, 0]}
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={700}
-      >
-        {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
-      </Text>
-    </group>
+    <p className={cn("text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] font-bold text-center", colorClass)}>
+      {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
+    </p>
   );
 };
 
+// Helper component for each grid block (2D HTML/CSS version)
+interface BlockProps {
+  bgColor: string; // Tailwind background class
+  textColor: string; // Tailwind text class
+  children: React.ReactNode;
+}
+
+const Block = ({ bgColor, textColor, children }: BlockProps) => {
+  return (
+    <div className={cn("flex flex-col items-center justify-center p-[1vw] md:p-2 border-2 border-white", bgColor)}>
+      {children}
+    </div>
+  );
+};
 
 export const SummaryInfographic = ({
   customerName,
@@ -85,8 +69,6 @@ export const SummaryInfographic = ({
   dominantBeerCategory,
   top5Products,
   totalVisits,
-  isPaused,
-  // New props
   totalVisits2024,
   totalLiters2024,
   uniqueVarieties2025,
@@ -96,325 +78,110 @@ export const SummaryInfographic = ({
   textColor,
   highlightColor,
 }: SummaryInfographicProps) => {
-  const { viewport } = useThree();
-  const BASE_REFERENCE_WIDTH = 12;
-  const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  // Define overall infographic dimensions based on viewport, not fixed ratio
-  const infographicWidth = viewport.width * 0.8; // Use 80% of viewport width
-  const infographicHeight = viewport.height * 0.8; // Use 80% of viewport height
-
-  // Calculate block dimensions for a 2x3 grid
-  const blockWidth = infographicWidth / 2;
-  const blockHeight = infographicHeight / 3;
-
-  const [isTitleTyped, setIsTitleTyped] = useState(false);
+  const [isTitleTyped, setIsTitleTyped] = useState(false); // Simulate typing for the main title
 
   useEffect(() => {
-    setIsTitleTyped(false);
+    // Simulate a delay for the title to appear, similar to typewriter
+    const timer = setTimeout(() => setIsTitleTyped(true), 1000); // 1 second delay
+    return () => clearTimeout(timer);
   }, [customerName, year]);
-
-  // Helper to get block position - Explicitly returning a tuple [number, number, number]
-  const getBlockPosition = (row: number, col: number): [number, number, number] => {
-    // Calculate x relative to the center of the infographicWidth
-    const x = (col === 1 ? -blockWidth / 2 : blockWidth / 2) - infographicWidth / 4;
-    // Calculate y relative to the center of the infographicHeight
-    const y = (row === 1 ? infographicHeight / 3 : row === 2 ? 0 : -infographicHeight / 3) + infographicHeight / 6;
-    return [x, y, 0];
-  };
 
   // Get the top 1 product, or a placeholder if none
   const top1Product = top5Products.length > 0 ? top5Products[0] : { name: "N/A", liters: 0 };
 
-  const mainTitleSegments: TextSegment[] = useMemo(() => [
-    { text: customerName.toUpperCase(), color: highlightColor },
-    { text: `\n${year} WRAPPED`, color: textColor },
-  ], [customerName, year, textColor, highlightColor]);
-
   return (
-    <group position={[0, 0, 0]}>
+    <div className="absolute inset-0 flex flex-col items-center justify-center bg-background text-foreground p-4 font-sans overflow-auto">
       {/* Main Infographic Title */}
-      <TypewriterText
-        segments={mainTitleSegments}
-        speed={75}
-        onComplete={() => setIsTitleTyped(true)}
-        isPaused={isPaused}
-        position={[0, infographicHeight / 2 + 0.3 * responsiveScale, 0]} // Adjust position for combined title
-        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={infographicWidth * 0.9}
-        textAlign="center"
-        letterSpacing={-0.05}
-        fontWeight={900}
-        lineHeight={1.2}
-      />
+      <div className="mb-4 text-center">
+        {isTitleTyped && (
+          <>
+            <h1 className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black uppercase leading-tight", highlightColor)}>
+              {customerName.toUpperCase()}
+            </h1>
+            <p className={cn("text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black uppercase leading-tight", textColor)}>
+              {year} WRAPPED
+            </p>
+          </>
+        )}
+      </div>
 
       {isTitleTyped && (
-        <group position={[0, -0.5 * responsiveScale, 0]}> {/* Adjust group position to center the grid */}
+        <div className="grid grid-cols-2 grid-rows-3 gap-2 w-[90vw] h-[80vh] max-w-[900px] max-h-[1600px] aspect-[9/16] border-2 border-white">
           {/* Row 1, Column 1: Total Visitas */}
-          <Block
-            position={getBlockPosition(1, 1)}
-            width={blockWidth}
-            height={blockHeight}
-            bgColor="#000000" // Fixed for infographic
-            textColor={textColor}
-            responsiveScale={responsiveScale}
-          >
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.3 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+          <Block bgColor="bg-black" textColor="text-white">
+            <p className={cn("text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center", textColor)}>
               VISITAS {year}
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color={highlightColor} // Highlighted
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.05 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
+            </p>
+            <p className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center", highlightColor)}>
               {totalVisits}
-            </Text>
-            <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} textColor={textColor} position={[0, -0.4 * responsiveScale, 0.03]} />
+            </p>
+            <ComparisonText current={totalVisits} previous={totalVisits2024} year={year} textColor={textColor} />
           </Block>
 
           {/* Row 1, Column 2: Total Litros */}
-          <Block
-            position={getBlockPosition(1, 2)}
-            width={blockWidth}
-            height={blockHeight}
-            bgColor="#FFFFFF" // Fixed for infographic
-            textColor={textColor}
-            responsiveScale={responsiveScale}
-          >
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.3 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+          <Block bgColor="bg-white" textColor="text-black">
+            <p className={cn("text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center", textColor)}>
               LITROS CONSUMIDOS
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color={highlightColor} // Highlighted
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.05 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
+            </p>
+            <p className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center", highlightColor)}>
               {totalLiters.toFixed(1)} L
-            </Text>
-            <ComparisonText current={totalLiters} previous={totalLiters2024} responsiveScale={responsiveScale} year={year} textColor={textColor} position={[0, -0.4 * responsiveScale, 0.03]} />
+            </p>
+            <ComparisonText current={totalLiters} previous={totalLiters2024} year={year} textColor={textColor} />
           </Block>
 
           {/* Row 2, Column 1: Top 5 Cervezas */}
-          <Block
-            position={getBlockPosition(2, 1)}
-            width={blockWidth}
-            height={blockHeight}
-            bgColor="#000000" // Fixed for infographic
-            textColor={textColor}
-            responsiveScale={responsiveScale}
-          >
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.4 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+          <Block bgColor="bg-black" textColor="text-white">
+            <p className={cn("text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1", textColor)}>
               TUS 5 FAVORITAS
-            </Text>
+            </p>
             {top5Products.slice(0, 5).map((product, idx) => (
-              <Text
+              <p
                 key={idx}
-                fontSize={idx === 0 ? Math.min(viewport.width * 0.04, 0.25) * responsiveScale : Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
-                color={idx === 0 ? highlightColor : textColor} // Highlight top product
-                anchorX="center"
-                anchorY="middle"
-                position={[0, 0.2 * responsiveScale - idx * 0.15 * responsiveScale, 0.03]}
-                maxWidth={blockWidth * 0.8}
-                textAlign="center"
-                letterSpacing={-0.05}
-                fontWeight={idx === 0 ? 900 : 700}
+                className={cn(
+                  "text-center leading-tight",
+                  idx === 0 ? cn("text-[3.5vw] md:text-[1.5rem] lg:text-[2rem] font-black", highlightColor) : cn("text-[2vw] md:text-[1rem] lg:text-[1.2rem] font-bold", textColor)
+                )}
               >
                 {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
-              </Text>
+              </p>
             ))}
           </Block>
 
           {/* Row 2, Column 2: Variedades Probadas */}
-          <Block
-            position={getBlockPosition(2, 2)}
-            width={blockWidth}
-            height={blockHeight}
-            bgColor="#FFFFFF" // Fixed for infographic
-            textColor={textColor}
-            responsiveScale={responsiveScale}
-          >
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.3 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+          <Block bgColor="bg-white" textColor="text-black">
+            <p className={cn("text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center", textColor)}>
               COLECCIONISTA DE SABORES
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color={highlightColor} // Highlighted
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
+            </p>
+            <p className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center", highlightColor)}>
               {`${uniqueVarieties2025} / ${totalVarietiesInDb}`}
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, -0.2 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+            </p>
+            <p className={cn("text-[2vw] md:text-[1rem] lg:text-[1.2rem] font-bold text-center", textColor)}>
               VARIEDADES PROBADAS
-            </Text>
+            </p>
           </Block>
 
           {/* Row 3, Column 1: Día Más Activo */}
-          <Block
-            position={getBlockPosition(3, 1)}
-            width={blockWidth}
-            height={blockHeight}
-            bgColor="#000000" // Fixed for infographic
-            textColor={textColor}
-            responsiveScale={responsiveScale}
-          >
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.3 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+          <Block bgColor="bg-black" textColor="text-white">
+            <p className={cn("text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center", textColor)}>
               DÍA MÁS CHIN CHIN
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color={highlightColor} // Highlighted
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
+            </p>
+            <p className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center", highlightColor)}>
               {mostActiveDay.toUpperCase()}
-            </Text>
+            </p>
           </Block>
 
           {/* Row 3, Column 2: Mes Más Activo */}
-          <Block
-            position={getBlockPosition(3, 2)}
-            width={blockWidth}
-            height={blockHeight}
-            bgColor="#FFFFFF" // Fixed for infographic
-            textColor={textColor}
-            responsiveScale={responsiveScale}
-          >
-            <Text
-              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color={textColor}
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0.3 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={700}
-            >
+          <Block bgColor="bg-white" textColor="text-black">
+            <p className={cn("text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center", textColor)}>
               EL MES DE LA SED
-            </Text>
-            <Text
-              fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color={highlightColor} // Highlighted
-              anchorX="center"
-              anchorY="middle"
-              position={[0, 0 * responsiveScale, 0.03]}
-              maxWidth={blockWidth * 0.8}
-              textAlign="center"
-              letterSpacing={-0.05}
-              fontWeight={900}
-            >
+            </p>
+            <p className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center", highlightColor)}>
               {mostActiveMonth.toUpperCase()}
-            </Text>
+            </p>
           </Block>
-        </group>
+        </div>
       )}
-    </group>
-  );
-};
-
-// Helper component for each grid block
-interface BlockProps {
-  position: [number, number, number];
-  width: number;
-  height: number;
-  bgColor: string;
-  textColor: string; // Passed for consistency, though fixed for infographic blocks
-  responsiveScale: number;
-  children: React.ReactNode;
-}
-
-const Block = ({ position, width, height, bgColor, children }: BlockProps) => {
-  return (
-    <group position={position}>
-      <Box args={[width, height, 0.05]}>
-        <meshBasicMaterial color={bgColor} />
-      </Box>
-      {children}
-    </group>
+    </div>
   );
 };

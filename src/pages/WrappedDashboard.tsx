@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { Canvas, useThree, useFrame } from "@react-three/fiber"; // Import useFrame
+import { Canvas, useThree, useFrame } from "@react-three/fiber";
 import { useDb } from "@/hooks/useDb";
 import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
 import { ResponsiveCamera } from "@/components/ResponsiveCamera";
@@ -21,8 +21,8 @@ import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory"
 import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
 import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory";
 import { Top5Story } from "@/components/stories/Top5Story";
-import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory"; // Now Slide 6
-import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; // Now Slide 7
+import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
+import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; // This will become a 2D component
 
 // Componente auxiliar para la captura de pantalla
 const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
@@ -51,12 +51,12 @@ interface StoryScene {
   downloadFileName: string;
 }
 
-// Define the 8 slides as per the consolidated instructions
+// REVISIÓN CRÍTICA DE DURACIONES
 const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // Slide 0
     component: IntroFunStory,
-    duration: 20000, // 20 seconds
+    duration: 12000, // 12 segundos para lectura de texto largo
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
@@ -64,7 +64,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalVisits', // Slide 1
     component: TotalVisitsStory,
-    duration: 20000, // 20 seconds
+    duration: 6000, // 6 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Visitas del Año',
     downloadFileName: 'Historia_Visitas',
@@ -72,7 +72,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveMonth', // Slide 2
     component: MostActiveMonthStory,
-    duration: 20000, // 20 seconds
+    duration: 6000, // 6 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Mes Más Activo',
     downloadFileName: 'Historia_MesActivo',
@@ -80,7 +80,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveDay', // Slide 3
     component: MostActiveDayStory,
-    duration: 20000, // 20 seconds
+    duration: 6000, // 6 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Día Más Activo',
     downloadFileName: 'Historia_DiaActivo',
@@ -88,7 +88,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'dominantCategoryAndVarieties', // Slide 4
     component: DominantCategoryAndVarietiesStory,
-    duration: 20000, // 20 seconds
+    duration: 6000, // 6 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Categoría y Variedades',
     downloadFileName: 'Historia_CategoriaVariedades',
@@ -96,30 +96,30 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'top5', // Slide 5
     component: Top5Story,
-    duration: 20000, // 20 seconds
+    duration: 6000, // 6 seconds
     cameraViewMode: 'top5',
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
   },
   {
-    id: 'totalConsumption', // Slide 6 (Moved from 7)
+    id: 'totalConsumption', // Slide 6
     component: TotalConsumptionStory,
-    duration: 20000, // 20 seconds
+    duration: 6000, // 6 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
   },
   {
-    id: 'summaryInfographic', // Slide 7 (Moved from 6)
+    id: 'summaryInfographic', // Slide 7
     component: SummaryInfographic,
-    duration: 20000, // 20 seconds
+    duration: 15000, // 15 segundos para dar tiempo a descargar
     cameraViewMode: 'summaryInfographic',
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
   },
 ];
 
-// Color definitions based on the user's table (updated to match new order)
+// REVISIÓN CRÍTICA DE COLORES BRUTALISTAS
 const BACKGROUND_COLORS = [
   0x000000, // Slide 0: Intro (Negro)
   0xFFFFFF, // Slide 1: Visitas (Blanco)
@@ -132,25 +132,25 @@ const BACKGROUND_COLORS = [
 ];
 
 const TEXT_COLORS = [
-  "#FFFFFF", // Slide 0: Intro (Blanco) - OK for Black background
-  "#000000", // Slide 1: Visitas (Negro) - OK for White background
-  "#FFFFFF", // Slide 2: Mes Activo (Blanco) - OK for Black background
-  "#000000", // Slide 3: Día Activo (Negro) - OK for White background
-  "#FFFFFF", // Slide 4: Categorías/Variedades (Blanco) - OK for Black background
-  "#000000", // Slide 5: Top 5 Cervezas (Negro) - OK for White background
-  "#FFFFFF", // Slide 6: Total Litros (Blanco) - OK for Black background
-  "#000000", // Slide 7: Infografía Final (Negro) - OK for White background
+  "#FFFFFF", // Slide 0: Intro (Blanco)
+  "#000000", // Slide 1: Visitas (Negro)
+  "#FFFFFF", // Slide 2: Mes Activo (Blanco)
+  "#000000", // Slide 3: Día Activo (Negro)
+  "#FFFFFF", // Slide 4: Categorías/Variedades (Blanco)
+  "#000000", // Slide 5: Top 5 Cervezas (Negro)
+  "#FFFFFF", // Slide 6: Total Litros (Blanco)
+  "#000000", // Slide 7: Infografía Final (Negro)
 ];
 
 const HIGHLIGHT_COLORS = [
-  "#FFD700", // Slide 0: Intro (Amarillo Saturado) - OK for Black background
-  "#DC143C", // Slide 1: Visitas (Rojo Saturado) - OK for White background
-  "#FFD700", // Slide 2: Mes Activo (Amarillo Saturado) - OK for Black background
-  "#DC143C", // Slide 3: Día Activo (Rojo Saturado) - OK for White background
-  "#FFD700", // Slide 4: Categorías/Variedades (Amarillo Saturado) - OK for Black background
-  "#DC143C", // Slide 5: Top 5 Cervezas (Rojo Saturado) - OK for White background
-  "#FFD700", // Slide 6: Total Litros (Amarillo Saturado) - OK for Black background
-  "#DC143C", // Slide 7: Infografía Final (Rojo Saturado) - OK for White background
+  "#FFFFFF", // Slide 0: Highlight (Blanco)
+  "#000000", // Slide 1: Highlight (Negro)
+  "#FFFFFF", // Slide 2: Highlight (Blanco)
+  "#000000", // Slide 3: Highlight (Negro)
+  "#FFFFFF", // Slide 4: Highlight (Blanco)
+  "#000000", // Slide 5: Highlight (Negro)
+  "#FFFFFF", // Slide 6: Highlight (Blanco)
+  "#000000", // Slide 7: Highlight (Negro)
 ];
 
 
@@ -162,7 +162,7 @@ const WrappedDashboard = () => {
   const [isCapturing, setIsCapturing] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  // Removed timeoutRef as auto-advance is disabled
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // Reintroduced timeoutRef
 
   const currentStory = STORY_SCENES[currentStoryIndex];
 
@@ -187,22 +187,22 @@ const WrappedDashboard = () => {
     fetchWrappedData();
   }, [customerId, dbLoaded]);
 
-  // Story navigation logic - Removed auto-advance useEffect
-  // useEffect(() => {
-  //   if (wrappedData && currentStory.duration > 0 && !isPaused) {
-  //     if (timeoutRef.current) {
-  //       clearTimeout(timeoutRef.current);
-  //     }
-  //     timeoutRef.current = setTimeout(() => {
-  //       handleNextStory();
-  //     }, currentStory.duration);
-  //   }
-  //   return () => {
-  //     if (timeoutRef.current) {
-  //       clearTimeout(timeoutRef.current);
-  //     }
-  //   };
-  // }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]);
+  // Story navigation logic - Reintroduced auto-advance
+  useEffect(() => {
+    if (wrappedData && currentStory.duration > 0 && !isPaused) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        handleNextStory();
+      }, currentStory.duration);
+    }
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]);
 
   const handleNextStory = useCallback(() => {
     setCurrentStoryIndex((prevIndex) =>
@@ -218,7 +218,9 @@ const WrappedDashboard = () => {
 
   const handlePauseStory = useCallback(() => {
     setIsPaused(true);
-    // No need to clear timeoutRef.current here as auto-advance is disabled
+    if (timeoutRef.current) { // Clear timeout when paused
+      clearTimeout(timeoutRef.current);
+    }
   }, []);
 
   const handleResumeStory = useCallback(() => {
@@ -285,7 +287,8 @@ const WrappedDashboard = () => {
     return null;
   };
 
-  const isIntroStory = currentStory.id === 'introFun'; // Only IntroFunStory is considered intro for overlay logic
+  const isIntroStory = currentStory.id === 'introFun';
+  const isSummaryInfographicStory = currentStory.id === 'summaryInfographic';
 
   const StoryComponent = currentStory.component;
 
@@ -320,7 +323,7 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {!isIntroStory && currentStory.id !== 'summaryInfographic' && ( // Only show WrappedOverlay if not an intro story and not the infographic
+        {!isIntroStory && !isSummaryInfographicStory && ( // Only show WrappedOverlay if not an intro story and not the infographic
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
@@ -328,27 +331,33 @@ const WrappedDashboard = () => {
           />
         )}
 
-        <Canvas
-          camera={{ position: [0, 0, 8], fov: 75 }}
-          className="w-full h-full"
-          gl={{ preserveDrawingBuffer: true }}
-        >
-          <CanvasBackground />
-          {/* Removed ambientLight and pointLight for brutalist style */}
-          <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
-          <PostProcessingEffects />
+        {isSummaryInfographicStory ? (
+          // Render SummaryInfographic as a 2D HTML/CSS component outside the Canvas
+          <SummaryInfographic {...storyProps} />
+        ) : (
+          // Render other stories inside the Canvas
+          <Canvas
+            camera={{ position: [0, 0, 8], fov: 75 }}
+            className="w-full h-full"
+            gl={{ preserveDrawingBuffer: true }}
+          >
+            <CanvasBackground />
+            {/* Removed ambientLight and pointLight for brutalist style */}
+            <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
+            <PostProcessingEffects />
 
-          {/* Render current story component using dynamic component and spread props */}
-          <StoryComponent {...storyProps} />
+            {/* Render current story component using dynamic component and spread props */}
+            <StoryComponent {...storyProps} />
 
-          <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
-        </Canvas>
+            <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
+          </Canvas>
+        )}
 
         {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
         <img
           src="/Logo.png"
           alt="Chin Chin Logo"
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[9.6vw] max-w-[72px] p-1" // 8vw * 1.2 = 9.6vw, 60px * 1.2 = 72px
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[9.6vw] max-w-[72px] p-1"
         />
 
         {/* Interaction Zone */}
@@ -361,10 +370,9 @@ const WrappedDashboard = () => {
         />
 
         {/* Download Button (only for SummaryInfographic) - Brutalist styling */}
-        {currentStory.id === 'summaryInfographic' && (
+        {isSummaryInfographicStory && (
           <Button
             onClick={handleDownloadScreenshot}
-            // Brutalist Button: White background, Black text, Black border, no rounded corners, simple hover inverse
             className="absolute top-4 right-4 z-30 bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
             disabled={isCapturing}
           >

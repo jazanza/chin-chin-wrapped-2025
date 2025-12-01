@@ -38,14 +38,14 @@ const SCENE_PLAYLIST: Scene[] = [
 const RANGE_MAP: { [key: string]: string } = {
   this_week: "Servidos esta semana",
   last_week: "Servidos la semana pasada",
-  last_15_days: "Servidos las útimas dos semanas",
-  this_month: "Servidos ese mes",
+  last_15_days: "Servidos en las útimas dos semanas",
+  this_month: "Servidos este mes",
   last_month: "Servidos el mes pasado",
   last_3_months: "Servidos en los útimos 3 meses",
   last_6_months: "Servidos en los útimos 6 meses",
-  last_1_year: "Servidos en  útimo año",
+  last_1_year: "Servidos el  útimo año",
   this_year: "Servidos este año",
-  last_year: "Servidos en año pasado",
+  last_year: "Servidos el año pasado",
   all_time: "Servidos históricamente",
 };
 

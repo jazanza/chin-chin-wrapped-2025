@@ -9,12 +9,11 @@ import { LoyaltyConstellation } from "@/components/LoyaltyConstellation";
 import { FlavorSpectrum } from "@/components/FlavorSpectrum";
 import { CameraAnimator } from "@/components/CameraAnimator";
 import { FileUploader } from "@/components/FileUploader";
-import { DateRangeSelector } from "@/components/DateRangeSelector";
 import { SceneEffects } from "@/components/SceneEffects";
 
 type ViewMode = "meter" | "ranking" | "loyalty" | "balance" | "spectrum";
 const VIEWS: ViewMode[] = ["meter", "ranking", "loyalty", "balance", "spectrum"];
-const VIEW_DURATION = 15000; // 15 segundos por vista
+const VIEW_DURATION = 15000; // 15 seconds per view
 
 const Dashboard = () => {
   const {
@@ -29,7 +28,7 @@ const Dashboard = () => {
   } = useDb();
   const [viewMode, setViewMode] = useState<ViewMode>("meter");
   const [dbBuffer, setDbBuffer] = useState<Uint8Array | null>(null);
-  const [rangeKey, setRangeKey] = useState<string>("last_month");
+  const [rangeKey] = useState<string>("last_month"); // Hardcoded to last_month
 
   useEffect(() => {
     if (!dbBuffer || loading) return;
@@ -50,13 +49,6 @@ const Dashboard = () => {
     await processData(buffer, rangeKey);
   };
 
-  const handleRangeChange = async (newRange: string) => {
-    setRangeKey(newRange);
-    if (dbBuffer) {
-      await processData(dbBuffer, newRange);
-    }
-  };
-
   if (!dbBuffer) {
     return (
       <div className="w-screen h-screen bg-black text-white flex flex-col items-center justify-center">
@@ -74,13 +66,6 @@ const Dashboard = () => {
 
   return (
     <div className="w-screen h-screen bg-black text-white flex flex-col font-mono">
-      <div className="absolute top-4 left-4 z-10">
-        <DateRangeSelector
-          selectedRange={rangeKey}
-          onRangeChange={handleRangeChange}
-        />
-      </div>
-
       <div className="flex-grow">
         <Canvas
           shadows
@@ -99,7 +84,7 @@ const Dashboard = () => {
             </Html>
           ) : (
             <Suspense fallback={null}>
-              <BeerVisualizer {...consumptionMetrics} rankedBeers={rankedBeers} visible={viewMode === "meter"} />
+              <BeerVisualizer {...consumptionMetrics} visible={viewMode === "meter"} />
               <ConsumptionRanking rankedBeers={rankedBeers} visible={viewMode === "ranking"} />
               <VarietyBalance varietyMetrics={varietyMetrics} visible={viewMode === "balance"} />
               <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} visible={viewMode === "loyalty"} />
@@ -107,7 +92,6 @@ const Dashboard = () => {
             </Suspense>
           )}
 
-          {/* SOLUCIÓN: Estos componentes ahora son hijos directos e incondicionales del Canvas */}
           <CameraAnimator viewMode={viewMode} />
           <SceneEffects />
         </Canvas>

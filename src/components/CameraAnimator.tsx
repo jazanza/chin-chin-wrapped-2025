@@ -2,7 +2,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useMemo } from "react";
 
-type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum"; // Añadir 'spectrum'
+type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum";
 
 const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: THREE.Vector3 } } = {
   meter: {
@@ -21,7 +21,7 @@ const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: TH
     position: new THREE.Vector3(0, 3, 8),
     lookAt: new THREE.Vector3(0, 0, 0),
   },
-  spectrum: { // Nueva preset para FlavorSpectrum
+  spectrum: {
     position: new THREE.Vector3(0, 0, 5),
     lookAt: new THREE.Vector3(0, 0, 0),
   },
@@ -36,7 +36,6 @@ export function CameraAnimator({ viewMode }: { viewMode: ViewMode }) {
     const targetPosition = preset.position.clone();
     const targetLookAt = preset.lookAt.clone();
 
-    // For loyalty view, add a slow orbit
     if (viewMode === 'loyalty') {
       const time = clock.getElapsedTime() * 0.08;
       targetPosition.x = 8 * Math.cos(time);
@@ -44,11 +43,11 @@ export function CameraAnimator({ viewMode }: { viewMode: ViewMode }) {
       targetPosition.y = 3 + Math.sin(time * 0.5);
     }
 
-    // Smoothly interpolate camera position (slightly faster lerp for "rudo" feel)
-    camera.position.lerp(targetPosition, 0.1); // Aumentar lerp para transiciones más abruptas
+    // Increased lerp factor for more abrupt, "glitchy" transitions
+    camera.position.lerp(targetPosition, 0.2);
 
-    // Directly set lookAt for abrupt changes, or a very fast lerp
-    currentLookAt.copy(targetLookAt); // Asignación directa para saltos abruptos
+    // Lerp lookAt as well for a slightly less jarring rotation change
+    currentLookAt.lerp(targetLookAt, 0.2);
     camera.lookAt(currentLookAt);
   });
 

@@ -1,61 +1,79 @@
 import { useRef, useMemo, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Text, Box } from "@react-three/drei"; // Usar Box en lugar de Cylinder
+import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
-interface RankedBeer {
-  name: string;
-  liters: number;
-  color: string;
-}
+const PARTICLE_COUNT = 50000;
+const CYLINDER_RADIUS = 1.5;
+const MAX_LITERS_FOR_SCALE = 1000;
 
-// Eliminamos DataBubble y AestheticBubbles para un enfoque más brutalista y simple.
-
-export function BeerVisualizer({ liters, rankedBeers, ...props }: { liters: number; rankedBeers: RankedBeer[] } & JSX.IntrinsicElements['group']) {
+export function BeerVisualizer({ liters, ...props }: { liters: number } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
-  const liquidRef = useRef<THREE.Mesh>(null!);
+  const pointsRef = useRef<THREE.Points>(null!);
   const textRef = useRef<any>(null!);
-  const animatedHeight = useRef(0);
+  const animatedLiters = useRef(0);
 
-  const MAX_LITERS_FOR_SCALE = 1000;
-  const targetHeight = (liters / MAX_LITERS_FOR_SCALE) * (viewport.height * 0.8);
+  const maxHeight = viewport.height * 0.8;
   const bottomY = -viewport.height / 2;
 
+  const [positions, colors] = useMemo(() => {
+    const pos = new Float32Array(PARTICLE_COUNT * 3);
+    const col = new Float32Array(PARTICLE_COUNT * 3);
+    const color = new THREE.Color();
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const y = bottomY + (i / PARTICLE_COUNT) * maxHeight;
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.sqrt(Math.random()) * CYLINDER_RADIUS;
+      
+      pos[i * 3] = Math.cos(angle) * radius;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = Math.sin(angle) * radius;
+
+      // Rainbow gradient based on height (Y)
+      color.setHSL((y - bottomY) / maxHeight, 1.0, 0.5);
+      col[i * 3] = color.r;
+      col[i * 3 + 1] = color.g;
+      col[i * 3 + 2] = color.b;
+    }
+    return [pos, col];
+  }, [maxHeight, bottomY]);
+
   useFrame(() => {
-    animatedHeight.current = THREE.MathUtils.lerp(animatedHeight.current, targetHeight, 0.05);
-    
-    if (liquidRef.current) {
-      liquidRef.current.scale.y = animatedHeight.current;
-      liquidRef.current.position.y = bottomY + (animatedHeight.current / 2);
+    animatedLiters.current = THREE.MathUtils.lerp(animatedLiters.current, liters, 0.05);
+    const targetParticleCount = Math.floor((animatedLiters.current / MAX_LITERS_FOR_SCALE) * PARTICLE_COUNT);
+
+    if (pointsRef.current) {
+      (pointsRef.current.geometry as THREE.BufferGeometry).setDrawRange(0, targetParticleCount);
     }
 
     if (textRef.current) {
-      const topOfLiquid = bottomY + animatedHeight.current;
+      const topOfLiquid = bottomY + (targetParticleCount / PARTICLE_COUNT) * maxHeight;
       textRef.current.position.y = topOfLiquid + 0.3;
     }
   });
-  
+
   useEffect(() => {
     if (liters === 0) {
-      animatedHeight.current = 0;
+      animatedLiters.current = 0;
     }
   }, [liters]);
 
   return (
     <group {...props}>
-      <ambientLight intensity={0.7} />
-      <directionalLight position={[0, 5, 5]} intensity={1} />
-
-      {/* Pilar rectangular que emerge del fondo */}
-      <Box ref={liquidRef} args={[viewport.width * 0.4, 1, 0.5]} position={[0, bottomY, 0]} scale-y={0}>
-        <meshBasicMaterial color="var(--secondary-glitch-cyan)" wireframe={true} />
-      </Box>
+      <points ref={pointsRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT} array={positions} itemSize={3} />
+          <bufferAttribute attach="attributes-color" count={PARTICLE_COUNT} array={colors} itemSize={3} />
+        </bufferGeometry>
+        <pointsMaterial size={0.02} vertexColors={true} transparent={true} opacity={0.7} />
+      </points>
 
       <Text
         ref={textRef}
         position={[0, bottomY + 0.3, 0]}
         fontSize={0.5}
-        color="var(--secondary-glitch-cyan)"
+        color="white"
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.02}

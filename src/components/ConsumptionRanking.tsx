@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Box, Text } from "@react-three/drei"; // Usar Box en lugar de Cylinder
+import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
 interface RankedBeer {
@@ -9,40 +9,62 @@ interface RankedBeer {
   color: string;
 }
 
-const BeerColumn = ({ beer, index, maxLiters }: { beer: RankedBeer; index: number; maxLiters: number }) => {
-  const ref = useRef<THREE.Group>(null!);
-  const targetHeight = maxLiters > 0 ? (beer.liters / maxLiters) * 5 : 0.1;
-  const currentHeight = useRef(0);
-  const initialY = useRef(0); // Para la vibración
+const PARTICLE_COUNT_PER_COLUMN = 5000;
+const COLUMN_WIDTH = 0.8;
+const MAX_COLUMN_HEIGHT = 5;
 
+const BeerColumn = ({ beer, index, maxLiters }: { beer: RankedBeer; index: number; maxLiters: number }) => {
+  const pointsRef = useRef<THREE.Points>(null!);
+  const textRef = useRef<any>(null!);
+  const animatedHeight = useRef(0);
+  
+  const targetHeight = maxLiters > 0 ? (beer.liters / maxLiters) * MAX_COLUMN_HEIGHT : 0;
   const color = index % 2 === 0 ? "var(--primary-glitch-pink)" : "var(--secondary-glitch-cyan)";
 
+  const originalPositions = useMemo(() => {
+    const pos = new Float32Array(PARTICLE_COUNT_PER_COLUMN * 3);
+    for (let i = 0; i < PARTICLE_COUNT_PER_COLUMN; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * COLUMN_WIDTH;
+      pos[i * 3 + 1] = (i / PARTICLE_COUNT_PER_COLUMN) * MAX_COLUMN_HEIGHT;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * COLUMN_WIDTH;
+    }
+    return pos;
+  }, []);
+
   useFrame(({ clock }) => {
-    if (ref.current) {
-      currentHeight.current = THREE.MathUtils.lerp(currentHeight.current, targetHeight, 0.05);
-      const box = ref.current.children[0] as THREE.Mesh;
-      if (box) {
-        box.scale.y = currentHeight.current;
-        box.position.y = currentHeight.current / 2;
-        // Vibración vertical sutil
-        box.position.y += Math.sin(clock.getElapsedTime() * 5 + index) * 0.05;
+    animatedHeight.current = THREE.MathUtils.lerp(animatedHeight.current, targetHeight, 0.05);
+    const visibleParticles = Math.floor((animatedHeight.current / MAX_COLUMN_HEIGHT) * PARTICLE_COUNT_PER_COLUMN);
+
+    if (pointsRef.current) {
+      const geom = pointsRef.current.geometry as THREE.BufferGeometry;
+      geom.setDrawRange(0, visibleParticles);
+
+      // Sinusoidal wave distortion
+      const positions = geom.attributes.position.array as Float32Array;
+      const time = clock.getElapsedTime();
+      for (let i = 0; i < visibleParticles; i++) {
+        const y = originalPositions[i * 3 + 1];
+        positions[i * 3] = originalPositions[i * 3] + Math.sin(y * 2 + time * 2 + index) * 0.1;
+        positions[i * 3 + 2] = originalPositions[i * 3 + 2] + Math.cos(y * 2 + time * 2 + index) * 0.1;
       }
-      const text = ref.current.children[1] as THREE.Object3D;
-      if (text) {
-        text.position.y = currentHeight.current + 0.3;
-      }
+      geom.attributes.position.needsUpdate = true;
+    }
+
+    if (textRef.current) {
+      textRef.current.position.y = animatedHeight.current + 0.3;
     }
   });
 
   return (
-    <group ref={ref} position={[(index - 4.5) * 1.2, 0, 0]}>
-      <Box args={[0.8, 1, 0.8]} scale-y={0}> {/* Usar Box */}
-        <meshBasicMaterial
-          color={color}
-          wireframe={true} // Wireframe
-        />
-      </Box>
+    <group position={[(index - 4.5) * 1.2, 0, 0]}>
+      <points ref={pointsRef}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" count={PARTICLE_COUNT_PER_COLUMN} array={originalPositions.slice()} itemSize={3} />
+        </bufferGeometry>
+        <pointsMaterial size={0.02} color={color} />
+      </points>
       <Text
+        ref={textRef}
         position={[0, 0.3, 0]}
         fontSize={0.2}
         color="white"

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, Line } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { TypewriterText } from '../TypewriterText'; // Import the new component
+import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
 
 interface WelcomeStoryProps {
   customerName: string;
@@ -73,17 +73,24 @@ export const WelcomeStory = ({ customerName, year, isPaused }: WelcomeStoryProps
     setIsSubTitleTyped(false);
   }, [customerName, year]);
 
+  const titleSegments: TextSegment[] = [
+    { text: `¡HOLA, ${customerName.toUpperCase()}!`, color: "#FFFFFF" },
+  ];
+
+  const subTitleSegments: TextSegment[] = [
+    { text: `BIENVENIDO A TU ${year} WRAPPED`, color: "#FFFFFF" },
+  ];
+
   return (
     <group>
       <AnimatedBackgroundLines />
       <TypewriterText
-        text={`¡HOLA, ${customerName.toUpperCase()}!`}
+        segments={titleSegments}
         speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 1.5 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
-        color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
@@ -93,13 +100,12 @@ export const WelcomeStory = ({ customerName, year, isPaused }: WelcomeStoryProps
       />
       {isTitleTyped && (
         <TypewriterText
-          text={`BIENVENIDO A TU ${year} WRAPPED`}
+          segments={subTitleSegments}
           speed={75}
           onComplete={() => setIsSubTitleTyped(true)}
           isPaused={isPaused}
           position={[0, 0.5 * responsiveScale, 0]}
           fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
-          color="#FFFFFF"
           anchorX="center"
           anchorY="middle"
           maxWidth={viewport.width * 0.8}

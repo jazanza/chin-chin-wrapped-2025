@@ -6,7 +6,7 @@ import * as THREE from "three";
 const PARTICLE_COUNT = 50000;
 const MAX_LITERS_FOR_SCALE = 15000;
 
-export function BeerVisualizer({ liters, visible, ...props }: { liters: number; visible: boolean } & JSX.IntrinsicElements['group']) {
+export function BeerVisualizer({ liters, visible, textColor, highlightColor, ...props }: { liters: number; visible: boolean; textColor: string; highlightColor: string } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
   const pointsRef = useRef<THREE.Points>(null!);
   const textRef = useRef<any>(null!);
@@ -124,10 +124,9 @@ export function BeerVisualizer({ liters, visible, ...props }: { liters: number; 
         ref={textRef}
         position={[0, -viewport.height, 0]} // Posición inicial fuera de la pantalla
         fontSize={2} // Valor inicial, se actualizará en useFrame
-        color="white"
+        color={highlightColor} // Use highlightColor for the main liters text
         anchorX="center"
         anchorY="middle"
-        // Removed outlineWidth and outlineColor
       >
         {`0.00 L`}
       </Text>

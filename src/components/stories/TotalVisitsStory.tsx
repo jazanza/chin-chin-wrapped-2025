@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { TypewriterText } from '../TypewriterText';
+import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
 import { AnimatedBackgroundLines } from './WelcomeStory'; // Reusing background lines
 
 interface TotalVisitsStoryProps {
@@ -10,16 +10,18 @@ interface TotalVisitsStoryProps {
   totalVisits: number;
   totalVisits2024: number;
   isPaused: boolean;
+  textColor: string;
+  highlightColor: string;
 }
 
-const ComparisonText = ({ current, previous, responsiveScale, year }: { current: number; previous: number; responsiveScale: number; year: string }) => {
+const ComparisonText = ({ current, previous, responsiveScale, year, textColor }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string }) => {
   const { viewport } = useThree();
 
   if (previous === 0) {
     return (
       <Text
         fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
-        color="#888888"
+        color={textColor} // Use textColor for "No data"
         anchorX="center"
         anchorY="middle"
         position={[0, -0.4 * responsiveScale, 0.03]}
@@ -57,7 +59,7 @@ const ComparisonText = ({ current, previous, responsiveScale, year }: { current:
   );
 };
 
-export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, isPaused }: TotalVisitsStoryProps) => {
+export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, isPaused, textColor, highlightColor }: TotalVisitsStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
@@ -70,17 +72,27 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
     setIsVisitsTyped(false);
   }, [customerName, year, totalVisits, totalVisits2024]);
 
+  const titleSegments: TextSegment[] = [
+    { text: "¡", color: textColor },
+    { text: customerName.toUpperCase(), color: highlightColor },
+    { text: ", NOS VISITASTE...", color: textColor },
+  ];
+
+  const visitsSegments: TextSegment[] = [
+    { text: `${totalVisits}`, color: highlightColor },
+    { text: " VECES!", color: textColor },
+  ];
+
   return (
     <group>
       <AnimatedBackgroundLines />
       <TypewriterText
-        text={`¡${customerName.toUpperCase()}, NOS VISITASTE...`}
+        segments={titleSegments}
         speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
-        color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
@@ -90,13 +102,12 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
       />
       {isTitleTyped && (
         <TypewriterText
-          text={`${totalVisits} VECES!`}
+          segments={visitsSegments}
           speed={75}
           onComplete={() => setIsVisitsTyped(true)}
           isPaused={isPaused}
           position={[0, 1.5 * responsiveScale, 0]}
           fontSize={Math.min(viewport.width * 0.08, 0.8) * responsiveScale}
-          color="#FFFFFF"
           anchorX="center"
           anchorY="middle"
           maxWidth={viewport.width * 0.8}
@@ -106,7 +117,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
         />
       )}
       {isVisitsTyped && (
-        <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} />
+        <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} textColor={textColor} />
       )}
     </group>
   );

@@ -14,7 +14,7 @@ const COLUMN_WIDTH = 0.5;
 const MAX_COLUMN_HEIGHT = 2;
 const BASE_TEXT_FONT_SIZE = 0.1;
 
-const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product: Product; index: number; maxLiters: number; totalBars: number; responsiveScale: number }) => {
+const ProductColumn = ({ product, index, maxLiters, responsiveScale, textColor, highlightColor }: { product: Product; index: number; maxLiters: number; totalBars: number; responsiveScale: number; textColor: string; highlightColor: string }) => {
   const pointsRef = useRef<THREE.Points>(null!);
   const textRef = useRef<any>(null!);
   const animatedHeight = useRef(0);
@@ -67,26 +67,24 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
       <Text
         position={[0, MAX_COLUMN_HEIGHT + 0.2, 0]} // Position above the max height
         fontSize={BASE_TEXT_FONT_SIZE * responsiveScale}
-        color="white"
+        color={highlightColor} // Use highlightColor for product name
         anchorX="center"
         maxWidth={0.8}
         textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-        // Removed outlineWidth and outlineColor
+        letterSpacing={-0.05}
+        fontWeight={700}
       >
         {product.name.toUpperCase()}
       </Text>
       <Text
         position={[0, MAX_COLUMN_HEIGHT, 0]} // Position slightly below the name
         fontSize={BASE_TEXT_FONT_SIZE * 0.8 * responsiveScale}
-        color="gray"
+        color={textColor} // Use textColor for liters
         anchorX="center"
         maxWidth={0.8}
         textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={400} // Apply normal font weight
-        // Removed outlineWidth and outlineColor
+        letterSpacing={-0.05}
+        fontWeight={400}
       >
         {`${product.liters.toFixed(1)} L`}
       </Text>
@@ -94,7 +92,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
   );
 };
 
-export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[] } & JSX.IntrinsicElements['group']) {
+export function WrappedTop5({ top5Products, textColor, highlightColor, ...props }: { top5Products: Product[]; textColor: string; highlightColor: string } & JSX.IntrinsicElements['group']) {
   const { viewport } = useThree();
   const responsiveScale = Math.min(1, viewport.width / 12);
 
@@ -102,9 +100,17 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
 
   return (
     <group {...props} scale={responsiveScale}>
-      {/* Removed redundant "TU TOP 5 DE CERVEZAS" text, as it's handled by the parent story component */}
       {top5Products.map((product, index) => (
-        <ProductColumn key={product.name} product={product} index={index} maxLiters={maxLiters} totalBars={top5Products.length} responsiveScale={responsiveScale} />
+        <ProductColumn
+          key={product.name}
+          product={product}
+          index={index}
+          maxLiters={maxLiters}
+          totalBars={top5Products.length}
+          responsiveScale={responsiveScale}
+          textColor={textColor}
+          highlightColor={highlightColor}
+        />
       ))}
     </group>
   );

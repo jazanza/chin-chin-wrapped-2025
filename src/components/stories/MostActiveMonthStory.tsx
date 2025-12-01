@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { TypewriterText } from '../TypewriterText';
+import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
 import { AnimatedBackgroundLines } from './WelcomeStory'; // Reusing background lines
 
 interface MostActiveMonthStoryProps {
   mostActiveMonth: string;
   isPaused: boolean;
+  textColor: string;
+  highlightColor: string;
 }
 
-export const MostActiveMonthStory = ({ mostActiveMonth, isPaused }: MostActiveMonthStoryProps) => {
+export const MostActiveMonthStory = ({ mostActiveMonth, isPaused, textColor, highlightColor }: MostActiveMonthStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
@@ -22,17 +24,24 @@ export const MostActiveMonthStory = ({ mostActiveMonth, isPaused }: MostActiveMo
     setIsMonthTyped(false);
   }, [mostActiveMonth]);
 
+  const titleSegments: TextSegment[] = [
+    { text: "EL MES DE LA SED FUE...", color: textColor },
+  ];
+
+  const monthSegments: TextSegment[] = [
+    { text: mostActiveMonth.toUpperCase(), color: highlightColor },
+  ];
+
   return (
     <group>
       <AnimatedBackgroundLines />
       <TypewriterText
-        text="EL MES DE LA SED FUE..."
+        segments={titleSegments}
         speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, 2.5 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
-        color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
@@ -42,13 +51,12 @@ export const MostActiveMonthStory = ({ mostActiveMonth, isPaused }: MostActiveMo
       />
       {isTitleTyped && (
         <TypewriterText
-          text={mostActiveMonth.toUpperCase()}
+          segments={monthSegments}
           speed={75}
           onComplete={() => setIsMonthTyped(true)}
           isPaused={isPaused}
           position={[0, 1.5 * responsiveScale, 0]}
           fontSize={Math.min(viewport.width * 0.08, 0.8) * responsiveScale}
-          color="#FFFFFF"
           anchorX="center"
           anchorY="middle"
           maxWidth={viewport.width * 0.8}

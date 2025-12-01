@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Text, Box, Image } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { TypewriterText } from '../TypewriterText';
+import { TypewriterText, TextSegment } from '../TypewriterText'; // Import TextSegment
 
 interface Product {
   name: string;
@@ -25,17 +25,19 @@ interface SummaryInfographicProps {
   totalVarietiesInDb: number;
   mostActiveDay: string;
   mostActiveMonth: string;
+  textColor: string;
+  highlightColor: string;
 }
 
 // Helper for comparison text and arrow
-const ComparisonText = ({ current, previous, responsiveScale, year }: { current: number; previous: number; responsiveScale: number; year: string }) => {
+const ComparisonText = ({ current, previous, responsiveScale, year, textColor }: { current: number; previous: number; responsiveScale: number; year: string; textColor: string }) => {
   const { viewport } = useThree(); // Access viewport for responsive font sizing
 
   if (previous === 0) {
     return (
       <Text
         fontSize={Math.min(viewport.width * 0.02, 0.1) * responsiveScale}
-        color="#888888"
+        color={textColor} // Use textColor for "No data"
         anchorX="center"
         anchorY="middle"
         position={[0, -0.4 * responsiveScale, 0.03]}
@@ -89,6 +91,8 @@ export const SummaryInfographic = ({
   totalVarietiesInDb,
   mostActiveDay,
   mostActiveMonth,
+  textColor,
+  highlightColor,
 }: SummaryInfographicProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
@@ -122,17 +126,19 @@ export const SummaryInfographic = ({
   // Get the top 1 product, or a placeholder if none
   const top1Product = top5Products.length > 0 ? top5Products[0] : { name: "N/A", liters: 0 };
 
+  const customerNameSegments: TextSegment[] = [{ text: customerName.toUpperCase(), color: highlightColor }];
+  const yearWrappedSegments: TextSegment[] = [{ text: `${year} WRAPPED`, color: textColor }];
+
   return (
     <group position={[0, 0, 0]}>
       {/* Main Infographic Title */}
       <TypewriterText
-        text={customerName.toUpperCase()}
+        segments={customerNameSegments}
         speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
         position={[0, infographicHeight / 2 + 0.5 * responsiveScale, 0]}
         fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
-        color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
         maxWidth={infographicWidth * 0.9}
@@ -142,13 +148,12 @@ export const SummaryInfographic = ({
       />
       {isTitleTyped && (
         <TypewriterText
-          text={`${year} WRAPPED`}
+          segments={yearWrappedSegments}
           speed={75}
           onComplete={() => setIsSubTitleTyped(true)}
           isPaused={isPaused}
           position={[0, infographicHeight / 2 + 0.1 * responsiveScale, 0]}
           fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
-          color="#FFFFFF"
           anchorX="center"
           anchorY="middle"
           maxWidth={infographicWidth * 0.9}
@@ -165,13 +170,13 @@ export const SummaryInfographic = ({
             position={getBlockPosition(1, 1)}
             width={blockWidth}
             height={blockHeight}
-            bgColor="#000000"
-            textColor="#FFFFFF"
+            bgColor="#000000" // Fixed for infographic
+            textColor={textColor}
             responsiveScale={responsiveScale}
           >
             <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#FFFFFF"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, 0.3 * responsiveScale, 0.03]}
@@ -184,7 +189,7 @@ export const SummaryInfographic = ({
             </Text>
             <Text
               fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color="#FFFFFF"
+              color={highlightColor} // Highlighted
               anchorX="center"
               anchorY="middle"
               position={[0, 0.05 * responsiveScale, 0.03]}
@@ -195,7 +200,7 @@ export const SummaryInfographic = ({
             >
               {totalVisits}
             </Text>
-            <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} />
+            <ComparisonText current={totalVisits} previous={totalVisits2024} responsiveScale={responsiveScale} year={year} textColor={textColor} />
           </Block>
 
           {/* Row 1, Column 2: Total Litros */}
@@ -203,13 +208,13 @@ export const SummaryInfographic = ({
             position={getBlockPosition(1, 2)}
             width={blockWidth}
             height={blockHeight}
-            bgColor="#FFFFFF"
-            textColor="#000000"
+            bgColor="#FFFFFF" // Fixed for infographic
+            textColor={textColor}
             responsiveScale={responsiveScale}
           >
             <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#000000"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, 0.3 * responsiveScale, 0.03]}
@@ -222,7 +227,7 @@ export const SummaryInfographic = ({
             </Text>
             <Text
               fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color="#000000"
+              color={highlightColor} // Highlighted
               anchorX="center"
               anchorY="middle"
               position={[0, 0.05 * responsiveScale, 0.03]}
@@ -233,7 +238,7 @@ export const SummaryInfographic = ({
             >
               {totalLiters.toFixed(1)} L
             </Text>
-            <ComparisonText current={totalLiters} previous={totalLiters2024} responsiveScale={responsiveScale} year={year} />
+            <ComparisonText current={totalLiters} previous={totalLiters2024} responsiveScale={responsiveScale} year={year} textColor={textColor} />
           </Block>
 
           {/* Row 2, Column 1: Top 5 Cervezas */}
@@ -241,13 +246,13 @@ export const SummaryInfographic = ({
             position={getBlockPosition(2, 1)}
             width={blockWidth}
             height={blockHeight}
-            bgColor="#000000"
-            textColor="#FFFFFF"
+            bgColor="#000000" // Fixed for infographic
+            textColor={textColor}
             responsiveScale={responsiveScale}
           >
             <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#FFFFFF"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, 0.4 * responsiveScale, 0.03]}
@@ -262,7 +267,7 @@ export const SummaryInfographic = ({
               <Text
                 key={idx}
                 fontSize={idx === 0 ? Math.min(viewport.width * 0.04, 0.25) * responsiveScale : Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
-                color="#FFFFFF"
+                color={idx === 0 ? highlightColor : textColor} // Highlight top product
                 anchorX="center"
                 anchorY="middle"
                 position={[0, 0.2 * responsiveScale - idx * 0.15 * responsiveScale, 0.03]}
@@ -281,13 +286,13 @@ export const SummaryInfographic = ({
             position={getBlockPosition(2, 2)}
             width={blockWidth}
             height={blockHeight}
-            bgColor="#FFFFFF"
-            textColor="#000000"
+            bgColor="#FFFFFF" // Fixed for infographic
+            textColor={textColor}
             responsiveScale={responsiveScale}
           >
             <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#000000"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, 0.3 * responsiveScale, 0.03]}
@@ -300,7 +305,7 @@ export const SummaryInfographic = ({
             </Text>
             <Text
               fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color="#000000"
+              color={highlightColor} // Highlighted
               anchorX="center"
               anchorY="middle"
               position={[0, 0 * responsiveScale, 0.03]}
@@ -313,7 +318,7 @@ export const SummaryInfographic = ({
             </Text>
             <Text
               fontSize={Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
-              color="#000000"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, -0.2 * responsiveScale, 0.03]}
@@ -331,13 +336,13 @@ export const SummaryInfographic = ({
             position={getBlockPosition(3, 1)}
             width={blockWidth}
             height={blockHeight}
-            bgColor="#000000"
-            textColor="#FFFFFF"
+            bgColor="#000000" // Fixed for infographic
+            textColor={textColor}
             responsiveScale={responsiveScale}
           >
             <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#FFFFFF"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, 0.3 * responsiveScale, 0.03]}
@@ -350,7 +355,7 @@ export const SummaryInfographic = ({
             </Text>
             <Text
               fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color="#FFFFFF"
+              color={highlightColor} // Highlighted
               anchorX="center"
               anchorY="middle"
               position={[0, 0 * responsiveScale, 0.03]}
@@ -368,13 +373,13 @@ export const SummaryInfographic = ({
             position={getBlockPosition(3, 2)}
             width={blockWidth}
             height={blockHeight}
-            bgColor="#FFFFFF"
-            textColor="#000000"
+            bgColor="#FFFFFF" // Fixed for infographic
+            textColor={textColor}
             responsiveScale={responsiveScale}
           >
             <Text
               fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
-              color="#000000"
+              color={textColor}
               anchorX="center"
               anchorY="middle"
               position={[0, 0.3 * responsiveScale, 0.03]}
@@ -387,7 +392,7 @@ export const SummaryInfographic = ({
             </Text>
             <Text
               fontSize={Math.min(viewport.width * 0.08, 0.6) * responsiveScale}
-              color="#000000"
+              color={highlightColor} // Highlighted
               anchorX="center"
               anchorY="middle"
               position={[0, 0 * responsiveScale, 0.03]}
@@ -411,7 +416,7 @@ interface BlockProps {
   width: number;
   height: number;
   bgColor: string;
-  textColor: string;
+  textColor: string; // Passed for consistency, though fixed for infographic blocks
   responsiveScale: number;
   children: React.ReactNode;
 }

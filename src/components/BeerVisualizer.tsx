@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
-const PARTICLE_COUNT = 50000;
+const PARTICLE_COUNT = 100000; // Increased particle count for density
 const CYLINDER_RADIUS = 1.5;
 const MAX_LITERS_FOR_SCALE = 1000;
 
@@ -13,8 +13,8 @@ export function BeerVisualizer({ liters, ...props }: { liters: number } & JSX.In
   const textRef = useRef<any>(null!);
   const animatedLiters = useRef(0);
 
-  const maxHeight = viewport.height * 0.8;
-  const bottomY = -viewport.height / 2;
+  const maxHeight = viewport.height * 1.2; // Increased height for dominance
+  const bottomY = -maxHeight / 2; // Centering the visualizer vertically
 
   const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT * 3);

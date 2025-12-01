@@ -6,7 +6,7 @@ type ViewMode = "meter" | "ranking" | "balance" | "loyalty" | "spectrum";
 
 const CAMERA_PRESETS: { [key in ViewMode]: { position: THREE.Vector3; lookAt: THREE.Vector3 } } = {
   meter: {
-    position: new THREE.Vector3(0, 1, 7),
+    position: new THREE.Vector3(0, 0, 8),
     lookAt: new THREE.Vector3(0, 0, 0),
   },
   ranking: {
@@ -43,11 +43,11 @@ export function CameraAnimator({ viewMode }: { viewMode: ViewMode }) {
       targetPosition.y = 3 + Math.sin(time * 0.5);
     }
 
-    // Increased lerp factor for more abrupt, "glitchy" transitions
-    camera.position.lerp(targetPosition, 0.2);
+    // Decreased lerp factor for smoother transitions
+    camera.position.lerp(targetPosition, 0.05);
 
     // Lerp lookAt as well for a slightly less jarring rotation change
-    currentLookAt.lerp(targetLookAt, 0.2);
+    currentLookAt.lerp(targetLookAt, 0.05);
     camera.lookAt(currentLookAt);
   });
 

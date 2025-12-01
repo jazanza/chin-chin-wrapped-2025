@@ -210,14 +210,10 @@ const WrappedDashboard = () => {
     return null;
   }
 
-  const StoryComponent = currentStory.component;
-
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
       {/* Mobile mockup container with border - Brutalist: Black background, White border, no rounded corners */}
       <div className="relative w-full h-full max-w-[420px] border-[4px] border-white rounded-none overflow-hidden bg-black">
-        {/* Spike Burst Effect removed */}
-
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}
@@ -245,26 +241,54 @@ const WrappedDashboard = () => {
           <ResponsiveCamera viewMode={currentStory.cameraViewMode} />
           <PostProcessingEffects />
 
-          {/* Render current story component */}
-          <StoryComponent
-            customerName={wrappedData.customerName}
-            year={wrappedData.year}
-            totalLiters={wrappedData.totalLiters}
-            dominantBeerCategory={wrappedData.dominantBeerCategory}
-            top5Products={wrappedData.top5Products}
-            totalVisits={wrappedData.totalVisits}
-            categoryVolumes={wrappedData.categoryVolumes}
-            isPaused={isPaused} // Pass isPaused to story components
-          />
+          {/* Render current story component conditionally */}
+          {currentStoryIndex === 0 && (
+            <IntroStory
+              customerName={wrappedData.customerName}
+              year={wrappedData.year}
+              totalVisits={wrappedData.totalVisits}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStoryIndex === 1 && (
+            <TotalConsumptionStory
+              totalLiters={wrappedData.totalLiters}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStoryIndex === 2 && (
+            <DominantBeerStory
+              dominantBeerCategory={wrappedData.dominantBeerCategory}
+              categoryVolumes={wrappedData.categoryVolumes}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStoryIndex === 3 && (
+            <Top5Story
+              top5Products={wrappedData.top5Products}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStoryIndex === 4 && (
+            <SummaryInfographic
+              customerName={wrappedData.customerName}
+              year={wrappedData.year}
+              totalLiters={wrappedData.totalLiters}
+              dominantBeerCategory={wrappedData.dominantBeerCategory}
+              top5Products={wrappedData.top5Products}
+              totalVisits={wrappedData.totalVisits}
+              isPaused={isPaused}
+            />
+          )}
 
           <ScreenshotHelper onScreenshotReady={onScreenshotReady} />
         </Canvas>
 
-        {/* Chin Chin Logo */}
+        {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
         <img
           src="/Logo.png"
           alt="Chin Chin Logo"
-          className="absolute bottom-4 right-4 z-10 w-[8vw] max-w-[60px] p-1"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[9.6vw] max-w-[72px] p-1" // 8vw * 1.2 = 9.6vw, 60px * 1.2 = 72px
         />
 
         {/* Interaction Zone */}

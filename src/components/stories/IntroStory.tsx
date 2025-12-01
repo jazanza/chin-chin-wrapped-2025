@@ -6,6 +6,7 @@ import { TypewriterText } from '../TypewriterText'; // Import the new component
 
 interface IntroStoryProps {
   customerName: string;
+  year: string; // Added year prop
   totalVisits: number;
   isPaused: boolean; // Added isPaused prop
 }
@@ -58,7 +59,7 @@ const AnimatedBackgroundLines = () => {
   );
 };
 
-export const IntroStory = ({ customerName, totalVisits, isPaused }: IntroStoryProps) => {
+export const IntroStory = ({ customerName, year, totalVisits, isPaused }: IntroStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
@@ -70,7 +71,7 @@ export const IntroStory = ({ customerName, totalVisits, isPaused }: IntroStoryPr
     // Reset animation states when story changes
     setIsTitleTyped(false);
     setIsSubTitleTyped(false);
-  }, [customerName, totalVisits]);
+  }, [customerName, year, totalVisits]); // Added year to dependencies
 
   return (
     <group>
@@ -94,7 +95,7 @@ export const IntroStory = ({ customerName, totalVisits, isPaused }: IntroStoryPr
       />
       {isTitleTyped && (
         <TypewriterText
-          text="ESTE FUE TU 2025 EN CHIN CHIN"
+          text={`ESTE FUE TU ${year} EN CHIN CHIN`}
           speed={50}
           onComplete={() => setIsSubTitleTyped(true)}
           isPaused={isPaused}

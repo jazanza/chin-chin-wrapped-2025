@@ -14,7 +14,7 @@ const COLUMN_WIDTH = 0.5;
 const MAX_COLUMN_HEIGHT = 2;
 const BASE_TEXT_FONT_SIZE = 0.1;
 
-const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product: Product; index: number; maxLiters: number; responsiveScale: number }) => {
+const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product: Product; index: number; maxLiters: number; totalBars: number; responsiveScale: number }) => {
   const pointsRef = useRef<THREE.Points>(null!);
   const textRef = useRef<any>(null!);
   const animatedHeight = useRef(0);
@@ -100,23 +100,9 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
 
   return (
     <group {...props} scale={responsiveScale}>
-      <Text
-        position={[0, MAX_COLUMN_HEIGHT + 0.5, 0]}
-        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale} // Simulating 6vw
-        color="#FFFFFF" // White
-        anchorX="center"
-        anchorY="middle"
-        outlineWidth={0.04 * responsiveScale}
-        outlineColor="#000000"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={900} // Apply extreme font weight
-      >
-        TU TOP 5 DE CERVEZAS
-      </Text>
+      {/* Removed redundant "TU TOP 5 DE CERVEZAS" text, as it's handled by the parent story component */}
       {top5Products.map((product, index) => (
-        <ProductColumn key={product.name} product={product} index={index} maxLiters={maxLiters} responsiveScale={responsiveScale} />
+        <ProductColumn key={product.name} product={product} index={index} maxLiters={maxLiters} totalBars={top5Products.length} responsiveScale={responsiveScale} />
       ))}
     </group>
   );

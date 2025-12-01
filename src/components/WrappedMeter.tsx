@@ -50,19 +50,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
       >
         {`${totalLiters.toFixed(1)} L`}
       </Text>
-      <Text
-        position={[0, -maxHeight / 2 - 0.8 * responsiveScale, 0]}
-        fontSize={0.3 * responsiveScale}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={viewport.width * 0.8}
-        textAlign="center"
-        letterSpacing={-0.05} // Apply negative letter spacing
-        fontWeight={700} // Apply strong font weight
-      >
-        TOTAL CONSUMIDO
-      </Text>
+      {/* Removed redundant "TOTAL CONSUMIDO" text, as it's handled by the parent story component */}
     </group>
   );
 }

@@ -157,7 +157,7 @@ export const SummaryInfographic = ({
             letterSpacing={-0.05}
             fontWeight={900}
           >
-            {totalLiters.toFixed(1)} L
+            {totalLiters.toFixed(1)} LITROS
           </Text>
           {/* Simple visual for total liters - White Cylinder */}
           <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
@@ -250,7 +250,7 @@ export const SummaryInfographic = ({
             </group>
           ))}
 
-          {/* Total Visits */}
+          {/* Total Visits (DÍAS DE LEALTAD) */}
           <Text
             position={[2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
             fontSize={BASE_FONT_SIZE * 1.2}
@@ -262,7 +262,7 @@ export const SummaryInfographic = ({
             letterSpacing={-0.05}
             fontWeight={700}
           >
-            VISITAS:
+            DÍAS DE LEALTAD:
           </Text>
           <Text
             position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
@@ -277,7 +277,7 @@ export const SummaryInfographic = ({
             letterSpacing={-0.05}
             fontWeight={900}
           >
-            {totalVisits}
+            {totalVisits} DÍAS
           </Text>
           {/* Simple visual for visits - White Box */}
           <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>

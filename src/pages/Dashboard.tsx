@@ -102,11 +102,10 @@ const Dashboard = () => {
               <VarietyBalance varietyMetrics={varietyMetrics} visible={viewMode === "balance"} />
               <LoyaltyConstellation loyaltyMetrics={loyaltyMetrics} visible={viewMode === "loyalty"} />
               <FlavorSpectrum flavorData={flavorData} visible={viewMode === "spectrum"} />
-              
-              <CameraAnimator viewMode={viewMode} />
-              
-              <SceneEffects />
             </Suspense>
+            
+            <CameraAnimator viewMode={viewMode} />
+            <SceneEffects />
           </Canvas>
         )}
       </div>

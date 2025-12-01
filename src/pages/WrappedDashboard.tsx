@@ -51,12 +51,12 @@ interface StoryScene {
   downloadFileName: string;
 }
 
-// REVISIÓN CRÍTICA DE DURACIONES
+// MODIFICACIÓN CRÍTICA EN STORY_SCENES:
 const STORY_SCENES: StoryScene[] = [
   {
     id: 'introFun', // Slide 0
     component: IntroFunStory,
-    duration: 12000, // 12 segundos para lectura de texto largo
+    duration: 15000, // 15 segundos para lectura de texto largo
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
@@ -64,7 +64,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalVisits', // Slide 1
     component: TotalVisitsStory,
-    duration: 6000, // 6 seconds
+    duration: 15000, // 15 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Visitas del Año',
     downloadFileName: 'Historia_Visitas',
@@ -72,7 +72,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveMonth', // Slide 2
     component: MostActiveMonthStory,
-    duration: 6000, // 6 seconds
+    duration: 15000, // 15 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Mes Más Activo',
     downloadFileName: 'Historia_MesActivo',
@@ -80,7 +80,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'mostActiveDay', // Slide 3
     component: MostActiveDayStory,
-    duration: 6000, // 6 seconds
+    duration: 15000, // 15 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Día Más Activo',
     downloadFileName: 'Historia_DiaActivo',
@@ -88,7 +88,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'dominantCategoryAndVarieties', // Slide 4
     component: DominantCategoryAndVarietiesStory,
-    duration: 6000, // 6 seconds
+    duration: 15000, // 15 seconds
     cameraViewMode: 'dominantBeer',
     title: 'Categoría y Variedades',
     downloadFileName: 'Historia_CategoriaVariedades',
@@ -96,7 +96,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'top5', // Slide 5
     component: Top5Story,
-    duration: 6000, // 6 seconds
+    duration: 15000, // 15 seconds
     cameraViewMode: 'top5',
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
@@ -104,7 +104,7 @@ const STORY_SCENES: StoryScene[] = [
   {
     id: 'totalConsumption', // Slide 6
     component: TotalConsumptionStory,
-    duration: 6000, // 6 seconds
+    duration: 15000, // 15 seconds
     cameraViewMode: 'totalConsumption',
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
@@ -339,7 +339,11 @@ const WrappedDashboard = () => {
           <Canvas
             camera={{ position: [0, 0, 8], fov: 75 }}
             className="w-full h-full"
-            gl={{ preserveDrawingBuffer: true, antialias: false }} // Desactivar Antialias para reducir carga
+            gl={{ 
+              preserveDrawingBuffer: true, 
+              antialias: false, // Desactivar Antialias para reducir carga
+              powerPreference: 'low-power' // Pedir al navegador que use menos recursos
+            }} 
           >
             <CanvasBackground />
             {/* Removed ambientLight and pointLight for brutalist style */}

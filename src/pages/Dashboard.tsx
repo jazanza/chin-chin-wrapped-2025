@@ -26,7 +26,7 @@ const SCENE_PLAYLIST: Scene[] = [
   { viewMode: "meter", rangeKey: "last_3_months", title: "LITROS CERVEZA" },
   { viewMode: "meter", rangeKey: "last_6_months", title: "LITROS CERVEZA" },
   { viewMode: "meter", rangeKey: "this_year", title: "LITROS CERVEZA" },
-  { viewMode: "meter", rangeKey: "last_year", title: "CONLITROS CERVEZASUMO" },
+  { viewMode: "meter", rangeKey: "last_year", title: "LITROS CERVEZA" },
   { viewMode: "meter", rangeKey: "all_time", title: "LITROS CERVEZA" },
 ];
 
@@ -35,7 +35,7 @@ const RANGE_MAP: { [key: string]: string } = {
   last_week: "SEMANA PASADA",
   last_15_days: "ÚLTIMOS 15 DÍAS",
   this_month: "ESTE MES",
-  last_month: "ÚLTIMO MES",
+  last_month: "MES ANTERIOR",
   last_3_months: "ÚLTIMOS 3 MESES",
   last_6_months: "ÚLTIMOS 6 MESES",
   last_1_year: "ÚLTIMO AÑO",

@@ -7,7 +7,7 @@ import { TypewriterText } from '../TypewriterText'; // Import the new component
 interface WelcomeStoryProps {
   customerName: string;
   year: string; // Added year prop
-  totalVisits: number;
+  totalVisits: number; // Still passed, but not used in this component anymore
   isPaused: boolean; // Added isPaused prop
 }
 
@@ -59,63 +59,54 @@ export const AnimatedBackgroundLines = () => {
   );
 };
 
-export const WelcomeStory = ({ customerName, year, totalVisits, isPaused }: WelcomeStoryProps) => {
+export const WelcomeStory = ({ customerName, year, isPaused }: WelcomeStoryProps) => {
   const { viewport } = useThree();
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
   const [isTitleTyped, setIsTitleTyped] = useState(false);
-  // Removed isSubTitleTyped as the first title is removed
+  const [isSubTitleTyped, setIsSubTitleTyped] = useState(false);
 
   useEffect(() => {
     // Reset animation states when story changes
     setIsTitleTyped(false);
-  }, [customerName, year, totalVisits]); // Added year to dependencies
+    setIsSubTitleTyped(false);
+  }, [customerName, year]);
 
   return (
     <group>
       <AnimatedBackgroundLines />
-      {/* Removed the first TypewriterText for "¡HOLA, ${customerName.toUpperCase()}!" */}
       <TypewriterText
-        text={`ESTE FUE TU ${year} EN CHIN CHIN`}
-        speed={75} // Increased typewriter speed
+        text={`¡HOLA, ${customerName.toUpperCase()}!`}
+        speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
-        position={[0, 0.5 * responsiveScale, 0]} // Adjusted position
-        fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
-        color="#FFFFFF" // White
+        position={[0, 1.5 * responsiveScale, 0]}
+        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
+        color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
-        // Removed outlineWidth and outlineColor
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={900}
       />
       {isTitleTyped && (
-        <group>
-          <Text
-            position={[0, -1.5 * responsiveScale, 0]}
-            fontSize={0.3 * responsiveScale}
-            color="white"
-            anchorX="center"
-            anchorY="middle"
-            maxWidth={viewport.width * 0.8}
-            textAlign="center"
-            letterSpacing={-0.05}
-            fontWeight={700}
-            // Removed outlineWidth and outlineColor
-          >
-            NOS VISITASTE {totalVisits} VECES
-          </Text>
-          {/* Simple visual for visits - Monochromatic spheres */}
-          {Array.from({ length: Math.min(totalVisits, 10) }).map((_, i) => (
-            <mesh key={i} position={[-2 + i * 0.4 * responsiveScale, -2.5 * responsiveScale, 0]}>
-              <sphereGeometry args={[0.1 * responsiveScale, 16, 16]} />
-              <meshBasicMaterial color={i % 2 === 0 ? "#FFFFFF" : "#333333"} />
-            </mesh>
-          ))}
-        </group>
+        <TypewriterText
+          text={`BIENVENIDO A TU ${year} WRAPPED`}
+          speed={75}
+          onComplete={() => setIsSubTitleTyped(true)}
+          isPaused={isPaused}
+          position={[0, 0.5 * responsiveScale, 0]}
+          fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
+          color="#FFFFFF"
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={viewport.width * 0.8}
+          textAlign="center"
+          letterSpacing={-0.05}
+          fontWeight={900}
+        />
       )}
     </group>
   );

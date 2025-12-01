@@ -15,12 +15,15 @@ import { StoryInteractionZone } from "@/components/StoryInteractionZone";
 import { StoryProgressBar } from "@/components/StoryProgressBar";
 
 // Import story components
-import { IntroFunStory } from "@/components/stories/IntroFunStory"; // New intro story
-import { WelcomeStory } from "@/components/stories/WelcomeStory"; // Renamed from IntroStory
-import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
-import { DominantBeerStory } from "@/components/stories/DominantBeerStory";
+import { IntroFunStory } from "@/components/stories/IntroFunStory";
+import { WelcomeStory } from "@/components/stories/WelcomeStory";
+import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory"; // NEW
+import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory"; // NEW
+import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory"; // NEW
+import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory"; // NEW
 import { Top5Story } from "@/components/stories/Top5Story";
 import { SummaryInfographic } from "@/components/stories/SummaryInfographic";
+import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory"; // Moved to end
 
 // Componente auxiliar para la captura de pantalla
 const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
@@ -51,36 +54,52 @@ interface StoryScene {
 
 const STORY_SCENES: StoryScene[] = [
   {
-    id: 'introFun', // New intro story
+    id: 'introFun',
     component: IntroFunStory,
-    duration: 0, // Duration now controlled by the component itself
+    duration: 0, // Controlled by component
     cameraViewMode: 'intro',
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
   },
   {
-    id: 'welcome', // Renamed from intro
+    id: 'welcome', // Simple welcome message
     component: WelcomeStory,
-    duration: 5000,
+    duration: 4000, // Shorter duration
     cameraViewMode: 'intro',
-    title: 'Introducción',
-    downloadFileName: 'Historia_Intro',
+    title: 'Bienvenida',
+    downloadFileName: 'Historia_Bienvenida',
   },
   {
-    id: 'totalConsumption',
-    component: TotalConsumptionStory,
+    id: 'totalVisits', // NEW
+    component: TotalVisitsStory,
     duration: 5000,
-    cameraViewMode: 'totalConsumption',
-    title: 'Consumo Total',
-    downloadFileName: 'Historia_ConsumoTotal',
+    cameraViewMode: 'totalConsumption', // Reusing camera mode
+    title: 'Visitas del Año',
+    downloadFileName: 'Historia_Visitas',
   },
   {
-    id: 'dominantBeer',
-    component: DominantBeerStory,
+    id: 'mostActiveMonth', // NEW
+    component: MostActiveMonthStory,
     duration: 5000,
+    cameraViewMode: 'dominantBeer', // Reusing camera mode
+    title: 'Mes Más Activo',
+    downloadFileName: 'Historia_MesActivo',
+  },
+  {
+    id: 'mostActiveDay', // NEW
+    component: MostActiveDayStory,
+    duration: 5000,
+    cameraViewMode: 'dominantBeer', // Reusing camera mode
+    title: 'Día Más Activo',
+    downloadFileName: 'Historia_DiaActivo',
+  },
+  {
+    id: 'dominantCategoryAndVarieties', // NEW
+    component: DominantCategoryAndVarietiesStory,
+    duration: 6000,
     cameraViewMode: 'dominantBeer',
-    title: 'Cerveza Dominante',
-    downloadFileName: 'Historia_CervezaDominante',
+    title: 'Categoría y Variedades',
+    downloadFileName: 'Historia_CategoriaVariedades',
   },
   {
     id: 'top5',
@@ -97,6 +116,14 @@ const STORY_SCENES: StoryScene[] = [
     cameraViewMode: 'summaryInfographic',
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
+  },
+  {
+    id: 'totalConsumption', // LAST SLIDE
+    component: TotalConsumptionStory,
+    duration: 5000,
+    cameraViewMode: 'totalConsumption',
+    title: 'Consumo Total',
+    downloadFileName: 'Historia_ConsumoTotal',
   },
 ];
 
@@ -220,7 +247,7 @@ const WrappedDashboard = () => {
     return null;
   }
 
-  const isIntroStory = currentStory.id === 'introFun' || currentStory.id === 'welcome';
+  const isIntroOrWelcomeStory = currentStory.id === 'introFun' || currentStory.id === 'welcome';
 
   return (
     <div className="w-screen h-screen relative bg-background font-sans flex items-center justify-center">
@@ -233,7 +260,7 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {!isIntroStory && currentStory.id !== 'summaryInfographic' && ( // Only show WrappedOverlay if not an intro story and not the infographic
+        {!isIntroOrWelcomeStory && currentStory.id !== 'summaryInfographic' && ( // Only show WrappedOverlay if not an intro story and not the infographic
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
@@ -253,41 +280,57 @@ const WrappedDashboard = () => {
           <PostProcessingEffects />
 
           {/* Render current story component conditionally */}
-          {currentStoryIndex === 0 && (
+          {currentStory.id === 'introFun' && (
             <IntroFunStory
               totalVisits={wrappedData.totalVisits}
               isPaused={isPaused}
-              onStoryFinished={handleNextStory} // Pass callback for dynamic duration
+              onStoryFinished={handleNextStory}
             />
           )}
-          {currentStoryIndex === 1 && (
+          {currentStory.id === 'welcome' && (
             <WelcomeStory
               customerName={wrappedData.customerName}
               year={wrappedData.year}
+              totalVisits={wrappedData.totalVisits} // Still passed, but not used in WelcomeStory anymore
+              isPaused={isPaused}
+            />
+          )}
+          {currentStory.id === 'totalVisits' && (
+            <TotalVisitsStory
+              customerName={wrappedData.customerName}
+              year={wrappedData.year}
               totalVisits={wrappedData.totalVisits}
+              totalVisits2024={wrappedData.totalVisits2024}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 2 && (
-            <TotalConsumptionStory
-              totalLiters={wrappedData.totalLiters}
+          {currentStory.id === 'mostActiveMonth' && (
+            <MostActiveMonthStory
+              mostActiveMonth={wrappedData.mostActiveMonth}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 3 && (
-            <DominantBeerStory
+          {currentStory.id === 'mostActiveDay' && (
+            <MostActiveDayStory
+              mostActiveDay={wrappedData.mostActiveDay}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStory.id === 'dominantCategoryAndVarieties' && (
+            <DominantCategoryAndVarietiesStory
               dominantBeerCategory={wrappedData.dominantBeerCategory}
-              categoryVolumes={wrappedData.categoryVolumes}
+              uniqueVarieties2025={wrappedData.uniqueVarieties2025}
+              totalVarietiesInDb={wrappedData.totalVarietiesInDb}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 4 && (
+          {currentStory.id === 'top5' && (
             <Top5Story
               top5Products={wrappedData.top5Products}
               isPaused={isPaused}
             />
           )}
-          {currentStoryIndex === 5 && (
+          {currentStory.id === 'summaryInfographic' && (
             <SummaryInfographic
               customerName={wrappedData.customerName}
               year={wrappedData.year}
@@ -295,13 +338,18 @@ const WrappedDashboard = () => {
               dominantBeerCategory={wrappedData.dominantBeerCategory}
               top5Products={wrappedData.top5Products}
               totalVisits={wrappedData.totalVisits}
-              // Pass new data for infographic
               totalVisits2024={wrappedData.totalVisits2024}
               totalLiters2024={wrappedData.totalLiters2024}
               uniqueVarieties2025={wrappedData.uniqueVarieties2025}
               totalVarietiesInDb={wrappedData.totalVarietiesInDb}
               mostActiveDay={wrappedData.mostActiveDay}
               mostActiveMonth={wrappedData.mostActiveMonth}
+              isPaused={isPaused}
+            />
+          )}
+          {currentStory.id === 'totalConsumption' && (
+            <TotalConsumptionStory
+              totalLiters={wrappedData.totalLiters}
               isPaused={isPaused}
             />
           )}

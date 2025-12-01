@@ -5,13 +5,18 @@ import React from "react";
 export const SceneEffects = () => {
   const { gl, size } = useThree();
 
-  // No renderizar EffectComposer si gl o size no están definidos o si las dimensiones son cero.
-  if (!gl || !size || size.width === 0 || size.height === 0) {
+  // Usamos un tamaño de fallback si size no está listo, aunque la verificación de gl debería ser suficiente.
+  const width = size?.width || 800;
+  const height = size?.height || 600;
+  const dpr = gl?.getPixelRatio() || 1;
+
+  // Si el contexto GL no está disponible, no renderizamos.
+  if (!gl) {
     return null;
   }
 
   return (
-    <EffectComposer skipRender> {/* Eliminados gl={gl} y size={size} */}
+    <EffectComposer dpr={dpr} width={width} height={height} skipRender>
       <Bloom
         mipmapBlur
         luminanceThreshold={1}

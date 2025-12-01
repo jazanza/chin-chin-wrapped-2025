@@ -3,8 +3,6 @@ import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { initDb, loadDb, queryData } from "@/lib/db";
 
-// Removed IElectronAPI and declare global as Electron API is no longer used for file loading
-
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 
 let dbInstance: any = null; // Global instance for the database
@@ -139,29 +137,20 @@ export function useDb() {
     if (!dbInstance) {
       throw new Error("Database not loaded.");
     }
-    // Check for common column name variations if 'PhoneNumber' fails
+    // Simplified query to only search by Name
     const customerQuery = `
-      SELECT Id, Name,
-             CASE
-                 WHEN EXISTS (SELECT 1 FROM pragma_table_info('Customer') WHERE name = 'PhoneNumber') THEN PhoneNumber
-                 WHEN EXISTS (SELECT 1 FROM pragma_table_info('Customer') WHERE name = 'Phone') THEN Phone
-                 ELSE NULL
-             END AS ContactNumber
+      SELECT Id, Name
       FROM Customer
-      WHERE Name LIKE '%' || ? || '%' OR ContactNumber = ?
+      WHERE Name LIKE '%' || ? || '%'
       LIMIT 1;
     `;
 
     try {
-      const results = queryData(dbInstance, customerQuery, [searchTerm, searchTerm]);
+      const results = queryData(dbInstance, customerQuery, [searchTerm]);
       return results.length > 0 ? results[0] : null;
     } catch (e: any) {
       console.error("Error executing findCustomer query:", e);
-      // Provide a more specific error message if a column is missing
-      if (e.message.includes("no such column")) {
-        throw new Error(`Failed to execute customer search query: Column missing. Please check if 'Id', 'Name', 'PhoneNumber' or 'Phone' columns exist in your 'Customer' table. Original error: ${e.message}`);
-      }
-      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, PhoneNumber/Phone columns) or search term.`);
+      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name columns) or search term.`);
     }
   }, []);
 
@@ -264,8 +253,6 @@ export function useDb() {
       setLoading(false);
     }
   }, []);
-
-  // Removed processData as it's replaced by getWrappedData for the new flow
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
 }

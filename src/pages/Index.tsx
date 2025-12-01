@@ -1,7 +1,7 @@
-import Dashboard from "./Dashboard";
+import ClientLogin from "./ClientLogin";
 
 const Index = () => {
-  return <Dashboard />;
+  return <ClientLogin />;
 };
 
 export default Index;

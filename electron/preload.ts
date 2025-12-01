@@ -1,5 +1,5 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge } from "electron";
+// Removed ipcRenderer as openDbFile is no longer needed
 
-contextBridge.exposeInMainWorld("electronAPI", {
-  openDbFile: (): Promise<Uint8Array | null> => ipcRenderer.invoke("open-db-file"),
-});
+// Removed contextBridge.exposeInMainWorld("electronAPI", { openDbFile: ... });
+// No electronAPI functions are exposed anymore.

@@ -1,6 +1,6 @@
-import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, BrowserWindow } from "electron";
 import path from "path";
-import fs from "fs";
+// Removed ipcMain and dialog as file selection is no longer needed
 
 let mainWindow: BrowserWindow | null;
 
@@ -28,31 +28,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  // IPC handler para abrir el diálogo de selección de archivos y leer el archivo de la base de datos
-  ipcMain.handle("open-db-file", async () => {
-    try {
-      const result = await dialog.showOpenDialog({
-        title: "Seleccionar archivo de base de datos de Aronium",
-        buttonLabel: "Abrir",
-        properties: ["openFile"],
-        filters: [{ name: "Database Files", extensions: ["db"] }],
-      });
-
-      if (result.canceled || result.filePaths.length === 0) {
-        console.log("Selección de archivo cancelada.");
-        return null;
-      }
-
-      const filePath = result.filePaths[0];
-      const buffer = await fs.promises.readFile(filePath);
-      console.log(`Leyendo archivo DB, tamaño: ${buffer.length} bytes.`);
-      return buffer;
-    } catch (error) {
-      console.error("Error al leer el archivo de la base de datos:", error);
-      return null;
-    }
-  });
-
+  // IPC handler for open-db-file removed
   createWindow();
 
   app.on("activate", () => {

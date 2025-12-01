@@ -1,74 +1,69 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { initDb, loadDb, queryData } from "@/lib/db";
-import { calculateDateRange } from "@/lib/dates";
 
-interface IElectronAPI {
-  openDbFile: () => Promise<Uint8Array | null>;
-}
-
-declare global {
-  interface Window {
-    electronAPI: IElectronAPI;
-  }
-}
+// Removed IElectronAPI and declare global as Electron API is no longer used for file loading
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 
+let dbInstance: any = null; // Global instance for the database
+
 const createQuery = (baseQuery: string, dateRange?: DateRange): string => {
-  let whereClause = "WHERE T3.DocumentTypeId = 2";
+  let whereClause = "WHERE T1.DocumentTypeId = 2"; // Assuming DocumentTypeId 2 is for sales
   if (dateRange?.from) {
     const fromDate = format(dateRange.from, "yyyy-MM-dd 00:00:00");
     const toDate = dateRange.to
       ? format(dateRange.to, "yyyy-MM-dd 23:59:59")
       : format(new Date(), "yyyy-MM-dd 23:59:59");
-    whereClause += ` AND T3.DateCreated BETWEEN '${fromDate}' AND '${toDate}'`;
+    whereClause += ` AND T1.DateCreated BETWEEN '${fromDate}' AND '${toDate}'`;
   }
 
   const excludedCustomersString = EXCLUDED_CUSTOMERS.map(name => `'${name.replace(/'/g, "''")}'`).join(',');
 
-  if (baseQuery.includes("LEFT JOIN Customer")) {
+  // Adjusting table aliases for consistency with Aronium schema
+  if (baseQuery.includes("LEFT JOIN Customer AS T4")) {
     whereClause += ` AND (T4.Name IS NULL OR T4.Name NOT IN (${excludedCustomersString}))`;
-  } else if (baseQuery.includes("INNER JOIN Customer")) {
+  } else if (baseQuery.includes("INNER JOIN Customer AS T4")) {
     whereClause += ` AND T4.Name NOT IN (${excludedCustomersString})`;
   }
 
   return baseQuery.replace("{{WHERE_CLAUSE}}", whereClause);
 };
 
+// Corrected queries using Aronium table/column names
 const VOLUME_QUERY_BASE = `
-  SELECT T1.Quantity, T2.Name AS ItemName, T2.Description AS ItemDescription
-  FROM DocumentItem AS T1
-  INNER JOIN Product AS T2 ON T1.ProductId = T2.Id
-  INNER JOIN Document AS T3 ON T1.DocumentId = T3.Id
-  LEFT JOIN Customer AS T4 ON T3.CustomerId = T4.Id
+  SELECT T2.Quantity, T3.Name AS ItemName, T3.Description AS ItemDescription
+  FROM Document AS T1
+  INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
+  INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
+  LEFT JOIN Customer AS T4 ON T1.CustomerId = T4.Id
   {{WHERE_CLAUSE}};
 `;
 
 const SPECTRUM_QUERY_BASE = `
-  SELECT T2.Name as ItemName, T2.Description AS ItemDescription, SUM(T1.Quantity) as TotalQuantity
-  FROM DocumentItem AS T1
-  INNER JOIN Product AS T2 ON T1.ProductId = T2.Id
-  INNER JOIN Document AS T3 ON T1.DocumentId = T3.Id
-  LEFT JOIN Customer AS T4 ON T3.CustomerId = T4.Id
+  SELECT T3.Name as ItemName, T3.Description AS ItemDescription, SUM(T2.Quantity) as TotalQuantity
+  FROM Document AS T1
+  INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
+  INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
+  LEFT JOIN Customer AS T4 ON T1.CustomerId = T4.Id
   {{WHERE_CLAUSE}}
-  GROUP BY T2.Name, T2.Description;
+  GROUP BY T3.Name, T3.Description;
 `;
 
 const LOYALTY_QUERY_BASE = `
   SELECT
     T4.Name AS CustomerName,
-    T2.Name AS ItemName,
-    T2.Description AS ItemDescription,
-    SUM(T1.Quantity) AS TotalQuantity
-  FROM DocumentItem AS T1
-  INNER JOIN Product AS T2 ON T1.ProductId = T2.Id
-  INNER JOIN Document AS T3 ON T1.DocumentId = T3.Id
-  INNER JOIN Customer AS T4 ON T3.CustomerId = T4.Id
+    T3.Name AS ItemName,
+    T3.Description AS ItemDescription,
+    SUM(T2.Quantity) AS TotalQuantity
+  FROM Document AS T1
+  INNER JOIN DocumentItem AS T2 ON T1.Id = T2.DocumentId
+  INNER JOIN Product AS T3 ON T2.ProductId = T3.Id
+  INNER JOIN Customer AS T4 ON T1.CustomerId = T4.Id
   {{WHERE_CLAUSE}} AND T4.Name IS NOT NULL
-  GROUP BY T4.Name, T2.Name, T2.Description
-  ORDER BY SUM(T1.Quantity) DESC;
+  GROUP BY T4.Name, T3.Name, T3.Description
+  ORDER BY SUM(T2.Quantity) DESC;
 `;
 
 const extractVolumeMl = (name: string, description: string | null): number => {
@@ -111,104 +106,154 @@ const BEER_CATEGORY_COLORS: { [key: string]: string } = {
 };
 
 export function useDb() {
-  const [data, setData] = useState<{
-    consumptionMetrics: { liters: number };
-    flavorData: { [key: string]: number };
-    varietyMetrics: { totalLiters: number; uniqueProducts: number };
-    loyaltyMetrics: { topCustomers: { name: string; liters: number }[] };
-    rankedBeers: { name: string; liters: number; color: string }[];
-  }>({
-    consumptionMetrics: { liters: 0 },
-    flavorData: {},
-    varietyMetrics: { totalLiters: 0, uniqueProducts: 0 },
-    loyaltyMetrics: { topCustomers: [] },
-    rankedBeers: [],
-  });
+  const [dbLoaded, setDbLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const processData = useCallback(async (dbBuffer: Uint8Array, rangeKey: string) => {
-    setLoading(true);
-    setError(null);
-    console.log("Starting database processing with date range:", rangeKey);
+  useEffect(() => {
+    const loadDatabase = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        await initDb();
+        // Static load from public/data/bbdd.db
+        const response = await fetch('/data/bbdd.db');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch database: ${response.statusText}`);
+        }
+        const buffer = await response.arrayBuffer();
+        dbInstance = loadDb(new Uint8Array(buffer));
+        setDbLoaded(true);
+        console.log("Database loaded successfully from static path.");
+      } catch (e: any) {
+        console.error("Error loading database:", e);
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDatabase();
+  }, []);
+
+  const findCustomer = useCallback(async (searchTerm: string) => {
+    if (!dbInstance) {
+      throw new Error("Database not loaded.");
+    }
+    const query = `
+      SELECT Id, Name
+      FROM Customer
+      WHERE Name LIKE '%' || ? || '%' OR PhoneNumber = ?
+      LIMIT 1;
+    `;
     try {
-      await initDb();
-      const db = loadDb(dbBuffer);
-      
-      const dateRange = calculateDateRange(rangeKey);
-
-      const VOLUME_QUERY = createQuery(VOLUME_QUERY_BASE, dateRange);
-      const SPECTRUM_QUERY = createQuery(SPECTRUM_QUERY_BASE, dateRange);
-      const LOYALTY_QUERY = createQuery(LOYALTY_QUERY_BASE, dateRange);
-
-      const volumeData = queryData(db, VOLUME_QUERY);
-      const spectrumData = queryData(db, SPECTRUM_QUERY);
-      const loyaltyData = queryData(db, LOYALTY_QUERY);
-      db.close();
-
-      let totalMl = 0;
-      for (const item of volumeData) {
-        const volume = extractVolumeMl(item.ItemName, item.ItemDescription);
-        totalMl += item.Quantity * volume;
-      }
-      const totalLiters = totalMl / 1000;
-
-      const flavorMl: { [key: string]: number } = {};
-      for (const item of spectrumData) {
-        const volume = extractVolumeMl(item.ItemName, item.ItemDescription);
-        if (volume > 0) {
-          const category = categorizeBeer(item.ItemName);
-          flavorMl[category] = (flavorMl[category] || 0) + item.TotalQuantity * volume;
-        }
-      }
-
-      const varietyMetrics = {
-        totalLiters,
-        uniqueProducts: spectrumData.length,
-      };
-
-      const customerVolumes: { [key: string]: number } = {};
-      for (const item of loyaltyData) {
-        const volume = extractVolumeMl(item.ItemName, item.ItemDescription);
-        if (volume > 0) {
-          customerVolumes[item.CustomerName] = (customerVolumes[item.CustomerName] || 0) + item.TotalQuantity * volume;
-        }
-      }
-      const sortedCustomers = Object.entries(customerVolumes)
-        .map(([name, ml]) => ({ name, liters: ml / 1000 }))
-        .sort((a, b) => b.liters - a.liters);
-      const topCustomers = sortedCustomers.slice(0, 20);
-
-      const rankedBeers = spectrumData
-        .filter(item => categorizeBeer(item.ItemName) !== "Other")
-        .map(item => {
-          const volume = extractVolumeMl(item.ItemName, item.ItemDescription);
-          const category = categorizeBeer(item.ItemName);
-          return {
-            name: item.ItemName,
-            liters: (item.TotalQuantity * volume) / 1000,
-            color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
-          };
-        })
-        .filter(beer => beer.liters > 0.1)
-        .sort((a, b) => b.liters - a.liters)
-        .slice(0, 10);
-
-      setData({
-        consumptionMetrics: { liters: totalLiters },
-        flavorData: flavorMl,
-        varietyMetrics,
-        loyaltyMetrics: { topCustomers },
-        rankedBeers,
-      });
+      const results = queryData(dbInstance, query, [searchTerm, searchTerm]);
+      return results.length > 0 ? results[0] : null;
     } catch (e: any) {
-      console.error("Error processing database:", e);
-      setError(e.message);
-    } finally {
-      setLoading(false);
-      console.log("Database processing finished.");
+      console.error("Error finding customer:", e);
+      throw new Error("Failed to find customer.");
     }
   }, []);
 
-  return { ...data, loading, error, processData };
+  const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
+    if (!dbInstance) {
+      throw new Error("Database not loaded.");
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      // Metric 5: Customer Name (fetched separately for overlay)
+      const customerNameQuery = `SELECT Name FROM Customer WHERE Id = ? LIMIT 1;`;
+      const customerNameResult = queryData(dbInstance, customerNameQuery, [customerId]);
+      const customerName = customerNameResult.length > 0 ? customerNameResult[0].Name : "Cliente Desconocido";
+
+      // Metric 1 & 3: Total Consumed and Top 5 Products
+      const totalConsumedAndRankingQuery = `
+        SELECT
+            T3.Name AS ProductName,
+            SUM(T2.Quantity) AS TotalQuantity
+        FROM
+            Document AS T1
+        INNER JOIN
+            DocumentItem AS T2 ON T1.Id = T2.DocumentId
+        INNER JOIN
+            Product AS T3 ON T2.ProductId = T3.Id
+        WHERE
+            T1.CustomerId = ?
+            AND STRFTIME('%Y', T1.Date) = ?
+        GROUP BY
+            T3.Id, T3.Name
+        HAVING
+            TotalQuantity > 0
+        ORDER BY
+            TotalQuantity DESC;
+      `;
+      const rawProductData = queryData(dbInstance, totalConsumedAndRankingQuery, [customerId, year]);
+
+      let totalLiters = 0;
+      const categoryVolumes: { [key: string]: number } = {};
+      const productLiters: { name: string; liters: number; color: string }[] = [];
+
+      for (const item of rawProductData) {
+        const volumeMl = extractVolumeMl(item.ProductName, null); // Assuming description is not needed here
+        const liters = (item.TotalQuantity * volumeMl) / 1000;
+        totalLiters += liters;
+
+        const category = categorizeBeer(item.ProductName);
+        categoryVolumes[category] = (categoryVolumes[category] || 0) + liters;
+        
+        productLiters.push({
+          name: item.ProductName,
+          liters: liters,
+          color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
+        });
+      }
+
+      // Metric 2: Dominant Beer
+      let dominantBeerCategory = "N/A";
+      let maxCategoryLiters = 0;
+      for (const category in categoryVolumes) {
+        if (categoryVolumes[category] > maxCategoryLiters) {
+          maxCategoryLiters = categoryVolumes[category];
+          dominantBeerCategory = category;
+        }
+      }
+
+      // Metric 3: Top 5 Products
+      const top5Products = productLiters
+        .sort((a, b) => b.liters - a.liters)
+        .slice(0, 5);
+
+      // Metric 4: Frequency/Loyalty (Total Visits)
+      const totalVisitsQuery = `
+        SELECT
+            COUNT(DISTINCT T1.Date) AS TotalVisits
+        FROM
+            Document AS T1
+        WHERE
+            T1.CustomerId = ?
+            AND STRFTIME('%Y', T1.Date) = ?;
+      `;
+      const totalVisitsResult = queryData(dbInstance, totalVisitsQuery, [customerId, year]);
+      const totalVisits = totalVisitsResult.length > 0 ? totalVisitsResult[0].TotalVisits : 0;
+
+      return {
+        customerName,
+        year,
+        totalLiters,
+        dominantBeerCategory,
+        top5Products,
+        totalVisits,
+      };
+    } catch (e: any) {
+      console.error("Error getting wrapped data:", e);
+      setError(e.message);
+      throw new Error("Failed to retrieve wrapped data.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Removed processData as it's replaced by getWrappedData for the new flow
+
+  return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
 }

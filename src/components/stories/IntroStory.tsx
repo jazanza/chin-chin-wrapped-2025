@@ -64,8 +64,8 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
     <group>
       <AnimatedBackgroundLines />
       <Text
-        position={[0, 1.5, 0]}
-        fontSize={0.8 * responsiveScale}
+        position={[0, 1.5 * responsiveScale, 0]} // Adjusted position for scaling
+        fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale} // Simulating 6vw
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -73,12 +73,14 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         ¡HOLA, {customerName.toUpperCase()}!
       </Text>
       <Text
-        position={[0, 0, 0]}
-        fontSize={0.4 * responsiveScale}
+        position={[0, 0 * responsiveScale, 0]} // Adjusted position for scaling
+        fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale} // Simulating 6vw
         color="#00FF66" // neon-green
         anchorX="center"
         anchorY="middle"
@@ -86,17 +88,21 @@ export const IntroStory = ({ customerName, totalVisits }: IntroStoryProps) => {
         outlineColor="#000000"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         ESTE FUE TU 2025 EN CHIN CHIN
       </Text>
       <Text
-        position={[0, -1.5, 0]}
+        position={[0, -1.5 * responsiveScale, 0]} // Adjusted position for scaling
         fontSize={0.3 * responsiveScale}
         color="white"
         anchorX="center"
         anchorY="middle"
         maxWidth={viewport.width * 0.8}
         textAlign="center"
+        letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         NOS VISITASTE {totalVisits} VECES
       </Text>

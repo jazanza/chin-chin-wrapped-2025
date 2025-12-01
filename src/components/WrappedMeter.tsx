@@ -27,6 +27,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
       // Position text above the animated liquid level
       const currentLiquidHeight = (animatedLiters.current / MAX_LITERS_FOR_SCALE) * maxHeight;
       textRef.current.position.y = bottomY + currentLiquidHeight + 0.5 * responsiveScale;
+      textRef.current.fontWeight = 900; // Apply extreme font weight
     }
   });
 
@@ -45,6 +46,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {`${totalLiters.toFixed(1)} L`}
       </Text>
@@ -57,6 +59,7 @@ export function WrappedMeter({ totalLiters, ...props }: { totalLiters: number } 
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         TOTAL CONSUMIDO
       </Text>

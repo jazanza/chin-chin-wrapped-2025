@@ -15,7 +15,7 @@ export const TotalConsumptionStory = ({ totalLiters }: TotalConsumptionStoryProp
     <group>
       <Text
         position={[0, 3 * responsiveScale, 0]}
-        fontSize={0.6 * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale} // Simulating 6vw
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -24,6 +24,7 @@ export const TotalConsumptionStory = ({ totalLiters }: TotalConsumptionStoryProp
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         TU CONSUMO TOTAL
       </Text>

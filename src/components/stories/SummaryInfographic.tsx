@@ -72,7 +72,7 @@ export const SummaryInfographic = ({
       {/* Title */}
       <Text
         position={[0, 2.5 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 2}
+        fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 2) * responsiveScale} // Simulating 6vw
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -81,12 +81,13 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {customerName.toUpperCase()}
       </Text>
       <Text
         position={[0, 2.1 * responsiveScale, 0]}
-        fontSize={BASE_FONT_SIZE * 1.2}
+        fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 1.2) * responsiveScale} // Simulating 6vw
         color="#00FF66" // neon-green
         anchorX="center"
         anchorY="middle"
@@ -95,6 +96,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {year} WRAPPED
       </Text>
@@ -109,6 +111,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="left"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         TOTAL CONSUMIDO:
       </Text>
@@ -123,6 +126,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="left"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {totalLiters.toFixed(1)} L
       </Text>
@@ -141,6 +145,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="right"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         CERVEZA DOMINANTE:
       </Text>
@@ -155,6 +160,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="right"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {dominantBeerCategory.toUpperCase()}
       </Text>
@@ -173,6 +179,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="left"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         TOP 5 PRODUCTOS:
       </Text>
@@ -186,6 +193,7 @@ export const SummaryInfographic = ({
             maxWidth={viewport.width * 0.3}
             textAlign="left"
             letterSpacing={-0.05} // Apply negative letter spacing
+            fontWeight={700} // Apply strong font weight
           >
             {index + 1}. {product.name.toUpperCase()}
           </Text>
@@ -198,6 +206,7 @@ export const SummaryInfographic = ({
             maxWidth={viewport.width * 0.1}
             textAlign="right"
             letterSpacing={-0.05} // Apply negative letter spacing
+            fontWeight={400} // Apply normal font weight
           >
             {product.liters.toFixed(1)} L
           </Text>
@@ -222,6 +231,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="right"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         VISITAS:
       </Text>
@@ -236,6 +246,7 @@ export const SummaryInfographic = ({
         maxWidth={viewport.width * 0.4}
         textAlign="right"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {totalVisits}
       </Text>

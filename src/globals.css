@@ -64,7 +64,7 @@
     --neon-cyan: 185 100% 55%;    /* #00E6FF */
     --neon-orange: 39 100% 55%;   /* #FF9A00 */
     --neon-yellow: 54 100% 62%;   /* #FFEB3B */
-    --bg-deep-violet: 265 100% 25%; /* #4C00A3 */
+    --bg-deep-violet: 270 100% 25%; /* #8000FF - Púrpura Principal */
   }
 
   .dark {
@@ -112,8 +112,8 @@
   }
 
   body {
-    /* Reemplazo del fondo actual por uno más potente */
-    background: radial-gradient(circle at 50% 50%, hsl(var(--bg-deep-violet)), #000 85%);
+    /* Fondo sólido Púrpura Principal */
+    background-color: hsl(var(--bg-deep-violet));
     background-attachment: fixed;
     @apply text-foreground font-sans;
   }
@@ -158,7 +158,7 @@
   .burst-effect {
     position: absolute;
     inset: 0; /* Usar inset: 0 para cubrir completamente el padre */
-    transform: translate(-50%, -50%) scale(1.8);
+    transform: translate(-50%, -50%) scale(1.8) rotate(15deg); /* Base rotation of 15deg */
     clip-path: polygon(
       50% 0%, 65% 30%, 100% 35%, 70% 60%, 80% 100%, 
       50% 75%, 20% 100%, 30% 60%, 0% 35%, 35% 30%
@@ -177,8 +177,8 @@
     pointer-events: none; /* Ensure it doesn't block interactions */
   }
   @keyframes burst-spin {
-    from { transform: translate(-50%, -50%) scale(1.8) rotate(0deg); }
-    to { transform: translate(-50%, -50%) scale(1.8) rotate(360deg); }
+    from { transform: translate(-50%, -50%) scale(1.8) rotate(15deg); } /* Start with base rotation */
+    to { transform: translate(-50%, -50%) scale(1.8) rotate(375deg); } /* 360 + 15 */
   }
 
   /* Stacked-Cards con efecto físico */
@@ -188,16 +188,16 @@
 
   .card-stack > *:nth-child(1) {
     transform: rotate(-4deg) scale(1.00);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+    box-shadow: 0 0 20px rgba(0,0,0,0.25); /* Stronger shadow, less blur */
   }
 
   .card-stack > *:nth-child(2) {
     transform: rotate(3deg) scale(1.04);
-    box-shadow: 0 14px 26px rgba(0,0,0,0.35);
+    box-shadow: 0 0 20px rgba(0,0,0,0.25); /* Stronger shadow, less blur */
   }
 
   .card-stack > *:nth-child(3) {
     transform: rotate(-2deg) scale(1.07);
-    box-shadow: 0 22px 40px rgba(0,0,0,0.45);
+    box-shadow: 0 0 20px rgba(0,0,0,0.25); /* Stronger shadow, less blur */
   }
 }

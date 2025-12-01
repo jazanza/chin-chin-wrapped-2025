@@ -7,8 +7,8 @@ import { useDb } from "@/hooks/useDb";
 import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
 import { ResponsiveCamera } from "@/components/ResponsiveCamera";
 import { PostProcessingEffects } from "@/components/PostProcessingEffects";
-import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { Button } from "@/components/ui/button"; // Keep Button import for now, might be removed if not used elsewhere
+import { Loader2, ChevronLeft, ChevronRight, Download } from "lucide-react"; // Keep icons for loading spinner
 import { WrappedOverlay } from "@/components/WrappedOverlay";
 import { ViewMode } from "@/components/CameraAnimator"; // Import ViewMode
 import { StoryInteractionZone } from "@/components/StoryInteractionZone"; // New import
@@ -108,8 +108,6 @@ const WrappedDashboard = () => {
 
     const fetchWrappedData = async () => {
       if (toastId) dismissToast(toastId);
-      // Removed the "Cargando tu Wrapped..." text toast for immediate transition
-      // setToastId(showLoading("Cargando tu Wrapped...")); 
       try {
         const data = await getWrappedData(Number(customerId), '2025'); // Hardcoded year 2025
         setWrappedData(data);
@@ -195,8 +193,7 @@ const WrappedDashboard = () => {
   if (loading && !wrappedData) {
     return (
       <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
-        <Loader2 className="h-8 w-8 animate-spin text-primary-glitch-pink" />
-        {/* Removed the text part of the loading state */}
+        <Loader2 className="h-8 w-8 animate-spin text-neon-magenta" /> {/* Using neon-magenta for spinner */}
       </div>
     );
   }
@@ -278,19 +275,11 @@ const WrappedDashboard = () => {
           isPaused={isPaused}
         />
 
-        {/* Navigation and Download Buttons */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex space-x-4">
-          <Button
-            onClick={handlePrevStory}
-            disabled={currentStoryIndex === 0 || isCapturing}
-            className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-          >
-            <ChevronLeft className="mr-2 h-4 w-4" /> Anterior
-          </Button>
-
+        {/* Download Button (moved to top-right for accessibility, as navigation buttons are removed) */}
+        {currentStory.id === 'summaryInfographic' && (
           <Button
             onClick={handleDownloadScreenshot}
-            className="bg-button-highlight hover:bg-button-highlight/80 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+            className="absolute top-4 right-4 z-30 bg-neon-yellow hover:bg-neon-yellow/80 text-black font-bold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
             disabled={isCapturing}
           >
             {isCapturing ? (
@@ -301,19 +290,11 @@ const WrappedDashboard = () => {
             ) : (
               <>
                 <Download className="mr-2 h-4 w-4" />
-                {currentStory.id === 'summaryInfographic' ? "Descargar Infografía" : "Descargar Story"}
+                Descargar Infografía
               </>
             )}
           </Button>
-
-          <Button
-            onClick={handleNextStory}
-            disabled={currentStoryIndex === STORY_SCENES.length - 1 || isCapturing}
-            className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-          >
-            Siguiente <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+        )}
       </div>
     </div>
   );

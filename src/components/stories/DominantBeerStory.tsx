@@ -17,7 +17,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
     <group>
       <Text
         position={[0, 2.5 * responsiveScale, 0]}
-        fontSize={0.6 * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale} // Simulating 6vw
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -26,12 +26,13 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         TU CERVEZA DOMINANTE
       </Text>
       <Text
         position={[0, 1.8 * responsiveScale, 0]}
-        fontSize={0.8 * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.06, 0.8) * responsiveScale} // Simulating 6vw
         color="#00FF66" // neon-green
         anchorX="center"
         anchorY="middle"
@@ -40,6 +41,7 @@ export const DominantBeerStory = ({ dominantBeerCategory, categoryVolumes }: Dom
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         {dominantBeerCategory.toUpperCase()}
       </Text>

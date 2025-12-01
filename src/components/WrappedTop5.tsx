@@ -71,6 +71,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         maxWidth={0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={700} // Apply strong font weight
       >
         {product.name.toUpperCase()}
       </Text>
@@ -82,6 +83,7 @@ const ProductColumn = ({ product, index, maxLiters, responsiveScale }: { product
         maxWidth={0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={400} // Apply normal font weight
       >
         {`${product.liters.toFixed(1)} L`}
       </Text>
@@ -99,7 +101,7 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
     <group {...props} scale={responsiveScale}>
       <Text
         position={[0, MAX_COLUMN_HEIGHT + 0.5, 0]}
-        fontSize={BASE_TEXT_FONT_SIZE * 2 * responsiveScale}
+        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale} // Simulating 6vw
         color="#FF008A" // neon-magenta
         anchorX="center"
         anchorY="middle"
@@ -108,6 +110,7 @@ export function WrappedTop5({ top5Products, ...props }: { top5Products: Product[
         maxWidth={viewport.width * 0.8}
         textAlign="center"
         letterSpacing={-0.05} // Apply negative letter spacing
+        fontWeight={900} // Apply extreme font weight
       >
         TU TOP 5 DE CERVEZAS
       </Text>

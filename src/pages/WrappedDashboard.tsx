@@ -94,7 +94,7 @@ const STORY_SCENES: StoryScene[] = [
     id: 'summaryInfographic',
     component: SummaryInfographic,
     duration: 0, // Static, no auto-advance
-    cameraViewMode: 'summaryInfographic',
+    cameraViewMode: 'summaryInfographic', // Ensure this view mode is appropriate for the new layout
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
   },

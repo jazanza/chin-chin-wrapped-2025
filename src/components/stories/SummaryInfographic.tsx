@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Text, Box, Cylinder } from '@react-three/drei';
+import { Text, Box, Image } from '@react-three/drei';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { TypewriterText } from '../TypewriterText'; // Import the new component
+import { TypewriterText } from '../TypewriterText';
 
 interface Product {
   name: string;
@@ -17,35 +17,8 @@ interface SummaryInfographicProps {
   dominantBeerCategory: string;
   top5Products: Product[];
   totalVisits: number;
-  isPaused: boolean; // Added isPaused prop
+  isPaused: boolean;
 }
-
-const ProgressBar = ({ value, maxValue, color, position, scaleFactor = 1, responsiveScale }: { value: number; maxValue: number; color: string; position: [number, number, number]; scaleFactor?: number; responsiveScale: number }) => {
-  const barRef = useRef<THREE.Mesh>(null!);
-  const animatedScale = useRef(0);
-  const targetScale = maxValue > 0 ? (value / maxValue) : 0;
-
-  useFrame(() => {
-    animatedScale.current = THREE.MathUtils.lerp(animatedScale.current, targetScale, 0.05);
-    if (barRef.current) {
-      barRef.current.scale.x = animatedScale.current * scaleFactor;
-      barRef.current.position.x = position[0] + (barRef.current.scale.x / 2); // Adjust position to grow from left
-    }
-  });
-
-  return (
-    <group>
-      {/* Background bar: Dark Gray */}
-      <Box args={[scaleFactor, 0.05 * responsiveScale, 0.01]} position={[position[0] + scaleFactor / 2, position[1], position[2]]}>
-        <meshBasicMaterial color="#333333" transparent opacity={0.5} /> 
-      </Box>
-      {/* Foreground bar: White */}
-      <Box ref={barRef} args={[1, 0.05 * responsiveScale, 0.02]} position={[position[0], position[1], position[2] + 0.01]} scale-x={0.01}>
-        <meshBasicMaterial color="#FFFFFF" />
-      </Box>
-    </group>
-  );
-};
 
 export const SummaryInfographic = ({
   customerName,
@@ -60,9 +33,13 @@ export const SummaryInfographic = ({
   const BASE_REFERENCE_WIDTH = 12;
   const responsiveScale = Math.min(1, viewport.width / BASE_REFERENCE_WIDTH);
 
-  const BASE_FONT_SIZE = 0.18 * responsiveScale;
-  const SMALL_FONT_SIZE = 0.12 * responsiveScale;
-  const LINE_HEIGHT = 0.4 * responsiveScale;
+  // Define overall infographic dimensions in 3D units, maintaining 9:16 aspect ratio
+  const infographicWidth = 4 * responsiveScale;
+  const infographicHeight = infographicWidth * (16 / 9);
+
+  // Calculate block dimensions
+  const blockWidth = infographicWidth / 2;
+  const blockHeight = infographicHeight / 3;
 
   const [isTitleTyped, setIsTitleTyped] = useState(false);
   const [isSubTitleTyped, setIsSubTitleTyped] = useState(false);
@@ -72,38 +49,32 @@ export const SummaryInfographic = ({
     setIsSubTitleTyped(false);
   }, [customerName, year]);
 
+  // Helper to get block position
+  const getBlockPosition = (row: number, col: number) => {
+    const x = (col === 1 ? -blockWidth / 2 : blockWidth / 2) - infographicWidth / 4;
+    const y = (row === 1 ? infographicHeight / 3 : row === 2 ? 0 : -infographicHeight / 3) + infographicHeight / 6;
+    return [x, y, 0];
+  };
+
+  // Get the top 1 product, or a placeholder if none
+  const top1Product = top5Products.length > 0 ? top5Products[0] : { name: "N/A", liters: 0 };
+
   return (
     <group position={[0, 0, 0]}>
-      {/* Background Panel - Brutalist: Black/Dark Gray blocks with hard shadows */}
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[0.04 * responsiveScale, -0.04 * responsiveScale, -0.1]} rotation-z={-0.04}>
-        <meshBasicMaterial color="#333333" transparent opacity={0.7} />
-      </Box>
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.1]} position={[-0.03 * responsiveScale, 0.03 * responsiveScale, -0.15]} rotation-z={0.03}>
-        <meshBasicMaterial color="#111111" transparent opacity={0.8} />
-      </Box>
-      <Box args={[8 * responsiveScale, 6 * responsiveScale, 0.05]} position={[0, 0, 0]}>
-        <meshBasicMaterial color="#000000" transparent opacity={0.9} />
-      </Box>
-      {/* White Border Outline */}
-      <Box args={[8 * responsiveScale + 0.05, 6 * responsiveScale + 0.05, 0.01]} position={[0, 0, 0.03]}>
-        <meshBasicMaterial color="#FFFFFF" wireframe={true} />
-      </Box>
-
-
-      {/* Title */}
+      {/* Main Infographic Title */}
       <TypewriterText
         text={customerName.toUpperCase()}
-        speed={75} // Increased typewriter speed
+        speed={75}
         onComplete={() => setIsTitleTyped(true)}
         isPaused={isPaused}
-        position={[0, 2.5 * responsiveScale, 0]}
-        fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 2) * responsiveScale}
-        color="#FFFFFF" // White
+        position={[0, infographicHeight / 2 + 0.5 * responsiveScale, 0]}
+        fontSize={Math.min(viewport.width * 0.06, 0.6) * responsiveScale}
+        color="#FFFFFF"
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.02 * responsiveScale}
         outlineColor="#000000"
-        maxWidth={viewport.width * 0.8}
+        maxWidth={infographicWidth * 0.9}
         textAlign="center"
         letterSpacing={-0.05}
         fontWeight={900}
@@ -111,17 +82,17 @@ export const SummaryInfographic = ({
       {isTitleTyped && (
         <TypewriterText
           text={`${year} WRAPPED`}
-          speed={75} // Increased typewriter speed
+          speed={75}
           onComplete={() => setIsSubTitleTyped(true)}
           isPaused={isPaused}
-          position={[0, 2.1 * responsiveScale, 0]}
-          fontSize={Math.min(viewport.width * 0.06, BASE_FONT_SIZE * 1.2) * responsiveScale}
-          color="#FFFFFF" // White
+          position={[0, infographicHeight / 2 + 0.1 * responsiveScale, 0]}
+          fontSize={Math.min(viewport.width * 0.06, 0.4) * responsiveScale}
+          color="#FFFFFF"
           anchorX="center"
           anchorY="middle"
           outlineWidth={0.01 * responsiveScale}
           outlineColor="#000000"
-          maxWidth={viewport.width * 0.8}
+          maxWidth={infographicWidth * 0.9}
           textAlign="center"
           letterSpacing={-0.05}
           fontWeight={900}
@@ -129,162 +100,243 @@ export const SummaryInfographic = ({
       )}
 
       {isSubTitleTyped && (
-        <group>
-          {/* Total Liters */}
-          <Text
-            position={[-2.5 * responsiveScale, 1.2 * responsiveScale, 0]}
-            fontSize={BASE_FONT_SIZE * 1.5}
-            color="white"
-            anchorX="left"
-            anchorY="middle"
-            maxWidth={viewport.width * 0.4}
-            textAlign="left"
-            letterSpacing={-0.05}
-            fontWeight={700}
+        <group position={[0, -0.5 * responsiveScale, 0]}> {/* Adjust group position to center the grid */}
+          {/* Row 1, Column 1: Customer Name */}
+          <Block
+            position={getBlockPosition(1, 1)}
+            width={blockWidth}
+            height={blockHeight}
+            bgColor="#000000"
+            textColor="#FFFFFF"
+            responsiveScale={responsiveScale}
           >
-            TOTAL CONSUMIDO:
-          </Text>
-          <Text
-            position={[-2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
-            fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-            color="#FFFFFF" // White
-            anchorX="left"
-            anchorY="middle"
-            outlineWidth={0.02 * responsiveScale}
-            outlineColor="#000000"
-            maxWidth={viewport.width * 0.4}
-            textAlign="left"
-            letterSpacing={-0.05}
-            fontWeight={900}
-          >
-            {totalLiters.toFixed(1)} LITROS
-          </Text>
-          {/* Simple visual for total liters - White Cylinder */}
-          <Cylinder args={[0.3 * responsiveScale, 0.3 * responsiveScale, Math.min(totalLiters / 500, 1.5) * responsiveScale, 16]} position={[-1 * responsiveScale, 0.8 * responsiveScale, 0]} rotation-x={Math.PI / 2}>
-            <meshBasicMaterial color="#FFFFFF" />
-          </Cylinder>
+            <Text
+              fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {customerName.toUpperCase()}
+            </Text>
+          </Block>
 
-          {/* Dominant Beer Category */}
-          <Text
-            position={[2.5 * responsiveScale, 1.2 * responsiveScale, 0]}
-            fontSize={BASE_FONT_SIZE * 1.5}
-            color="white"
-            anchorX="right"
-            anchorY="middle"
-            maxWidth={viewport.width * 0.4}
-            textAlign="right"
-            letterSpacing={-0.05}
-            fontWeight={700}
+          {/* Row 1, Column 2: Total Visits */}
+          <Block
+            position={getBlockPosition(1, 2)}
+            width={blockWidth}
+            height={blockHeight}
+            bgColor="#FFFFFF"
+            textColor="#000000"
+            responsiveScale={responsiveScale}
           >
-            CERVEZA DOMINANTE:
-          </Text>
-          <Text
-            position={[2.5 * responsiveScale, 0.8 * responsiveScale, 0]}
-            fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-            color="#FFFFFF" // White
-            anchorX="right"
-            anchorY="middle"
-            outlineWidth={0.02 * responsiveScale}
-            outlineColor="#000000"
-            maxWidth={viewport.width * 0.4}
-            textAlign="right"
-            letterSpacing={-0.05}
-            fontWeight={900}
-          >
-            {dominantBeerCategory.toUpperCase()}
-          </Text>
-          {/* Simple visual for dominant beer - White Box */}
-          <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, 0.8 * responsiveScale, 0]}>
-            <meshBasicMaterial color="#FFFFFF" />
-          </Box>
+            <Text
+              fontSize={Math.min(viewport.width * 0.1, 0.8) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0.2 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {totalVisits}
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.2 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              DÍAS DE LEALTAD
+            </Text>
+          </Block>
 
-          {/* Top 5 Products */}
-          <Text
-            position={[-2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
-            fontSize={BASE_FONT_SIZE * 1.2}
-            color="white"
-            anchorX="left"
-            anchorY="middle"
-            maxWidth={viewport.width * 0.4}
-            textAlign="left"
-            letterSpacing={-0.05}
-            fontWeight={700}
+          {/* Row 2, Column 1: Total Liters */}
+          <Block
+            position={getBlockPosition(2, 1)}
+            width={blockWidth}
+            height={blockHeight}
+            bgColor="#000000"
+            textColor="#FFFFFF"
+            responsiveScale={responsiveScale}
           >
-            TOP 5 PRODUCTOS:
-          </Text>
-          {top5Products.map((product, index) => (
-            <group key={product.name} position={[-2.5 * responsiveScale, -0.6 * responsiveScale - index * LINE_HEIGHT, 0]}>
-              <Text
-                fontSize={SMALL_FONT_SIZE}
-                color="white"
-                anchorX="left"
-                anchorY="middle"
-                maxWidth={viewport.width * 0.3}
-                textAlign="left"
-                letterSpacing={-0.05}
-                fontWeight={700}
-              >
-                {index + 1}. {product.name.toUpperCase()}
-              </Text>
-              <Text
-                position={[2 * responsiveScale, 0, 0]}
-                fontSize={SMALL_FONT_SIZE * 0.8}
-                color="gray"
-                anchorX="right"
-                anchorY="middle"
-                maxWidth={viewport.width * 0.1}
-                textAlign="right"
-                letterSpacing={-0.05}
-                fontWeight={400}
-              >
-                {product.liters.toFixed(1)} L
-              </Text>
-              <ProgressBar
-                value={product.liters}
-                maxValue={Math.max(...top5Products.map(p => p.liters), 1)}
-                color="#FFFFFF" // White progress bar
-                position={[-0.2 * responsiveScale, -0.15 * responsiveScale, 0]} // Position relative to the group
-                scaleFactor={2.2 * responsiveScale} // Max width of the progress bar
-                responsiveScale={responsiveScale}
-              />
-            </group>
-          ))}
+            <Text
+              fontSize={Math.min(viewport.width * 0.1, 0.8) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0.2 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {totalLiters.toFixed(1)}
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.2 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              LITROS CONSUMIDOS
+            </Text>
+          </Block>
 
-          {/* Total Visits (DÍAS DE LEALTAD) */}
-          <Text
-            position={[2.5 * responsiveScale, -0.2 * responsiveScale, 0]}
-            fontSize={BASE_FONT_SIZE * 1.2}
-            color="white"
-            anchorX="right"
-            anchorY="middle"
-            maxWidth={viewport.width * 0.4}
-            textAlign="right"
-            letterSpacing={-0.05}
-            fontWeight={700}
+          {/* Row 2, Column 2: Dominant Beer Category */}
+          <Block
+            position={getBlockPosition(2, 2)}
+            width={blockWidth}
+            height={blockHeight}
+            bgColor="#FFFFFF"
+            textColor="#000000"
+            responsiveScale={responsiveScale}
           >
-            DÍAS DE LEALTAD:
-          </Text>
-          <Text
-            position={[2.5 * responsiveScale, -0.6 * responsiveScale, 0]}
-            fontSize={Math.min(viewport.width * 0.18, 2.5)} // Oversize de Datos: Simulate 18vw
-            color="#FFFFFF" // White
-            anchorX="right"
-            anchorY="middle"
-            outlineWidth={0.02 * responsiveScale}
-            outlineColor="#000000"
-            maxWidth={viewport.width * 0.4}
-            textAlign="right"
-            letterSpacing={-0.05}
-            fontWeight={900}
+            <Text
+              fontSize={Math.min(viewport.width * 0.05, 0.3) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {dominantBeerCategory.toUpperCase()}
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.3 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              CERVEZA DOMINANTE
+            </Text>
+          </Block>
+
+          {/* Row 3, Column 1: Top 1 Cerveza */}
+          <Block
+            position={getBlockPosition(3, 1)}
+            width={blockWidth}
+            height={blockHeight}
+            bgColor="#000000"
+            textColor="#FFFFFF"
+            responsiveScale={responsiveScale}
           >
-            {totalVisits} DÍAS
-          </Text>
-          {/* Simple visual for visits - White Box */}
-          <Box args={[0.5 * responsiveScale, 0.5 * responsiveScale, 0.1]} position={[1.5 * responsiveScale, -0.6 * responsiveScale, 0]}>
-            <meshBasicMaterial color="#FFFFFF" />
-          </Box>
+            <Text
+              fontSize={Math.min(viewport.width * 0.04, 0.25) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, 0.2 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {top1Product.name.toUpperCase()}
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.03, 0.15) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.1 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              {top1Product.liters.toFixed(1)} L
+            </Text>
+            <Text
+              fontSize={Math.min(viewport.width * 0.025, 0.12) * responsiveScale}
+              color="#FFFFFF"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.3 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={700}
+            >
+              TU TOP 1
+            </Text>
+          </Block>
+
+          {/* Row 3, Column 2: Logo + Year */}
+          <Block
+            position={getBlockPosition(3, 2)}
+            width={blockWidth}
+            height={blockHeight}
+            bgColor="#FFFFFF"
+            textColor="#000000"
+            responsiveScale={responsiveScale}
+          >
+            <Image
+              url="/Logo.png"
+              position={[0, 0.2 * responsiveScale, 0.01]}
+              scale={[blockWidth * 0.5, blockWidth * 0.5 * (1000 / 1000), 1]} // Adjust scale based on image aspect ratio if needed
+              transparent
+            />
+            <Text
+              fontSize={Math.min(viewport.width * 0.03, 0.2) * responsiveScale}
+              color="#000000"
+              anchorX="center"
+              anchorY="middle"
+              position={[0, -0.3 * responsiveScale, 0]}
+              maxWidth={blockWidth * 0.8}
+              textAlign="center"
+              letterSpacing={-0.05}
+              fontWeight={900}
+            >
+              {year} WRAPPED
+            </Text>
+          </Block>
         </group>
       )}
+    </group>
+  );
+};
+
+// Helper component for each grid block
+interface BlockProps {
+  position: [number, number, number];
+  width: number;
+  height: number;
+  bgColor: string;
+  textColor: string;
+  responsiveScale: number;
+  children: React.ReactNode;
+}
+
+const Block = ({ position, width, height, bgColor, children }: BlockProps) => {
+  return (
+    <group position={position}>
+      <Box args={[width, height, 0.05]}>
+        <meshBasicMaterial color={bgColor} />
+      </Box>
+      {children}
     </group>
   );
 };

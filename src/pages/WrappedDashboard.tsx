@@ -267,6 +267,30 @@ const WrappedDashboard = () => {
 
   const currentStory = STORY_SCENES[currentStoryIndex];
 
+  // Story navigation callbacks - Moved before useEffect that uses them
+  const handleNextStory = useCallback(() => {
+    setCurrentStoryIndex((prevIndex) =>
+      Math.min(prevIndex + 1, STORY_SCENES.length - 1)
+    );
+  }, []);
+
+  const handlePrevStory = useCallback(() => {
+    setCurrentStoryIndex((prevIndex) =>
+      Math.max(prevIndex - 1, 0)
+    );
+  }, []);
+
+  const handlePauseStory = useCallback(() => {
+    setIsPaused(true);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  }, []);
+
+  const handleResumeStory = useCallback(() => {
+    setIsPaused(false);
+  }, []);
+
   useEffect(() => {
     if (!dbLoaded) return;
 
@@ -313,30 +337,8 @@ const WrappedDashboard = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration, handleNextStory]); // Added handleNextStory to dependencies
+  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration, handleNextStory]); // handleNextStory is now defined
 
-  const handleNextStory = useCallback(() => {
-    setCurrentStoryIndex((prevIndex) =>
-      Math.min(prevIndex + 1, STORY_SCENES.length - 1)
-    );
-  }, []);
-
-  const handlePrevStory = useCallback(() => {
-    setCurrentStoryIndex((prevIndex) =>
-      Math.max(prevIndex - 1, 0)
-    );
-  }, []);
-
-  const handlePauseStory = useCallback(() => {
-    setIsPaused(true);
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-  }, []);
-
-  const handleResumeStory = useCallback(() => {
-    setIsPaused(false);
-  }, []);
 
   const handleDownloadScreenshot = async () => {
     if (!wrappedData || !storyContainerRef.current) {

@@ -193,7 +193,7 @@ export const SummaryInfographic = ({
                     idx === 0 ? "text-base font-black" : "text-sm font-bold" // H4 for first, Cuerpo for others
                   )}
                 >
-                  {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
+                  {`${idx + 1}. ${product.name.toUpperCase()}`} {/* Removed volume details */}
                 </p>
               ))}
             </Block>

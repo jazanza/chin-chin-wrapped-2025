@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils'; // For Tailwind class merging
 import { Button } from '@/components/ui/button'; // Assuming you have a Button component
-import { Download, Share2, Home, Loader2 } from 'lucide-react'; // Icons
+import { Download, Home, Loader2 } from 'lucide-react'; // Icons
 import { showError, showSuccess, showLoading, dismissToast } from '@/utils/toast';
 import { useNavigate } from 'react-router-dom'; // For navigation
 
@@ -38,7 +38,7 @@ const Block = ({ bgColor, children }: BlockProps) => {
   // Determine text color based on background color for brutalist contrast
   const textColorClass = bgColor === "bg-black" ? "text-white" : "text-black";
   return (
-    <div className={cn("flex flex-col items-center justify-center p-[1vw] md:p-2 border-2 border-white", bgColor, textColorClass)}>
+    <div className={cn("flex flex-col items-center justify-center p-6 border-2 border-white", bgColor, textColorClass)}>
       {children}
     </div>
   );
@@ -136,8 +136,6 @@ export const SummaryInfographic = ({
     }
   }, [captureInfographic, customerName, year]);
 
-  // handleShareToInstagram is removed as per instructions.
-
   const handleBackToLogin = useCallback(() => {
     navigate('/');
   }, [navigate]);
@@ -164,27 +162,27 @@ export const SummaryInfographic = ({
           <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white"> {/* Adjusted grid to fill parent */}
             {/* Row 1, Column 1: Total Visitas */}
             <Block bgColor="bg-black">
-              <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
+              <p className="text-sm md:text-lg lg:text-xl font-bold text-center">
                 CANTIDAD DE VISITAS ESTE {year}
               </p>
-              <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
+              <p className="text-5xl md:text-6xl lg:text-7xl font-black text-center">
                 {totalVisits}
               </p>
             </Block>
 
             {/* Row 1, Column 2: Total Litros */}
             <Block bgColor="bg-white">
-              <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
+              <p className="text-sm md:text-lg lg:text-xl font-bold text-center">
                 LITROS PROCESADOS
               </p>
-              <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
+              <p className="text-5xl md:text-6xl lg:text-7xl font-black text-center">
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
 
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block bgColor="bg-black">
-              <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1">
+              <p className="text-sm md:text-lg lg:text-xl font-bold text-center mb-1">
                 EL TRÍO FAVORITO
               </p>
               {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
@@ -192,7 +190,7 @@ export const SummaryInfographic = ({
                   key={idx}
                   className={cn(
                     "text-center leading-tight",
-                    idx === 0 ? "text-[3.5vw] md:text-[1.5rem] lg:text-[2rem] font-black" : "text-[2vw] md:text-[1rem] lg:text-[1.2rem] font-bold"
+                    idx === 0 ? "text-base md:text-xl lg:text-2xl font-black" : "text-xs md:text-sm lg:text-base font-bold"
                   )}
                 >
                   {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
@@ -204,12 +202,12 @@ export const SummaryInfographic = ({
             <Block bgColor="bg-white">
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
                   {/* Título Dinámico del Nivel */}
-                  <h2 className="text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black leading-tight mb-2">
+                  <h2 className="text-xl md:text-3xl lg:text-4xl font-black leading-tight mb-2">
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   
                   {/* Métrica de Soporte */}
-                  <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold">
+                  <p className="text-sm md:text-lg lg:text-xl font-bold">
                       {uniqueVarieties2025} VARIEDADES PROBADAS
                   </p>
                   
@@ -222,10 +220,10 @@ export const SummaryInfographic = ({
 
             {/* Row 3, Column 1: Día Más Activo */}
             <Block bgColor="bg-black">
-              <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
+              <p className="text-sm md:text-lg lg:text-xl font-bold text-center">
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
+              <p className="text-5xl md:text-6xl lg:text-7xl font-black text-center">
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
@@ -235,9 +233,9 @@ export const SummaryInfographic = ({
               <img
                 src="/Logo.png"
                 alt="Logo Chin Chin"
-                className="w-[15vw] max-w-[100px] p-1 mb-2" // Ajustar tamaño del logo para la celda
+                className="w-auto max-w-[100px] p-1 mb-2" // Adjusted to w-auto
               />
-              <p className="text-white text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold">
+              <p className="text-white text-sm md:text-lg lg:text-xl font-bold">
                 @CHINCHIN.CERVEZAS
               </p>
             </Block>

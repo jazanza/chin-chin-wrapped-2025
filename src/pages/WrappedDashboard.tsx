@@ -35,12 +35,12 @@ const WrappedOverlay = ({ customerName, year, textColor }: WrappedOverlayProps) 
   return (
     <div className="absolute top-8 left-8 z-10 pointer-events-none font-sans max-w-[80%]">
       <h1
-        className={cn("text-[min(6vw,3.5rem)] font-bold uppercase tracking-widest", textColor)} // Use textColor here
+        className={cn("text-4xl font-bold uppercase tracking-widest", textColor)} // H2
       >
         {customerName}
       </h1>
       <p
-        className={cn("text-[min(3vw,1.8rem)] font-bold uppercase tracking-wide", textColor)} // Use textColor here
+        className={cn("text-xl font-bold uppercase tracking-wide", textColor)} // H3
       >
         {year} WRAPPED
       </p>
@@ -353,7 +353,7 @@ const WrappedDashboard = () => {
   if (error) {
     return (
       <div className="w-screen h-screen bg-background text-foreground flex items-center justify-center font-sans">
-        <p className="text-lg text-red-500">Error: {error}</p>
+        <p className="text-base text-red-500">Error: {error}</p> {/* H4 */}
       </div>
     );
   }
@@ -431,7 +431,7 @@ const WrappedDashboard = () => {
         <img
           src="/Logo.png"
           alt="Logo Chin Chin"
-          className="absolute bottom-4 right-4 z-10 w-[9.6vw] max-w-[72px] p-1"
+          className="absolute bottom-4 right-4 z-10 w-24 h-auto p-1" // Fixed size for logo
         />
 
         {/* Interaction Zone */}

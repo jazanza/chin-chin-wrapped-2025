@@ -268,12 +268,12 @@ const ClientLogin = () => {
           className="mx-auto w-32 h-auto mb-8" // Centrado, tamaño y margen inferior
         />
         <h1 
-          className="text-[min(8vw,4rem)] font-bold mb-8 uppercase tracking-widest"
+          className="text-4xl font-bold mb-8 uppercase tracking-widest" // H2
         >
           CHIN CHIN WRAPPED 2025
         </h1>
         <p 
-          className="text-[min(4vw,1.5rem)] mb-8 uppercase tracking-wide"
+          className="text-xl mb-8 uppercase tracking-wide" // H3
         >
           Descubre tu año cervecero.
         </p>
@@ -312,7 +312,7 @@ const ClientLogin = () => {
 
         {step === "select" && (
           <div className="space-y-4">
-            <h2 className="text-[min(5vw,2rem)] font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-white mb-4"> {/* H2 */}
               ¿Quién eres?
             </h2>
             <RadioGroup
@@ -322,7 +322,7 @@ const ClientLogin = () => {
               {searchResults.map((customer) => (
                 <div key={customer.Id} className="flex items-center space-x-2">
                   <RadioGroupItem value={customer.Id.toString()} id={`customer-${customer.Id}`} className="border-white text-white focus:ring-white" />
-                  <Label htmlFor={`customer-${customer.Id}`} className="text-white text-lg cursor-pointer">
+                  <Label htmlFor={`customer-${customer.Id}`} className="text-base cursor-pointer"> {/* H4 */}
                     {customer.Name}
                   </Label>
                 </div>
@@ -342,10 +342,10 @@ const ClientLogin = () => {
 
         {step === "kba" && selectedCustomer && kbaQuestion && (
           <div className="space-y-4">
-            <h2 className="text-[min(5vw,2rem)] font-bold text-white mb-4">
+            <h2 className="text-4xl font-bold text-white mb-4"> {/* H2 */}
               Verifica tu identidad
             </h2>
-            <p className="text-lg text-white mb-4 border-2 border-white p-2">
+            <p className="text-base text-white mb-4 border-2 border-white p-2"> {/* H4 */}
               {kbaQuestion.question}
             </p>
             <RadioGroup
@@ -355,13 +355,13 @@ const ClientLogin = () => {
               {kbaQuestion.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <RadioGroupItem value={option} id={`kba-option-${index}`} className="border-white text-white focus:ring-white" />
-                  <Label htmlFor={`kba-option-${index}`} className="text-white text-lg cursor-pointer">
+                  <Label htmlFor={`kba-option-${index}`} className="text-base cursor-pointer"> {/* H4 */}
                     {option}
                   </Label>
                 </div>
               ))}
             </RadioGroup>
-            <p className="text-sm text-gray-400 mt-2">
+            <p className="text-sm text-gray-400 mt-2"> {/* Cuerpo */}
               Intentos restantes: {MAX_KBA_ATTEMPTS - kbaAttempts}
             </p>
             <Button
@@ -382,7 +382,7 @@ const ClientLogin = () => {
         )}
 
         {!dbLoaded && step === "search" && (
-          <p className="mt-4 text-white text-sm border-2 border-white p-2">Cargando base de datos...</p>
+          <p className="mt-4 text-base text-white border-2 border-white p-2">Cargando base de datos...</p> {/* H4 */}
         )}
       </div>
     </div>

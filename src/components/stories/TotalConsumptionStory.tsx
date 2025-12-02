@@ -33,7 +33,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
   }
 
   return (
-    <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
+    <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
       {wittyPhrase}
     </p>
   );
@@ -43,7 +43,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
 
 export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile, mostFrequentBeerName }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor }, // H2
+    { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor, sizeClass: "text-4xl" }, // H2
   ], [textColor]);
 
   const renderedText = useMemo(() => {
@@ -51,7 +51,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -71,7 +71,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-center`}> {/* Removed direct font size classes here */}
           {renderedText}
         </p>
       </div>

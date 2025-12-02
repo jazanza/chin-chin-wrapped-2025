@@ -21,20 +21,20 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   const storySegments = useMemo(() => {
     if (!firstBeerDetails) {
       return [
-        { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor }, // H3
-        { text: "\n\n", color: textColor },
-        { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor }, // H3
+        { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor, sizeClass: "text-xl" }, // H3
+        { text: "\n\n", color: textColor, sizeClass: "" },
+        { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor, sizeClass: "text-xl" }, // H3
       ];
     }
 
     return [
-      { text: "TU VIAJE CERVECERO COMENZÓ EL ", color: textColor }, // H3
-      { text: `${formattedDate.toUpperCase()}`, color: highlightColor }, // H3
-      { text: "\n\n", color: textColor },
-      { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor }, // H3
-      { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor }, // H3
-      { text: "\n\n", color: textColor },
-      { text: `¡UNA ELECCIÓN ATREVIDA QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor }, // H3
+      { text: "TU VIAJE CERVECERO COMENZÓ EL ", color: textColor, sizeClass: "text-xl" }, // H3
+      { text: `${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
+      { text: "\n\n", color: textColor, sizeClass: "" },
+      { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor, sizeClass: "text-xl" }, // H3
+      { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
+      { text: "\n\n", color: textColor, sizeClass: "" },
+      { text: `¡UNA ELECCIÓN ATREVIDA QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-xl" }, // H3
     ];
   }, [firstBeerDetails, formattedDate, textColor, highlightColor]);
 
@@ -43,7 +43,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -60,7 +60,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
-        <p className={`text-xl text-center`}> {/* H3 for main text block */}
+        <p className={`text-center`}> {/* Removed direct font size classes here */}
           {renderedText}
         </p>
       </div>

@@ -37,7 +37,7 @@ const getDaySpecificWittyRemark = (day: string) => {
 const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, textColor, highlightColor }: { mostActiveDay: string; mostPopularCommunityDay: string; textColor: string; highlightColor: string }) => {
   if (mostActiveDay === "N/A") {
     return (
-      <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
+      <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
         No hay suficientes datos para determinar tu día más activo.
       </p>
     );
@@ -57,7 +57,7 @@ const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, te
       <p className={cn("text-xl font-black text-center", highlightColor)}> {/* H3 */}
         {title}
       </p>
-      <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
+      <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
         {remark} {comparisonPhrase}
       </p>
     </div>
@@ -70,14 +70,14 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
   const mainStoryTextSegments: TextSegment[] = useMemo(() => {
     if (mostActiveDay === "N/A") {
       return [
-        { text: "NO HAY DATOS SUFICIENTES PARA TU DÍA MÁS ACTIVO.", color: textColor }, // H2
+        { text: "NO HAY DATOS SUFICIENTES PARA TU DÍA MÁS ACTIVO.", color: textColor, sizeClass: "text-4xl" }, // H2
       ];
     }
     return [
       // 1. Título genérico:
-      { text: "EL DÍA QUE MÁS\nNOS VISITASTE FUE EL:", color: textColor }, // H2
+      { text: "EL DÍA QUE MÁS\nNOS VISITASTE FUE EL:", color: textColor, sizeClass: "text-4xl" }, // H2
       // 2. El día activo resaltado:
-      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor }, // H2
+      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
     ];
   }, [mostActiveDay, textColor, highlightColor]);
 
@@ -86,7 +86,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -114,7 +114,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-center`}> {/* Removed direct font size classes here */}
           {renderedText}
         </p>
       </div>

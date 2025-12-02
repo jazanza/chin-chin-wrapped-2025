@@ -34,7 +34,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   }
 
   return (
-    <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
+    <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
       {wittyPhrase}
     </p>
   );
@@ -59,7 +59,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
     { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
     { text: " VECES", color: textColor, sizeClass: "text-6xl" }, // H1
     { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
-    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-base" }, // H4
+    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-xl" }, // H3
   ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);
 
   const renderedText = useMemo(() => {

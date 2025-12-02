@@ -57,7 +57,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
 
       {randomSuggestions.length > 0 && (
         <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
-          <p className={cn("text-sm font-bold mb-2 text-center", highlightColor)}> {/* Cuerpo */}
+          <p className={cn("text-base font-bold mb-2 text-center", highlightColor)}> {/* H4 */}
             DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beerName, idx) => (

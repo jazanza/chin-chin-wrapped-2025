@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 
 interface TextSegment {
   text: string;
@@ -19,13 +20,13 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [customerName]);
 
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor }, // H2
-    { text: "\n\n", color: textColor },
-    { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor }, // H3
-    { text: "\n\n", color: textColor },
-    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor }, // H2
-    { text: "\n\n", color: textColor },
-    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor } // H3
+    { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor, sizeClass: "text-xl" }, // H3
+    { text: "\n\n", color: textColor, sizeClass: "" },
+    { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor, sizeClass: "text-xl" }, // H3
+    { text: "\n\n", color: textColor, sizeClass: "" },
+    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor, sizeClass: "text-4xl" }, // H2
+    { text: "\n\n", color: textColor, sizeClass: "" },
+    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor, sizeClass: "text-xl" } // H3
   ], [totalVisits, textColor, highlightColor, firstName]); // Add firstName to dependencies
 
   const renderedText = useMemo(() => {
@@ -33,7 +34,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -50,7 +51,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
-        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-center`}> {/* Removed direct font size classes here */}
           {renderedText}
         </p>
       </div>

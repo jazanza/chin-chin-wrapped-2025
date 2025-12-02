@@ -62,7 +62,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
   }
 
   return (
-    <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
+    <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
       {wittyPhrase}
     </p>
   );
@@ -70,8 +70,8 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
 
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE...", color: textColor }, // H2
-    { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor }, // H2
+    { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE...", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
   ], [mostActiveMonth, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -79,7 +79,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -96,7 +96,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-center`}> {/* Removed direct font size classes here */}
           {renderedText}
         </p>
       </div>

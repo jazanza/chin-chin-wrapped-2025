@@ -52,14 +52,14 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-xl" }, // H3
-    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
-    { text: "\n\nY PROBASTE ", color: textColor, sizeClass: "text-xl" }, // H3
-    { text: `${uniqueVarieties2025}`, color: highlightColor, sizeClass: "text-xl" }, // H3
-    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor, sizeClass: "text-xl" }, // H3
-    { text: `${totalVarietiesInDb}`, color: highlightColor, sizeClass: "text-xl" }, // H3
+    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
+    { text: "\n\nY PROBASTE ", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: `${uniqueVarieties2025}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
+    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: `${totalVarietiesInDb}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
     // 2. Insertar la frase dinámica aquí:
-    { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor, sizeClass: "text-xl" }, // H3
+    { text: ` DISPONIBLES. (${dynamicComment}).`, color: textColor, sizeClass: "text-base" }, // H4
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {
@@ -85,7 +85,7 @@ export const DominantCategoryAndVarietiesStory = ({
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-tight`}
       >
-        <p className={`text-center`}> {/* Eliminado text-xl de aquí */}
+        <p className={`text-center`}>
           {renderedText}
         </p>
       </div>

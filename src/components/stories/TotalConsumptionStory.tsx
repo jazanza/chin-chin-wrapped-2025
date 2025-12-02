@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
+  sizeClass: string; // Added for explicit size control
 }
 
 interface TotalConsumptionStoryProps {
@@ -71,7 +72,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-center`}> {/* Removed direct font size classes here */}
+        <p className={`text-center`}>
           {renderedText}
         </p>
       </div>

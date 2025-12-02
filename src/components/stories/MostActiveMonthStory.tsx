@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
+  sizeClass: string; // Added for explicit size control
 }
 
 interface MostActiveMonthStoryProps {
@@ -71,7 +72,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE:", color: textColor, sizeClass: "text-4xl" }, // H2
-    { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
+    { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
   ], [mostActiveMonth, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -96,7 +97,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-center`}> {/* Removed direct font size classes here */}
+        <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
@@ -106,12 +107,12 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
         </p>
         {monthlyVisits.length > 0 ? (
           monthlyVisits.map((data, idx) => (
-            <p key={idx} className={cn("text-sm text-center", textColor)}> {/* Cuerpo */}
+            <p key={idx} className={cn("text-base text-center", textColor)}> {/* H4 */}
               {`${data.month}: ${data.count} Visitas`}
             </p>
           ))
         ) : (
-          <p className={cn("text-sm text-center", textColor)}> {/* Cuerpo */}
+          <p className={cn("text-base text-center", textColor)}> {/* H4 */}
             Aún no conoces tu potencial cervecero. (No hay datos).
           </p>
         )}

@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
+  sizeClass: string; // Added for explicit size control
 }
 
 interface MostActiveDayStoryProps {
@@ -77,7 +78,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       // 1. Título genérico:
       { text: "EL DÍA QUE MÁS\nNOS VISITASTE FUE EL:", color: textColor, sizeClass: "text-4xl" }, // H2
       // 2. El día activo resaltado:
-      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
+      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
     ];
   }, [mostActiveDay, textColor, highlightColor]);
 
@@ -114,7 +115,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-center`}> {/* Removed direct font size classes here */}
+        <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
@@ -124,12 +125,12 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
         </p>
         {filteredDailyVisits.length > 0 ? (
           filteredDailyVisits.map((data, idx) => (
-            <p key={idx} className={cn("text-sm text-center", textColor)}> {/* Cuerpo */}
+            <p key={idx} className={cn("text-base text-center", textColor)}> {/* H4 */}
               {`${data.day}: ${data.count} Visitas`}
             </p>
           ))
         ) : (
-          <p className={cn("text-sm text-center", textColor)}> {/* Cuerpo */}
+          <p className={cn("text-base text-center", textColor)}> {/* H4 */}
             Parece que fuiste a Chin Chin... 0 días. ¡Error de sistema!
           </p>
         )}

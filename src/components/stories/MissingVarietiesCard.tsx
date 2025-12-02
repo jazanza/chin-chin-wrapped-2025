@@ -50,7 +50,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
         <p className={cn("text-4xl text-center", highlightColor)}> {/* H2 */}
           TU MISIÓN PARA EL 2026:
         </p>
-        <p className={cn("text-xl text-center mt-4", textColor)}> {/* H3 */}
+        <p className={cn("text-6xl text-center mt-4", textColor)}> {/* H1 */}
           {wittyTitle}
         </p>
       </div>
@@ -61,7 +61,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
             DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beerName, idx) => (
-            <p key={idx} className={cn("text-sm text-center", textColor)}> {/* Cuerpo */}
+            <p key={idx} className={cn("text-base text-center", textColor)}> {/* H4 */}
               {beerName.toUpperCase()}
             </p>
           ))}

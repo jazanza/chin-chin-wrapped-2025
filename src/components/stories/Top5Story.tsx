@@ -20,18 +20,19 @@ interface Top5StoryProps {
   highlightColor: string; // Tailwind CSS class
 }
 
-export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Props) => { // Changed prop name
+export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5StoryProps) => { // Changed prop name
   const titleSegments: TextSegment[] = useMemo(() => {
     const segments: TextSegment[] = [];
     if (top10Products && top10Products.length > 0) {
       const top1Name = top10Products[0].name;
-      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA: ${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-4xl" }); // H2
-      segments.push({ text: "\n", color: textColor, sizeClass: "" }); // Add a line break
+      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA:`, color: textColor, sizeClass: "text-4xl" }); // H2
+      segments.push({ text: `\n${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-6xl" }); // H1
+      segments.push({ text: "\n\n", color: textColor, sizeClass: "" }); // Add a line break
     } else {
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-4xl" }); // H2
-      segments.push({ text: "\n", color: textColor, sizeClass: "" }); // Add a line break
+      segments.push({ text: "\n\n", color: textColor, sizeClass: "" }); // Add a line break
     }
-    segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor, sizeClass: "text-4xl" }); // H2
+    segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor, sizeClass: "text-xl" }); // H3
     return segments;
   }, [top10Products, textColor, highlightColor]);
 
@@ -57,7 +58,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Prop
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-center`}> {/* Removed direct font size classes here */}
+        <p className={`text-center`}>
           {renderedText}
         </p>
       </div>

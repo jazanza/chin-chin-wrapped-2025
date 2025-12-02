@@ -22,7 +22,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
     if (!firstBeerDetails) {
       return [
         { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor, sizeClass: "text-xl" }, // H3
-        { text: "\n", color: textColor, sizeClass: "" }, // Cambiado de \n\n a \n
+        { text: "\n\n", color: textColor, sizeClass: "" },
         { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor, sizeClass: "text-xl" }, // H3
       ];
     }
@@ -30,10 +30,10 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
     return [
       { text: "TU VIAJE CERVECERO COMENZÓ EL ", color: textColor, sizeClass: "text-4xl" }, // H2
       { text: `${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-      { text: "\n", color: textColor, sizeClass: "" }, // Cambiado de \n\n a \n
+      { text: "\n\n", color: textColor, sizeClass: "" },
       { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor, sizeClass: "text-4xl" }, // H2
       { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-      { text: "\n", color: textColor, sizeClass: "" }, // Cambiado de \n\n a \n
+      { text: "\n\n", color: textColor, sizeClass: "" },
       { text: `¡UNA EXCELENTE ELECCIÓN QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-base" }, // H4
     ];
   }, [firstBeerDetails, formattedDate, textColor, highlightColor]);

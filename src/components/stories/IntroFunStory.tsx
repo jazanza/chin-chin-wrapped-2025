@@ -22,11 +22,11 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
 
   const introSegments: TextSegment[] = useMemo(() => [
     { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor, sizeClass: "text-4xl" }, // H2
-    { text: "\n", color: textColor, sizeClass: "" }, // Cambiado de \n\n a \n
+    { text: "\n\n", color: textColor, sizeClass: "" },
     { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor, sizeClass: "text-xl" }, // H3
-    { text: "\n", color: textColor, sizeClass: "" }, // Cambiado de \n\n a \n
+    { text: "\n\n", color: textColor, sizeClass: "" },
     { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor, sizeClass: "text-xl" }, // H3
-    { text: "\n", color: textColor, sizeClass: "" }, // Cambiado de \n\n a \n
+    { text: "\n\n", color: textColor, sizeClass: "" },
     { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor, sizeClass: "text-4xl" } // H2
   ], [totalVisits, textColor, highlightColor, firstName]); // Add firstName to dependencies
 

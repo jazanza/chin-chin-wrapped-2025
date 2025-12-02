@@ -58,7 +58,7 @@ export const DominantCategoryAndVarietiesStory = ({
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
     { text: "\n\nY PROBASTE ", color: textColor },
     { text: `${uniqueVarieties2025}`, color: highlightColor },
-    { text: " VARIEDADES ÚNICAS. \n(DE ", color: textColor },
+    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor },
     { text: `${totalVarietiesInDb}`, color: highlightColor },
     // 2. Insertar la frase dinámica aquí:
     { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor }, 

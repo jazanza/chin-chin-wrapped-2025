@@ -268,7 +268,7 @@ const ClientLogin = () => {
           className="mx-auto w-32 h-auto mb-8" // Centrado, tamaño y margen inferior
         />
         <h1 
-          className="text-4xl font-bold mb-8 uppercase tracking-widest" // H2
+          className="text-6xl font-bold mb-8 uppercase tracking-widest" // H1
         >
           CHIN CHIN WRAPPED 2025
         </h1>

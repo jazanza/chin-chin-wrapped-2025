@@ -125,7 +125,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
         {filteredDailyVisits.length > 0 ? (
           filteredDailyVisits.map((data, idx) => (
             <p key={idx} className={cn("text-sm text-center", textColor)}> {/* Cuerpo */}
-              {`${data.day}: ${data.count} VISITAS`}
+              {`${data.day}: ${data.count} Visitas`}
             </p>
           ))
         ) : (

@@ -286,7 +286,7 @@ const WrappedDashboard = () => {
     };
 
     fetchWrappedData();
-  }, [customerId, dbLoaded]);
+  }, [customerId, dbLoaded, getWrappedData]); // Added getWrappedData to dependencies
 
   // TEMPORARY: Log all beer varieties to console for debugging
   useEffect(() => {
@@ -313,7 +313,7 @@ const WrappedDashboard = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration]);
+  }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration, handleNextStory]); // Added handleNextStory to dependencies
 
   const handleNextStory = useCallback(() => {
     setCurrentStoryIndex((prevIndex) =>
@@ -428,6 +428,7 @@ const WrappedDashboard = () => {
     visitsPercentile: wrappedData.visitsPercentile, // NEW
     mostPopularCommunityDay: wrappedData.mostPopularCommunityDay, // NEW
     mostPopularCommunityMonth: wrappedData.mostPopularCommunityMonth, // NEW
+    mostFrequentBeerName: wrappedData.mostFrequentBeerName, // NEW: Most frequent beer name
   };
 
   return (

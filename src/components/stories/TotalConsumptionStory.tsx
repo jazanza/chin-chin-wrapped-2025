@@ -11,28 +11,25 @@ interface TotalConsumptionStoryProps {
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
   litersPercentile: number; // NEW: customer's percentile for liters
+  mostFrequentBeerName: string; // NEW: Most frequent beer name
 }
 
-const CommunityComparisonText = ({ litersPercentile, textColor, highlightColor }: { litersPercentile: number; textColor: string; highlightColor: string }) => {
-  if (litersPercentile === 0) {
-    return (
-      <p className={cn("text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center", textColor)}>
-        No hay suficientes datos de la comunidad para comparar tu consumo.
-      </p>
-    );
-  }
-
-  const topPercentage = 100 - litersPercentile;
+const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColor, highlightColor, mostFrequentBeerName }: { totalLiters: number; litersPercentile: number; textColor: string; highlightColor: string; mostFrequentBeerName: string }) => {
+  const beerName = mostFrequentBeerName.toUpperCase();
   let wittyPhrase = "";
 
-  if (topPercentage <= 5) {
-    wittyPhrase = `¡Eres nuestro Campeón Cervecero! Solo el ${topPercentage.toFixed(0)}% de nuestros clientes bebe más que tú.`;
-  } else if (topPercentage <= 25) {
-    wittyPhrase = `¡Estás en el top 25% de nuestros clientes! Un verdadero fan.`;
-  } else if (topPercentage <= 50) {
-    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Sigue así!`;
-  } else {
-    wittyPhrase = `Tu consumo te ubica por debajo de la mitad de nuestros clientes. ¡Necesitas más visitas a Chin Chin!`;
+  if (litersPercentile === 0) {
+    wittyPhrase = "No hay suficientes datos de la comunidad para comparar tu consumo.";
+  } else if (litersPercentile >= 95 && totalLiters >= 150) {
+    wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de ${beerName}. Podrías llenar nuestra piscina con tu consumo.`;
+  } else if (litersPercentile >= 95 && totalLiters < 150) {
+    wittyPhrase = `¡Un campeón! Eres parte del Top 5% de consumidores, superando al ${litersPercentile.toFixed(0)}% de la comunidad con tu pasión por ${beerName}.`;
+  } else if (litersPercentile >= 75) {
+    wittyPhrase = `Tu consumo te ubica en el Top 25%. Tienes buen ritmo y siempre con tu favorita: ${beerName}.`;
+  } else if (litersPercentile >= 50) {
+    wittyPhrase = `Estás por encima del cliente promedio. Tu consumo de ${beerName} te pone en la mitad superior.`;
+  } else { // 0% - 49%
+    wittyPhrase = `Tienes un consumo moderado. ¡Aún tienes mucho tiempo para probar más ${beerName} y subir en el ranking!`;
   }
 
   return (
@@ -42,16 +39,9 @@ const CommunityComparisonText = ({ litersPercentile, textColor, highlightColor }
   );
 };
 
-const getLitersReaction = (liters: number): string => {
-  if (liters >= 100) return "¡Alerta! Tu cuerpo ya no está compuesto de agua, sino de la más puras cervezas.";
-  if (liters >= 50) return "Tu compromiso es notable. Eres oficialmente una celebridad de Chin Chin";
-  if (liters >= 20) return "Bien hecho, eres un contribuyente serio al PIB cervecero. Buen trabajo.";
-  if (liters >= 10) return "Parece que has estado ahorrando. ¡Necesitas más práctica y más visitas a Chin Chin!";
-  // 0 - 9.9 Litros
-  return "¿Seguro que no te confundiste de Wrapped? No mentira, sabemos que lo harás mejor el 2026.";
-};
+// Removed getLitersReaction as it's replaced by CommunityLitersComparisonText
 
-export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile }: TotalConsumptionStoryProps) => {
+export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile, mostFrequentBeerName }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
     { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor },
   ], [textColor]);
@@ -73,7 +63,8 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
     });
   }, [titleSegments]);
 
-  const volumeReaction = useMemo(() => getLitersReaction(totalLiters), [totalLiters]);
+  // The volumeReaction is now handled by CommunityLitersComparisonText
+  // const volumeReaction = useMemo(() => getLitersReaction(totalLiters), [totalLiters]);
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
@@ -88,15 +79,15 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
         <p className="text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)] font-black leading-none">
           {totalLiters.toFixed(1)} LITROS.
         </p>
-        <p className={`text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center ${textColor}`}>
-          {volumeReaction}
-        </p>
+        {/* Replaced volumeReaction with CommunityLitersComparisonText */}
+        <CommunityLitersComparisonText
+          totalLiters={totalLiters}
+          litersPercentile={litersPercentile}
+          textColor={textColor}
+          highlightColor={highlightColor}
+          mostFrequentBeerName={mostFrequentBeerName}
+        />
       </div>
-      <CommunityComparisonText
-        litersPercentile={litersPercentile}
-        textColor={textColor}
-        highlightColor={highlightColor}
-      />
     </div>
   );
 };

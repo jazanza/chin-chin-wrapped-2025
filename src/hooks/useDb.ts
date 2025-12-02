@@ -484,7 +484,8 @@ export function useDb() {
             P.Name AS ProductName,
             P.Description AS ProductDescription,
             P.ProductGroupId AS ProductGroupId,
-            SUM(DI.Quantity) AS TotalQuantity
+            SUM(DI.Quantity) AS TotalQuantity,
+            P.Id AS ProductId -- Added ProductId to the select
         FROM
             Document AS D
         INNER JOIN
@@ -537,7 +538,7 @@ export function useDb() {
           totalLiters += liters; // This includes all liquid products, including ID 40
 
           // Only add to customer's unique varieties set if it's a beer from the specified groups (now including 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.Id)) { // Added check for forced IDs
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) { // Added check for forced IDs
             const baseBeerName = getBaseBeerName(item.ProductName);
             customerUniqueBeerNamesSet.add(baseBeerName); // Use the new helper
             
@@ -548,7 +549,7 @@ export function useDb() {
           }
 
           // Aggregate liters for dominant category calculation (now including 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.Id)) { // Added check for forced IDs
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) { // Added check for forced IDs
             categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
           }
 
@@ -591,6 +592,10 @@ export function useDb() {
       const top10Products = productLiters
         .sort((a, b) => b.liters - a.liters)
         .slice(0, 10); // Slice to 10
+      
+      // Determine most frequent beer name
+      const mostFrequentBeerName = top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita";
+
 
       // Metric 4: Frequency/Loyalty (Total Visits) for current year - COUNT DISTINCT
       const totalVisitsQuery = `
@@ -679,7 +684,7 @@ export function useDb() {
       const allMonthlyVisitsResult = queryData(dbInstance, allMonthlyVisitsQuery, [customerId, currentYear]);
       const monthlyVisits = allMonthlyVisitsResult.map((row: any) => ({
         month: MONTH_NAMES[parseInt(row.MonthOfYear, 10) - 1],
-        count: row.MonthCount, // Corrected from row.DayCount to row.MonthCount
+        count: row.MonthCount,
       }));
 
       // --- Calculate Patrón de Consumo (Concentration) ---
@@ -784,6 +789,7 @@ export function useDb() {
         mostPopularCommunityMonth, // New: community's most popular month
         dynamicTitle, // New: dynamic title based on palate
         firstBeerDetails, // New: first beer of the year
+        mostFrequentBeerName, // NEW: Most frequent beer name
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);
@@ -792,7 +798,7 @@ export function useDb() {
     } finally {
       setLoading(false);
     }
-  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution, getAllCustomerLiters, getAllCustomerVisits, getCommunityDailyVisits, getCommunityMonthlyVisits, getFirstBeerDetails]);
+  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution, getAllCustomerLiters, getAllCustomerVisits, getCommunityDailyVisits, getCommunityMonthlyVisits, getFirstBeerDetails, extractVolumeMl, getBaseBeerName, categorizeBeer]);
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

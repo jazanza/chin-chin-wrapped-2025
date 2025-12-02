@@ -17,11 +17,11 @@ interface IntroFunStoryProps {
 export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroFunStoryProps) => {
   const introSegments: TextSegment[] = useMemo(() => [
     { text: "¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!", color: highlightColor },
-    { text: "\n", color: textColor }, // Line break
+    { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
     { text: "PARA NOSOTROS, CADA VISITA NO ES UN MOTIVO, SINO LA RAZÓN DE NUESTRA ALEGRÍA.", color: textColor },
-    { text: "\n", color: textColor }, // Line break
+    { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
     { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE EL TERAPEUTA EN CHIN CHIN.`, color: highlightColor },
-    { text: "\n", color: textColor }, // Line break
+    { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
     { text: "GRACIAS POR ELEGIRNOS. AHORA, A LO QUE VINIMOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
@@ -44,9 +44,9 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
 
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
-      {/* AnimatedBackgroundLines REMOVED */}
+      {/* 1. CAMBIAR leading-tight por leading-normal */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-tight`}
+        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`} 
       >
         <p className={`text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)] text-center`}>
           {renderedText}

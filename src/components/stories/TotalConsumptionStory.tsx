@@ -38,10 +38,10 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
 const getLitersReaction = (liters: number): string => {
   if (liters >= 100) return "¡Alerta! Tu cuerpo ya no está compuesto de agua, sino de la más puras cervezas.";
   if (liters >= 50) return "Tu compromiso es notable. Eres oficialmente una celebridad de Chin Chin";
-  if (liters >= 20) return "Bien hecho, ya eres un contribuyente serio al PIB cervecero. Buen trabajo.";
-  if (liters >= 10) return "Parece que has estado ahorrando. ¡Necesitas más práctica y más visitas al Chin Chin!";
+  if (liters >= 20) return "Bien hecho, eres un contribuyente serio al PIB cervecero. Buen trabajo.";
+  if (liters >= 10) return "Parece que has estado ahorrando. ¡Necesitas más práctica y más visitas a Chin Chin!";
   // 0 - 9.9 Litros
-  return "¿Seguro que no te confundiste de Wrapped? Esto es un poco decepcionante. No mentira, sabemos que lo harás mejor el 2026";
+  return "¿Seguro que no te confundiste de Wrapped? No mentira, sabemos que lo harás mejor el 2026.";
 };
 
 export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor, highlightColor }: TotalConsumptionStoryProps) => {

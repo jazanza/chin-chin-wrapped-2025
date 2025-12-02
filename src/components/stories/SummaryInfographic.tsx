@@ -148,10 +148,10 @@ export const SummaryInfographic = ({
         <div className="mb-4 text-center">
           {isTitleTyped && (
             <>
-              <h1 className={cn("text-[4.5vw] md:text-[2.5rem] lg:text-[3rem] font-black uppercase leading-tight", highlightColor)}>
+              <h1 className={cn("text-3xl font-black uppercase leading-tight", highlightColor)}> {/* H2 */}
                 {dynamicTitle.toUpperCase()} {/* Use dynamicTitle here */}
               </h1>
-              <p className={cn("text-[3vw] md:text-[1.5rem] lg:text-[2rem] font-black uppercase leading-tight", textColor)}>
+              <p className={cn("text-xl font-black uppercase leading-tight", textColor)}> {/* H3 */}
                 {customerName.toUpperCase()} WRAPPED {year}
               </p>
             </>
@@ -162,27 +162,27 @@ export const SummaryInfographic = ({
           <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white">
             {/* Row 1, Column 1: Total Visitas */}
             <Block bgColor="bg-black">
-              <p className="text-xs md:text-sm lg:text-base font-bold text-center">
+              <p className="text-base font-bold text-center"> {/* H4 */}
                 CANTIDAD DE VISITAS ESTE {year}
               </p>
-              <p className="text-4xl md:text-5xl lg:text-6xl font-black text-center">
+              <p className="text-5xl font-black text-center"> {/* H1 */}
                 {totalVisits}
               </p>
             </Block>
 
             {/* Row 1, Column 2: Total Litros */}
             <Block bgColor="bg-white">
-              <p className="text-xs md:text-sm lg:text-base font-bold text-center">
+              <p className="text-base font-bold text-center"> {/* H4 */}
                 LITROS PROCESADOS
               </p>
-              <p className="text-4xl md:text-5xl lg:text-6xl font-black text-center">
+              <p className="text-5xl font-black text-center"> {/* H1 */}
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
 
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block bgColor="bg-black">
-              <p className="text-xs md:text-sm lg:text-base font-bold text-center mb-1">
+              <p className="text-base font-bold text-center mb-1"> {/* H4 */}
                 EL TRÍO FAVORITO
               </p>
               {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
@@ -190,7 +190,7 @@ export const SummaryInfographic = ({
                   key={idx}
                   className={cn(
                     "text-center leading-tight text-ellipsis overflow-hidden whitespace-nowrap", // Added text overflow handling
-                    idx === 0 ? "text-sm md:text-lg lg:text-xl font-black" : "text-xs md:text-sm lg:text-base font-bold"
+                    idx === 0 ? "text-base font-black" : "text-sm font-bold" // H4 for first, Cuerpo for others
                   )}
                 >
                   {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
@@ -202,17 +202,17 @@ export const SummaryInfographic = ({
             <Block bgColor="bg-white">
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
                   {/* Título Dinámico del Nivel */}
-                  <h2 className="text-lg md:text-xl lg:text-2xl font-black leading-tight mb-2">
+                  <h2 className="text-xl font-black leading-tight mb-2"> {/* H3 */}
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   
                   {/* Métrica de Soporte */}
-                  <p className="text-xs md:text-sm lg:text-base font-bold">
+                  <p className="text-base font-bold"> {/* H4 */}
                       {uniqueVarieties2025} VARIEDADES PROBADAS
                   </p>
                   
                   {/* Comparación (Total disponible) */}
-                  <p className="text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] mt-1">
+                  <p className="text-sm mt-1"> {/* Cuerpo */}
                       de un total de {totalVarietiesInDb} DISPONIBLES.
                   </p>
               </div>
@@ -220,10 +220,10 @@ export const SummaryInfographic = ({
 
             {/* Row 3, Column 1: Día Más Activo */}
             <Block bgColor="bg-black">
-              <p className="text-xs md:text-sm lg:text-base font-bold text-center">
+              <p className="text-base font-bold text-center"> {/* H4 */}
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-4xl md:text-5xl lg:text-6xl font-black text-center">
+              <p className="text-5xl font-black text-center"> {/* H1 */}
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
@@ -235,7 +235,7 @@ export const SummaryInfographic = ({
                 alt="Logo Chin Chin"
                 className="w-auto max-w-[100px] p-1 mb-2" // Adjusted to w-auto
               />
-              <p className="text-white text-xs md:text-sm lg:text-base font-bold">
+              <p className="text-white text-sm font-bold"> {/* Cuerpo */}
                 @CHINCHIN.CERVEZAS
               </p>
             </Block>

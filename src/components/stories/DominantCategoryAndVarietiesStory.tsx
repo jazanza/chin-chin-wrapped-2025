@@ -54,14 +54,14 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor },
-    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
-    { text: "\n\nY PROBASTE ", color: textColor },
-    { text: `${uniqueVarieties2025}`, color: highlightColor },
-    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor },
-    { text: `${totalVarietiesInDb}`, color: highlightColor },
+    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor }, // H3
+    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor }, // H3
+    { text: "\n\nY PROBASTE ", color: textColor }, // H3
+    { text: `${uniqueVarieties2025}`, color: highlightColor }, // H3
+    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor }, // H3
+    { text: `${totalVarietiesInDb}`, color: highlightColor }, // H3
     // 2. Insertar la frase dinámica aquí:
-    { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor }, 
+    { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor }, // H3
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {
@@ -87,7 +87,7 @@ export const DominantCategoryAndVarietiesStory = ({
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-tight`}
       >
-        <p className={`text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)] text-center`}>
+        <p className={`text-xl text-center`}> {/* H3 for main text block */}
           {renderedText}
         </p>
       </div>

@@ -23,13 +23,13 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
     const segments: TextSegment[] = [];
     if (top10Products && top10Products.length > 0) {
       const top1Name = top10Products[0].name;
-      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA: ${top1Name.toUpperCase()}.`, color: highlightColor });
+      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA: ${top1Name.toUpperCase()}.`, color: highlightColor }); // H2
       segments.push({ text: "\n", color: textColor }); // Add a line break
     } else {
-      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor });
+      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor }); // H2
       segments.push({ text: "\n", color: textColor }); // Add a line break
     }
-    segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor });
+    segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor }); // H2
     return segments;
   }, [top10Products, textColor, highlightColor]);
 
@@ -55,13 +55,13 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center`}>
+        <p className={`text-3xl text-center`}> {/* H2 for main text block */}
           {renderedText}
         </p>
       </div>
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
         {top10Products.slice(0, 10).map((product, idx) => ( // Changed slice to 10
-          <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-[min(3.5vw,1.4rem)] md:text-[min(3vw,1.2rem)] lg:text-[min(2.5vw,1.1rem)] font-black' : 'text-[min(2.5vw,1.1rem)] md:text-[min(2vw,1rem)] lg:text-[min(1.8vw,0.9rem)] font-bold'}`}> {/* Adjusted font sizes */}
+          <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-xl font-black' : 'text-sm font-bold'}`}> {/* H3 for first, Cuerpo for others */}
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} LITROS BEBIDOS)`}
           </p>
         ))}

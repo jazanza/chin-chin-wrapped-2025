@@ -34,7 +34,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   }
 
   return (
-    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+    <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
       {wittyPhrase}
     </p>
   );
@@ -55,11 +55,11 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" },
-    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)]" },
-    { text: " VECES!", color: textColor, sizeClass: "text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)]" },
-    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)]" },
-    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-[min(4vw,1.5rem)] md:text-[min(3vw,1.2rem)] lg:text-[min(2.5vw,1.1rem)]" },
+    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-3xl" }, // H2
+    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-5xl" }, // H1
+    { text: " VECES!", color: textColor, sizeClass: "text-5xl" }, // H1
+    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
+    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-base" }, // H4
   ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);
 
   const renderedText = useMemo(() => {

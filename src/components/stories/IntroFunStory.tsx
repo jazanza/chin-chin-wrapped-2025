@@ -19,13 +19,13 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [customerName]);
 
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor }, // Use firstName
+    { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor }, // H2
     { text: "\n\n", color: textColor },
-    { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor },
+    { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor }, // H3
     { text: "\n\n", color: textColor },
-    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor },
+    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor }, // H2
     { text: "\n\n", color: textColor },
-    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
+    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor } // H3
   ], [totalVisits, textColor, highlightColor, firstName]); // Add firstName to dependencies
 
   const renderedText = useMemo(() => {
@@ -50,7 +50,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
-        <p className={`text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)] text-center`}>
+        <p className={`text-3xl text-center`}> {/* H2 for main text block */}
           {renderedText}
         </p>
       </div>

@@ -33,7 +33,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
   }
 
   return (
-    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+    <p className={cn("text-sm font-bold text-center", textColor)}> {/* Cuerpo */}
       {wittyPhrase}
     </p>
   );
@@ -43,7 +43,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
 
 export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile, mostFrequentBeerName }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor },
+    { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor }, // H2
   ], [textColor]);
 
   const renderedText = useMemo(() => {
@@ -71,12 +71,12 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center`}>
+        <p className={`text-3xl text-center`}> {/* H2 for main text block */}
           {renderedText}
         </p>
       </div>
       <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
-        <p className="text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)] font-black leading-none">
+        <p className="text-5xl font-black leading-none"> {/* H1 */}
           {totalLiters.toFixed(1)} LITROS.
         </p>
         {/* Replaced volumeReaction with CommunityLitersComparisonText */}

@@ -21,20 +21,20 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   const storySegments = useMemo(() => {
     if (!firstBeerDetails) {
       return [
-        { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor },
+        { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor }, // H3
         { text: "\n\n", color: textColor },
-        { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor },
+        { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor }, // H3
       ];
     }
 
     return [
-      { text: "TU VIAJE CERVECERO COMENZÓ EL ", color: textColor },
-      { text: `${formattedDate.toUpperCase()}`, color: highlightColor },
+      { text: "TU VIAJE CERVECERO COMENZÓ EL ", color: textColor }, // H3
+      { text: `${formattedDate.toUpperCase()}`, color: highlightColor }, // H3
       { text: "\n\n", color: textColor },
-      { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor },
-      { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor },
+      { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor }, // H3
+      { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor }, // H3
       { text: "\n\n", color: textColor },
-      { text: `¡UNA ELECCIÓN ATREVIDA QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor }, // Modificado aquí
+      { text: `¡UNA ELECCIÓN ATREVIDA QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor }, // H3
     ];
   }, [firstBeerDetails, formattedDate, textColor, highlightColor]);
 
@@ -60,7 +60,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
-        <p className={`text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)] text-center`}>
+        <p className={`text-xl text-center`}> {/* H3 for main text block */}
           {renderedText}
         </p>
       </div>

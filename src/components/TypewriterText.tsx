@@ -8,8 +8,6 @@ export interface TextSegment {
 interface TypewriterTextProps {
   segments: TextSegment[];
   fontSize: string; // Tailwind CSS class for font size, e.g., "text-5xl"
-  anchorX?: 'left' | 'center' | 'right'; // Not directly used for flex, but for conceptual alignment
-  anchorY?: 'top' | 'middle' | 'bottom'; // Not directly used for flex, but for conceptual alignment
   maxWidth?: string; // Tailwind CSS class for max-width, e.g., "max-w-md"
   textAlign?: 'left' | 'center' | 'right'; // Tailwind CSS class for text alignment, e.g., "text-center"
   letterSpacing?: string; // Tailwind CSS class for letter spacing, e.g., "tracking-tight"
@@ -21,7 +19,7 @@ interface TypewriterTextProps {
 export const TypewriterText = ({
   segments,
   fontSize,
-  maxWidth = "max-w-full",
+  maxWidth = "max-w-full", // Default to full width, let stories constrain if needed
   textAlign = "text-center",
   letterSpacing = "tracking-normal",
   fontWeight = "font-normal",
@@ -34,19 +32,21 @@ export const TypewriterText = ({
       // Split by newline to create paragraphs or line breaks
       const lines = segment.text.split('\n');
       return lines.map((line, lineIndex) => (
-        <span key={`${segmentIndex}-${lineIndex}`} className={`${segment.color}`}>
-          {line}
+        <React.Fragment key={`${segmentIndex}-${lineIndex}`}>
+          <span className={`${segment.color}`}>
+            {line}
+          </span>
           {lineIndex < lines.length - 1 && <br />} {/* Add <br> for newlines within a segment */}
-        </span>
+        </React.Fragment>
       ));
     });
   }, [segments]);
 
   return (
     <div
-      className={`absolute inset-0 flex flex-col items-center justify-center p-4 ${maxWidth} ${textAlign} ${letterSpacing} ${fontWeight} ${lineHeight} ${className}`}
+      className={`absolute inset-0 flex flex-col items-center justify-center p-4 ${maxWidth} ${letterSpacing} ${fontWeight} ${lineHeight} ${className}`}
     >
-      <p className={`${fontSize}`}>
+      <p className={`${fontSize} ${textAlign}`}> {/* Explicitly apply textAlign to p tag */}
         {renderedText}
       </p>
     </div>

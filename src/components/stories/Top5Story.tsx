@@ -23,7 +23,7 @@ export const Top5Story = ({ top5Products, textColor, highlightColor }: Top5Story
   ], [highlightColor]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       <TypewriterText
         segments={titleSegments}
         fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Adjusted font size

@@ -26,7 +26,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
       <TypewriterText
         segments={introSegments}
         fontSize="text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)]" // Adjusted font size
-        maxWidth="max-w-md"
+        maxWidth="max-w-2xl" // Increased max-width for better readability
         textAlign="text-center"
         letterSpacing="tracking-tight"
         fontWeight="font-black"

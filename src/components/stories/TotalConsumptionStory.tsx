@@ -18,7 +18,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor }
   ], [textColor]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       {/* AnimatedBackgroundLines REMOVED */}
       <TypewriterText
         segments={titleSegments}

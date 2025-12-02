@@ -40,8 +40,8 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
 const getVisitsIntroText = (count: number) => {
   if (count >= 80) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: "\nA esta altura, tu GPS nos tiene como 'Casa'. Nos visitaste:" };
   if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nPasaste más tiempo aquí que en tu casa. Nos visitaste:" };
-  if (count >= 25) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tiene competencia, porque Chin Chin te vimos:" };
-  if (count >= 10) return { top: "¡VAYA, parece que Chin Chin te gustó!", bottom: "\nNos visitaste más de una vez. En concreto:" };
+  if (count >= 25) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tiene competencia, porque en Chin Chin te vimos:" };
+  if (count >= 10) return { top: "¡Parece que Chin Chin te gustó!", bottom: "\nNos visitaste más de una vez. En concreto:" };
   
   // 0 - 9 visitas: Usar la frase fija que aprobaste si no cumple el rango alto
   return { top: `¡INTERESANTE!`, bottom: `\nNOS VISITASTE:` };

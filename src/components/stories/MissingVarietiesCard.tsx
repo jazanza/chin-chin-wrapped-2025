@@ -28,7 +28,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
     // Assuming total varieties is around 100.
     // If missingCount > 50, it means more than half are missing.
     if (missingCount > 50) { 
-      return `TOMAR MÁS CERVEZAS`;
+      return `¡TOMAR MÁS CERVEZAS!`;
     }
     // Default for < 50% missing (or between 2 and 50)
     return `YA MISMO LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;

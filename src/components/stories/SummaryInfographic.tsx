@@ -60,6 +60,16 @@ const Block = ({ bgColor, children }: BlockProps) => {
   );
 };
 
+// Función Helper para calcular el nivel de cerveza
+const getBeerLevel = (uniqueVarietiesCount: number): string => {
+  if (uniqueVarietiesCount >= 80) return "Experto Legendario";
+  if (uniqueVarietiesCount >= 60) return "Maestro Cervecero";
+  if (uniqueVarietiesCount >= 40) return "Coleccionista de Tapones";
+  if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas";
+  if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo";
+  return "Novato en la Barra";
+};
+
 export const SummaryInfographic = ({
   customerName,
   year,
@@ -143,17 +153,24 @@ export const SummaryInfographic = ({
             ))}
           </Block>
 
-          {/* Row 2, Column 2: Variedades Probadas */}
+          {/* Row 2, Column 2: Variedades Probadas (Ahora con Nivel Dinámico) */}
           <Block bgColor="bg-white">
-            <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              COLECCIONISTA DE SABORES
-            </p>
-            <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
-              {`${uniqueVarieties2025} / ${totalVarietiesInDb}`}
-            </p>
-            <p className="text-[2vw] md:text-[1rem] lg:text-[1.2rem] font-bold text-center">
-              VARIEDADES PROBADAS
-            </p>
+            <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
+                {/* Título Dinámico del Nivel */}
+                <h2 className="text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black leading-tight mb-2">
+                    {getBeerLevel(uniqueVarieties2025)}
+                </h2>
+                
+                {/* Métrica de Soporte */}
+                <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold">
+                    {uniqueVarieties2025} Variedades Probadas
+                </p>
+                
+                {/* Comparación (Total disponible) */}
+                <p className="text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] mt-1">
+                    de un total de {totalVarietiesInDb} disponibles.
+                </p>
+            </div>
           </Block>
 
           {/* Row 3, Column 1: Día Más Activo */}

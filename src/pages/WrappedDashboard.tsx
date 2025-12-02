@@ -37,7 +37,7 @@ const WrappedOverlay = ({ customerName, year, textColor }: WrappedOverlayProps) 
       <p
         className={cn("text-[min(3vw,1.8rem)] font-bold uppercase tracking-wide", textColor)} // Use textColor here
       >
-        {year} Wrapped
+        {year} ** WRAPPED**
       </p>
     </div>
   );
@@ -240,10 +240,10 @@ const WrappedDashboard = () => {
       try {
         const data = await getWrappedData(Number(customerId), '2025'); // Hardcoded year 2025
         setWrappedData(data);
-        showSuccess("¡Tu Wrapped está listo!");
+        showSuccess("¡Tu Wrapped 2025 está listo!");
       } catch (err: any) {
-        console.error("Error fetching wrapped data:", err);
-        showError(err.message || "No se pudo cargar tu Wrapped.");
+        console.error("Error al obtener datos Wrapped:", err);
+        showError(err.message || "No se pudo cargar tu Wrapped 2025.");
       } finally {
         if (toastId) dismissToast(toastId);
         setToastId(null);
@@ -257,7 +257,7 @@ const WrappedDashboard = () => {
   useEffect(() => {
     if (dbLoaded && getAllBeerVarietiesInDb) {
       getAllBeerVarietiesInDb().then(list => {
-        console.log("Listado de variedades de cerveza en la base de datos (88 items):", list);
+        console.log(`Listado de variedades de cerveza en la base de datos (${list.length} items):`, list);
       }).catch(console.error);
     }
   }, [dbLoaded, getAllBeerVarietiesInDb]);
@@ -413,7 +413,7 @@ const WrappedDashboard = () => {
         {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
         <img
           src="/Logo.png"
-          alt="Chin Chin Logo"
+          alt="Logo Chin Chin"
           className="absolute bottom-4 right-4 z-10 w-[9.6vw] max-w-[72px] p-1"
         />
 
@@ -441,7 +441,7 @@ const WrappedDashboard = () => {
             ) : (
               <>
                 <Download className="mr-2 h-4 w-4" />
-                Descargar y Compartir
+                DESCARGAR Y COMPARTIR
               </>
             )}
           </Button>

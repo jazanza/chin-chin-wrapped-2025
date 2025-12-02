@@ -136,7 +136,7 @@ const ClientLogin = () => {
     if (customer.Email) availableFields.push({ type: 'Email', value: customer.Email });
 
     if (availableFields.length === 0) {
-      showError("No hay datos de verificación disponibles para este cliente.");
+      showError("No hay datos de verificación (KBA) disponibles para este cliente.");
       return null;
     }
 
@@ -155,14 +155,14 @@ const ClientLogin = () => {
         } while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1);
         break;
       case 'TaxNumber':
-        questionText = "¿Cuál de estos es tu RFC/Número de Identificación Fiscal?";
+        questionText = "¿Cuál es el número de tu Cédula o RUC?";
         fakeOption1 = generateFakeTaxNumber(correctAnswer);
         do {
           fakeOption2 = generateFakeTaxNumber(correctAnswer);
         } while (fakeOption2 === correctAnswer || fakeOption2 === fakeOption1);
         break;
       case 'Email':
-        questionText = "¿Cuál de estos es tu correo electrónico registrado?";
+        questionText = "¿Cuál de estos es tu correo electrónico?";
         fakeOption1 = generateFakeEmail(correctAnswer);
         do {
           fakeOption2 = generateFakeEmail(correctAnswer);
@@ -182,7 +182,7 @@ const ClientLogin = () => {
 
   const handleSearch = async () => {
     if (!dbLoaded) {
-      showError("Database not loaded yet. Please wait.");
+      showError("Base de datos no cargada. Por favor, espera.");
       console.error("Attempted search before database was loaded.");
       return;
     }
@@ -193,11 +193,11 @@ const ClientLogin = () => {
         setSearchResults(results);
         setStep("select");
       } else {
-        showError("No se encontraron coincidencias. Intenta con otro nombre o número.");
+        showError("No encontramos coincidencias. Intenta otro nombre o número.");
       }
     } catch (error: any) {
       console.error("Error searching for customer:", error);
-      showError(error.message || "Ocurrió un error al buscar el cliente.");
+      showError(error.message || "Ocurrió un error al buscar.");
     } finally {
       setLoading(false);
     }
@@ -227,7 +227,7 @@ const ClientLogin = () => {
         showError("Demasiados intentos fallidos. Por favor, reinicia la búsqueda.");
         handleBackToSearch();
       } else {
-        showError(`Respuesta incorrecta. Te quedan ${MAX_KBA_ATTEMPTS - (kbaAttempts + 1)} intentos.`);
+        showError(`Respuesta incorrecta. Intentos restantes: ${MAX_KBA_ATTEMPTS - (kbaAttempts + 1)}`);
       }
     }
   };
@@ -254,7 +254,7 @@ const ClientLogin = () => {
         <h1 
           className="text-[min(8vw,4rem)] font-bold mb-8 uppercase tracking-widest"
         >
-          Chin Chin 2025 Wrapped
+          CHIN CHIN WRAPPED 2025
         </h1>
         <p 
           className="text-[min(4vw,1.5rem)] mb-8 uppercase tracking-wide"
@@ -270,7 +270,7 @@ const ClientLogin = () => {
             <Input
               id="customer-search"
               type="text"
-              placeholder="Tu nombre y apellido o cédula" // Updated placeholder
+              placeholder="Tu nombre, apellido o cédula"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               // Brutalist Input: Black background, White text, White border, no rounded corners
@@ -289,7 +289,7 @@ const ClientLogin = () => {
               className="w-full bg-white text-black font-bold py-3 px-6 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
               disabled={loading || !dbLoaded}
             >
-              {loading ? "Buscando..." : "Siguiente"} {/* Updated button text */}
+              {loading ? "Buscando..." : "Siguiente"}
             </Button>
           </div>
         )}

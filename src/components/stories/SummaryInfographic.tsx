@@ -39,7 +39,7 @@ const ComparisonText = ({ current, previous, year }: { current: number; previous
 
   return (
     <p className={cn("text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] font-bold text-center", colorClass)}>
-      {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
+      {`${isPositive ? '▲ +' : '▼ -'}${percentage.toFixed(1)}% VS. ${parseInt(year) - 1}`}
     </p>
   );
 };
@@ -105,7 +105,7 @@ export const SummaryInfographic = ({
               {customerName.toUpperCase()}
             </h1>
             <p className={cn("text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black uppercase leading-tight", textColor)}>
-              {year} WRAPPED
+              {year} ** WRAPPED**
             </p>
           </>
         )}
@@ -116,7 +116,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 1: Total Visitas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              VISITAS {year}
+              **VISITAS **{year}
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalVisits}
@@ -130,7 +130,7 @@ export const SummaryInfographic = ({
               LITROS CONSUMIDOS
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
-              {totalLiters.toFixed(1)} L
+              {totalLiters.toFixed(1)} ** L**
             </p>
             <ComparisonText current={totalLiters} previous={totalLiters2024} year={year} />
           </Block>
@@ -138,7 +138,7 @@ export const SummaryInfographic = ({
           {/* Row 2, Column 1: Top 3 Cervezas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1">
-              TUS 3 FAVORITAS
+              TU TOP 3 FAVORITAS
             </p>
             {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
               <p
@@ -148,7 +148,7 @@ export const SummaryInfographic = ({
                   idx === 0 ? "text-[3.5vw] md:text-[1.5rem] lg:text-[2rem] font-black" : "text-[2vw] md:text-[1rem] lg:text-[1.2rem] font-bold"
                 )}
               >
-                {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
+                {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} ** L)**`}
               </p>
             ))}
           </Block>
@@ -163,12 +163,12 @@ export const SummaryInfographic = ({
                 
                 {/* Métrica de Soporte */}
                 <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold">
-                    {uniqueVarieties2025} Variedades Probadas
+                    {uniqueVarieties2025} ** VARIEDADES PROBADAS**
                 </p>
                 
                 {/* Comparación (Total disponible) */}
                 <p className="text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] mt-1">
-                    de un total de {totalVarietiesInDb} disponibles.
+                    **de un total de **{totalVarietiesInDb} ** DISPONIBLES.**
                 </p>
             </div>
           </Block>
@@ -187,7 +187,7 @@ export const SummaryInfographic = ({
           <Block bgColor="bg-black"> {/* Changed to bg-black */}
             <img
               src="/Logo.png"
-              alt="Chin Chin Logo"
+              alt="Logo Chin Chin"
               className="w-[15vw] max-w-[100px] p-1" // Ajustar tamaño del logo para la celda
             />
           </Block>

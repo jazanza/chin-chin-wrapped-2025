@@ -93,14 +93,14 @@ export function useDb() {
         // Static load from public/data/bbdd.db
         const response = await fetch('/data/bbdd.db');
         if (!response.ok) {
-          throw new Error(`Failed to fetch database: ${response.statusText}`);
+          throw new Error(`Fallo al cargar base de datos: ${response.statusText}`);
         }
         const buffer = await response.arrayBuffer();
         dbInstance = loadDb(new Uint8Array(buffer)); // Call the imported loadDb
         setDbLoaded(true);
-        console.log("Database loaded successfully from static path.");
+        console.log("Base de datos cargada correctamente desde ruta estática.");
       } catch (e: any) {
-        console.error("Error loading database:", e);
+        console.error("Error cargando base de datos:", e);
         setError(e.message);
       } finally {
         setLoading(false);
@@ -111,7 +111,7 @@ export function useDb() {
 
   const findCustomer = useCallback(async (searchTerm: string) => {
     if (!dbInstance) {
-      throw new Error("Database not loaded.");
+      throw new Error("Base de datos no cargada.");
     }
 
     // Normalize search term for SQL query
@@ -134,14 +134,14 @@ export function useDb() {
       const results = queryData(dbInstance, customerQuery, queryParams);
       return results; // Return all potential matches
     } catch (e: any) {
-      console.error("Error executing findCustomer query:", e);
-      throw new Error(`Failed to execute customer search query: ${e.message}. Please check database schema (Customer table, Id, Name, PhoneNumber, TaxNumber, Email columns) or search term.`);
+      console.error("Error ejecutando consulta de cliente:", e);
+      throw new Error(`Fallo al ejecutar búsqueda de cliente: ${e.message}. Verifica el esquema de la base de datos (tabla Customer, columnas Id, Name, etc.) o el término de búsqueda.`);
     }
   }, []);
 
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
-      throw new Error("Database not loaded.");
+      throw new Error("Base de datos no cargada.");
     }
     setLoading(true);
     setError(null);
@@ -297,7 +297,7 @@ export function useDb() {
         WHERE 1=1
         AND P.IsEnabled = TRUE
         ${buildExclusionClause('P')}
-        ${buildBeerCategoryFilterClause('P')}; -- This uses ALL_BEER_PRODUCT_GROUP_IDS
+        ${buildBeerCategoryFilterClause('P')};
       `;
       const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
       const totalVarietiesInDbSet = new Set<string>();
@@ -382,9 +382,9 @@ export function useDb() {
         monthlyVisits,
       };
     } catch (e: any) {
-      console.error("Error getting wrapped data:", e);
+      console.error("Error obteniendo datos Wrapped:", e);
       setError(e.message);
-      throw new Error(`Failed to retrieve wrapped data: ${e.message}. Please check database schema or customer ID.`);
+      throw new Error(`Fallo al obtener datos Wrapped: ${e.message}. Verifica el esquema de la base de datos o el ID del cliente.`);
     } finally {
       setLoading(false);
     }
@@ -392,7 +392,7 @@ export function useDb() {
 
   const getAllBeerVarietiesInDb = useCallback(async () => {
     if (!dbInstance) {
-      throw new Error("Database not loaded.");
+      throw new Error("Base de datos no cargada.");
     }
 
     const buildExclusionClause = (tableAlias: string) => {

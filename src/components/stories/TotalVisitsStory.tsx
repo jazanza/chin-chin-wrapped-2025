@@ -31,7 +31,7 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
 
   return (
     <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center ${colorClass}`}>
-      {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
+      {`${isPositive ? '▲ +' : '▼ -'}${percentage.toFixed(1)}% VS. ${parseInt(year) - 1}`}
     </p>
   );
 };
@@ -41,7 +41,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
     { text: `¡${customerName.toUpperCase()},`, color: highlightColor },
     { text: "\nNOS VISITASTE...", color: textColor },
     { text: `\n${totalVisits}`, color: highlightColor },
-    { text: " VECES!", color: textColor },
+    { text: "** VECES!**", color: textColor },
   ], [customerName, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

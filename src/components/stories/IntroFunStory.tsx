@@ -21,7 +21,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [customerName]);
 
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor, sizeClass: "text-4xl" }, // H2
+    { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!`, color: highlightColor, sizeClass: "text-4xl" }, // H2
     { text: "\n\n", color: textColor, sizeClass: "" },
     { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor, sizeClass: "text-xl" }, // H3
     { text: "\n\n", color: textColor, sizeClass: "" },

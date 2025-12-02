@@ -152,7 +152,7 @@ export function useDb() {
       return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query to get all potential beer products, including 750ml, before processing
+    // Query to get all potential beer products from relevant groups (excluding 750ml for total varieties count)
     const queryForBaseNames = `
       SELECT
           P.Name AS ProductName,
@@ -162,7 +162,7 @@ export function useDb() {
           Product AS P
       WHERE
           P.IsEnabled = TRUE
-          AND P.ProductGroupId IN (34, 36, 52, 53, 40) -- Include 750ml group here as per new instruction
+          AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')}) -- Exclude 750ml (ID 40) here
           ${buildExclusionClause('P')};
     `;
 
@@ -170,16 +170,14 @@ export function useDb() {
     const uniqueBaseBeerNamesSet = new Set<string>();
 
     for (const item of rawProducts) {
-      const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-      if (volumeMl > 0) { // Only consider liquid products
-        // Apply SUBSTRING_INDEX equivalent logic in JS
-        let baseName = item.ProductName;
-        const lastDashIndex = baseName.lastIndexOf(' - ');
-        if (lastDashIndex !== -1) {
-          baseName = baseName.substring(0, lastDashIndex);
-        }
-        uniqueBaseBeerNamesSet.add(baseName);
+      // No longer filtering by volumeMl > 0 here, as ProductGroupId defines a beer variety for total count
+      // Apply SUBSTRING_INDEX equivalent logic in JS
+      let baseName = item.ProductName;
+      const lastDashIndex = baseName.lastIndexOf(' - ');
+      if (lastDashIndex !== -1) {
+        baseName = baseName.substring(0, lastDashIndex);
       }
+      uniqueBaseBeerNamesSet.add(baseName);
     }
     return Array.from(uniqueBaseBeerNamesSet).sort();
   }, []);
@@ -200,17 +198,6 @@ export function useDb() {
         const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
         return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
       };
-
-      // Helper to build the beer category filter clause for ProductGroupId
-      // This uses the ALL_BEER_PRODUCT_GROUP_IDS for initial broad filtering
-      const buildBeerCategoryFilterClause = (tableAlias: string) => {
-        if (ALL_BEER_PRODUCT_GROUP_IDS.length === 0) {
-          return "";
-        }
-        const categoryIdsSql = ALL_BEER_PRODUCT_GROUP_IDS.join(',');
-        return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
-      };
-
 
       // Metric 5: Customer Name (fetched separately for overlay)
       const customerNameQuery = `SELECT Name FROM Customer WHERE Id = ? LIMIT 1;`;
@@ -261,9 +248,8 @@ export function useDb() {
         if (liters > 0) {
           totalLiters += liters; // This includes all liquid products, including ID 40
 
-          // Only add to unique varieties set if it's a beer from the specified groups (excluding 750ml)
-          // This set is for the customer's *consumed* unique varieties, using the base name logic
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || item.ProductGroupId === 40) {
+          // Only add to customer's unique varieties set if it's a beer from the specified groups (excluding 750ml)
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) { // Exclude 750ml (ID 40) here
             let baseName = item.ProductName;
             const lastDashIndex = baseName.lastIndexOf(' - ');
             if (lastDashIndex !== -1) {

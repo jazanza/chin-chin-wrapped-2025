@@ -57,7 +57,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-4xl" }, // H2
     { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-    { text: "¡ VECES!", color: textColor, sizeClass: "text-6xl" }, // H1
+    { text: " VECES!", color: textColor, sizeClass: "text-6xl" }, // H1
     { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
     { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-base" }, // H4
   ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);

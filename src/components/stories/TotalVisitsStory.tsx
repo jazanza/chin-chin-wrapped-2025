@@ -13,7 +13,7 @@ interface TotalVisitsStoryProps {
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
   visitsPercentile: number; // NEW: customer's percentile for visits
-  mostFrequentBeerName: string; // This prop is no longer used in this component's text logic
+  // mostFrequentBeerName: string; // This prop is no longer used in this component's text logic
 }
 
 const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColor, highlightColor }: { totalVisits: number; visitsPercentile: number; textColor: string; highlightColor: string }) => {
@@ -53,7 +53,7 @@ const getVisitsIntroText = (count: number) => {
   return { top: "¡INTERESANTE!", bottom: "\nPARECE QUE ESTÁS EMPEZANDO TU CAMINO." };
 };
 
-export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, highlightColor, visitsPercentile, mostFrequentBeerName }: TotalVisitsStoryProps) => {
+export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, highlightColor, visitsPercentile }: TotalVisitsStoryProps) => {
   
   // 1. Obtener las frases dinámicas:
   const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits); // Removed mostFrequentBeerName

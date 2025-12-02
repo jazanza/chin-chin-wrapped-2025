@@ -211,7 +211,11 @@ export function useDb() {
         // Only count liters for the overall total if it's a liquid product
         if (liters > 0) {
           totalLiters += liters;
-          uniqueVarietiesSet.add(item.ProductName); // Add to unique varieties set
+          
+          // Only add to unique varieties set if it's a beer from the specified groups
+          if (BEER_PRODUCT_GROUP_IDS.includes(item.ProductGroupId)) {
+            uniqueVarietiesSet.add(item.ProductName); 
+          }
 
           // Aggregate liters for dominant category calculation (only for specified beer groups)
           if (BEER_PRODUCT_GROUP_IDS.includes(item.ProductGroupId)) {
@@ -275,16 +279,23 @@ export function useDb() {
       // Unique Varieties for customer in current year (using filtered data)
       const uniqueVarieties2025 = uniqueVarietiesSet.size; // Use the set collected above
 
-      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter)
+      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid)
       const totalUniqueProductsDbQuery = `
-        SELECT COUNT(DISTINCT P.Name) AS TotalUniqueProducts
+        SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
         FROM Product AS P
         WHERE 1=1
         ${buildExclusionClause('P')}
-        ${buildBeerCategoryFilterClause('P')}; -- APLICANDO EL FILTRO DE CATEGORÍA DE CERVEZA AQUÍ
+        ${buildBeerCategoryFilterClause('P')};
       `;
-      const totalVarietiesInDbResult = queryData(dbInstance, totalUniqueProductsDbQuery);
-      const totalVarietiesInDb = totalVarietiesInDbResult.length > 0 ? totalVarietiesInDbResult[0].TotalUniqueProducts : 0;
+      const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
+      const totalVarietiesInDbSet = new Set<string>();
+      for (const item of rawTotalVarietiesInDb) {
+        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+        if (volumeMl > 0) { // Only count if it's a liquid product
+          totalVarietiesInDbSet.add(item.ProductName);
+        }
+      }
+      const totalVarietiesInDb = totalVarietiesInDbSet.size;
 
       // Most Active Day 2025 - COUNT DISTINCT
       const mostActiveDayQuery = `

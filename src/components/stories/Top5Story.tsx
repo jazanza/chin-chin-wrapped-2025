@@ -29,7 +29,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que se está perdiendo.", color: textColor });
       segments.push({ text: "\n", color: textColor }); // Add a line break
     }
-    segments.push({ text: "10 RAZONES POR LAS VIENES A CHIN CHIN", color: highlightColor });
+    segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor });
     return segments;
   }, [top10Products, textColor, highlightColor]);
 

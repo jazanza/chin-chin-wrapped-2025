@@ -23,7 +23,11 @@ const BubbleBackground = ({ backgroundColor }: BubbleBackgroundProps) => {
     const generatedBubbles = [];
 
     for (let i = 0; i < numBubbles; i++) {
-      const size = Math.random() * (75 - 25) + 25; // Tamaño aleatorio entre 25px y 75px
+      // Tamaño aleatorio entre 25px y 75px, luego reducido en un 15%
+      const minSize = 25 * 0.85; // ~21.25px
+      const maxSize = 75 * 0.85; // ~63.75px
+      const size = Math.random() * (maxSize - minSize) + minSize; 
+      
       const left = Math.random() * 100; // Posición horizontal aleatoria (0% a 100%)
       const duration = Math.random() * (18 - 10) + 10; // Duración de animación aleatoria (10s a 18s)
       const delay = Math.random() * (10 - 0) + 0; // Retardo de inicio aleatorio (0s a 10s)

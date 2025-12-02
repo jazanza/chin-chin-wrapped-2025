@@ -145,15 +145,15 @@
       opacity: 0.1;
     }
     60% {
-      transform: translateY(-90vh); /* Sube hasta el 10% superior de la pantalla */
+      transform: translateY(-100vh); /* Sube hasta la parte superior de la pantalla */
       opacity: 0.3;
     }
     90% {
-      transform: translateY(-90vh); /* Se detiene en la "espuma" */
+      transform: translateY(-100vh); /* Se detiene en la "espuma" */
       opacity: 0.4;
     }
     100% {
-      transform: translateY(-95vh) scale(1.2); /* Pop y desaparición ligeramente por encima */
+      transform: translateY(-105vh) scale(1.2); /* Pop y desaparición ligeramente por encima */
       opacity: 0;
     }
   }

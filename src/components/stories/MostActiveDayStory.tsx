@@ -5,6 +5,7 @@ interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
   sizeClass: string; // Added for explicit size control
+  nowrap?: boolean; // NEW: Optional property to prevent wrapping
 }
 
 interface MostActiveDayStoryProps {
@@ -76,7 +77,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
     }
     return [
       // 1. Título genérico:
-      { text: "TU DÍA PREFERIDO PARA VISITARNOS SON LOS:", color: textColor, sizeClass: "text-4xl" }, // H2
+      { text: "TU DÍA PREFERIDO PARA VISITARNOS SON LOS:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
       // 2. El día activo resaltado:
       { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
     ];
@@ -87,7 +88,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass, segment.nowrap && 'whitespace-nowrap')}>
             {line}
           </span>
         ];

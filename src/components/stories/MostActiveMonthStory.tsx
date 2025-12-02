@@ -5,6 +5,7 @@ interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
   sizeClass: string; // Added for explicit size control
+  nowrap?: boolean; // NEW: Optional property to prevent wrapping
 }
 
 interface MostActiveMonthStoryProps {
@@ -71,7 +72,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
 
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "EL MES QUE MÁS NOS NECESITASTE FUE:", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: "EL MES QUE MÁS NOS NECESITASTE FUE:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
     { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
   ], [mostActiveMonth, textColor, highlightColor]);
 
@@ -80,7 +81,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass, segment.nowrap && 'whitespace-nowrap')}>
             {line}
           </span>
         ];

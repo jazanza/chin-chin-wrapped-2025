@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react';
-// import { Text } from '@react-three/drei'; // REMOVED
-// import { useThree } from '@react-three/fiber'; // REMOVED
-// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
+import { cn } from '@/lib/utils';
 
 interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
+  sizeClass: string; // Añadido para control explícito del tamaño
 }
 
 interface DominantCategoryAndVarietiesStoryProps {
   dominantBeerCategory: string;
   uniqueVarieties2025: number;
   totalVarietiesInDb: number;
-  // isPaused: boolean; // REMOVED
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
 }
@@ -54,14 +52,14 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor }, // H3
-    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor }, // H3
-    { text: "\n\nY PROBASTE ", color: textColor }, // H3
-    { text: `${uniqueVarieties2025}`, color: highlightColor }, // H3
-    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor }, // H3
-    { text: `${totalVarietiesInDb}`, color: highlightColor }, // H3
+    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor, sizeClass: "text-xl" }, // H3
+    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-xl" }, // H3
+    { text: "\n\nY PROBASTE ", color: textColor, sizeClass: "text-xl" }, // H3
+    { text: `${uniqueVarieties2025}`, color: highlightColor, sizeClass: "text-xl" }, // H3
+    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor, sizeClass: "text-xl" }, // H3
+    { text: `${totalVarietiesInDb}`, color: highlightColor, sizeClass: "text-xl" }, // H3
     // 2. Insertar la frase dinámica aquí:
-    { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor }, // H3
+    { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor, sizeClass: "text-xl" }, // H3
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {
@@ -69,7 +67,7 @@ export const DominantCategoryAndVarietiesStory = ({
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -87,7 +85,7 @@ export const DominantCategoryAndVarietiesStory = ({
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-tight`}
       >
-        <p className={`text-xl text-center`}> {/* H3 for main text block */}
+        <p className={`text-center`}> {/* Eliminado text-xl de aquí */}
           {renderedText}
         </p>
       </div>

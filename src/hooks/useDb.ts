@@ -72,11 +72,18 @@ const BEER_CATEGORY_COLORS: { [key: string]: string } = {
 const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-// Full list of beer product group IDs for general filtering (e.g., in buildBeerCategoryFilterClause)
-const ALL_BEER_PRODUCT_GROUP_IDS = [34, 36, 40, 52, 53]; // 34: Belgas, 36: Alemanas, 40: 750ml, 52: Españolas, 53: Del Mundo
+// List of beer product group IDs to be considered for unique varieties and dominant category
+// Now includes 40 for unique varieties count and dominant category calculation
+const BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT = [34, 36, 40, 52, 53];
 
-// List of beer product group IDs to be considered for unique varieties and dominant category (excluding 750ml)
-const BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT = [34, 36, 52, 53];
+// Helper to extract the base beer name by removing volume suffix (e.g., " - 330ml")
+const getBaseBeerName = (productName: string): string => {
+  const lastDashIndex = productName.lastIndexOf(' - ');
+  if (lastDashIndex !== -1) {
+    return productName.substring(0, lastDashIndex);
+  }
+  return productName;
+};
 
 
 export function useDb() {
@@ -152,7 +159,7 @@ export function useDb() {
       return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query to get all potential beer products from relevant groups (excluding 750ml for total varieties count)
+    // Query to get all potential beer products from relevant groups (now including 750ml for total varieties count)
     const queryForBaseNames = `
       SELECT
           P.Name AS ProductName,
@@ -162,7 +169,7 @@ export function useDb() {
           Product AS P
       WHERE
           P.IsEnabled = TRUE
-          AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')}) -- Exclude 750ml (ID 40) here
+          AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')}) -- Now includes 750ml (ID 40)
           ${buildExclusionClause('P')};
     `;
 
@@ -172,12 +179,7 @@ export function useDb() {
     for (const item of rawProducts) {
       // No longer filtering by volumeMl > 0 here, as ProductGroupId defines a beer variety for total count
       // Apply SUBSTRING_INDEX equivalent logic in JS
-      let baseName = item.ProductName;
-      const lastDashIndex = baseName.lastIndexOf(' - ');
-      if (lastDashIndex !== -1) {
-        baseName = baseName.substring(0, lastDashIndex);
-      }
-      uniqueBaseBeerNamesSet.add(baseName);
+      uniqueBaseBeerNamesSet.add(getBaseBeerName(item.ProductName)); // Use the new helper
     }
     return Array.from(uniqueBaseBeerNamesSet).sort();
   }, []);
@@ -248,17 +250,12 @@ export function useDb() {
         if (liters > 0) {
           totalLiters += liters; // This includes all liquid products, including ID 40
 
-          // Only add to customer's unique varieties set if it's a beer from the specified groups (excluding 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) { // Exclude 750ml (ID 40) here
-            let baseName = item.ProductName;
-            const lastDashIndex = baseName.lastIndexOf(' - ');
-            if (lastDashIndex !== -1) {
-              baseName = baseName.substring(0, lastDashIndex);
-            }
-            customerUniqueBeerNamesSet.add(baseName); 
+          // Only add to customer's unique varieties set if it's a beer from the specified groups (now including 750ml)
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
+            customerUniqueBeerNamesSet.add(getBaseBeerName(item.ProductName)); // Use the new helper
           }
 
-          // Aggregate liters for dominant category calculation (only for specified beer groups, excluding 750ml)
+          // Aggregate liters for dominant category calculation (now including 750ml)
           if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
             categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
           }
@@ -266,7 +263,7 @@ export function useDb() {
           // For individual product display, use the more granular categorization
           const category = categorizeBeer(item.ProductName);
           productLiters.push({
-            name: item.ProductName,
+            name: getBaseBeerName(item.ProductName), // Apply getBaseBeerName here
             liters: liters,
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
           });
@@ -278,7 +275,7 @@ export function useDb() {
       let maxLiters = 0;
       let dominantGroupId: number | null = null;
 
-      for (const groupId of BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT) { // Loop through groups relevant for dominance
+      for (const groupId of BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT) { // Loop through groups relevant for dominance (now including 750ml)
         if (categoryVolumesByGroupId[groupId] > maxLiters) {
           maxLiters = categoryVolumesByGroupId[groupId];
           dominantGroupId = groupId;
@@ -290,6 +287,7 @@ export function useDb() {
         switch (dominantGroupId) {
           case 34: dominantBeerCategory = "Cervezas Belgas"; break;
           case 36: dominantBeerCategory = "Cervezas Alemanas"; break;
+          case 40: dominantBeerCategory = "Cervezas de 750ml"; break; // Added for 750ml
           case 52: dominantBeerCategory = "Cervezas Españolas"; break;
           case 53: dominantBeerCategory = "Cervezas del Mundo"; break;
           default: dominantBeerCategory = "Categoría de Cerveza Dominante";
@@ -329,7 +327,7 @@ export function useDb() {
       const uniqueVarieties2025 = customerUniqueBeerNamesSet.size; // Use the set collected above
       const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesSet); // Convert to array for comparison
 
-      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid, AND EXCLUDING 750ml)
+      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid, AND INCLUDING 750ml)
       const allDbUniqueBeerNames = await getAllBeerVarietiesInDb(); // Call the helper function
 
       const totalVarietiesInDb = allDbUniqueBeerNames.length; // Update count based on the array

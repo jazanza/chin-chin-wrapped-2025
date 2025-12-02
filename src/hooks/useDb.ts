@@ -186,6 +186,7 @@ export function useDb() {
         WHERE
             D.CustomerId = ?
             AND STRFTIME('%Y', D.Date) = ?
+            AND P.IsEnabled = TRUE -- ADDED: Filter by IsEnabled
             ${buildExclusionClause('P')}
         GROUP BY
             P.Id, P.Name, P.Description, P.ProductGroupId -- Group by ProductGroupId as well
@@ -284,6 +285,7 @@ export function useDb() {
         SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
         FROM Product AS P
         WHERE 1=1
+        AND P.IsEnabled = TRUE -- ADDED: Filter by IsEnabled
         ${buildExclusionClause('P')}
         ${buildBeerCategoryFilterClause('P')};
       `;
@@ -402,6 +404,7 @@ export function useDb() {
       SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
       FROM Product AS P
       WHERE 1=1
+      AND P.IsEnabled = TRUE -- ADDED: Filter by IsEnabled
       ${buildExclusionClause('P')}
       ${buildBeerCategoryFilterClause('P')};
     `;

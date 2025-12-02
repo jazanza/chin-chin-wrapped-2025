@@ -105,7 +105,7 @@ export const SummaryInfographic = ({
               {customerName.toUpperCase()}
             </h1>
             <p className={cn("text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black uppercase leading-tight", textColor)}>
-              ¿QUÉ TAN MAL ESTAMOS? {year} WRAPPED
+              CHIN CHIN WRAPPED {year}
             </p>
           </>
         )}

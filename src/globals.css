@@ -141,15 +141,15 @@
   /* New bubble animation keyframes */
   @keyframes bubble-up {
     0% {
-      transform: translateY(100vh) scale(0);
+      transform: translateY(0) scale(0); /* Start at its initial 'bottom' position */
       opacity: 0.1;
     }
     95% {
-      transform: translateY(0vh) scale(1);
+      transform: translateY(-100vh) scale(1); /* Move UP by 100% of viewport height */
       opacity: 0.3;
     }
     100% {
-      transform: translateY(0vh) scale(1.05);
+      transform: translateY(-100vh) scale(1.05); /* Stop at the top, slightly larger */
       opacity: 0.4;
     }
   }

@@ -679,7 +679,7 @@ export function useDb() {
       const allMonthlyVisitsResult = queryData(dbInstance, allMonthlyVisitsQuery, [customerId, currentYear]);
       const monthlyVisits = allMonthlyVisitsResult.map((row: any) => ({
         month: MONTH_NAMES[parseInt(row.MonthOfYear, 10) - 1],
-        count: row.DayCount, // Corrected to DayCount as per schema
+        count: row.MonthCount, // Corrected from row.DayCount to row.MonthCount
       }));
 
       // --- Calculate Patrón de Consumo (Concentration) ---

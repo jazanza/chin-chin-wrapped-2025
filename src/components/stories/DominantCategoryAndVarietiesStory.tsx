@@ -27,11 +27,11 @@ export const DominantCategoryAndVarietiesStory = ({
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "TUS CERVEZAS\nFAVORITAS SON...", color: textColor },
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
-    { text: "\n\nY PROBASTE **", color: textColor },
+    { text: "\n\nY PROBASTE ", color: textColor },
     { text: `${uniqueVarieties2025}`, color: highlightColor },
-    { text: "** DE **", color: textColor },
+    { text: " DE ", color: textColor },
     { text: `${totalVarietiesInDb}`, color: highlightColor },
-    { text: "** VARIEDADES!**", color: textColor },
+    { text: " VARIEDADES!", color: textColor },
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

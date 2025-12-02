@@ -9,16 +9,6 @@ import { Loader2, Download } from "lucide-react";
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
 import { cn } from '@/lib/utils';
 
-// Import story components (now all 2D)
-import { IntroFunStory } from "@/components/stories/IntroFunStory";
-import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
-import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
-import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
-import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory";
-import { Top5Story } from "@/components/stories/Top5Story";
-import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
-import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; // This will become a 2D component
-
 // Inline WrappedOverlay logic
 interface WrappedOverlayProps {
   customerName: string;
@@ -37,7 +27,7 @@ const WrappedOverlay = ({ customerName, year, textColor }: WrappedOverlayProps) 
       <p
         className={cn("text-[min(3vw,1.8rem)] font-bold uppercase tracking-wide", textColor)} // Use textColor here
       >
-        {year} ** WRAPPED**
+        {year} WRAPPED
       </p>
     </div>
   );

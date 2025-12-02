@@ -41,7 +41,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
     { text: `¡${customerName.toUpperCase()},`, color: highlightColor },
     { text: "\nNOS VISITASTE...", color: textColor },
     { text: `\n${totalVisits}`, color: highlightColor },
-    { text: "** VECES!**", color: textColor },
+    { text: " VECES!", color: textColor },
   ], [customerName, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

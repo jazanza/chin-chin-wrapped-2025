@@ -105,7 +105,7 @@ export const SummaryInfographic = ({
               {customerName.toUpperCase()}
             </h1>
             <p className={cn("text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black uppercase leading-tight", textColor)}>
-              {year} ** WRAPPED**
+              {year} WRAPPED
             </p>
           </>
         )}
@@ -116,7 +116,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 1: Total Visitas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              **VISITAS **{year}
+              VISITAS {year}
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalVisits}
@@ -130,7 +130,7 @@ export const SummaryInfographic = ({
               LITROS CONSUMIDOS
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
-              {totalLiters.toFixed(1)} ** L**
+              {totalLiters.toFixed(1)} L
             </p>
             <ComparisonText current={totalLiters} previous={totalLiters2024} year={year} />
           </Block>
@@ -148,7 +148,7 @@ export const SummaryInfographic = ({
                   idx === 0 ? "text-[3.5vw] md:text-[1.5rem] lg:text-[2rem] font-black" : "text-[2vw] md:text-[1rem] lg:text-[1.2rem] font-bold"
                 )}
               >
-                {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} ** L)**`}
+                {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
               </p>
             ))}
           </Block>
@@ -163,12 +163,12 @@ export const SummaryInfographic = ({
                 
                 {/* Métrica de Soporte */}
                 <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold">
-                    {uniqueVarieties2025} ** VARIEDADES PROBADAS**
+                    {uniqueVarieties2025} VARIEDADES PROBADAS
                 </p>
                 
                 {/* Comparación (Total disponible) */}
                 <p className="text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] mt-1">
-                    **de un total de **{totalVarietiesInDb} ** DISPONIBLES.**
+                    de un total de {totalVarietiesInDb} DISPONIBLES.
                 </p>
             </div>
           </Block>

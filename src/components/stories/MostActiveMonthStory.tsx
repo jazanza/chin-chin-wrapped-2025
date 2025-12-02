@@ -52,7 +52,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
         {monthlyVisits.length > 0 ? (
           monthlyVisits.map((data, idx) => (
             <p key={idx} className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-              {`${data.month}: ${data.count} ** VISITAS**`}
+              {`${data.month}: ${data.count} VISITAS`}
             </p>
           ))
         ) : (

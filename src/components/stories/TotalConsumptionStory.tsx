@@ -15,24 +15,21 @@ interface TotalConsumptionStoryProps {
 }
 
 const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColor, highlightColor, mostFrequentBeerName }: { totalLiters: number; litersPercentile: number; textColor: string; highlightColor: string; mostFrequentBeerName: string }) => {
-  const beerName = mostFrequentBeerName.toUpperCase();
+  const upperBeerName = mostFrequentBeerName.toUpperCase();
   let wittyPhrase = "";
 
   if (litersPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tu consumo.";
-  } else if (litersPercentile >= 95) { // Top 5%
-      if (totalLiters >= 150) { // Cliente TITÁN
-          wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de ${beerName}. Podrías llenar nuestra piscina con tu consumo.`;
-      } else {
-          // Cliente Destacado, pero no Leyenda (ej: 14.7 Litros)
-          wittyPhrase = `¡Un campeón! Eres parte del Top 5% de consumidores, superando al ${litersPercentile.toFixed(0)}% de la comunidad con tu pasión por ${beerName}.`;
-      }
-  } else if (litersPercentile >= 75) {
-    wittyPhrase = `Tu consumo te ubica en el Top 25%. Tienes buen ritmo y siempre con tu favorita: ${beerName}.`;
-  } else if (litersPercentile >= 50) {
-    wittyPhrase = `Estás por encima del cliente promedio. Tu consumo de ${beerName} te pone en la mitad superior.`;
-  } else { // 0% - 49%
-    wittyPhrase = `Tienes un consumo moderado. ¡Aún tienes mucho tiempo para probar más ${beerName} y subir en el ranking!`;
+  } else if (litersPercentile >= 95 && totalLiters >= 150) {
+      wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de ${upperBeerName}. Podrías llenar nuestra piscina con tu consumo.`;
+  } else if (litersPercentile >= 95 && totalLiters >= 100) {
+      wittyPhrase = `¡Consumo Destacado! Eres parte del Top 5% de consumidores, superando al ${litersPercentile.toFixed(0)}% de la comunidad con tu pasión por ${upperBeerName}.`;
+  } else if (litersPercentile >= 75 && totalLiters >= 50) {
+    wittyPhrase = `¡Estás en el Top 25% de consumidores! Demuestras un buen ritmo y siempre con tu favorita: ${upperBeerName}.`;
+  } else if (litersPercentile >= 50 && totalLiters >= 20) {
+    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Claramente, disfrutas mucho tu ${upperBeerName}!`;
+  } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
+    wittyPhrase = `Tienes un consumo moderado de ${totalLiters.toFixed(1)} litros. ¡Aún tienes tiempo para probar más ${upperBeerName} y subir en el ranking!`;
   }
 
   return (

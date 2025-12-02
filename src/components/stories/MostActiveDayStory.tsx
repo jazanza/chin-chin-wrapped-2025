@@ -18,17 +18,17 @@ interface MostActiveDayStoryProps {
 const getDaySpecificWittyRemark = (day: string) => {
     switch (day) {
         case 'Martes':
-            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes para ti..." };
+            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes para ti. Eres un verdadero pionero que evita las multitudes y busca la primicia." };
         case 'Miércoles':
-            return { title: "¡ROMPE MITADES! 🎯", remark: "Mitad de semana es mejor que fin de semana..." };
+            return { title: "¡ROMPE MITADES! 🎯", remark: "Mitad de semana es mejor que fin de semana. Celebras los pequeños logros y nos visitas cuando más lo necesitas." };
         case 'Jueves':
-            return { title: "¡PRE-FIN DE SEMANA! 🚀", remark: "Te anticipas a todos..." };
+            return { title: "¡PRE-FIN DE SEMANA! 🚀", remark: "Te anticipas a todos. Eres el insider que prueba las etiquetas antes de que se agoten el viernes." };
         case 'Viernes':
-            return { title: "¡ES OFICIAL! 🎉", remark: "El fin de semana comienza el viernes..." };
+            return { title: "¡ES OFICIAL! 🎉", remark: "El fin de semana comienza el viernes, y tú lo confirmas. ¡Sabes dónde está la fiesta!" };
         case 'Sábado':
-            return { title: "¡DÍA DE GLORIA! 🏆", remark: "El sábado es tu campo de juego..." };
+            return { title: "¡DÍA DE GLORIA! 🏆", remark: "El sábado es tu campo de juego. Coincides con la mayoría, porque ese día Chin Chin es el lugar para estar." };
         case 'Domingo':
-            return { title: "¡CIERRE DE ORO! 🧘", remark: "Tu ritual de domingo es perfecto..." };
+            return { title: "¡CIERRE DE ORO! 🧘", remark: "Tu ritual de domingo es perfecto. Cierras la semana con la mejor compañía y el mejor lúpulo." };
         default: // Esto cubrirá 'Lunes' o cualquier valor inesperado
             return { title: "DÍA MISTERIOSO 👻", remark: "Tuviste un día activo que nadie esperaba..." };
     }
@@ -47,9 +47,9 @@ const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, te
   let comparisonPhrase = "";
 
   if (mostActiveDay === mostPopularCommunityDay) {
-    comparisonPhrase = `Coincides con la tendencia de la comunidad.`;
+    comparisonPhrase = `Coincides con el resto de clientes, seguro ya reconoces algunas caras.`;
   } else {
-    comparisonPhrase = `Mientras la mayoría prefiere el ${mostPopularCommunityDay}, tú marcas tu propio ritmo.`;
+    comparisonPhrase = `Mientras la mayoría prefiere el ${mostPopularCommunityDay}, tú marcas tu propio estilo.`;
   }
 
   return (

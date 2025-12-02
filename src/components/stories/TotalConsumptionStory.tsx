@@ -1,8 +1,5 @@
 import React, { useMemo } from 'react';
-// import { WrappedMeter } from '../WrappedMeter'; // REMOVED
-// import { Text } from '@react-three/drei'; // REMOVED
-// import { useThree } from '@react-three/fiber'; // REMOVED
-// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
+import { cn } from '@/lib/utils';
 
 interface TextSegment {
   text: string;
@@ -11,26 +8,36 @@ interface TextSegment {
 
 interface TotalConsumptionStoryProps {
   totalLiters: number;
-  totalLiters2024: number; // Added for comparison
-  // isPaused: boolean; // REMOVED
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
+  litersPercentile: number; // NEW: customer's percentile for liters
 }
 
-const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
-  // Modificación: No renderizar si el valor 'previous' es nulo, indefinido o menor o igual a cero.
-  if (previous == null || previous <= 0) { 
-    return null; 
+const CommunityComparisonText = ({ litersPercentile, textColor, highlightColor }: { litersPercentile: number; textColor: string; highlightColor: string }) => {
+  if (litersPercentile === 0) {
+    return (
+      <p className={cn("text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center", textColor)}>
+        No hay suficientes datos de la comunidad para comparar tu consumo.
+      </p>
+    );
   }
 
-  const diff = current - previous;
-  const percentage = (diff / previous) * 100;
-  const isPositive = percentage >= 0;
-  const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red
+  const topPercentage = 100 - litersPercentile;
+  let wittyPhrase = "";
+
+  if (topPercentage <= 5) {
+    wittyPhrase = `¡Eres nuestro Campeón Cervecero! Solo el ${topPercentage.toFixed(0)}% de nuestros clientes bebe más que tú.`;
+  } else if (topPercentage <= 25) {
+    wittyPhrase = `¡Estás en el top 25% de nuestros clientes más bebedores! Un verdadero conocedor.`;
+  } else if (topPercentage <= 50) {
+    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Sigue así!`;
+  } else {
+    wittyPhrase = `Tu consumo te ubica por debajo de la mitad de nuestros clientes. ¡Necesitas más práctica y más visitas a Chin Chin!`;
+  }
 
   return (
-    <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center ${colorClass}`}>
-      {`${isPositive ? '▲ +' : '▼ -'}${percentage.toFixed(1)}% VS. ${parseInt(year) - 1}`}
+    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+      {wittyPhrase}
     </p>
   );
 };
@@ -44,7 +51,7 @@ const getLitersReaction = (liters: number): string => {
   return "¿Seguro que no te confundiste de Wrapped? No mentira, sabemos que lo harás mejor el 2026.";
 };
 
-export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor, highlightColor }: TotalConsumptionStoryProps) => {
+export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
     { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor },
   ], [textColor]);
@@ -70,7 +77,6 @@ export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor,
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
-      {/* AnimatedBackgroundLines REMOVED */}
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
@@ -86,13 +92,11 @@ export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor,
           {volumeReaction}
         </p>
       </div>
-      <ComparisonText
-        current={totalLiters}
-        previous={totalLiters2024}
-        year="2025" // Assuming current year is 2025
+      <CommunityComparisonText
+        litersPercentile={litersPercentile}
         textColor={textColor}
+        highlightColor={highlightColor}
       />
-      {/* WrappedMeter REMOVED, replaced by simple text display */}
     </div>
   );
 };

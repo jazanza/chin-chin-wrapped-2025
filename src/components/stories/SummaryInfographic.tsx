@@ -23,6 +23,7 @@ interface SummaryInfographicProps {
   mostActiveMonth: string;
   textColor: string; // Passed as Tailwind class color
   highlightColor: string; // Passed as Tailwind class color
+  dynamicTitle: string; // NEW: Dynamic title for the customer
 }
 
 // Helper for comparison text and arrow (2D HTML/CSS version)
@@ -85,6 +86,7 @@ export const SummaryInfographic = ({
   mostActiveMonth,
   textColor, // Keep for main title, but ignore for blocks
   highlightColor, // Keep for main title, but ignore for blocks
+  dynamicTitle, // NEW
 }: SummaryInfographicProps) => {
 
   const [isTitleTyped, setIsTitleTyped] = useState(false); // Simulate typing for the main title
@@ -102,10 +104,10 @@ export const SummaryInfographic = ({
         {isTitleTyped && (
           <>
             <h1 className={cn("text-[6vw] md:text-[3rem] lg:text-[4rem] font-black uppercase leading-tight", highlightColor)}>
-              {customerName.toUpperCase()}
+              {dynamicTitle.toUpperCase()} {/* Use dynamicTitle here */}
             </h1>
             <p className={cn("text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black uppercase leading-tight", textColor)}>
-              CHIN CHIN WRAPPED {year}
+              {customerName.toUpperCase()} WRAPPED {year}
             </p>
           </>
         )}

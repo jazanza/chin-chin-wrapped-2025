@@ -405,6 +405,53 @@ export function useDb() {
     return queryData(dbInstance, query, [year]);
   }, []);
 
+  // New: Get first beer details for the year
+  const getFirstBeerDetails = useCallback(async (customerId: number, year: string) => {
+    if (!dbInstance) throw new Error("Base de datos no cargada.");
+
+    const buildExclusionClause = (tableAlias: string) => {
+      if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) return "";
+      const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
+      return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
+    };
+
+    const query = `
+      SELECT
+          P.Name AS ProductName,
+          D.Date AS DocumentDate,
+          DI.Quantity AS Quantity
+      FROM
+          Document AS D
+      INNER JOIN
+          DocumentItem AS DI ON D.Id = DI.DocumentId
+      INNER JOIN
+          Product AS P ON DI.ProductId = P.Id
+      WHERE
+          D.CustomerId = ?
+          AND STRFTIME('%Y', D.Date) = ?
+          ${buildExclusionClause('P')}
+          AND (
+              (
+                  P.IsEnabled = TRUE
+                  AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
+              )
+              OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
+          )
+      ORDER BY
+          D.Date ASC
+      LIMIT 1;
+    `;
+    const result = queryData(dbInstance, query, [customerId, year]);
+    if (result.length > 0) {
+      return {
+        name: getBaseBeerName(result[0].ProductName),
+        date: result[0].DocumentDate,
+        quantity: result[0].Quantity,
+      };
+    }
+    return null;
+  }, [getBaseBeerName]);
+
 
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
@@ -632,7 +679,7 @@ export function useDb() {
       const allMonthlyVisitsResult = queryData(dbInstance, allMonthlyVisitsQuery, [customerId, currentYear]);
       const monthlyVisits = allMonthlyVisitsResult.map((row: any) => ({
         month: MONTH_NAMES[parseInt(row.MonthOfYear, 10) - 1],
-        count: row.MonthCount,
+        count: row.DayCount, // Corrected to DayCount as per schema
       }));
 
       // --- Calculate Patrón de Consumo (Concentration) ---
@@ -676,6 +723,18 @@ export function useDb() {
 
       const palateCategory = { concentration, rarity };
 
+      // --- Calculate Dynamic Title ---
+      let dynamicTitle = "Tu Título Cervecero"; // Default
+      if (palateCategory.concentration === 'Fiel' && palateCategory.rarity === 'Nicho') {
+        dynamicTitle = "El Monje Cervecero";
+      } else if (palateCategory.concentration === 'Explorador' && palateCategory.rarity === 'Nicho') {
+        dynamicTitle = "El Catador Global";
+      } else if (palateCategory.concentration === 'Fiel' && palateCategory.rarity === 'Popular') {
+        dynamicTitle = "El Inquebrantable";
+      } else if (palateCategory.concentration === 'Explorador' && palateCategory.rarity === 'Popular') {
+        dynamicTitle = "El Explorador Sociable";
+      }
+
       // --- Community Comparisons ---
       const allCustomerLiters = await getAllCustomerLiters(currentYear);
       const litersPercentile = calculatePercentile(allCustomerLiters, totalLiters);
@@ -696,6 +755,9 @@ export function useDb() {
         count: row.MonthCount,
       }));
       const mostPopularCommunityMonth = communityMonthlyVisits.reduce((prev, current) => (prev.count > current.count ? prev : current), { month: "N/A", count: 0 }).month;
+
+      // --- First Beer of the Year ---
+      const firstBeerDetails = await getFirstBeerDetails(customerId, currentYear);
 
 
       return {
@@ -720,6 +782,8 @@ export function useDb() {
         visitsPercentile, // New: customer's percentile for visits
         mostPopularCommunityDay, // New: community's most popular day
         mostPopularCommunityMonth, // New: community's most popular month
+        dynamicTitle, // New: dynamic title based on palate
+        firstBeerDetails, // New: first beer of the year
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);
@@ -728,7 +792,7 @@ export function useDb() {
     } finally {
       setLoading(false);
     }
-  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution, getAllCustomerLiters, getAllCustomerVisits, getCommunityDailyVisits, getCommunityMonthlyVisits]);
+  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution, getAllCustomerLiters, getAllCustomerVisits, getCommunityDailyVisits, getCommunityMonthlyVisits, getFirstBeerDetails]);
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

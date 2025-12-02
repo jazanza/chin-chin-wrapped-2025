@@ -11,9 +11,27 @@ interface MostActiveDayStoryProps {
   dailyVisits: { day: string; count: number }[]; // New prop for daily visits
   textColor: string;
   highlightColor: string;
+  mostPopularCommunityDay: string; // NEW: community's most popular day
 }
 
-export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, highlightColor }: MostActiveDayStoryProps) => {
+const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, textColor, highlightColor }: { mostActiveDay: string; mostPopularCommunityDay: string; textColor: string; highlightColor: string }) => {
+  let wittyPhrase = "";
+  if (mostActiveDay === "N/A") {
+    wittyPhrase = "No hay suficientes datos para determinar tu día más activo.";
+  } else if (mostActiveDay === mostPopularCommunityDay) {
+    wittyPhrase = `¡Como la mayoría, esperas al ${mostActiveDay} para descorchar! Eres muy predecible.`;
+  } else {
+    wittyPhrase = `Mientras el mundo espera, tu día más activo es el ${mostActiveDay}. ¡Eres un verdadero insider de la semana!`;
+  }
+
+  return (
+    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+      {wittyPhrase}
+    </p>
+  );
+};
+
+export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, highlightColor, mostPopularCommunityDay }: MostActiveDayStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "TU DÍA FAVORITO\nPARA VISITARNOS FUE...", color: textColor },
     { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor },
@@ -72,6 +90,12 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
           </p>
         )}
       </div>
+      <CommunityDayComparisonText
+        mostActiveDay={mostActiveDay}
+        mostPopularCommunityDay={mostPopularCommunityDay}
+        textColor={textColor}
+        highlightColor={highlightColor}
+      />
     </div>
   );
 };

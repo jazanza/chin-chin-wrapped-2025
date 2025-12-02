@@ -1,7 +1,5 @@
 import React, { useMemo } from 'react';
-// import { Text } from '@react-three/drei'; // REMOVED
-// import { useThree } from '@react-three/fiber'; // REMOVED
-// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
+import { cn } from '@/lib/utils';
 
 interface TextSegment {
   text: string;
@@ -12,26 +10,34 @@ interface TotalVisitsStoryProps {
   customerName: string;
   year: string;
   totalVisits: number;
-  totalVisits2024: number;
-  // isPaused: boolean; // REMOVED
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
+  visitsPercentile: number; // NEW: customer's percentile for visits
 }
 
-const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
-  // Modificación: No renderizar si el valor 'previous' es nulo, indefinido o menor o igual a cero.
-  if (previous == null || previous <= 0) { 
-    return null; 
+const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColor, highlightColor }: { totalVisits: number; visitsPercentile: number; textColor: string; highlightColor: string }) => {
+  if (visitsPercentile === 0) {
+    return (
+      <p className={cn("text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center", textColor)}>
+        No hay suficientes datos de la comunidad para comparar tus visitas.
+      </p>
+    );
   }
 
-  const diff = current - previous;
-  const percentage = (diff / previous) * 100;
-  const isPositive = percentage >= 0;
-  const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red
+  let wittyPhrase = "";
+  if (visitsPercentile >= 95) { // Top 5%
+    wittyPhrase = `¡Felicidades! Eres oficialmente uno de nuestros clientes más fieles, superando al ${visitsPercentile.toFixed(0)}% de la comunidad.`;
+  } else if (visitsPercentile >= 75) {
+    wittyPhrase = `¡Estás en el top 25% de nuestros clientes más frecuentes! Un verdadero habitué.`;
+  } else if (visitsPercentile >= 50) {
+    wittyPhrase = `Tus visitas te ubican en la mitad superior de nuestros clientes. ¡Nos encanta verte!`;
+  } else {
+    wittyPhrase = `Tus visitas te ubican por debajo de la mitad de nuestros clientes. ¡Te esperamos más seguido!`;
+  }
 
   return (
-    <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center ${colorClass}`}>
-      {`${isPositive ? '▲ +' : '▼ -'}${percentage.toFixed(1)}% VS. ${parseInt(year) - 1}`}
+    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+      {wittyPhrase}
     </p>
   );
 };
@@ -47,7 +53,7 @@ const getVisitsIntroText = (count: number) => {
   return { top: `¡INTERESANTE!`, bottom: `\nNOS VISITASTE:` };
 };
 
-export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, textColor, highlightColor }: TotalVisitsStoryProps) => {
+export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, highlightColor, visitsPercentile }: TotalVisitsStoryProps) => {
   
   // 1. Obtener las frases dinámicas:
   const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits);
@@ -79,7 +85,6 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-      {/* AnimatedBackgroundLines REMOVED */}
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-4`}
       >
@@ -87,11 +92,11 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
           {renderedText}
         </p>
       </div>
-      <ComparisonText
-        current={totalVisits}
-        previous={totalVisits2024}
-        year={year}
+      <CommunityVisitsComparisonText
+        totalVisits={totalVisits}
+        visitsPercentile={visitsPercentile}
         textColor={textColor}
+        highlightColor={highlightColor}
       />
     </div>
   );

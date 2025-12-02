@@ -11,9 +11,27 @@ interface MostActiveMonthStoryProps {
   monthlyVisits: { month: string; count: number }[]; // New prop for monthly visits
   textColor: string;
   highlightColor: string;
+  mostPopularCommunityMonth: string; // NEW: community's most popular month
 }
 
-export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor }: MostActiveMonthStoryProps) => {
+const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMonth, textColor, highlightColor }: { mostActiveMonth: string; mostPopularCommunityMonth: string; textColor: string; highlightColor: string }) => {
+  let wittyPhrase = "";
+  if (mostActiveMonth === "N/A") {
+    wittyPhrase = "No hay suficientes datos para determinar tu mes más activo.";
+  } else if (mostActiveMonth === mostPopularCommunityMonth) {
+    wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes más visitado! No nos sorprende.`;
+  } else {
+    wittyPhrase = `Ignoraste las tendencias y nos visitaste en ${mostActiveMonth}. ¡Eres un pionero de la temporada!`;
+  }
+
+  return (
+    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+      {wittyPhrase}
+    </p>
+  );
+};
+
+export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE...", color: textColor },
     { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor },
@@ -61,6 +79,12 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
           </p>
         )}
       </div>
+      <CommunityMonthComparisonText
+        mostActiveMonth={mostActiveMonth}
+        mostPopularCommunityMonth={mostPopularCommunityMonth}
+        textColor={textColor}
+        highlightColor={highlightColor}
+      />
     </div>
   );
 };

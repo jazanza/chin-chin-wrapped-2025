@@ -137,4 +137,22 @@
   .card-stack > *:nth-child(3) {
     transform: rotate(-2deg) scale(1.07);
   }
+
+  /* New bubble animation keyframes */
+  @keyframes bubble-up {
+    0% {
+      transform: translateY(100vh) scale(0);
+      opacity: 0;
+    }
+    20% {
+      opacity: 0.1;
+    }
+    80% {
+      opacity: 0.2;
+    }
+    100% {
+      transform: translateY(-100vh) scale(1.2);
+      opacity: 0;
+    }
+  }
 }

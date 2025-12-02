@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
 import { cn } from '@/lib/utils';
+import BubbleBackground from "@/components/BubbleBackground"; // Importar el nuevo componente
 
 // Import story components
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
@@ -392,6 +393,9 @@ const WrappedDashboard = () => {
   return (
     <div className={`w-screen h-screen relative font-sans flex items-center justify-center ${currentBackgroundColor}`}>
       <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex items-center justify-center">
+        {/* Bubble Background */}
+        <BubbleBackground backgroundColor={currentBackgroundColor} />
+
         {/* Story Progress Bar */}
         <StoryProgressBar
           currentStoryIndex={currentStoryIndex}

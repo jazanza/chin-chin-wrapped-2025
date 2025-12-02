@@ -84,11 +84,26 @@ const FORCED_INCLUDED_VARIETY_IDS = [
 
 // Helper to extract the base beer name by removing volume suffix (e.g., " - 330ml")
 const getBaseBeerName = (productName: string): string => {
+  // Expresión Regular robusta para eliminar sufijos de volumen o formato comunes.
+  // Busca: - [número]ml, - [número] ml, - [número]ml, - lata, - botella, etc.
+  // Se asume que el nombre base siempre viene ANTES del último descriptor de formato/volumen.
+  
+  const volumeSuffixRegex = /\s?-\s?((\d+\s?m?l)|(\d+m?l)|lata|botella|caña|pinta|litro|x\d+|pack|\d+pk|sin\s?alcohol)$/i;
+  
+  // Aplicar la expresión regular de forma iterativa si es necesario o simplificarla al patrón de formato:
+  let baseName = productName;
+  
+  // Buscar el último patrón de volumen/formato conocido y recortar. 
+  // El patrón ' - [volumen]' sigue siendo el más confiable, pero si hay que buscarlo, debemos ser tolerantes:
   const lastDashIndex = productName.lastIndexOf(' - ');
   if (lastDashIndex !== -1) {
-    return productName.substring(0, lastDashIndex);
+      baseName = productName.substring(0, lastDashIndex).trim();
   }
-  return productName;
+  
+  // Si el patrón ' - ' es inconsistente, se usará la expresión regular como fallback para eliminar cualquier volumen al final:
+  baseName = baseName.replace(volumeSuffixRegex, '').trim();
+  
+  return baseName;
 };
 
 

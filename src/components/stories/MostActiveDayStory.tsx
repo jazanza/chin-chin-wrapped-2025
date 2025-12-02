@@ -18,15 +18,15 @@ interface MostActiveDayStoryProps {
 const getDaySpecificWittyRemark = (day: string) => {
     switch (day) {
         case 'Martes':
-            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes para ti. Eres un verdadero pionero que evita las multitudes y busca la primicia." };
+            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes para ti. Eres un verdadero pionero que evita las multitudes." };
         case 'Miércoles':
             return { title: "¡ROMPE MITADES! 🎯", remark: "Mitad de semana es mejor que fin de semana. Celebras los pequeños logros y nos visitas cuando más lo necesitas." };
         case 'Jueves':
-            return { title: "¡PRE-FIN DE SEMANA! 🚀", remark: "Te anticipas a todos. Eres el insider que prueba las etiquetas antes de que se agoten el viernes." };
+            return { title: "¡PRE-FIN DE SEMANA! 🚀", remark: "Te anticipas a todos. Eres el insider que prueba las cervezas antes de que se agoten el viernes." };
         case 'Viernes':
-            return { title: "¡ES OFICIAL! 🎉", remark: "El fin de semana comienza el viernes, y tú lo confirmas. ¡Sabes dónde está la fiesta!" };
+            return { title: "¡SAN VIERNES! 🎉", remark: "El fin de semana comienza y tú garganta lo sabe." };
         case 'Sábado':
-            return { title: "¡DÍA DE GLORIA! 🏆", remark: "El sábado es tu campo de juego. Coincides con la mayoría, porque ese día Chin Chin es el lugar para estar." };
+            return { title: "¡DÍA DE PLACER! 🏆", remark: "El sábado es tu campo de juego. Coincides con la mayoría, porque ese día Chin Chin es el lugar para estar." };
         case 'Domingo':
             return { title: "¡CIERRE DE ORO! 🧘", remark: "Tu ritual de domingo es perfecto. Cierras la semana con la mejor compañía y el mejor lúpulo." };
         default: // Esto cubrirá 'Lunes' o cualquier valor inesperado

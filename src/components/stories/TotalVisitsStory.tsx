@@ -39,12 +39,12 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
 // Definir esta función FUERA del componente TotalVisitsStory
 const getVisitsIntroText = (count: number) => {
   if (count >= 80) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: "\nA esta altura, tu GPS nos tiene como 'Casa'. Nos visitaste:" };
-  if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nGastaste más tiempo aquí que buscando las llaves. Nos visitaste:" };
-  if (count >= 25) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tenía competencia, porque Chin Chin te vio:" };
-  if (count >= 10) return { top: "¡VAYA, parece que te gustó!", bottom: "\nNos visitaste más de una vez. En concreto:" };
+  if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nPasaste más tiempo aquí que en tu casa. Nos visitaste:" };
+  if (count >= 25) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tiene competencia, porque Chin Chin te vimos:" };
+  if (count >= 10) return { top: "¡VAYA, parece que Chin Chin te gustó!", bottom: "\nNos visitaste más de una vez. En concreto:" };
   
   // 0 - 9 visitas: Usar la frase fija que aprobaste si no cumple el rango alto
-  return { top: `¡VAYA, VAYA!`, bottom: `\nTU HOGAR ESTUVO VACÍO... PORQUE NOS VISITASTE:` };
+  return { top: `¡INTERESANTE!`, bottom: `\nNOS VISITASTE:` };
 };
 
 export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, textColor, highlightColor }: TotalVisitsStoryProps) => {

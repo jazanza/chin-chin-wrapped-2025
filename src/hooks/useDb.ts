@@ -72,7 +72,11 @@ const BEER_CATEGORY_COLORS: { [key: string]: string } = {
 const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-const BEER_PRODUCT_GROUP_IDS = [34, 36, 40, 52, 53]; // AÑADIDOS: 40, 52, 53
+// Full list of beer product group IDs for general filtering (e.g., in buildBeerCategoryFilterClause)
+const ALL_BEER_PRODUCT_GROUP_IDS = [34, 36, 40, 52, 53]; // 34: Belgas, 36: Alemanas, 40: 750ml, 52: Españolas, 53: Del Mundo
+
+// List of beer product group IDs to be considered for unique varieties and dominant category (excluding 750ml)
+const BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT = [34, 36, 52, 53];
 
 
 export function useDb() {
@@ -152,11 +156,12 @@ export function useDb() {
       };
 
       // Helper to build the beer category filter clause for ProductGroupId
+      // This uses the ALL_BEER_PRODUCT_GROUP_IDS for initial broad filtering
       const buildBeerCategoryFilterClause = (tableAlias: string) => {
-        if (BEER_PRODUCT_GROUP_IDS.length === 0) {
+        if (ALL_BEER_PRODUCT_GROUP_IDS.length === 0) {
           return "";
         }
-        const categoryIdsSql = BEER_PRODUCT_GROUP_IDS.join(',');
+        const categoryIdsSql = ALL_BEER_PRODUCT_GROUP_IDS.join(',');
         return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
       };
 
@@ -208,15 +213,15 @@ export function useDb() {
         
         // Only count liters for the overall total if it's a liquid product
         if (liters > 0) {
-          totalLiters += liters;
-          
-          // Only add to unique varieties set if it's a beer from the specified groups
-          if (BEER_PRODUCT_GROUP_IDS.includes(item.ProductGroupId)) {
+          totalLiters += liters; // This includes all liquid products, including ID 40
+
+          // Only add to unique varieties set if it's a beer from the specified groups (excluding 750ml)
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
             uniqueVarietiesSet.add(item.ProductName); 
           }
 
-          // Aggregate liters for dominant category calculation (only for specified beer groups)
-          if (BEER_PRODUCT_GROUP_IDS.includes(item.ProductGroupId)) {
+          // Aggregate liters for dominant category calculation (only for specified beer groups, excluding 750ml)
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
             categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
           }
 
@@ -230,12 +235,12 @@ export function useDb() {
         }
       }
 
-      // Metric 2: Dominant Beer Category for current year (based on all BEER_PRODUCT_GROUP_IDS)
+      // Metric 2: Dominant Beer Category for current year (based on BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT)
       let dominantBeerCategory = "Ninguna (otras categorías)";
       let maxLiters = 0;
       let dominantGroupId: number | null = null;
 
-      for (const groupId of BEER_PRODUCT_GROUP_IDS) {
+      for (const groupId of BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT) { // Loop through groups relevant for dominance
         if (categoryVolumesByGroupId[groupId] > maxLiters) {
           maxLiters = categoryVolumesByGroupId[groupId];
           dominantGroupId = groupId;
@@ -247,7 +252,6 @@ export function useDb() {
         switch (dominantGroupId) {
           case 34: dominantBeerCategory = "Cervezas Belgas"; break;
           case 36: dominantBeerCategory = "Cervezas Alemanas"; break;
-          case 40: dominantBeerCategory = "Cervezas 750ml"; break;
           case 52: dominantBeerCategory = "Cervezas Españolas"; break;
           case 53: dominantBeerCategory = "Cervezas del Mundo"; break;
           default: dominantBeerCategory = "Categoría de Cerveza Dominante";
@@ -286,20 +290,21 @@ export function useDb() {
       // Unique Varieties for customer in current year (using filtered data)
       const uniqueVarieties2025 = uniqueVarietiesSet.size; // Use the set collected above
 
-      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid)
+      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid, AND EXCLUDING 750ml)
       const totalUniqueProductsDbQuery = `
         SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
         FROM Product AS P
         WHERE 1=1
         AND P.IsEnabled = TRUE
         ${buildExclusionClause('P')}
-        ${buildBeerCategoryFilterClause('P')};
+        ${buildBeerCategoryFilterClause('P')}; -- This uses ALL_BEER_PRODUCT_GROUP_IDS
       `;
       const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
       const totalVarietiesInDbSet = new Set<string>();
       for (const item of rawTotalVarietiesInDb) {
         const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-        if (volumeMl > 0) { // Only count if it's a liquid product
+        // Only count if it's a liquid product AND not from ProductGroupId 40
+        if (volumeMl > 0 && item.ProductGroupId !== 40) { 
           totalVarietiesInDbSet.add(item.ProductName);
         }
       }
@@ -399,10 +404,10 @@ export function useDb() {
     };
 
     const buildBeerCategoryFilterClause = (tableAlias: string) => {
-      if (BEER_PRODUCT_GROUP_IDS.length === 0) {
+      if (ALL_BEER_PRODUCT_GROUP_IDS.length === 0) {
         return "";
       }
-      const categoryIdsSql = BEER_PRODUCT_GROUP_IDS.join(',');
+      const categoryIdsSql = ALL_BEER_PRODUCT_GROUP_IDS.join(',');
       return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
     };
 
@@ -418,7 +423,8 @@ export function useDb() {
     const totalVarietiesInDbSet = new Set<string>();
     for (const item of rawTotalVarietiesInDb) {
       const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-      if (volumeMl > 0) { // Only count if it's a liquid product
+      // Only count if it's a liquid product AND not from ProductGroupId 40
+      if (volumeMl > 0 && item.ProductGroupId !== 40) {
         totalVarietiesInDbSet.add(item.ProductName);
       }
     }

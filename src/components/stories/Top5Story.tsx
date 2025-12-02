@@ -27,10 +27,10 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       const top1Name = top10Products[0].name;
       segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA:`, color: textColor, sizeClass: "text-4xl" }); // H2
       segments.push({ text: `\n${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-6xl" }); // H1
-      segments.push({ text: "\n\n", color: textColor, sizeClass: "" }); // Add a line break
+      segments.push({ text: "\n", color: textColor, sizeClass: "" }); // Cambiado de \n\n a \n
     } else {
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-4xl" }); // H2
-      segments.push({ text: "\n\n", color: textColor, sizeClass: "" }); // Add a line break
+      segments.push({ text: "\n", color: textColor, sizeClass: "" }); // Cambiado de \n\n a \n
     }
     segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor, sizeClass: "text-xl" }); // H3
     return segments;

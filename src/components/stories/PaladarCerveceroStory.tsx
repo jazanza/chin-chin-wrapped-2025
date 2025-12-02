@@ -47,7 +47,7 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
       const explorationPercentage = (safeRatio * 100).toFixed(1); // Muestra un decimal
 
       // 3. Uso del porcentaje seguro: Se mantiene igual
-      finalQuadrantPhrase = `RECIÉN BAUTIZADO. Aunque tienes un gusto interesante, apenas estás explorando el ${explorationPercentage}% de nuestra barra. ¡Te falta mucho por probar!`;
+      finalQuadrantPhrase = `Aunque tienes un gusto interesante, apenas estás explorando el ${explorationPercentage}% de nuestra barra. ¡Te falta mucho por probar!`;
   }
 
   return (

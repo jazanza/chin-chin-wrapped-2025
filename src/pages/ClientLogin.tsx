@@ -24,7 +24,7 @@ interface KBAQuestion {
   fieldType: 'PhoneNumber' | 'TaxNumber' | 'Email';
 }
 
-const MAX_KBA_ATTEMPTS = 3;
+const MAX_KBA_ATTEMPTS = 2; // Changed from 3 to 2
 
 // Helper to shuffle an array
 const shuffleArray = (array: any[]) => {
@@ -189,10 +189,19 @@ const ClientLogin = () => {
     setLoading(true);
     try {
       const results = await findCustomer(searchTerm);
-      if (results && results.length > 0) {
+      if (results && results.length === 1) { // Exact match, skip selection screen
+        const customer = results[0];
+        setSelectedCustomer(customer);
+        const kba = generateKBAQuestion(customer);
+        if (kba) {
+          setKbaQuestion(kba);
+          setKbaAttempts(0); // Reset KBA attempts for new flow
+          setStep("kba");
+        }
+      } else if (results && results.length > 1) { // Multiple matches, go to selection screen
         setSearchResults(results);
         setStep("select");
-      } else {
+      } else { // No matches
         showError("No encontramos coincidencias. Intenta otro nombre o número.");
       }
     } catch (error: any) {
@@ -210,7 +219,7 @@ const ClientLogin = () => {
       const kba = generateKBAQuestion(customer);
       if (kba) {
         setKbaQuestion(kba);
-        setKbaAttempts(0);
+        setKbaAttempts(0); // Reset KBA attempts for new flow
         setStep("kba");
       }
     }
@@ -220,14 +229,15 @@ const ClientLogin = () => {
     if (!kbaQuestion || !selectedCustomer) return;
 
     if (selectedOption === kbaQuestion.correctAnswer) {
-      navigate(`/wrapped/${selectedCustomer.Id}`);
+      navigate(`/wrapped/${selectedCustomer.Id}`); // Navigate immediately on correct answer
     } else {
-      setKbaAttempts((prev) => prev + 1);
-      if (kbaAttempts + 1 >= MAX_KBA_ATTEMPTS) {
-        showError("Demasiados intentos fallidos. Por favor, reinicia la búsqueda.");
-        handleBackToSearch();
+      const newAttempts = kbaAttempts + 1;
+      setKbaAttempts(newAttempts);
+      if (newAttempts >= MAX_KBA_ATTEMPTS) {
+        showError("Has agotado tus intentos de verificación. Vuelve a empezar.");
+        handleBackToSearch(); // Go back to search on too many failed attempts
       } else {
-        showError(`Respuesta incorrecta. Intentos restantes: ${MAX_KBA_ATTEMPTS - (kbaAttempts + 1)}`);
+        showError(`Respuesta incorrecta. Intentos restantes: ${MAX_KBA_ATTEMPTS - newAttempts}`);
       }
     }
   };

@@ -16,13 +16,13 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, textColor,
 
   const quadrantPhrase = useMemo(() => {
     if (concentration === 'Fiel' && rarity === 'Nicho') {
-      return "EL CURADOR DE CERVEZAS. Tu paladar es exótico y exclusivo; pocos comparten tu gusto, y eres leal a las joyas raras que encuentras.";
+      return "EL CURADOR. Tu paladar es exótico y exclusivo; pocos comparten tu gusto, y eres leal a las joyas raras que encuentras.";
     } else if (concentration === 'Explorador' && rarity === 'Nicho') {
-      return "EL AVENTURERO DEL LUJO. Exploraste las etiquetas más raras de nuestra cava, demostrando un gusto refinado y un paladar incansable por lo nuevo.";
+      return "EL AVENTURERO. Exploraste las etiquetas más raras de nuestra barra, demostrando un gusto refinado y un paladar incansable por lo nuevo.";
     } else if (concentration === 'Fiel' && rarity === 'Popular') {
-      return "EL CLÁSICO CONVENCIERO. Eres firme en tus decisiones. Disfrutas el Top 3 de los más vendidos y lo haces con una admirable consistencia.";
+      return "EL CLÁSICO. Eres firme en tus decisiones. Disfrutas el Top 3 de los más vendidos y lo haces con una admirable consistencia.";
     } else if (concentration === 'Explorador' && rarity === 'Popular') {
-      return "EL SOCIABLE EXPERIMENTAL. Eres el amigo que prueba de todo. Consumes la mayoría de las cervezas populares, pero nunca te atas a una sola marca.";
+      return "EL SOCIABLE. Eres el amigo que prueba de todo. Consumes la mayoría de las cervezas populares, pero nunca te atas a una sola marca.";
     }
     return "Descubre tu paladar cervecero.";
   }, [concentration, rarity]);

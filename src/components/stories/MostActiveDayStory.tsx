@@ -76,7 +76,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
     }
     return [
       // 1. Título genérico:
-      { text: "EL DÍA QUE MÁS\nNOS VISITASTE FUE EL:", color: textColor, sizeClass: "text-4xl" }, // H2
+      { text: "TU DÍA PREFERIDO PARA VISITARNOS SON LOS:", color: textColor, sizeClass: "text-4xl" }, // H2
       // 2. El día activo resaltado:
       { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
     ];

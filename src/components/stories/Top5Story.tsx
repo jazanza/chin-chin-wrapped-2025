@@ -23,7 +23,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
     const segments: TextSegment[] = [];
     if (top10Products && top10Products.length > 0) {
       const top1Name = top10Products[0].name;
-      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA ${top1Name.toUpperCase()}.`, color: highlightColor });
+      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA: ${top1Name.toUpperCase()}.`, color: highlightColor });
       segments.push({ text: "\n", color: textColor }); // Add a line break
     } else {
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que se está perdiendo.", color: textColor });

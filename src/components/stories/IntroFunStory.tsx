@@ -25,7 +25,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
     { text: "\n\n", color: textColor },
     { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor }, // H4
     { text: "\n\n", color: textColor },
-    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor } // H3
+    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor } // H2
   ], [totalVisits, textColor, highlightColor, firstName]); // Add firstName to dependencies
 
   const renderedText = useMemo(() => {

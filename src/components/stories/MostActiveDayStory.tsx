@@ -15,7 +15,7 @@ interface MostActiveDayStoryProps {
 
 export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, highlightColor }: MostActiveDayStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TU DÍA OFICIAL\nPARA CERVECEAR FUE...", color: textColor },
+    { text: "TU DÍA FAVORITO\nPARA VISITARNOS FUE...", color: textColor },
     { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor },
   ], [mostActiveDay, textColor, highlightColor]);
 
@@ -58,7 +58,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       </div>
       <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
         <p className={cn("text-center text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold mb-2", highlightColor)}>
-          Los Días Que Puede Venir Más:
+          Los Días Que Podrías Venir Más:
         </p>
         {filteredDailyVisits.length > 0 ? (
           filteredDailyVisits.map((data, idx) => (

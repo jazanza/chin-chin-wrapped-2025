@@ -25,7 +25,7 @@ export const DominantCategoryAndVarietiesStory = ({
   highlightColor,
 }: DominantCategoryAndVarietiesStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "CON LAS QUE ESTÁS ENVICIADO) SON LAS...", color: textColor },
+    { text: "ESTÁS ENVICIADO CON LAS...", color: textColor },
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
     { text: "\n\nY PROBASTE ", color: textColor },
     { text: `${uniqueVarieties2025}`, color: highlightColor },

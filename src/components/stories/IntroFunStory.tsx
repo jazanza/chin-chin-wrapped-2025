@@ -50,7 +50,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
-        <p className={`text-3xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
           {renderedText}
         </p>
       </div>

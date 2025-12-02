@@ -26,10 +26,8 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
       wittyPhrase = `¡Consumo Destacado! Eres parte del Top 5% de consumidores, superando al ${litersPercentile.toFixed(0)}% de la comunidad con tu pasión por ${upperBeerName}.`;
   } else if (litersPercentile >= 75 && totalLiters >= 50) {
     wittyPhrase = `¡Estás en el Top 25% de consumidores! Demuestras un buen ritmo y siempre con tu favorita: ${upperBeerName}.`;
-  } else if (litersPercentile >= 50 && totalLiters >= 20) {
-    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Claramente, disfrutas mucho tu ${upperBeerName}!`;
   } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
-    wittyPhrase = `Tienes un consumo moderado de ${totalLiters.toFixed(1)} litros. ¡Aún tienes tiempo para probar más ${upperBeerName} y subir en el ranking!`;
+    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Claramente, disfrutas mucho tu ${upperBeerName}!`;
   }
 
   return (
@@ -71,12 +69,12 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-3xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
           {renderedText}
         </p>
       </div>
       <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
-        <p className="text-5xl font-black leading-none"> {/* H1 */}
+        <p className="text-6xl font-black leading-none"> {/* H1 */}
           {totalLiters.toFixed(1)} LITROS.
         </p>
         {/* Replaced volumeReaction with CommunityLitersComparisonText */}

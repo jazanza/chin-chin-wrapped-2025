@@ -96,7 +96,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
-        <p className={`text-3xl text-center`}> {/* H2 for main text block */}
+        <p className={`text-4xl text-center`}> {/* H2 for main text block */}
           {renderedText}
         </p>
       </div>

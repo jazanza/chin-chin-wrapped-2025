@@ -58,7 +58,7 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
         <p className={cn("text-xl text-center mb-4", highlightColor)}> {/* H3 */}
           TU PALADAR CERVECERO ES:
         </p>
-        <p className={cn("text-3xl text-center mb-8", highlightColor)}> {/* H2 */}
+        <p className={cn("text-4xl text-center mb-8", highlightColor)}> {/* H2 */}
           {dynamicTitle.toUpperCase()}
         </p>
         <p className={cn("text-xl text-center", textColor)}> {/* H3 */}

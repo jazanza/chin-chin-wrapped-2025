@@ -148,7 +148,7 @@ export const SummaryInfographic = ({
         <div className="mb-4 text-center">
           {isTitleTyped && (
             <>
-              <h1 className={cn("text-3xl font-black uppercase leading-tight", highlightColor)}> {/* H2 */}
+              <h1 className={cn("text-4xl font-black uppercase leading-tight", highlightColor)}> {/* H2 */}
                 {dynamicTitle.toUpperCase()} {/* Use dynamicTitle here */}
               </h1>
               <p className={cn("text-xl font-black uppercase leading-tight", textColor)}> {/* H3 */}
@@ -165,7 +165,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center"> {/* H4 */}
                 CANTIDAD DE VISITAS ESTE {year}
               </p>
-              <p className="text-5xl font-black text-center"> {/* H1 */}
+              <p className="text-6xl font-black text-center"> {/* H1 */}
                 {totalVisits}
               </p>
             </Block>
@@ -175,7 +175,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center"> {/* H4 */}
                 LITROS PROCESADOS
               </p>
-              <p className="text-5xl font-black text-center"> {/* H1 */}
+              <p className="text-6xl font-black text-center"> {/* H1 */}
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
@@ -223,7 +223,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center"> {/* H4 */}
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-5xl font-black text-center"> {/* H1 */}
+              <p className="text-6xl font-black text-center"> {/* H1 */}
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>

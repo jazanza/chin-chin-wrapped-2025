@@ -16,12 +16,19 @@ interface MostActiveDayStoryProps {
 
 const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, textColor, highlightColor }: { mostActiveDay: string; mostPopularCommunityDay: string; textColor: string; highlightColor: string }) => {
   let wittyPhrase = "";
+  const popularDays = ['Viernes', 'Sábado', 'Domingo']; // Definición de días populares
+
   if (mostActiveDay === "N/A") {
     wittyPhrase = "No hay suficientes datos para determinar tu día más activo.";
   } else if (mostActiveDay === mostPopularCommunityDay) {
-    wittyPhrase = `¡Como la mayoría, esperas al ${mostActiveDay} para descorchar! Eres muy predecible.`;
-  } else {
-    wittyPhrase = `Mientras el mundo espera, tu día más activo es el ${mostActiveDay}. ¡Eres un verdadero insider de la semana!`;
+    // Si coincide con el día más popular de la comunidad (típicamente Viernes/Sábado)
+    wittyPhrase = `Coincides con la tendencia. El ${mostActiveDay} es el día favorito de la mayoría. ¡Sabes dónde está la fiesta!`;
+  } else if (popularDays.includes(mostActiveDay)) {
+    // Si es un día popular, pero NO el más popular de la comunidad
+     wittyPhrase = `Tú y el ${mostActiveDay} tienen un acuerdo. Es un día popular, pero rompiste el récord de la comunidad.`;
+  } else { 
+    // Si es Lunes, Martes, Miércoles, o Jueves: VERDADERO INSIDER
+    wittyPhrase = `¡Eres un verdadero insider de la semana! Visitas el ${mostActiveDay} cuando Chin Chin está más tranquilo.`;
   }
 
   return (

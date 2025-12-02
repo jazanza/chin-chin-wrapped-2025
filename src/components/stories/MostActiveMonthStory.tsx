@@ -16,11 +16,19 @@ interface MostActiveMonthStoryProps {
 
 const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMonth, textColor, highlightColor }: { mostActiveMonth: string; mostPopularCommunityMonth: string; textColor: string; highlightColor: string }) => {
   let wittyPhrase = "";
+  // Definir meses populares (ejemplo, ajustar según datos reales si es necesario)
+  const popularMonths = ['Diciembre', 'Julio', 'Agosto']; // Suponiendo meses de alta actividad
+
   if (mostActiveMonth === "N/A") {
     wittyPhrase = "No hay suficientes datos para determinar tu mes más activo.";
   } else if (mostActiveMonth === mostPopularCommunityMonth) {
+    // Si coincide con el mes más popular de la comunidad
     wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes más visitado! No nos sorprende.`;
+  } else if (popularMonths.includes(mostActiveMonth)) {
+    // Si es un mes popular, pero NO el más popular de la comunidad
+    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, un mes popular, pero con tu propio estilo.`;
   } else {
+    // Si es un mes menos común para la comunidad
     wittyPhrase = `Ignoraste las tendencias y nos visitaste en ${mostActiveMonth}. ¡Eres un pionero de la temporada!`;
   }
 

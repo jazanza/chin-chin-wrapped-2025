@@ -116,7 +116,7 @@ const getBaseBeerName = (productName: string): string => {
   let baseName = productName;
   
   // Buscar el último patrón de volumen/formato conocido y recortar. 
-  // El patrón ' - [volumen]' sigue siendo el más confiable, pero si hay que buscarlo, debemos ser tolerantes:
+  // El patrón ' - ' sigue siendo el más confiable, pero si hay que buscarlo, debemos ser tolerantes:
   const lastDashIndex = productName.lastIndexOf(' - ');
   if (lastDashIndex !== -1) {
       baseName = productName.substring(0, lastDashIndex).trim();
@@ -476,7 +476,7 @@ export function useDb() {
 
       // --- Data for current year (2025) ---
       const currentYear = year; // Use the passed year, which is '2025'
-      const previousYear = (parseInt(year, 10) - 1).toString();
+      // const previousYear = (parseInt(year, 10) - 1).toString(); // REMOVED: No longer needed for comparison
 
       // Query for product data (name, description, quantity, ProductGroupId) for a given customer and year
       const productDataQuery = `
@@ -607,16 +607,16 @@ export function useDb() {
       const totalVisits = totalVisitsResult.length > 0 ? totalVisitsResult[0].TotalVisits : 0;
 
       // --- Data for previous year (2024) for comparison ---
-      // Re-run productDataQuery for previous year to get totalLiters2024 based on filtered products
-      const rawProductDataPreviousYear = queryData(dbInstance, productDataQuery, [customerId, previousYear]);
-      let totalLiters2024 = 0;
-      for (const item of rawProductDataPreviousYear) {
-        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-        totalLiters2024 += (item.TotalQuantity * volumeMl) / 1000;
-      }
+      // REMOVED: totalLiters2024 and totalVisits2024 calculations
+      // const rawProductDataPreviousYear = queryData(dbInstance, productDataQuery, [customerId, previousYear]);
+      // let totalLiters2024 = 0;
+      // for (const item of rawProductDataPreviousYear) {
+      //   const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+      //   totalLiters2024 += (item.TotalQuantity * volumeMl) / 1000;
+      // }
 
-      const totalVisitsPreviousYearResult = queryData(dbInstance, totalVisitsQuery, [customerId, previousYear]); // Use updated totalVisitsQuery
-      const totalVisits2024 = totalVisitsPreviousYearResult.length > 0 ? totalVisitsPreviousYearResult[0].TotalVisits : 0;
+      // const totalVisitsPreviousYearResult = queryData(dbInstance, totalVisitsQuery, [customerId, previousYear]);
+      // const totalVisits2024 = totalVisitsPreviousYearResult.length > 0 ? totalVisitsPreviousYearResult[0].TotalVisits : 0;
 
       // --- New Infographic Metrics for current year (2025) ---
 
@@ -740,6 +740,16 @@ export function useDb() {
         dynamicTitle = "El Explorador Sociable";
       }
 
+      // I. FIX: Coherencia de Paladar - Lógica de Anulación del Título
+      const varietyExplorationRatio = totalVarietiesInDb > 0 ? (uniqueVarieties2025 / totalVarietiesInDb) : 0;
+      const LOW_EXPLORATION_THRESHOLD = 0.20; // 20%
+
+      // Si la exploración es muy baja, anular el título
+      if (varietyExplorationRatio < LOW_EXPLORATION_THRESHOLD) {
+          dynamicTitle = "Curioso del Lúpulo (Recién Bautizado)"; 
+      }
+
+
       // --- Community Comparisons ---
       const allCustomerLiters = await getAllCustomerLiters(currentYear);
       const litersPercentile = calculatePercentile(allCustomerLiters, totalLiters);
@@ -773,8 +783,8 @@ export function useDb() {
         top10Products,
         totalVisits,
         categoryVolumes: categoryVolumesByGroupId, // Renamed for clarity
-        totalVisits2024, // Keep for now, might remove later if not used
-        totalLiters2024, // Keep for now, might remove later if not used
+        // REMOVED: totalVisits2024,
+        // REMOVED: totalLiters2024,
         uniqueVarieties2025,
         totalVarietiesInDb,
         mostActiveDay,
@@ -790,6 +800,7 @@ export function useDb() {
         dynamicTitle, // New: dynamic title based on palate
         firstBeerDetails, // New: first beer of the year
         mostFrequentBeerName, // NEW: Most frequent beer name
+        varietyExplorationRatio, // NEW: variety exploration ratio
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);

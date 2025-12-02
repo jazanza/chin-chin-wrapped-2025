@@ -411,8 +411,8 @@ const WrappedDashboard = () => {
     dominantBeerCategory: wrappedData.dominantBeerCategory,
     top10Products: wrappedData.top10Products,
     totalVisits: wrappedData.totalVisits,
-    totalVisits2024: wrappedData.totalVisits2024, // Still passed for now, but not used in updated stories
-    totalLiters2024: wrappedData.totalLiters2024, // Still passed for now, but not used in updated stories
+    // REMOVED: totalVisits2024: wrappedData.totalVisits2024,
+    // REMOVED: totalLiters2024: wrappedData.totalLiters2024,
     uniqueVarieties2025: wrappedData.uniqueVarieties2025,
     totalVarietiesInDb: wrappedData.totalVarietiesInDb,
     mostActiveDay: wrappedData.mostActiveDay,

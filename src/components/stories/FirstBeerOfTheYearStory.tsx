@@ -34,7 +34,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
       { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor },
       { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor },
       { text: "\n\n", color: textColor },
-      { text: `¡UNA ELECCIÓN DE ${firstBeerDetails.name.toUpperCase()} MARCÓ EL INICIO DE TU GRAN AÑO!`, color: textColor },
+      { text: `¡UNA ELECCIÓN ATREVIDA QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor }, // Modificado aquí
     ];
   }, [firstBeerDetails, formattedDate, textColor, highlightColor]);
 

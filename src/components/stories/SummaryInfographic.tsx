@@ -15,8 +15,8 @@ interface SummaryInfographicProps {
   top10Products: Product[]; // Changed from top3Products to top10Products
   totalVisits: number;
   isPaused: boolean; // Not directly used in 2D, but kept for consistency
-  totalVisits2024: number;
-  totalLiters2024: number;
+  // REMOVED: totalVisits2024: number;
+  // REMOVED: totalLiters2024: number;
   uniqueVarieties2025: number;
   totalVarietiesInDb: number;
   mostActiveDay: string;
@@ -26,24 +26,7 @@ interface SummaryInfographicProps {
   dynamicTitle: string; // NEW: Dynamic title for the customer
 }
 
-// Helper for comparison text and arrow (2D HTML/CSS version)
-const ComparisonText = ({ current, previous, year }: { current: number; previous: number; year: string }) => {
-  // Modificación: No renderizar si el valor 'previous' es nulo, indefinido o menor o igual a cero.
-  if (previous == null || previous <= 0) { 
-    return null; 
-  }
-
-  const diff = current - previous;
-  const percentage = (diff / previous) * 100;
-  const isPositive = percentage >= 0;
-  const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red for comparison
-
-  return (
-    <p className={cn("text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] font-bold text-center", colorClass)}>
-      {`${isPositive ? '▲ +' : '▼ -'}${percentage.toFixed(1)}% VS. ${parseInt(year) - 1}`}
-    </p>
-  );
-};
+// REMOVED: ComparisonText component
 
 // Helper component for each grid block (2D HTML/CSS version)
 interface BlockProps {
@@ -78,8 +61,8 @@ export const SummaryInfographic = ({
   dominantBeerCategory,
   top10Products, // Changed from top3Products to top10Products
   totalVisits,
-  totalVisits2024,
-  totalLiters2024,
+  // REMOVED: totalVisits2024,
+  // REMOVED: totalLiters2024,
   uniqueVarieties2025,
   totalVarietiesInDb,
   mostActiveDay,
@@ -123,7 +106,7 @@ export const SummaryInfographic = ({
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalVisits}
             </p>
-            <ComparisonText current={totalVisits} previous={totalVisits2024} year={year} />
+            {/* REMOVED: <ComparisonText current={totalVisits} previous={totalVisits2024} year={year} /> */}
           </Block>
 
           {/* Row 1, Column 2: Total Litros */}
@@ -134,7 +117,7 @@ export const SummaryInfographic = ({
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalLiters.toFixed(1)} L
             </p>
-            <ComparisonText current={totalLiters} previous={totalLiters2024} year={year} />
+            {/* REMOVED: <ComparisonText current={totalLiters} previous={totalLiters2024} year={year} /> */}
           </Block>
 
           {/* Row 2, Column 1: Top 3 Cervezas */}

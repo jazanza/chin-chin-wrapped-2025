@@ -76,6 +76,12 @@ const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Jul
 // Now includes 40 for unique varieties count and dominant category calculation
 const BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT = [34, 36, 40, 52, 53];
 
+// IDs de productos que deben ser incluidos forzosamente, independientemente de su estado IsEnabled
+const FORCED_INCLUDED_VARIETY_IDS = [
+    499, 498, 511, 111, 659, 695, 583, 584, 738, 651, 652, 737, 594, 666, 292,
+    592, 165, 342, 352, 665, 707, 706, 595, 822, 605, 86, 672
+];
+
 // Helper to extract the base beer name by removing volume suffix (e.g., " - 330ml")
 const getBaseBeerName = (productName: string): string => {
   const lastDashIndex = productName.lastIndexOf(' - ');
@@ -159,7 +165,7 @@ export function useDb() {
       return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query to get all potential beer products from relevant groups (now including 750ml for total varieties count)
+    // Query para obtener todas las variedades de cerveza, incluyendo las forzadas
     const queryForBaseNames = `
       SELECT
           P.Name AS ProductName,
@@ -168,8 +174,15 @@ export function useDb() {
       FROM
           Product AS P
       WHERE
-          P.IsEnabled = TRUE
-          AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')}) -- Now includes 750ml (ID 40)
+          (
+              -- Criterio 1: Cervezas activas en categorías principales
+              (
+                  P.IsEnabled = TRUE
+                  AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
+              )
+              -- Criterio 2: Cervezas de la lista blanca (aunque estén desactivadas)
+              OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
+          )
           ${buildExclusionClause('P')};
     `;
 
@@ -177,9 +190,7 @@ export function useDb() {
     const uniqueBaseBeerNamesSet = new Set<string>();
 
     for (const item of rawProducts) {
-      // No longer filtering by volumeMl > 0 here, as ProductGroupId defines a beer variety for total count
-      // Apply SUBSTRING_INDEX equivalent logic in JS
-      uniqueBaseBeerNamesSet.add(getBaseBeerName(item.ProductName)); // Use the new helper
+      uniqueBaseBeerNamesSet.add(getBaseBeerName(item.ProductName));
     }
     return Array.from(uniqueBaseBeerNamesSet).sort();
   }, []);

@@ -15,7 +15,7 @@ interface MostActiveMonthStoryProps {
 
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TU MES DE\nLA SED FUE...", color: textColor },
+    { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE...", color: textColor },
     { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor },
   ], [mostActiveMonth, textColor, highlightColor]);
 
@@ -47,17 +47,17 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       </div>
       <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
         <p className={cn("text-center text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold mb-2", highlightColor)}>
-          Visitas por mes
+          El Calendario de la Sed
         </p>
         {monthlyVisits.length > 0 ? (
           monthlyVisits.map((data, idx) => (
             <p key={idx} className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-              {`${data.month}: ${data.count} VISITAS`}
+              {`${data.month}: ${data.count} CERVEZAS NECESARIAS`}
             </p>
           ))
         ) : (
           <p className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-            No hay datos de visitas mensuales.
+            Aún no conoces tu potencial cervecero. (No hay datos).
           </p>
         )}
       </div>

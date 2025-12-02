@@ -20,7 +20,7 @@ interface Top5StoryProps {
 
 export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5StoryProps) => { // Changed prop name
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "TU TOP 10\nDE CERVEZAS", color: highlightColor }, // Changed to highlight for impact
+    { text: "LAS 10 RAZONES POR LAS QUE CASI VIVES AQUÍ", color: highlightColor }, // Changed to highlight for impact
   ], [highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -52,7 +52,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-2 p-4 border-2 border-white">
         {top10Products.slice(0, 5).map((product, idx) => ( // Slice to 5 from top10Products
           <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-[min(4vw,1.5rem)] md:text-[min(3.5vw,1.4rem)] lg:text-[min(3vw,1.2rem)] font-black' : 'text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold'}`}>
-            {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
+            {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L BEBIDOS)`}
           </p>
         ))}
       </div>

@@ -37,7 +37,7 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
 
 export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor, highlightColor }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "DISFRUTASTE UN\nTOTAL DE", color: textColor },
+    { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor },
   ], [textColor]);
 
   const renderedText = useMemo(() => {
@@ -69,7 +69,7 @@ export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor,
       </div>
       <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
         <p className="text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)] font-black leading-none">
-          {totalLiters.toFixed(1)} L
+          {totalLiters.toFixed(1)} LITROS.
         </p>
       </div>
       <ComparisonText

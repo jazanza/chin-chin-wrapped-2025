@@ -17,11 +17,9 @@ interface IntroFunStoryProps {
 export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroFunStoryProps) => {
   const introSegments: TextSegment[] = useMemo(() => [
     { text: "¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!", color: highlightColor },
-    { text: " PARA NOSOTROS, CADA VISITA ES UN MOTIVO DE ALEGRÍA.", color: textColor },
-    { text: ` POR LAS CERVEZAS QUE COMPARTIMOS, LOS NUEVOS AMIGOS QUE HICISTE, Y POR ESOS ${totalVisits} DÍAS INOLVIDABLES CON NOSOTROS.`, color: highlightColor },
-    { text: " (ESPERAMOS QUE NO HAYAS BORRADO CASSETTE... ¡O SÍ!)", color: textColor },
-    { text: " GRACIAS POR ELEGIRNOS COMO TU BARRA DE CERVEZAS FAVORITA.", color: textColor },
-    { text: " ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
+    { text: " PARA NOSOTROS, CADA VISITA NO ES UN MOTIVO, SINO LA RAZÓN DE NUESTRA ALEGRÍA.", color: textColor },
+    { text: ` POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE EL TERAPEUTA EN CHIN CHIN.`, color: highlightColor },
+    { text: " GRACIAS POR ELEGIRNOS. AHORA, A LO QUE VINIMOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

@@ -62,11 +62,11 @@ const Block = ({ bgColor, children }: BlockProps) => {
 
 // Función Helper para calcular el nivel de cerveza
 const getBeerLevel = (uniqueVarietiesCount: number): string => {
-  if (uniqueVarietiesCount >= 80) return "Experto Legendario";
-  if (uniqueVarietiesCount >= 60) return "Maestro Cervecero";
-  if (uniqueVarietiesCount >= 40) return "Coleccionista de Tapones";
-  if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas";
-  if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo";
+  if (uniqueVarietiesCount >= 80) return "LEYENDA ABSOLUTA (¡ES HORA DE DEJAR TU CV!)";
+  if (uniqueVarietiesCount >= 60) return "Maestro Cervecero (El que Nos Enseña)";
+  if (uniqueVarietiesCount >= 40) return "Coleccionista de Tapones (Conocedor de la Barra)";
+  if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas (El que Pide Sugerencias)";
+  if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo (Recién Bautizado)";
   return "Novato en la Barra";
 };
 
@@ -105,7 +105,7 @@ export const SummaryInfographic = ({
               {customerName.toUpperCase()}
             </h1>
             <p className={cn("text-[4vw] md:text-[2rem] lg:text-[2.5rem] font-black uppercase leading-tight", textColor)}>
-              {year} WRAPPED
+              ¿QUÉ TAN MAL ESTAMOS? {year} WRAPPED
             </p>
           </>
         )}
@@ -116,7 +116,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 1: Total Visitas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              VISITAS {year}
+              DÍAS DE COMPROMISO {year}
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalVisits}
@@ -127,7 +127,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 2: Total Litros */}
           <Block bgColor="bg-white">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              LITROS CONSUMIDOS
+              LITROS DRENADOS
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalLiters.toFixed(1)} L
@@ -138,7 +138,7 @@ export const SummaryInfographic = ({
           {/* Row 2, Column 1: Top 3 Cervezas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1">
-              TU TOP 3 FAVORITAS
+              EL TRÍO DE ORO
             </p>
             {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
               <p
@@ -176,7 +176,7 @@ export const SummaryInfographic = ({
           {/* Row 3, Column 1: Día Más Activo */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              DÍA MÁS CHIN CHIN
+              EL DÍA QUE TIENES MÁS SED
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {mostActiveDay.toUpperCase()}

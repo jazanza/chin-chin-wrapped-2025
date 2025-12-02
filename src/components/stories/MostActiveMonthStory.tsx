@@ -14,6 +14,34 @@ interface MostActiveMonthStoryProps {
   mostPopularCommunityMonth: string; // NEW: community's most popular month
 }
 
+// Nueva función auxiliar para frases divertidas específicas por mes
+const getSeasonalWittyRemark = (month: string) => {
+    switch (month) {
+        case 'Enero':
+            return "Eres el anticuerpo del Dry January. ¡Mientras el mundo hace dieta, tú pides la pinta más grande!";
+        case 'Febrero':
+            return "Febrero es el mes corto... ¡Pero no para tu agenda de visitas! Nos encanta esa dedicación.";
+        case 'Marzo':
+            return "Marzo es la nueva primavera cervecera para ti. Despertaste justo a tiempo, antes de que llegara el frío.";
+        case 'Abril':
+            return "Abril: Mes de bromas, pero tu hábito de visitarnos es 100% serio. ¡Tu fidelidad no es una broma!";
+        case 'Mayo':
+            return "Mayo es el mes del 'Ni frío ni calor'. Perfecto para beber, y tú lo entendiste antes que la multitud.";
+        case 'Junio':
+            return "Junio: La calma antes de la tormenta de julio. Disfrutaste de las mejores cervezas antes de las vacaciones de invierno.";
+        case 'Septiembre':
+            return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal. Ojalá tuvieras un Lederhosen para cada visita.";
+        case 'Octubre':
+            return "¡El verdadero espíritu del Oktoberfest! Tu pico de visitas en Octubre es una tradición global, aunque sea solo para ti.";
+        case 'Noviembre':
+            return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin las prisas de Diciembre.";
+        
+        // Meses de alta actividad (Julio, Agosto, Diciembre) no necesitan esta frase, pues usan la lógica de "popular".
+        default:
+            return "Marcaste un ritmo único que no sigue las estaciones. Siempre es buen momento para una Chin Chin.";
+    }
+};
+
 const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMonth, textColor, highlightColor }: { mostActiveMonth: string; mostPopularCommunityMonth: string; textColor: string; highlightColor: string }) => {
   let wittyPhrase = "";
   // Definir meses populares (ejemplo, ajustar según datos reales si es necesario)
@@ -28,8 +56,9 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
     // Si es un mes popular, pero NO el más popular de la comunidad
     wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, un mes popular, pero con tu propio estilo.`;
   } else {
-    // Si es un mes menos común para la comunidad
-    wittyPhrase = `Ignoraste las tendencias y nos visitaste en ${mostActiveMonth}. ¡Eres un pionero de la temporada!`;
+    // ✨ NUEVA LÓGICA: Meses Menos Comunes (Pionero con frase divertida)
+    const seasonalRemark = getSeasonalWittyRemark(mostActiveMonth);
+    wittyPhrase = `Ignoraste las tendencias. ${seasonalRemark} Nos visitaste en ${mostActiveMonth} con un propósito especial.`;
   }
 
   return (

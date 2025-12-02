@@ -72,7 +72,7 @@ export const SummaryInfographic = ({
 
   const [isTitleTyped, setIsTitleTyped] = useState(false); // Simulate typing for the main title
   const [isCapturing, setIsCapturing] = useState(false);
-  const infographicRef = useRef<HTMLDivElement>(null); // Ref for the grid to capture
+  const captureTargetRef = useRef<HTMLDivElement>(null); // Ref for the content to capture
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,8 +81,8 @@ export const SummaryInfographic = ({
     return () => clearTimeout(timer);
   }, [customerName, year]);
 
-  const captureInfographic = useCallback(async (aspectRatio: 'original' | '9:16') => {
-    if (!infographicRef.current) {
+  const captureInfographic = useCallback(async (targetRatio: number, paddingPx: number) => {
+    if (!captureTargetRef.current) {
       showError("No se pudo encontrar la infografía para capturar.");
       return null;
     }
@@ -92,33 +92,58 @@ export const SummaryInfographic = ({
 
     try {
       const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(infographicRef.current, {
+      const originalCanvas = await html2canvas(captureTargetRef.current, {
         useCORS: true,
         allowTaint: true,
         backgroundColor: null, // Let the background be captured as rendered
       });
 
-      if (aspectRatio === '9:16') {
-        const targetWidth = canvas.height * (9 / 16);
-        const targetHeight = canvas.height;
+      const originalWidth = originalCanvas.width;
+      const originalHeight = originalCanvas.height;
 
-        const newCanvas = document.createElement('canvas');
-        newCanvas.width = targetWidth;
-        newCanvas.height = targetHeight;
-        const ctx = newCanvas.getContext('2d');
+      // Calculate new canvas dimensions to fit content + padding with target aspect ratio
+      const paddedContentWidth = originalWidth + 2 * paddingPx;
+      const paddedContentHeight = originalHeight + 2 * paddingPx;
+      const paddedContentAspectRatio = paddedContentWidth / paddedContentHeight;
 
-        if (ctx) {
-          // Fill with black background
-          ctx.fillStyle = 'black';
-          ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+      let newCanvasWidth: number;
+      let newCanvasHeight: number;
 
-          // Calculate position to center the original canvas content
-          const xOffset = (targetWidth - canvas.width) / 2;
-          ctx.drawImage(canvas, xOffset, 0);
-        }
-        return newCanvas;
+      if (paddedContentAspectRatio > targetRatio) { // Content is wider than target aspect ratio
+        newCanvasWidth = paddedContentWidth;
+        newCanvasHeight = newCanvasWidth / targetRatio;
+      } else { // Content is taller or same aspect ratio as target
+        newCanvasHeight = paddedContentHeight;
+        newCanvasWidth = newCanvasHeight * targetRatio;
       }
-      return canvas;
+
+      const newCanvas = document.createElement('canvas');
+      newCanvas.width = newCanvasWidth;
+      newCanvas.height = newCanvasHeight;
+      const ctx = newCanvas.getContext('2d');
+
+      if (ctx) {
+        // Fill with black background
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
+
+        // Calculate scale factor to draw original content within padding
+        const availableWidth = newCanvasWidth - 2 * paddingPx;
+        const availableHeight = newCanvasHeight - 2 * paddingPx;
+        const scaleX = availableWidth / originalWidth;
+        const scaleY = availableHeight / originalHeight;
+        const scale = Math.min(scaleX, scaleY); // Use the smaller scale to ensure content fits
+
+        const drawWidth = originalWidth * scale;
+        const drawHeight = originalHeight * scale;
+
+        // Calculate position to center the scaled original content
+        const drawX = (newCanvasWidth - drawWidth) / 2;
+        const drawY = (newCanvasHeight - drawHeight) / 2;
+
+        ctx.drawImage(originalCanvas, drawX, drawY, drawWidth, drawHeight);
+      }
+      return newCanvas;
 
     } catch (error) {
       console.error("Error capturing infographic:", error);
@@ -131,7 +156,7 @@ export const SummaryInfographic = ({
   }, []);
 
   const handleDownload = useCallback(async () => {
-    const canvas = await captureInfographic('original');
+    const canvas = await captureInfographic(16 / 9, 30); // 16:9 aspect ratio, 30px padding
     if (canvas) {
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
@@ -145,7 +170,7 @@ export const SummaryInfographic = ({
   }, [captureInfographic, customerName, year]);
 
   const handleShareToInstagram = useCallback(async () => {
-    const canvas = await captureInfographic('9:16');
+    const canvas = await captureInfographic(9 / 16, 20); // 9:16 aspect ratio, 20px padding
     if (canvas) {
       canvas.toBlob(async (blob) => {
         if (blob) {
@@ -160,7 +185,7 @@ export const SummaryInfographic = ({
               showSuccess("¡Compartido con éxito!");
             } catch (error: any) {
               console.error("Error al compartir:", error);
-              showError("No se pudo compartir directamente. Descarga y comparte desde tu galería.");
+              showError("No se pudo compartir directamente. La imagen se descargará automáticamente.");
               // Fallback to download if share fails
               const dataUrl = canvas.toDataURL('image/png');
               const link = document.createElement('a');
@@ -171,7 +196,7 @@ export const SummaryInfographic = ({
               document.body.removeChild(link);
             }
           } else {
-            showError("Tu navegador no soporta la función de compartir directamente. La imagen se descargará. Por favor, compártela desde tu galería.");
+            showError("Tu navegador no soporta la función de compartir directamente. La imagen se descargará automáticamente.");
             // Fallback to download
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
@@ -192,47 +217,8 @@ export const SummaryInfographic = ({
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground p-4 font-sans overflow-auto">
-      {/* Action Header */}
-      <div className="fixed top-0 left-0 right-0 bg-background p-4 flex justify-between items-center z-50 border-b-2 border-white">
-        <Button
-          onClick={handleBackToLogin}
-          variant="ghost"
-          className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"
-          disabled={isCapturing}
-        >
-          <Home className="mr-2 h-4 w-4" />
-          Inicio
-        </Button>
-        <div className="flex space-x-2">
-          <Button
-            onClick={handleDownload}
-            className="bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
-            disabled={isCapturing}
-          >
-            {isCapturing ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Download className="h-4 w-4" />
-            )}
-            <span className="ml-2 hidden md:inline">Descargar</span>
-          </Button>
-          <Button
-            onClick={handleShareToInstagram}
-            className="bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
-            disabled={isCapturing}
-          >
-            {isCapturing ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Share2 className="h-4 w-4" />
-            )}
-            <span className="ml-2 hidden md:inline">Compartir IG</span>
-          </Button>
-        </div>
-      </div>
-
-      {/* Main Infographic Content - Adjusted padding-top */}
-      <div className="flex flex-col items-center justify-center pt-24 pb-4"> {/* Added pt-24 to account for fixed header */}
+      {/* Main Infographic Content - captureTargetRef now wraps title and grid */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-center w-full h-full">
         {/* Main Infographic Title */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -248,7 +234,7 @@ export const SummaryInfographic = ({
         </div>
 
         {isTitleTyped && (
-          <div ref={infographicRef} className="grid grid-cols-2 grid-rows-3 gap-2 w-[90vw] h-[80vh] max-w-[900px] max-h-[1600px] aspect-[9/16] border-2 border-white">
+          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-[90vw] h-[80vh] max-w-[900px] max-h-[1600px] aspect-[9/16] border-2 border-white">
             {/* Row 1, Column 1: Total Visitas */}
             <Block bgColor="bg-black">
               <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
@@ -330,6 +316,42 @@ export const SummaryInfographic = ({
             </Block>
           </div>
         )}
+      </div>
+
+      {/* Nuevo Footer Centrado para Botones */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background p-4 flex justify-center space-x-4 z-50 border-t-2 border-white">
+          <Button
+              onClick={handleDownload}
+              className="bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
+              disabled={isCapturing}
+          >
+              {isCapturing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                  <Download className="h-4 w-4" />
+              )}
+              <span className="ml-2 hidden md:inline">Descargar</span>
+          </Button>
+          <Button
+              onClick={handleShareToInstagram}
+              className="bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
+              disabled={isCapturing}
+          >
+              {isCapturing ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                  <Share2 className="h-4 w-4" />
+              )}
+              <span className="ml-2 hidden md:inline">Compartir IG</span>
+          </Button>
+          <Button
+              onClick={handleBackToLogin}
+              className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"
+              disabled={isCapturing}
+          >
+              <Home className="mr-2 h-4 w-4" />
+              Inicio
+          </Button>
       </div>
     </div>
   );

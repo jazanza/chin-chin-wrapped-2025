@@ -128,6 +128,21 @@ const getBaseBeerName = (productName: string): string => {
   return baseName;
 };
 
+// Helper para calcular el percentil
+const calculatePercentile = (data: number[], value: number): number => {
+  if (data.length === 0) return 0;
+  const sortedData = [...data].sort((a, b) => a - b);
+  let count = 0;
+  for (let i = 0; i < sortedData.length; i++) {
+    if (sortedData[i] <= value) {
+      count++;
+    } else {
+      break;
+    }
+  }
+  return (count / sortedData.length) * 100;
+};
+
 
 export function useDb() {
   const [dbLoaded, setDbLoaded] = useState(false);
@@ -292,6 +307,104 @@ export function useDb() {
     return { globalBeerDistribution, totalGlobalLiters };
   }, [extractVolumeMl, getBaseBeerName]);
 
+  // New: Get all customer liters for percentile calculation
+  const getAllCustomerLiters = useCallback(async (year: string) => {
+    if (!dbInstance) throw new Error("Base de datos no cargada.");
+
+    const buildExclusionClause = (tableAlias: string) => {
+      if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) return "";
+      const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
+      return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
+    };
+
+    const query = `
+      SELECT
+          D.CustomerId,
+          SUM(DI.Quantity * (
+              CASE
+                  WHEN P.Name LIKE '%ml' THEN CAST(REPLACE(P.Name, 'ml', '') AS INTEGER)
+                  WHEN P.Description LIKE '%ml' THEN CAST(REPLACE(P.Description, 'ml', '') AS INTEGER)
+                  WHEN P.Name LIKE '%pinta%' THEN 473
+                  WHEN P.Name LIKE '%caña%' THEN 200
+                  WHEN P.Name LIKE '%botella%' THEN 330
+                  WHEN P.Name LIKE '%lata%' THEN 330
+                  ELSE 0
+              END
+          ) / 1000.0) AS TotalLiters
+      FROM
+          Document AS D
+      INNER JOIN
+          DocumentItem AS DI ON D.Id = DI.DocumentId
+      INNER JOIN
+          Product AS P ON DI.ProductId = P.Id
+      WHERE
+          STRFTIME('%Y', D.Date) = ?
+          ${buildExclusionClause('P')}
+          AND (
+              (
+                  P.IsEnabled = TRUE
+                  AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
+              )
+              OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
+          )
+      GROUP BY
+          D.CustomerId
+      HAVING
+          TotalLiters > 0;
+    `;
+    const results = queryData(dbInstance, query, [year]);
+    return results.map((row: any) => row.TotalLiters);
+  }, []);
+
+  // New: Get all customer visits for percentile calculation
+  const getAllCustomerVisits = useCallback(async (year: string) => {
+    if (!dbInstance) throw new Error("Base de datos no cargada.");
+
+    const query = `
+      SELECT
+          CustomerId,
+          COUNT(DISTINCT Date) AS TotalVisits
+      FROM
+          Document
+      WHERE
+          STRFTIME('%Y', Date) = ?
+      GROUP BY
+          CustomerId
+      HAVING
+          TotalVisits > 0;
+    `;
+    const results = queryData(dbInstance, query, [year]);
+    return results.map((row: any) => row.TotalVisits);
+  }, []);
+
+  // New: Get community daily visits
+  const getCommunityDailyVisits = useCallback(async (year: string) => {
+    if (!dbInstance) throw new Error("Base de datos no cargada.");
+
+    const query = `
+      SELECT STRFTIME('%w', Date) AS DayOfWeek, COUNT(DISTINCT Date) AS DayCount
+      FROM Document
+      WHERE STRFTIME('%Y', Date) = ?
+      GROUP BY DayOfWeek
+      ORDER BY DayOfWeek ASC;
+    `;
+    return queryData(dbInstance, query, [year]);
+  }, []);
+
+  // New: Get community monthly visits
+  const getCommunityMonthlyVisits = useCallback(async (year: string) => {
+    if (!dbInstance) throw new Error("Base de datos no cargada.");
+
+    const query = `
+      SELECT STRFTIME('%m', Date) AS MonthOfYear, COUNT(DISTINCT Date) AS MonthCount
+      FROM Document
+      WHERE STRFTIME('%Y', Date) = ?
+      GROUP BY MonthOfYear
+      ORDER BY MonthOfYear ASC;
+    `;
+    return queryData(dbInstance, query, [year]);
+  }, []);
+
 
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
@@ -337,12 +450,10 @@ export function useDb() {
             ${buildExclusionClause('P')}
             -- *** FILTRO ESTRICTO: SOLO CERVEZAS RELEVANTES O FORZADAS ***
             AND (
-                -- Criterio 1: Cervezas activas en categorías principales
                 (
                     P.IsEnabled = TRUE
                     AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
                 )
-                -- Criterio 2: Cervezas de la lista blanca (IDs forzados, aunque estén desactivadas)
                 OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             )
         GROUP BY
@@ -565,6 +676,27 @@ export function useDb() {
 
       const palateCategory = { concentration, rarity };
 
+      // --- Community Comparisons ---
+      const allCustomerLiters = await getAllCustomerLiters(currentYear);
+      const litersPercentile = calculatePercentile(allCustomerLiters, totalLiters);
+
+      const allCustomerVisits = await getAllCustomerVisits(currentYear);
+      const visitsPercentile = calculatePercentile(allCustomerVisits, totalVisits);
+
+      const communityDailyVisitsRaw = await getCommunityDailyVisits(currentYear);
+      const communityDailyVisits = communityDailyVisitsRaw.map((row: any) => ({
+        day: DAY_NAMES[row.DayOfWeek],
+        count: row.DayCount,
+      }));
+      const mostPopularCommunityDay = communityDailyVisits.reduce((prev, current) => (prev.count > current.count ? prev : current), { day: "N/A", count: 0 }).day;
+
+      const communityMonthlyVisitsRaw = await getCommunityMonthlyVisits(currentYear);
+      const communityMonthlyVisits = communityMonthlyVisitsRaw.map((row: any) => ({
+        month: MONTH_NAMES[parseInt(row.MonthOfYear, 10) - 1],
+        count: row.MonthCount,
+      }));
+      const mostPopularCommunityMonth = communityMonthlyVisits.reduce((prev, current) => (prev.count > current.count ? prev : current), { month: "N/A", count: 0 }).month;
+
 
       return {
         customerName,
@@ -574,8 +706,8 @@ export function useDb() {
         top10Products,
         totalVisits,
         categoryVolumes: categoryVolumesByGroupId, // Renamed for clarity
-        totalVisits2024,
-        totalLiters2024,
+        totalVisits2024, // Keep for now, might remove later if not used
+        totalLiters2024, // Keep for now, might remove later if not used
         uniqueVarieties2025,
         totalVarietiesInDb,
         mostActiveDay,
@@ -584,6 +716,10 @@ export function useDb() {
         monthlyVisits,
         missingVarieties, // Add missing varieties to the returned data
         palateCategory, // Add new palate category
+        litersPercentile, // New: customer's percentile for liters
+        visitsPercentile, // New: customer's percentile for visits
+        mostPopularCommunityDay, // New: community's most popular day
+        mostPopularCommunityMonth, // New: community's most popular month
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);
@@ -592,7 +728,7 @@ export function useDb() {
     } finally {
       setLoading(false);
     }
-  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution]);
+  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution, getAllCustomerLiters, getAllCustomerVisits, getCommunityDailyVisits, getCommunityMonthlyVisits]);
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

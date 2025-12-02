@@ -43,7 +43,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 const getVisitsIntroText = (count: number) => {
   if (count >= 75) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: "\nA esta altura, tu GPS nos tiene como 'Casa'." };
   if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nPasaste más tiempo aquí que en tu casa." };
-  if (count >= 30) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tiene competencia." };
+  if (count >= 30) return { top: "¡Tenemos a un habitué!", bottom: "\nTu hogar tiene competencia." };
   if (count >= 15) return { top: "¡Parece que Chin Chin te gustó!", bottom: "\nYa tienes tu ruta marcada." };
   if (count >= 5) return { top: "¡Vemos Potencial!", bottom: "\nTu búsqueda te trajo estas veces." };
   

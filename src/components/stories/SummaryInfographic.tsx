@@ -116,7 +116,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 1: Total Visitas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              DÍAS DE COMPROMISO {year}
+              CANTIDAD DE DÍAS QUE NOS VISITASTE ESTE {year}
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalVisits}
@@ -127,7 +127,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 2: Total Litros */}
           <Block bgColor="bg-white">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              LITROS DRENADOS
+              LITROS PROCESADOS
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalLiters.toFixed(1)} L
@@ -138,7 +138,7 @@ export const SummaryInfographic = ({
           {/* Row 2, Column 1: Top 3 Cervezas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1">
-              EL TRÍO DE ORO
+              EL TRÍO FAVORITO
             </p>
             {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
               <p

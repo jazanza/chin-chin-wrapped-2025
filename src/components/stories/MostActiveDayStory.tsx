@@ -58,12 +58,12 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       </div>
       <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
         <p className={cn("text-center text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold mb-2", highlightColor)}>
-          Los Días de la Tentación:
+          Los Días Que Puede Venir Más:
         </p>
         {filteredDailyVisits.length > 0 ? (
           filteredDailyVisits.map((data, idx) => (
             <p key={idx} className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-              {`${data.day}: ${data.count} ATERRIZAJES`}
+              {`${data.day}: ${data.count} VISITAS`}
             </p>
           ))
         ) : (

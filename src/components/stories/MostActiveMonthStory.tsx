@@ -47,12 +47,12 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       </div>
       <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
         <p className={cn("text-center text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold mb-2", highlightColor)}>
-          El Calendario de la Sed
+          El Calendario de Visitas
         </p>
         {monthlyVisits.length > 0 ? (
           monthlyVisits.map((data, idx) => (
             <p key={idx} className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-              {`${data.month}: ${data.count} CERVEZAS NECESARIAS`}
+              {`${data.month}: ${data.count} VISITAS`}
             </p>
           ))
         ) : (

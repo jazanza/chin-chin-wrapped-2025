@@ -38,11 +38,11 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
 
 export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, textColor, highlightColor }: TotalVisitsStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: `¡VAYA, ${customerName.toUpperCase()}!`, color: highlightColor },
+    { text: `¡VAYA, VAYA!`, color: highlightColor },
     { text: "\nTU HOGAR ESTUVO VACÍO... PORQUE NOS VISITASTE:", color: textColor },
     { text: `\n${totalVisits}`, color: highlightColor },
     { text: " VECES!", color: textColor },
-  ], [customerName, totalVisits, textColor, highlightColor]);
+  ], [totalVisits, textColor, highlightColor]); // Removed customerName from dependencies as it's no longer used in text
 
   const renderedText = useMemo(() => {
     return storySegments.flatMap((segment, segmentIndex) => {

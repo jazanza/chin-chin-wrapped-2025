@@ -275,12 +275,13 @@ export function useDb() {
       // Unique Varieties for customer in current year (using filtered data)
       const uniqueVarieties2025 = uniqueVarietiesSet.size; // Use the set collected above
 
-      // Total Unique Varieties in DB (excluding non-liquid/excluded)
+      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter)
       const totalUniqueProductsDbQuery = `
         SELECT COUNT(DISTINCT P.Name) AS TotalUniqueProducts
         FROM Product AS P
         WHERE 1=1
-        ${buildExclusionClause('P')};
+        ${buildExclusionClause('P')}
+        ${buildBeerCategoryFilterClause('P')}; -- APLICANDO EL FILTRO DE CATEGORÍA DE CERVEZA AQUÍ
       `;
       const totalVarietiesInDbResult = queryData(dbInstance, totalUniqueProductsDbQuery);
       const totalVarietiesInDb = totalVarietiesInDbResult.length > 0 ? totalVarietiesInDbResult[0].TotalUniqueProducts : 0;

@@ -14,38 +14,73 @@ interface MostActiveDayStoryProps {
   mostPopularCommunityDay: string; // NEW: community's most popular day
 }
 
-const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, textColor, highlightColor }: { mostActiveDay: string; mostPopularCommunityDay: string; textColor: string; highlightColor: string }) => {
-  let wittyPhrase = "";
-  const popularDays = ['Viernes', 'Sábado', 'Domingo']; // Definición de días populares
+// Nueva función para generar frases ingeniosas específicas del día
+const getDaySpecificWittyRemark = (day: string) => {
+    switch (day) {
+        case 'Martes':
+            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes para ti..." };
+        case 'Miércoles':
+            return { title: "¡ROMPE MITADES! 🎯", remark: "Mitad de semana es mejor que fin de semana..." };
+        case 'Jueves':
+            return { title: "¡PRE-FIN DE SEMANA! 🚀", remark: "Te anticipas a todos..." };
+        case 'Viernes':
+            return { title: "¡ES OFICIAL! 🎉", remark: "El fin de semana comienza el viernes..." };
+        case 'Sábado':
+            return { title: "¡DÍA DE GLORIA! 🏆", remark: "El sábado es tu campo de juego..." };
+        case 'Domingo':
+            return { title: "¡CIERRE DE ORO! 🧘", remark: "Tu ritual de domingo es perfecto..." };
+        default: // Esto cubrirá 'Lunes' o cualquier valor inesperado
+            return { title: "DÍA MISTERIOSO 👻", remark: "Tuviste un día activo que nadie esperaba..." };
+    }
+};
 
+const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, textColor, highlightColor }: { mostActiveDay: string; mostPopularCommunityDay: string; textColor: string; highlightColor: string }) => {
   if (mostActiveDay === "N/A") {
-    wittyPhrase = "No hay suficientes datos para determinar tu día más activo.";
-  } else if (mostActiveDay === mostPopularCommunityDay) {
-    // Si coincide con el día más popular de la comunidad (típicamente Viernes/Sábado)
-    wittyPhrase = `Coincides con la tendencia. El ${mostActiveDay} es el día favorito de la mayoría. ¡Sabes dónde está la fiesta!`;
-  } else if (popularDays.includes(mostActiveDay)) {
-    // Si es un día popular, pero NO el más popular de la comunidad
-     wittyPhrase = `Tú y el ${mostActiveDay} tienen un acuerdo. Es un día popular, pero rompiste el récord de la comunidad.`;
-  } else { 
-    // Si es Lunes, Martes, Miércoles, o Jueves: VERDADERO INSIDER
-    wittyPhrase = `¡Eres un verdadero insider de la semana! Visitas el ${mostActiveDay} cuando Chin Chin está más tranquilo.`;
+    return (
+      <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+        No hay suficientes datos para determinar tu día más activo.
+      </p>
+    );
+  }
+
+  const { title, remark } = getDaySpecificWittyRemark(mostActiveDay);
+  let comparisonPhrase = "";
+
+  if (mostActiveDay === mostPopularCommunityDay) {
+    comparisonPhrase = `Coincides con la tendencia de la comunidad.`;
+  } else {
+    comparisonPhrase = `Mientras la mayoría prefiere el ${mostPopularCommunityDay}, tú marcas tu propio ritmo.`;
   }
 
   return (
-    <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
-      {wittyPhrase}
-    </p>
+    <div className="flex flex-col items-center justify-center mt-4">
+      <p className={cn("text-[min(3.5vw,1.4rem)] md:text-[min(3vw,1.2rem)] lg:text-[min(2.5vw,1.1rem)] font-black text-center", highlightColor)}>
+        {title}
+      </p>
+      <p className={cn("text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center", textColor)}>
+        {remark} {comparisonPhrase}
+      </p>
+    </div>
   );
 };
 
 export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, highlightColor, mostPopularCommunityDay }: MostActiveDayStoryProps) => {
-  const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TU DÍA FAVORITO\nPARA VISITARNOS FUE...", color: textColor },
-    { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor },
-  ], [mostActiveDay, textColor, highlightColor]);
+  const { title: dayTitle } = useMemo(() => getDaySpecificWittyRemark(mostActiveDay), [mostActiveDay]);
+
+  const mainStoryTextSegments: TextSegment[] = useMemo(() => {
+    if (mostActiveDay === "N/A") {
+      return [
+        { text: "NO HAY DATOS SUFICIENTES PARA TU DÍA MÁS ACTIVO.", color: textColor },
+      ];
+    }
+    return [
+      { text: dayTitle, color: highlightColor }, // Usar el título de la función helper
+      { text: `\n${mostActiveDay.toUpperCase()}`, color: textColor }, // Mostrar el día
+    ];
+  }, [mostActiveDay, dayTitle, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
-    return storySegments.flatMap((segment, segmentIndex) => {
+    return mainStoryTextSegments.flatMap((segment, segmentIndex) => {
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
@@ -59,7 +94,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
         return elements;
       });
     });
-  }, [storySegments]);
+  }, [mainStoryTextSegments]);
 
   // Filter and sort daily visits, excluding Monday
   const filteredDailyVisits = useMemo(() => {

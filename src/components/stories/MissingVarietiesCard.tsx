@@ -31,7 +31,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       return `DEBES MEJORAR EL 2026`;
     }
     // Default for < 50% missing (or between 2 and 50)
-    return `CASI LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
+    return `YA MISMO LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
   }, [missingCount, missingVarieties]);
 
   const randomSuggestions = useMemo(() => {

@@ -72,7 +72,7 @@ const BEER_CATEGORY_COLORS: { [key: string]: string } = {
 const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-const BEER_PRODUCT_GROUP_IDS = [34, 36]; // 34: Cervezas Belgas, 36: Cervezas Alemanas
+const BEER_PRODUCT_GROUP_IDS = [34, 36, 40, 52, 53]; // AÑADIDOS: 40, 52, 53
 
 
 export function useDb() {
@@ -186,7 +186,7 @@ export function useDb() {
         WHERE
             D.CustomerId = ?
             AND STRFTIME('%Y', D.Date) = ?
-            AND P.IsEnabled = TRUE -- ADDED: Filter by IsEnabled
+            AND P.IsEnabled = TRUE
             ${buildExclusionClause('P')}
         GROUP BY
             P.Id, P.Name, P.Description, P.ProductGroupId -- Group by ProductGroupId as well
@@ -198,10 +198,7 @@ export function useDb() {
       const rawProductDataCurrentYear = queryData(dbInstance, productDataQuery, [customerId, currentYear]);
 
       let totalLiters = 0;
-      const categoryVolumesByGroupId: { [key: number]: number } = {
-        [BEER_PRODUCT_GROUP_IDS[0]]: 0, // Cervezas Belgas
-        [BEER_PRODUCT_GROUP_IDS[1]]: 0, // Cervezas Alemanas
-      };
+      const categoryVolumesByGroupId: { [key: number]: number } = {}; // Initialize empty to dynamically add categories
       const productLiters: { name: string; liters: number; color: string }[] = [];
       const uniqueVarietiesSet = new Set<string>(); // To count unique varieties for the customer
 
@@ -233,18 +230,27 @@ export function useDb() {
         }
       }
 
-      // Metric 2: Dominant Beer Category for current year (based on ProductGroupId 34 and 36)
-      let dominantBeerCategory = "Ninguna (otras categorías)"; // Default if no specific beer group consumption
-      const belgasLiters = categoryVolumesByGroupId[BEER_PRODUCT_GROUP_IDS[0]];
-      const alemanasLiters = categoryVolumesByGroupId[BEER_PRODUCT_GROUP_IDS[1]];
+      // Metric 2: Dominant Beer Category for current year (based on all BEER_PRODUCT_GROUP_IDS)
+      let dominantBeerCategory = "Ninguna (otras categorías)";
+      let maxLiters = 0;
+      let dominantGroupId: number | null = null;
 
-      if (belgasLiters > 0 || alemanasLiters > 0) {
-        if (belgasLiters > alemanasLiters) {
-          dominantBeerCategory = "Cervezas Belgas";
-        } else if (alemanasLiters > belgasLiters) {
-          dominantBeerCategory = "Cervezas Alemanas";
-        } else {
-          dominantBeerCategory = "Cervezas Belgas y Alemanas (Empate)"; // Or choose one, or a combined name
+      for (const groupId of BEER_PRODUCT_GROUP_IDS) {
+        if (categoryVolumesByGroupId[groupId] > maxLiters) {
+          maxLiters = categoryVolumesByGroupId[groupId];
+          dominantGroupId = groupId;
+        }
+      }
+
+      if (dominantGroupId !== null) {
+        // Map ProductGroupId to a more descriptive name for display
+        switch (dominantGroupId) {
+          case 34: dominantBeerCategory = "Cervezas Belgas"; break;
+          case 36: dominantBeerCategory = "Cervezas Alemanas"; break;
+          case 40: dominantBeerCategory = "Cervezas 750ml"; break;
+          case 52: dominantBeerCategory = "Cervezas Españolas"; break;
+          case 53: dominantBeerCategory = "Cervezas del Mundo"; break;
+          default: dominantBeerCategory = "Categoría de Cerveza Dominante";
         }
       }
 
@@ -285,7 +291,7 @@ export function useDb() {
         SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
         FROM Product AS P
         WHERE 1=1
-        AND P.IsEnabled = TRUE -- ADDED: Filter by IsEnabled
+        AND P.IsEnabled = TRUE
         ${buildExclusionClause('P')}
         ${buildBeerCategoryFilterClause('P')};
       `;
@@ -404,7 +410,7 @@ export function useDb() {
       SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
       FROM Product AS P
       WHERE 1=1
-      AND P.IsEnabled = TRUE -- ADDED: Filter by IsEnabled
+      AND P.IsEnabled = TRUE
       ${buildExclusionClause('P')}
       ${buildBeerCategoryFilterClause('P')};
     `;

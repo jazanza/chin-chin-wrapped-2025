@@ -28,7 +28,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
     // Assuming total varieties is around 100.
     // If missingCount > 50, it means more than half are missing.
     if (missingCount > 50) { 
-      return `¿QUÉÉÉ? NO HAS PROBADO CASI NADA, ¿ES UNA BROMA? DEBES MEJORAR EL 2026`;
+      return `NO HAS PROBADO CASI NADA, ¿ES UNA BROMA? DEBES MEJORAR EL 2026`;
     }
     // Default for < 50% missing (or between 2 and 50)
     return `CASI LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
@@ -48,7 +48,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div className={cn("flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8", textColor)}>
         <p className={cn("text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center", highlightColor)}>
-          TU LISTA DE TAREAS PENDIENTES:
+          TU LISTA DE TAREAS 2026:
         </p>
         <p className={cn("text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)] text-center mt-4", textColor)}>
           {wittyTitle}

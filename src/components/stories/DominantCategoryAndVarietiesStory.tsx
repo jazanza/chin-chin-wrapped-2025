@@ -54,7 +54,7 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "ESTÁS ENVICIADO CON LAS...", color: textColor },
+    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor },
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
     { text: "\n\nY PROBASTE ", color: textColor },
     { text: `${uniqueVarieties2025}`, color: highlightColor },

@@ -35,12 +35,13 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
   );
 };
 
-const getVolumeReactionText = (liters: number): string => {
-  if (liters >= 200) return "Felicidades, eres oficialmente un cuerpo de agua. ¡La barra te saluda!";
-  if (liters >= 100) return "Con eso llenas una bañera. Te estás tomando esto muy en serio.";
-  if (liters >= 50) return "Suficiente para hidratar un desierto pequeño. Y sí, es un cumplido.";
-  if (liters > 0) return "Eso es menos de lo que bebió tu vecino. ¿Estás seguro de que este es tu Wrapped?";
-  return "Parece que aún no has descubierto tu potencial cervecero."; // Fallback for 0 liters
+const getLitersReaction = (liters: number): string => {
+  if (liters >= 100) return "¡Alerta! Tu cuerpo ya no está compuesto de agua, sino de la más puras cervezas.";
+  if (liters >= 50) return "Tu compromiso es notable. Eres oficialmente una celebridad de Chin Chin";
+  if (liters >= 20) return "Bien hecho, ya eres un contribuyente serio al PIB cervecero. Buen trabajo.";
+  if (liters >= 10) return "Parece que has estado ahorrando. ¡Necesitas más práctica y más visitas al Chin Chin!";
+  // 0 - 9.9 Litros
+  return "¿Seguro que no te confundiste de Wrapped? Esto es un poco decepcionante. No mentira, sabemos que lo harás mejor el 2026";
 };
 
 export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor, highlightColor }: TotalConsumptionStoryProps) => {
@@ -65,7 +66,7 @@ export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor,
     });
   }, [titleSegments]);
 
-  const volumeReaction = useMemo(() => getVolumeReactionText(totalLiters), [totalLiters]);
+  const volumeReaction = useMemo(() => getLitersReaction(totalLiters), [totalLiters]);
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}

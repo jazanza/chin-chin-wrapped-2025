@@ -38,7 +38,7 @@ const Block = ({ bgColor, children }: BlockProps) => {
   // Determine text color based on background color for brutalist contrast
   const textColorClass = bgColor === "bg-black" ? "text-white" : "text-black";
   return (
-    <div className={cn("flex flex-col items-center justify-center p-6 border-2 border-white", bgColor, textColorClass)}>
+    <div className={cn("flex flex-col items-center justify-center p-4 border-2 border-white", bgColor, textColorClass)}>
       {children}
     </div>
   );
@@ -141,9 +141,9 @@ export const SummaryInfographic = ({
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans overflow-auto"> {/* Removed p-4 from here */}
+    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans overflow-auto">
       {/* Main Infographic Content - captureTargetRef now wraps title and grid */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-4 bg-black w-[90vw] max-w-[500px] h-[80vh] max-h-[888px] aspect-[9/16]"> {/* Updated className */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] h-[80vh] max-h-[888px] aspect-[9/16]">
         {/* Main Infographic Title */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -159,38 +159,38 @@ export const SummaryInfographic = ({
         </div>
 
         {isTitleTyped && (
-          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white"> {/* Adjusted grid to fill parent */}
+          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white">
             {/* Row 1, Column 1: Total Visitas */}
             <Block bgColor="bg-black">
-              <p className="text-sm md:text-lg lg:text-xl font-bold text-center">
+              <p className="text-xs md:text-sm lg:text-base font-bold text-center">
                 CANTIDAD DE VISITAS ESTE {year}
               </p>
-              <p className="text-5xl md:text-6xl lg:text-7xl font-black text-center">
+              <p className="text-4xl md:text-5xl lg:text-6xl font-black text-center">
                 {totalVisits}
               </p>
             </Block>
 
             {/* Row 1, Column 2: Total Litros */}
             <Block bgColor="bg-white">
-              <p className="text-sm md:text-lg lg:text-xl font-bold text-center">
+              <p className="text-xs md:text-sm lg:text-base font-bold text-center">
                 LITROS PROCESADOS
               </p>
-              <p className="text-5xl md:text-6xl lg:text-7xl font-black text-center">
+              <p className="text-4xl md:text-5xl lg:text-6xl font-black text-center">
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
 
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block bgColor="bg-black">
-              <p className="text-sm md:text-lg lg:text-xl font-bold text-center mb-1">
+              <p className="text-xs md:text-sm lg:text-base font-bold text-center mb-1">
                 EL TRÍO FAVORITO
               </p>
               {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
                 <p
                   key={idx}
                   className={cn(
-                    "text-center leading-tight",
-                    idx === 0 ? "text-base md:text-xl lg:text-2xl font-black" : "text-xs md:text-sm lg:text-base font-bold"
+                    "text-center leading-tight text-ellipsis overflow-hidden whitespace-nowrap", // Added text overflow handling
+                    idx === 0 ? "text-sm md:text-lg lg:text-xl font-black" : "text-xs md:text-sm lg:text-base font-bold"
                   )}
                 >
                   {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
@@ -202,12 +202,12 @@ export const SummaryInfographic = ({
             <Block bgColor="bg-white">
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
                   {/* Título Dinámico del Nivel */}
-                  <h2 className="text-xl md:text-3xl lg:text-4xl font-black leading-tight mb-2">
+                  <h2 className="text-lg md:text-xl lg:text-2xl font-black leading-tight mb-2">
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   
                   {/* Métrica de Soporte */}
-                  <p className="text-sm md:text-lg lg:text-xl font-bold">
+                  <p className="text-xs md:text-sm lg:text-base font-bold">
                       {uniqueVarieties2025} VARIEDADES PROBADAS
                   </p>
                   
@@ -220,10 +220,10 @@ export const SummaryInfographic = ({
 
             {/* Row 3, Column 1: Día Más Activo */}
             <Block bgColor="bg-black">
-              <p className="text-sm md:text-lg lg:text-xl font-bold text-center">
+              <p className="text-xs md:text-sm lg:text-base font-bold text-center">
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-5xl md:text-6xl lg:text-7xl font-black text-center">
+              <p className="text-4xl md:text-5xl lg:text-6xl font-black text-center">
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
@@ -235,7 +235,7 @@ export const SummaryInfographic = ({
                 alt="Logo Chin Chin"
                 className="w-auto max-w-[100px] p-1 mb-2" // Adjusted to w-auto
               />
-              <p className="text-white text-sm md:text-lg lg:text-xl font-bold">
+              <p className="text-white text-xs md:text-sm lg:text-base font-bold">
                 @CHINCHIN.CERVEZAS
               </p>
             </Block>

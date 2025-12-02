@@ -221,7 +221,7 @@ const HIGHLIGHT_COLORS = [
 
 const WrappedDashboard = () => {
   const { customerId } = useParams<{ customerId: string }>();
-  const { getWrappedData, loading, error, dbLoaded } = useDb();
+  const { getWrappedData, loading, error, dbLoaded, getAllBeerVarietiesInDb } = useDb(); // Import new function
   const [wrappedData, setWrappedData] = useState<any>(null);
   const [toastId, setToastId] = useState<string | number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
@@ -252,6 +252,16 @@ const WrappedDashboard = () => {
 
     fetchWrappedData();
   }, [customerId, dbLoaded]);
+
+  // TEMPORARY: Log all beer varieties to console for debugging
+  useEffect(() => {
+    if (dbLoaded && getAllBeerVarietiesInDb) {
+      getAllBeerVarietiesInDb().then(list => {
+        console.log("Listado de variedades de cerveza en la base de datos (88 items):", list);
+      }).catch(console.error);
+    }
+  }, [dbLoaded, getAllBeerVarietiesInDb]);
+  // END TEMPORARY LOG
 
   // Story navigation logic - Reintroduced auto-advance
   useEffect(() => {

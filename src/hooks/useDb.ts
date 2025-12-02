@@ -377,5 +377,44 @@ export function useDb() {
     }
   }, []);
 
-  return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer };
+  const getAllBeerVarietiesInDb = useCallback(async () => {
+    if (!dbInstance) {
+      throw new Error("Database not loaded.");
+    }
+
+    const buildExclusionClause = (tableAlias: string) => {
+      if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) {
+        return "";
+      }
+      const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
+      return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
+    };
+
+    const buildBeerCategoryFilterClause = (tableAlias: string) => {
+      if (BEER_PRODUCT_GROUP_IDS.length === 0) {
+        return "";
+      }
+      const categoryIdsSql = BEER_PRODUCT_GROUP_IDS.join(',');
+      return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
+    };
+
+    const totalUniqueProductsDbQuery = `
+      SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
+      FROM Product AS P
+      WHERE 1=1
+      ${buildExclusionClause('P')}
+      ${buildBeerCategoryFilterClause('P')};
+    `;
+    const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
+    const totalVarietiesInDbSet = new Set<string>();
+    for (const item of rawTotalVarietiesInDb) {
+      const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+      if (volumeMl > 0) { // Only count if it's a liquid product
+        totalVarietiesInDbSet.add(item.ProductName);
+      }
+    }
+    return Array.from(totalVarietiesInDbSet).sort();
+  }, []);
+
+  return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

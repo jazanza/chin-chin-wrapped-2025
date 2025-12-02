@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 // import { Text } from '@react-three/drei'; // REMOVED
 // import { useThree } from '@react-three/fiber'; // REMOVED
-import { TypewriterText, TextSegment } from '../TypewriterText';
+import { SegmentedText, TextSegment } from '../SegmentedText';
 // import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface DominantCategoryAndVarietiesStoryProps {
@@ -33,7 +33,7 @@ export const DominantCategoryAndVarietiesStory = ({
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
       {/* AnimatedBackgroundLines REMOVED */}
-      <TypewriterText
+      <SegmentedText
         segments={storySegments}
         fontSize="text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)]" // Adjusted font size
         maxWidth="max-w-2xl" // Increased max-width for better readability

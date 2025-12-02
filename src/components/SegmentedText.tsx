@@ -5,7 +5,7 @@ export interface TextSegment {
   color: string; // Tailwind CSS class for color, e.g., "text-white"
 }
 
-interface TypewriterTextProps {
+interface SegmentedTextProps {
   segments: TextSegment[];
   fontSize: string; // Tailwind CSS class for font size, e.g., "text-5xl"
   maxWidth?: string; // Tailwind CSS class for max-width, e.g., "max-w-md"
@@ -16,7 +16,7 @@ interface TypewriterTextProps {
   className?: string; // Additional classes for the main container
 }
 
-export const TypewriterText = ({
+export const SegmentedText = ({
   segments,
   fontSize,
   maxWidth = "max-w-full", // Default to full width, let stories constrain if needed
@@ -25,28 +25,31 @@ export const TypewriterText = ({
   fontWeight = "font-normal",
   lineHeight = "leading-normal",
   className = "",
-}: TypewriterTextProps) => {
+}: SegmentedTextProps) => {
 
   const renderedText = useMemo(() => {
-    return segments.map((segment, segmentIndex) => {
-      // Split by newline to create paragraphs or line breaks
+    return segments.flatMap((segment, segmentIndex) => {
       const lines = segment.text.split('\n');
-      return lines.map((line, lineIndex) => (
-        <React.Fragment key={`${segmentIndex}-${lineIndex}`}>
-          <span className={`${segment.color}`}>
+      return lines.flatMap((line, lineIndex) => {
+        const elements: React.ReactNode[] = [
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
             {line}
           </span>
-          {lineIndex < lines.length - 1 && <br />} {/* Add <br> for newlines within a segment */}
-        </React.Fragment>
-      ));
+        ];
+        // Add <br> only if it's not the last line of the current segment
+        if (lineIndex < lines.length - 1) {
+          elements.push(<br key={`${segmentIndex}-${lineIndex}-br`} />);
+        }
+        return elements;
+      });
     });
   }, [segments]);
 
   return (
     <div
-      className={`absolute inset-0 flex flex-col items-center justify-center p-4 ${maxWidth} ${letterSpacing} ${fontWeight} ${lineHeight} ${className}`}
+      className={`flex flex-col items-center justify-center p-4 ${maxWidth} ${letterSpacing} ${fontWeight} ${lineHeight} ${className}`}
     >
-      <p className={`${fontSize} ${textAlign}`}> {/* Explicitly apply textAlign to p tag */}
+      <p className={`${fontSize} ${textAlign}`}>
         {renderedText}
       </p>
     </div>

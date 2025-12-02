@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { TypewriterText, TextSegment } from '../TypewriterText';
+import { SegmentedText, TextSegment } from '../SegmentedText';
 import { cn } from '@/lib/utils';
 
 interface MostActiveDayStoryProps {
@@ -23,7 +23,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-      <TypewriterText
+      <SegmentedText
         segments={storySegments}
         fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Adjusted font size
         maxWidth="max-w-md"

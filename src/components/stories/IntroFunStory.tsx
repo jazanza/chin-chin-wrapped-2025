@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { TypewriterText, TextSegment } from '../TypewriterText';
+import { SegmentedText, TextSegment } from '../SegmentedText';
 // import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface IntroFunStoryProps {
@@ -23,7 +23,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
       {/* AnimatedBackgroundLines REMOVED */}
-      <TypewriterText
+      <SegmentedText
         segments={introSegments}
         fontSize="text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)]" // Adjusted font size for better flow
         maxWidth="max-w-2xl" // Increased max-width for better readability

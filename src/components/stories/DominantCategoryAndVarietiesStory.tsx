@@ -17,31 +17,6 @@ interface DominantCategoryAndVarietiesStoryProps {
   highlightColor: string; // Tailwind CSS class
 }
 
-// Definir esta función fuera del componente:
-const getVarietyComment = (uniqueCount: number, totalCount: number): string => {
-  if (totalCount === 0) return "¡El universo cervecero te espera!";
-
-  const percentage = (uniqueCount / totalCount) * 100;
-
-  if (percentage === 100) {
-    return "¡LO LOGRASTE! Ahora ya puedes seguir bebiendo en paz.";
-  }
-  if (percentage >= 76) {
-    return "Tu currículum cervecero es envidiable. Eres una amenaza para los de la barra.";
-  }
-  if (percentage >= 51) {
-    return "Ya casi no tenemos secretos para ti. ¡Felicidades!";
-  }
-  if (percentage >= 31) {
-    return "Mitad de camino al nirvana cervecero. ¡Sigue así!";
-  }
-  if (percentage >= 11) {
-    return "Parece que aún no te convencemos de probar algo diferente. ¿Qué esperas?";
-  }
-  // 0% - 10%
-  return "Estás en el kinder garden de las cervezas. Hay que animarse a experimentar";
-};
-
 export const DominantCategoryAndVarietiesStory = ({
   dominantBeerCategory,
   uniqueVarieties2025,
@@ -49,10 +24,6 @@ export const DominantCategoryAndVarietiesStory = ({
   textColor,
   highlightColor,
 }: DominantCategoryAndVarietiesStoryProps) => {
-  
-  // 1. Obtener la frase dinámica:
-  const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
-
   const storySegments: TextSegment[] = useMemo(() => [
     { text: "ESTÁS ENVICIADO CON LAS...", color: textColor },
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor },
@@ -60,9 +31,8 @@ export const DominantCategoryAndVarietiesStory = ({
     { text: `${uniqueVarieties2025}`, color: highlightColor },
     { text: " VARIEDADES ÚNICAS. \n(DE ", color: textColor },
     { text: `${totalVarietiesInDb}`, color: highlightColor },
-    // 2. Insertar la frase dinámica aquí:
-    { text: ` DISPONIBLES. ${dynamicComment}).`, color: textColor }, 
-  ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]);
+    { text: " DISPONIBLES. VAS POR BUEN CAMINO).", color: textColor },
+  ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
     return storySegments.flatMap((segment, segmentIndex) => {

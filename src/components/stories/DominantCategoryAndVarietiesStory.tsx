@@ -1,8 +1,12 @@
 import React, { useMemo } from 'react';
 // import { Text } from '@react-three/drei'; // REMOVED
 // import { useThree } from '@react-three/fiber'; // REMOVED
-import { SegmentedText, TextSegment } from '../SegmentedText';
 // import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
+
+interface TextSegment {
+  text: string;
+  color: string; // Tailwind CSS class for color, e.g., "text-white"
+}
 
 interface DominantCategoryAndVarietiesStoryProps {
   dominantBeerCategory: string;
@@ -30,18 +34,33 @@ export const DominantCategoryAndVarietiesStory = ({
     { text: " VARIEDADES!", color: textColor },
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor]);
 
+  const renderedText = useMemo(() => {
+    return storySegments.flatMap((segment, segmentIndex) => {
+      const lines = segment.text.split('\n');
+      return lines.flatMap((line, lineIndex) => {
+        const elements: React.ReactNode[] = [
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+            {line}
+          </span>
+        ];
+        if (lineIndex < lines.length - 1) {
+          elements.push(<br key={`${segmentIndex}-${lineIndex}-br`} />);
+        }
+        return elements;
+      });
+    });
+  }, [storySegments]);
+
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
       {/* AnimatedBackgroundLines REMOVED */}
-      <SegmentedText
-        segments={storySegments}
-        fontSize="text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)]" // Adjusted font size
-        maxWidth="max-w-2xl" // Increased max-width for better readability
-        textAlign="text-center"
-        letterSpacing="tracking-tight"
-        fontWeight="font-black"
-        lineHeight="leading-tight"
-      />
+      <div
+        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-tight`}
+      >
+        <p className={`text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)] text-center`}>
+          {renderedText}
+        </p>
+      </div>
     </div>
   );
 };

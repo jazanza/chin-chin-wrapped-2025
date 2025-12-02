@@ -1,8 +1,12 @@
 import React, { useMemo } from 'react';
 // import { Text } from '@react-three/drei'; // REMOVED
 // import { useThree } from '@react-three/fiber'; // REMOVED
-import { SegmentedText, TextSegment } from '../SegmentedText';
 // import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
+
+interface TextSegment {
+  text: string;
+  color: string; // Tailwind CSS class for color, e.g., "text-white"
+}
 
 interface TotalVisitsStoryProps {
   customerName: string;
@@ -43,19 +47,33 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2
     { text: " VECES!", color: textColor },
   ], [customerName, totalVisits, textColor, highlightColor]);
 
+  const renderedText = useMemo(() => {
+    return storySegments.flatMap((segment, segmentIndex) => {
+      const lines = segment.text.split('\n');
+      return lines.flatMap((line, lineIndex) => {
+        const elements: React.ReactNode[] = [
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+            {line}
+          </span>
+        ];
+        if (lineIndex < lines.length - 1) {
+          elements.push(<br key={`${segmentIndex}-${lineIndex}-br`} />);
+        }
+        return elements;
+      });
+    });
+  }, [storySegments]);
+
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       {/* AnimatedBackgroundLines REMOVED */}
-      <SegmentedText
-        segments={storySegments}
-        fontSize="text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" // Adjusted font size
-        maxWidth="max-w-md"
-        textAlign="text-center"
-        letterSpacing="tracking-tight"
-        fontWeight="font-black"
-        lineHeight="leading-tight"
-        className="mb-4" // Add margin bottom to separate from comparison text
-      />
+      <div
+        className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-4`}
+      >
+        <p className={`text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center`}>
+          {renderedText}
+        </p>
+      </div>
       <ComparisonText
         current={totalVisits}
         previous={totalVisits2024}

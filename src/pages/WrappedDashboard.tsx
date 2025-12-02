@@ -8,10 +8,9 @@ import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast
 // import { PostProcessingEffects } from "@/components/PostProcessingEffects"; // REMOVED
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
-import { WrappedOverlay } from "@/components/WrappedOverlay";
 // import { ViewMode } from "@/components/CameraAnimator"; // REMOVED
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
-import { StoryProgressBar } from "@/components/StoryProgressBar";
+import { cn } from '@/lib/utils'; // For StoryProgressBar
 
 // Import story components (now all 2D)
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
@@ -23,29 +22,107 @@ import { Top5Story } from "@/components/stories/Top5Story";
 import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
 import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; // This will become a 2D component
 
-// No longer needed for 2D screenshot
-// const ScreenshotHelper = ({ onScreenshotReady }: { onScreenshotReady: (dataUrl: string) => void }) => {
-//   const { gl } = useThree();
-//   const captureScreenshot = useCallback(() => {
-//     const dataUrl = gl.domElement.toDataURL('image/png');
-//     onScreenshotReady(dataUrl);
-//   }, [gl, onScreenshotReady]);
+// Inline WrappedOverlay logic
+interface WrappedOverlayProps {
+  customerName: string;
+  year: string;
+}
 
-//   useEffect(() => {
-//     (window as any).captureWrappedScreenshot = captureScreenshot;
-//     return () => {
-//       delete (window as any).captureWrappedScreenshot;
-//     };
-//   }, [captureScreenshot]);
+const WrappedOverlay = ({ customerName, year }: WrappedOverlayProps) => {
+  return (
+    <div className="absolute top-8 left-8 z-10 text-white pointer-events-none font-sans max-w-[80%]">
+      <h1
+        className="text-[min(6vw,3.5rem)] font-bold text-white uppercase tracking-widest"
+      >
+        {customerName}
+      </h1>
+      <p
+        className="text-[min(3vw,1.8rem)] font-bold text-white uppercase tracking-wide"
+      >
+        {year} Wrapped
+      </p>
+    </div>
+  );
+};
 
-//   return null;
-// };
+// Inline StoryProgressBar logic
+interface StoryProgressBarProps {
+  currentStoryIndex: number;
+  totalStories: number;
+  storyDuration: number; // in milliseconds
+  isPaused: boolean;
+}
+
+const StoryProgressBar = ({
+  currentStoryIndex,
+  totalStories,
+  storyDuration,
+  isPaused,
+}: StoryProgressBarProps) => {
+  const [progress, setProgress] = useState(0); // Progress for the current segment (0-100)
+  const animationFrameRef = useRef<number>();
+  const startTimeRef = useRef<number>(0);
+  const pausedTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (isPaused) {
+      // Pause: record elapsed time and stop animation
+      cancelAnimationFrame(animationFrameRef.current!);
+      pausedTimeRef.current = Date.now() - startTimeRef.current;
+    } else {
+      // Resume or start new story
+      startTimeRef.current = Date.now() - pausedTimeRef.current; // Adjust start time for resume
+      const animate = (currentTime: number) => {
+        const elapsedTime = currentTime - startTimeRef.current;
+        const newProgress = Math.min((elapsedTime / storyDuration) * 100, 100);
+        setProgress(newProgress);
+
+        if (newProgress < 100) {
+          animationFrameRef.current = requestAnimationFrame(animate);
+        }
+      };
+      animationFrameRef.current = requestAnimationFrame(animate);
+    }
+
+    return () => {
+      cancelAnimationFrame(animationFrameRef.current!);
+    };
+  }, [currentStoryIndex, isPaused, storyDuration]);
+
+  // Reset progress when story changes
+  useEffect(() => {
+    setProgress(0);
+    pausedTimeRef.current = 0;
+    startTimeRef.current = Date.now();
+  }, [currentStoryIndex]);
+
+  return (
+    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex w-[90%] max-w-md space-x-1">
+      {Array.from({ length: totalStories }).map((_, index) => (
+        <div
+          key={index}
+          className={cn(
+            "h-1 flex-1 bg-gray-700 overflow-hidden", // Removed rounded-full
+            index < currentStoryIndex && "bg-white", // Completed stories are white
+          )}
+        >
+          {index === currentStoryIndex && (
+            <div
+              className="h-full bg-white transition-all duration-100 ease-linear"
+              style={{ width: `${progress}%` }}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
 interface StoryScene {
   id: string;
   component: React.ElementType;
   duration: number; // in milliseconds
-  // cameraViewMode: ViewMode; // REMOVED
   title: string;
   downloadFileName: string;
 }
@@ -55,7 +132,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'introFun', // Slide 0
     component: IntroFunStory,
     duration: 15000, // 15 segundos para lectura de texto largo
-    // cameraViewMode: 'intro', // REMOVED
     title: 'Bienvenida Divertida',
     downloadFileName: 'Historia_Bienvenida',
   },
@@ -63,7 +139,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'totalVisits', // Slide 1
     component: TotalVisitsStory,
     duration: 15000, // 15 seconds
-    // cameraViewMode: 'totalConsumption', // REMOVED
     title: 'Visitas del Año',
     downloadFileName: 'Historia_Visitas',
   },
@@ -71,7 +146,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'mostActiveMonth', // Slide 2
     component: MostActiveMonthStory,
     duration: 15000, // 15 seconds
-    // cameraViewMode: 'dominantBeer', // REMOVED
     title: 'Mes Más Activo',
     downloadFileName: 'Historia_MesActivo',
   },
@@ -79,7 +153,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'mostActiveDay', // Slide 3
     component: MostActiveDayStory,
     duration: 15000, // 15 seconds
-    // cameraViewMode: 'dominantBeer', // REMOVED
     title: 'Día Más Activo',
     downloadFileName: 'Historia_DiaActivo',
   },
@@ -87,7 +160,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'dominantCategoryAndVarieties', // Slide 4
     component: DominantCategoryAndVarietiesStory,
     duration: 15000, // 15 seconds
-    // cameraViewMode: 'dominantBeer', // REMOVED
     title: 'Categoría y Variedades',
     downloadFileName: 'Historia_CategoriaVariedades',
   },
@@ -95,7 +167,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'top5', // Slide 5
     component: Top5Story,
     duration: 15000, // 15 seconds
-    // cameraViewMode: 'top5', // REMOVED
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
   },
@@ -103,7 +174,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'totalConsumption', // Slide 6
     component: TotalConsumptionStory,
     duration: 15000, // 15 seconds
-    // cameraViewMode: 'totalConsumption', // REMOVED
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
   },
@@ -111,7 +181,6 @@ const STORY_SCENES: StoryScene[] = [
     id: 'summaryInfographic', // Slide 7
     component: SummaryInfographic,
     duration: 15000, // 15 segundos para dar tiempo a descargar
-    // cameraViewMode: 'summaryInfographic', // REMOVED
     title: 'Infografía Final',
     downloadFileName: 'Infografia_Final',
   },

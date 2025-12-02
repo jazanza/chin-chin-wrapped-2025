@@ -116,7 +116,7 @@ export const SummaryInfographic = ({
           {/* Row 1, Column 1: Total Visitas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
-              CANTIDAD DE DÍAS QUE NOS VISITASTE ESTE {year}
+              CANTIDAD DE VISITAS ESTE {year}
             </p>
             <p className="text-[6vw] md:text-[3rem] lg:text-[4rem] font-black text-center">
               {totalVisits}

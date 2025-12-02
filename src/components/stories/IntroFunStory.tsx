@@ -20,7 +20,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
     { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
     { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor },
     { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
-    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DEL TERAPEUTA GRACIAS A CHIN CHIN.`, color: highlightColor },
+    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor },
     { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
     { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);

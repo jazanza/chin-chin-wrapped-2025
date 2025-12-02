@@ -141,19 +141,19 @@
   /* New bubble animation keyframes */
   @keyframes bubble-up {
     0% {
-      transform: translateY(100vh); /* Inicia en la parte inferior */
+      transform: translateY(0); /* Inicia en su posición original (bottom: -size) */
       opacity: 0.1;
     }
     60% {
-      transform: translateY(10vh); /* Sube hasta cerca del límite superior */
+      transform: translateY(-90vh); /* Sube hasta el 10% superior de la pantalla */
       opacity: 0.3;
     }
     90% {
-      transform: translateY(10vh); /* Se detiene en la "espuma" */
+      transform: translateY(-90vh); /* Se detiene en la "espuma" */
       opacity: 0.4;
     }
     100% {
-      transform: translateY(5vh) scale(1.2); /* Pop y desaparición */
+      transform: translateY(-95vh) scale(1.2); /* Pop y desaparición ligeramente por encima */
       opacity: 0;
     }
   }

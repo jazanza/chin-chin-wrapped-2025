@@ -21,23 +21,20 @@ interface Top5StoryProps {
 }
 
 export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5StoryProps) => { // Changed prop name
-  const titleSegments: TextSegment[] = useMemo(() => {
+  const mainTitleSegments: TextSegment[] = useMemo(() => {
     const segments: TextSegment[] = [];
     if (top10Products && top10Products.length > 0) {
       const top1Name = top10Products[0].name;
-      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA:`, color: textColor, sizeClass: "text-4xl" }); // H2
+      segments.push({ text: `TU CERVEZA FAVORITA DEL AÑO FUE LA:`, color: textColor, sizeClass: "text-4xl" }); // H2
       segments.push({ text: `\n${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-6xl" }); // H1
-      segments.push({ text: "\n\n", color: textColor, sizeClass: "" }); // Add a line break
     } else {
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-4xl" }); // H2
-      segments.push({ text: "\n\n", color: textColor, sizeClass: "" }); // Add a line break
     }
-    segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor, sizeClass: "text-xl" }); // H3
     return segments;
   }, [top10Products, textColor, highlightColor]);
 
-  const renderedText = useMemo(() => {
-    return titleSegments.flatMap((segment, segmentIndex) => {
+  const renderedMainText = useMemo(() => {
+    return mainTitleSegments.flatMap((segment, segmentIndex) => {
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
@@ -51,7 +48,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
         return elements;
       });
     });
-  }, [titleSegments]);
+  }, [mainTitleSegments]);
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
@@ -59,9 +56,15 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
       >
         <p className={`text-center`}>
-          {renderedText}
+          {renderedMainText}
         </p>
       </div>
+      
+      {/* Moved "TU TOP 10 DE CERVEZAS:" closer to the list */}
+      <p className={cn("text-xl font-black text-center mb-4", highlightColor)}> {/* H3 */}
+        TU TOP 10 DE CERVEZAS:
+      </p>
+
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
         {top10Products.slice(0, 10).map((product, idx) => ( // Changed slice to 10
           <p key={idx} className={cn("text-center", textColor, idx === 0 ? 'text-xl font-black' : 'text-sm font-bold')}> {/* H3 for first, Cuerpo for others */}

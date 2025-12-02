@@ -78,8 +78,30 @@ const BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT = [34, 36, 40, 52, 53];
 
 // IDs de productos que deben ser incluidos forzosamente, independientemente de su estado IsEnabled
 const FORCED_INCLUDED_VARIETY_IDS = [
-    499, 498, 511, 111, 659, 695, 583, 584, 738, 651, 652, 737, 594, 666, 292,
-    592, 165, 342, 352, 665, 707, 706, 595, 822, 605, 86, 672
+    499, // 5.0 Craft - 500ml
+    498, // 5.0 Lager - 500ml
+    511, // 5.0 Weiss - 500ml
+    111, // Asahi - 330ml
+    659, // Bear Bear Wheat - 500ml
+    695, // Bear Beer Lager - 500ml
+    578, // Bush Caractere - 750ml
+    583, // Bush De Nuits - 750ml
+    584, // Bush Prestige - 750ml
+    738, // Club Colombia Roja - 330ml
+    651, // Cusqueña Doble Malta - 330ml
+    652, // Cusqueña Dorada - 330ml
+    737, // Cusqueña Trigo - 330ml
+    594, // Czechvar - 500ml
+    292, // Erdinger OktoberFest - 500ml
+    592, // Erdinger Urwisse - 500ml
+    665, // Hofbrau 3.3 Session Lager - 500ml
+    707, // Ladenburger Hefeweizen - 500ml
+    706, // Ladenburger Helles - 500ml
+    822, // Modelo Negra - 355ml
+    605, // Oettinger Radler - 500ml
+    86,  // Peroni - 330ml
+    672, // Sapporo - 330ml
+    801  // Schofferhofer Grapefruit - 330ml
 ];
 
 // Helper to extract the base beer name by removing volume suffix (e.g., " - 330ml")

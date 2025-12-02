@@ -22,7 +22,7 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, textColor,
     } else if (concentration === 'Fiel' && rarity === 'Popular') {
       return "EL CLÁSICO. Eres firme en tus decisiones. Disfrutas el Top 3 de los más vendidos y lo haces con una admirable consistencia.";
     } else if (concentration === 'Explorador' && rarity === 'Popular') {
-      return "EL SOCIABLE. Eres el amigo que prueba de todo. Consumes la mayoría de las cervezas populares, pero nunca te atas a una sola marca.";
+      return "EL SOCIABLE. Eres el amigo que prueba de todo. Consumes la mayoría de las cervezas populares, pero nunca te atas a una sola.";
     }
     return "Descubre tu paladar cervecero.";
   }, [concentration, rarity]);

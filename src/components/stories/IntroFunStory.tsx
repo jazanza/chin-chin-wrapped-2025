@@ -18,11 +18,11 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
   const introSegments: TextSegment[] = useMemo(() => [
     { text: "¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!", color: highlightColor },
     { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
-    { text: "PARA NOSOTROS, CADA VISITA NO ES UN MOTIVO, SINO LA RAZÓN DE NUESTRA ALEGRÍA.", color: textColor },
+    { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor },
     { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
-    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE EL TERAPEUTA EN CHIN CHIN.`, color: highlightColor },
+    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DEL TERAPEUTA GRACIAS A CHIN CHIN.`, color: highlightColor },
     { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
-    { text: "GRACIAS POR ELEGIRNOS. AHORA, A LO QUE VINIMOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
+    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
   ], [totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

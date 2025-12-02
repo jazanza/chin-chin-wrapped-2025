@@ -232,6 +232,66 @@ export function useDb() {
     return Array.from(uniqueBaseBeerNamesSet).sort();
   }, []);
 
+  // New function to get global beer distribution
+  const getGlobalBeerDistribution = useCallback(async (year: string) => {
+    if (!dbInstance) {
+        throw new Error("Base de datos no cargada.");
+    }
+
+    const buildExclusionClause = (tableAlias: string) => {
+        if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) {
+            return "";
+        }
+        const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
+        return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
+    };
+
+    const globalProductDataQuery = `
+        SELECT
+            P.Name AS ProductName,
+            P.Description AS ProductDescription,
+            P.ProductGroupId AS ProductGroupId,
+            SUM(DI.Quantity) AS TotalQuantity
+        FROM
+            Document AS D
+        INNER JOIN
+            DocumentItem AS DI ON D.Id = DI.DocumentId
+        INNER JOIN
+            Product AS P ON DI.ProductId = P.Id
+        WHERE
+            STRFTIME('%Y', D.Date) = ?
+            ${buildExclusionClause('P')}
+            AND (
+                (
+                    P.IsEnabled = TRUE
+                    AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
+                )
+                OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
+            )
+        GROUP BY
+            P.Id, P.Name, P.Description, P.ProductGroupId
+        HAVING
+            TotalQuantity > 0;
+    `;
+
+    const rawGlobalProductData = queryData(dbInstance, globalProductDataQuery, [year]);
+
+    const globalBeerDistribution = new Map<string, number>(); // base beer name -> total liters
+    let totalGlobalLiters = 0;
+
+    for (const item of rawGlobalProductData) {
+        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+        const liters = (item.TotalQuantity * volumeMl) / 1000;
+
+        if (liters > 0) {
+            totalGlobalLiters += liters;
+            const baseBeerName = getBaseBeerName(item.ProductName);
+            globalBeerDistribution.set(baseBeerName, (globalBeerDistribution.get(baseBeerName) || 0) + liters);
+        }
+    }
+    return { globalBeerDistribution, totalGlobalLiters };
+  }, [extractVolumeMl, getBaseBeerName]);
+
 
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
@@ -299,6 +359,17 @@ export function useDb() {
       const productLiters: { name: string; liters: number; color: string }[] = [];
       const customerUniqueBeerNamesSet = new Set<string>(); // Renamed from uniqueVarietiesSet for clarity
 
+      // Fetch global beer distribution for rarity calculation
+      const { globalBeerDistribution, totalGlobalLiters } = await getGlobalBeerDistribution(currentYear);
+
+      // Calculate customer's beer consumption by base name for palate analysis
+      const customerBeerLitersMap = new Map<string, number>();
+      let customerTotalBeerLitersForPalate = 0; // Only for beers considered in rarity/concentration
+
+      // Also collect top 3 for concentration coefficient
+      const customerProductLitersForConcentration: { name: string; liters: number }[] = [];
+
+
       for (const item of rawProductDataCurrentYear) {
         const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
         const liters = (item.TotalQuantity * volumeMl) / 1000;
@@ -309,7 +380,13 @@ export function useDb() {
 
           // Only add to customer's unique varieties set if it's a beer from the specified groups (now including 750ml)
           if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.Id)) { // Added check for forced IDs
-            customerUniqueBeerNamesSet.add(getBaseBeerName(item.ProductName)); // Use the new helper
+            const baseBeerName = getBaseBeerName(item.ProductName);
+            customerUniqueBeerNamesSet.add(baseBeerName); // Use the new helper
+            
+            // For palate analysis
+            customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
+            customerTotalBeerLitersForPalate += liters;
+            customerProductLitersForConcentration.push({ name: baseBeerName, liters: liters });
           }
 
           // Aggregate liters for dominant category calculation (now including 750ml)
@@ -447,6 +524,47 @@ export function useDb() {
         count: row.MonthCount,
       }));
 
+      // --- Calculate Patrón de Consumo (Concentration) ---
+      let concentration: 'Fiel' | 'Explorador' = 'Explorador';
+      if (customerTotalBeerLitersForPalate > 0) {
+          const sortedCustomerBeers = customerProductLitersForConcentration.sort((a, b) => b.liters - a.liters);
+          const top3Liters = sortedCustomerBeers.slice(0, 3).reduce((sum, beer) => sum + beer.liters, 0);
+          const concentrationCoefficient = top3Liters / customerTotalBeerLitersForPalate;
+          if (concentrationCoefficient > 0.60) { // Threshold as suggested
+              concentration = 'Fiel';
+          }
+      }
+
+      // --- Calculate Rareza de Gusto (Rarity) ---
+      let rarity: 'Nicho' | 'Popular' = 'Popular';
+      let weightedRarityScore = 0;
+      let totalWeightedLiters = 0; // Sum of customer liters for beers that have global data
+
+      if (customerTotalBeerLitersForPalate > 0 && totalGlobalLiters > 0) {
+          for (const [baseBeerName, customerLiters] of customerBeerLitersMap.entries()) {
+              const globalLiters = globalBeerDistribution.get(baseBeerName) || 0;
+              if (globalLiters > 0) {
+                  const globalPopularity = globalLiters / totalGlobalLiters; // 0 to 1, 1 being most popular
+                  const beerRarityFactor = 1 - globalPopularity; // 0 to 1, 1 being most rare (less popular)
+
+                  weightedRarityScore += customerLiters * beerRarityFactor;
+                  totalWeightedLiters += customerLiters;
+              }
+          }
+
+          if (totalWeightedLiters > 0) {
+              const averageRarityScore = weightedRarityScore / totalWeightedLiters;
+              // Define a fixed threshold for rarity. This might need tuning.
+              // A higher averageRarityScore means the customer drinks more rare beers.
+              const RARITY_THRESHOLD = 0.7; // Example threshold, needs empirical tuning
+              if (averageRarityScore > RARITY_THRESHOLD) {
+                  rarity = 'Nicho';
+              }
+          }
+      }
+
+      const palateCategory = { concentration, rarity };
+
 
       return {
         customerName,
@@ -465,6 +583,7 @@ export function useDb() {
         dailyVisits,
         monthlyVisits,
         missingVarieties, // Add missing varieties to the returned data
+        palateCategory, // Add new palate category
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);
@@ -473,7 +592,7 @@ export function useDb() {
     } finally {
       setLoading(false);
     }
-  }, [getAllBeerVarietiesInDb]);
+  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution]);
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

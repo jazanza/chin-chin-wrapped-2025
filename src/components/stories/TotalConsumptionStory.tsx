@@ -35,6 +35,14 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
   );
 };
 
+const getVolumeReactionText = (liters: number): string => {
+  if (liters >= 200) return "Felicidades, eres oficialmente un cuerpo de agua. ¡La barra te saluda!";
+  if (liters >= 100) return "Con eso llenas una bañera. Te estás tomando esto muy en serio.";
+  if (liters >= 50) return "Suficiente para hidratar un desierto pequeño. Y sí, es un cumplido.";
+  if (liters > 0) return "Eso es menos de lo que bebió tu vecino. ¿Estás seguro de que este es tu Wrapped?";
+  return "Parece que aún no has descubierto tu potencial cervecero."; // Fallback for 0 liters
+};
+
 export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor, highlightColor }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
     { text: "TU HÍGADO PROCESÓ UN\nVOLUMEN TOTAL DE...", color: textColor },
@@ -57,6 +65,8 @@ export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor,
     });
   }, [titleSegments]);
 
+  const volumeReaction = useMemo(() => getVolumeReactionText(totalLiters), [totalLiters]);
+
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       {/* AnimatedBackgroundLines REMOVED */}
@@ -70,6 +80,9 @@ export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor,
       <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
         <p className="text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)] font-black leading-none">
           {totalLiters.toFixed(1)} LITROS.
+        </p>
+        <p className={`text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold text-center ${textColor}`}>
+          {volumeReaction}
         </p>
       </div>
       <ComparisonText

@@ -19,9 +19,19 @@ interface Top5StoryProps {
 }
 
 export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5StoryProps) => { // Changed prop name
-  const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "LAS 10 RAZONES POR LAS QUE CASI VIVES AQUÍ", color: highlightColor }, // Changed to highlight for impact
-  ], [highlightColor]);
+  const titleSegments: TextSegment[] = useMemo(() => {
+    const segments: TextSegment[] = [];
+    if (top10Products && top10Products.length > 0) {
+      const top1Name = top10Products[0].name;
+      segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA ${top1Name.toUpperCase()}.`, color: highlightColor });
+      segments.push({ text: "\n", color: textColor }); // Add a line break
+    } else {
+      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que se está perdiendo.", color: textColor });
+      segments.push({ text: "\n", color: textColor }); // Add a line break
+    }
+    segments.push({ text: "LAS 10 RAZONES POR LAS QUE CASI VIVES AQUÍ", color: highlightColor });
+    return segments;
+  }, [top10Products, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
     return titleSegments.flatMap((segment, segmentIndex) => {

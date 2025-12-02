@@ -48,7 +48,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div className={cn("flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8", textColor)}>
         <p className={cn("text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center", highlightColor)}>
-          TU LISTA DE TAREAS 2026:
+          TU MISIÓN PARA EL 2026:
         </p>
         <p className={cn("text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)] text-center mt-4", textColor)}>
           {wittyTitle}
@@ -58,7 +58,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       {randomSuggestions.length > 0 && (
         <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
           <p className={cn("text-center text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold mb-2", highlightColor)}>
-            ¿POR DÓNDE EMPEZAR?
+            DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beerName, idx) => (
             <p key={idx} className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>

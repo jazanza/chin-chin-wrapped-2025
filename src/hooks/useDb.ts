@@ -226,7 +226,7 @@ export function useDb() {
         SELECT
             P.Name AS ProductName,
             P.Description AS ProductDescription,
-            P.ProductGroupId AS ProductGroupId, -- Include ProductGroupId
+            P.ProductGroupId AS ProductGroupId,
             SUM(DI.Quantity) AS TotalQuantity
         FROM
             Document AS D
@@ -237,10 +237,19 @@ export function useDb() {
         WHERE
             D.CustomerId = ?
             AND STRFTIME('%Y', D.Date) = ?
-            AND P.IsEnabled = TRUE
             ${buildExclusionClause('P')}
+            -- *** FILTRO ESTRICTO: SOLO CERVEZAS RELEVANTES O FORZADAS ***
+            AND (
+                -- Criterio 1: Cervezas activas en categorías principales
+                (
+                    P.IsEnabled = TRUE
+                    AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
+                )
+                -- Criterio 2: Cervezas de la lista blanca (IDs forzados, aunque estén desactivadas)
+                OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
+            )
         GROUP BY
-            P.Id, P.Name, P.Description, P.ProductGroupId -- Group by ProductGroupId as well
+            P.Id, P.Name, P.Description, P.ProductGroupId
         HAVING
             TotalQuantity > 0;
       `;
@@ -262,12 +271,12 @@ export function useDb() {
           totalLiters += liters; // This includes all liquid products, including ID 40
 
           // Only add to customer's unique varieties set if it's a beer from the specified groups (now including 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.Id)) { // Added check for forced IDs
             customerUniqueBeerNamesSet.add(getBaseBeerName(item.ProductName)); // Use the new helper
           }
 
           // Aggregate liters for dominant category calculation (now including 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.Id)) { // Added check for forced IDs
             categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
           }
 

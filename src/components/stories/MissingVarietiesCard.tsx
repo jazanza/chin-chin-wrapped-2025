@@ -28,10 +28,10 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
     // Assuming total varieties is around 100.
     // If missingCount > 50, it means more than half are missing.
     if (missingCount > 50) { 
-      return `¡VAYA! TE HAS SALTADO LA MITAD DE LA CARTA. ¿ES UNA BROMA?`;
+      return `¿QUÉÉÉ? NO HAS PROBADO CASI NADA, ¿ES UNA BROMA? DEBES MEJORAR EL 2026`;
     }
     // Default for < 50% missing (or between 2 and 50)
-    return `CASI LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE LA LEYENDA.`;
+    return `CASI LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
   }, [missingCount, missingVarieties]);
 
   const randomSuggestions = useMemo(() => {

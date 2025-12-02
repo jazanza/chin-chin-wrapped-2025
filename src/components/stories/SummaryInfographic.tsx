@@ -64,7 +64,7 @@ const Block = ({ bgColor, children }: BlockProps) => {
 const getBeerLevel = (uniqueVarietiesCount: number): string => {
   if (uniqueVarietiesCount >= 80) return "LEYENDA ABSOLUTA (¡ES HORA DE DEJAR TU CV!)";
   if (uniqueVarietiesCount >= 60) return "Maestro Cervecero (El que Nos Enseña)";
-  if (uniqueVarietiesCount >= 40) return "Coleccionista de Tapones (Conocedor de la Barra)";
+  if (uniqueVarietiesCount >= 40) return "Coleccionista de Sabores (Conocedor de la Barra)";
   if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas (El que Pide Sugerencias)";
   if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo (Recién Bautizado)";
   return "Novato en la Barra";

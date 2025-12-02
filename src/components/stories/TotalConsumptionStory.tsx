@@ -28,11 +28,11 @@ const CommunityComparisonText = ({ litersPercentile, textColor, highlightColor }
   if (topPercentage <= 5) {
     wittyPhrase = `¡Eres nuestro Campeón Cervecero! Solo el ${topPercentage.toFixed(0)}% de nuestros clientes bebe más que tú.`;
   } else if (topPercentage <= 25) {
-    wittyPhrase = `¡Estás en el top 25% de nuestros clientes más bebedores! Un verdadero conocedor.`;
+    wittyPhrase = `¡Estás en el top 25% de nuestros clientes! Un verdadero fan.`;
   } else if (topPercentage <= 50) {
     wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Sigue así!`;
   } else {
-    wittyPhrase = `Tu consumo te ubica por debajo de la mitad de nuestros clientes. ¡Necesitas más práctica y más visitas a Chin Chin!`;
+    wittyPhrase = `Tu consumo te ubica por debajo de la mitad de nuestros clientes. ¡Necesitas más visitas a Chin Chin!`;
   }
 
   return (

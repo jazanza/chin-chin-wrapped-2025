@@ -70,7 +70,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
 
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE...", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE:", color: textColor, sizeClass: "text-4xl" }, // H2
     { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
   ], [mostActiveMonth, textColor, highlightColor]);
 

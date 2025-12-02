@@ -9,6 +9,17 @@ import { Loader2, Download } from "lucide-react";
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
 import { cn } from '@/lib/utils';
 
+// Import story components
+import { IntroFunStory } from "@/components/stories/IntroFunStory";
+import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
+import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
+import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
+import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory";
+import { Top5Story } from "@/components/stories/Top5Story";
+import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
+import { SummaryInfographic } from "@/components/stories/SummaryInfographic";
+
+
 // Inline WrappedOverlay logic
 interface WrappedOverlayProps {
   customerName: string;

@@ -340,39 +340,7 @@ const WrappedDashboard = () => {
   }, [currentStoryIndex, wrappedData, isPaused, currentStory.duration, handleNextStory]); // handleNextStory is now defined
 
 
-  const handleDownloadScreenshot = async () => {
-    if (!wrappedData || !storyContainerRef.current) {
-      showError("Espera a que se carguen los datos para descargar.");
-      return;
-    }
-    setIsCapturing(true);
-    showLoading("Preparando descarga...");
-
-    try {
-      // Dynamically import html2canvas
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(storyContainerRef.current, {
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: null, // Let the background be captured as rendered
-      });
-      const dataUrl = canvas.toDataURL('image/png');
-
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = `ChinChin_Wrapped_${wrappedData?.customerName || 'Cliente'}_2025_${currentStory.downloadFileName}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showSuccess("¡Descarga completada!");
-    } catch (error) {
-      console.error("Error capturing screenshot:", error);
-      showError("Error al capturar la imagen. Intenta de nuevo.");
-    } finally {
-      dismissToast(toastId);
-      setIsCapturing(false);
-    }
-  };
+  // handleDownloadScreenshot is removed as per instructions.
 
   if (loading && !wrappedData) {
     return (
@@ -431,6 +399,7 @@ const WrappedDashboard = () => {
     mostPopularCommunityDay: wrappedData.mostPopularCommunityDay, // NEW
     mostPopularCommunityMonth: wrappedData.mostPopularCommunityMonth, // NEW
     mostFrequentBeerName: wrappedData.mostFrequentBeerName, // NEW: Most frequent beer name
+    varietyExplorationRatio: wrappedData.varietyExplorationRatio, // NEW: variety exploration ratio
   };
 
   return (
@@ -475,25 +444,7 @@ const WrappedDashboard = () => {
         />
 
         {/* Download Button (only for SummaryInfographic) - Brutalist styling */}
-        {isSummaryInfographicStory && (
-          <Button
-            onClick={handleDownloadScreenshot}
-            className="absolute top-4 right-4 z-30 bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
-            disabled={isCapturing}
-          >
-            {isCapturing ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Capturando...
-              </>
-            ) : (
-              <>
-                <Download className="mr-2 h-4 w-4" />
-                DESCARGAR Y COMPARTIR
-              </>
-            )}
-          </Button>
-        )}
+        {/* REMOVED: Download button is now handled within SummaryInfographic.tsx */}
       </div>
     </div>
   );

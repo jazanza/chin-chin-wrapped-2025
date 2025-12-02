@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
+  sizeClass: string; // NEW: Tailwind CSS class for font size
 }
 
 interface TotalVisitsStoryProps {
@@ -13,7 +14,6 @@ interface TotalVisitsStoryProps {
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
   visitsPercentile: number; // NEW: customer's percentile for visits
-  // mostFrequentBeerName: string; // This prop is no longer used in this component's text logic
 }
 
 const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColor, highlightColor }: { totalVisits: number; visitsPercentile: number; textColor: string; highlightColor: string }) => {
@@ -40,30 +40,26 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   );
 };
 
-// Definir esta función FUERA del componente TotalVisitsStory
 const getVisitsIntroText = (count: number) => {
-  // Umbrales aumentados para un ranking más estricto
   if (count >= 75) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: "\nA esta altura, tu GPS nos tiene como 'Casa'." };
   if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nPasaste más tiempo aquí que en tu casa." };
   if (count >= 30) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tiene competencia." };
   if (count >= 15) return { top: "¡Parece que Chin Chin te gustó!", bottom: "\nYa tienes tu ruta marcada." };
   if (count >= 5) return { top: "¡Vemos Potencial!", bottom: "\nTu búsqueda te trajo estas veces." };
   
-  // 0-4 visitas
   return { top: "¡INTERESANTE!", bottom: "\nPARECE QUE ESTÁS EMPEZANDO TU CAMINO." };
 };
 
 export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, highlightColor, visitsPercentile }: TotalVisitsStoryProps) => {
   
-  // 1. Obtener las frases dinámicas:
-  const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits); // Removed mostFrequentBeerName
+  const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    // 2. Usar las frases dinámicas:
-    { text: dynamicTopPhrase, color: highlightColor },
-    { text: dynamicBottomPhrase, color: textColor },
-    { text: `\n${totalVisits}`, color: highlightColor },
-    { text: " VECES!", color: textColor },
+    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)]" },
+    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)]" },
+    { text: " VECES!", color: textColor, sizeClass: "text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)]" },
+    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)]" },
+    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-[min(4vw,1.5rem)] md:text-[min(3vw,1.2rem)] lg:text-[min(2.5vw,1.1rem)]" },
   ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);
 
   const renderedText = useMemo(() => {
@@ -71,7 +67,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={`${segment.color}`}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -88,7 +84,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-4`}
       >
-        <p className={`text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center`}>
+        <p className={`text-center`}> {/* Removed direct font size classes here */}
           {renderedText}
         </p>
       </div>
@@ -97,7 +93,6 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
         visitsPercentile={visitsPercentile}
         textColor={textColor}
         highlightColor={highlightColor}
-        // mostFrequentBeerName is no longer passed here
       />
     </div>
   );

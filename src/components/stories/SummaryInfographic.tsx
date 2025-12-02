@@ -81,7 +81,8 @@ export const SummaryInfographic = ({
     return () => clearTimeout(timer);
   }, [customerName, year]);
 
-  const captureInfographic = useCallback(async (targetRatio: number, paddingPx: number) => {
+  // Refactored captureInfographic
+  const captureInfographic = useCallback(async (paddingPx: number) => {
     if (!captureTargetRef.current) {
       showError("No se pudo encontrar la infografía para capturar.");
       return null;
@@ -96,54 +97,20 @@ export const SummaryInfographic = ({
         useCORS: true,
         allowTaint: true,
         backgroundColor: null, // Let the background be captured as rendered
+        scale: 2, // High resolution
       });
 
-      const originalWidth = originalCanvas.width;
-      const originalHeight = originalCanvas.height;
-
-      // Calculate new canvas dimensions to fit content + padding with target aspect ratio
-      const paddedContentWidth = originalWidth + 2 * paddingPx;
-      const paddedContentHeight = originalHeight + 2 * paddingPx;
-      const paddedContentAspectRatio = paddedContentWidth / paddedContentHeight;
-
-      let newCanvasWidth: number;
-      let newCanvasHeight: number;
-
-      if (paddedContentAspectRatio > targetRatio) { // Content is wider than target aspect ratio
-        newCanvasWidth = paddedContentWidth;
-        newCanvasHeight = newCanvasWidth / targetRatio;
-      } else { // Content is taller or same aspect ratio as target
-        newCanvasHeight = paddedContentHeight;
-        newCanvasWidth = newCanvasHeight * targetRatio;
-      }
-
-      const newCanvas = document.createElement('canvas');
-      newCanvas.width = newCanvasWidth;
-      newCanvas.height = newCanvasHeight;
-      const ctx = newCanvas.getContext('2d');
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = originalCanvas.width + 2 * paddingPx;
+      finalCanvas.height = originalCanvas.height + 2 * paddingPx;
+      const ctx = finalCanvas.getContext('2d');
 
       if (ctx) {
-        // Fill with black background
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
-
-        // Calculate scale factor to draw original content within padding
-        const availableWidth = newCanvasWidth - 2 * paddingPx;
-        const availableHeight = newCanvasHeight - 2 * paddingPx;
-        const scaleX = availableWidth / originalWidth;
-        const scaleY = availableHeight / originalHeight;
-        const scale = Math.min(scaleX, scaleY); // Use the smaller scale to ensure content fits
-
-        const drawWidth = originalWidth * scale;
-        const drawHeight = originalHeight * scale;
-
-        // Calculate position to center the scaled original content
-        const drawX = (newCanvasWidth - drawWidth) / 2;
-        const drawY = (newCanvasHeight - drawHeight) / 2;
-
-        ctx.drawImage(originalCanvas, drawX, drawY, drawWidth, drawHeight);
+        ctx.fillStyle = 'black'; // Background color for the final canvas
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+        ctx.drawImage(originalCanvas, paddingPx, paddingPx); // Draw original canvas with padding
       }
-      return newCanvas;
+      return finalCanvas;
 
     } catch (error) {
       console.error("Error capturing infographic:", error);
@@ -156,12 +123,12 @@ export const SummaryInfographic = ({
   }, []);
 
   const handleDownload = useCallback(async () => {
-    const canvas = await captureInfographic(16 / 9, 30); // 16:9 aspect ratio, 30px padding
+    const canvas = await captureInfographic(15); // 15px padding
     if (canvas) {
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = dataUrl;
-      link.download = `ChinChin_Wrapped_${customerName.replace(/\s/g, '_')}_${year}_Infografia.png`;
+      link.download = `ChinChin_Wrapped_${customerName.replace(/\s/g, '_')}_${year}_Historia.png`; // New filename
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -169,56 +136,16 @@ export const SummaryInfographic = ({
     }
   }, [captureInfographic, customerName, year]);
 
-  const handleShareToInstagram = useCallback(async () => {
-    const canvas = await captureInfographic(9 / 16, 20); // 9:16 aspect ratio, 20px padding
-    if (canvas) {
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          const file = new File([blob], `ChinChin_Wrapped_${customerName.replace(/\s/g, '_')}_${year}_Story.png`, { type: 'image/png' });
-          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({
-                title: `Mi Chin Chin Wrapped ${year}`,
-                text: `¡Mira mi resumen cervecero de ${year} en Chin Chin!`,
-                files: [file],
-              });
-              showSuccess("¡Compartido con éxito!");
-            } catch (error: any) {
-              console.error("Error al compartir:", error);
-              showError("No se pudo compartir directamente. La imagen se descargará automáticamente.");
-              // Fallback to download if share fails
-              const dataUrl = canvas.toDataURL('image/png');
-              const link = document.createElement('a');
-              link.href = dataUrl;
-              link.download = `ChinChin_Wrapped_${customerName.replace(/\s/g, '_')}_${year}_Story.png`;
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            }
-          } else {
-            showError("Tu navegador no soporta la función de compartir directamente. La imagen se descargará automáticamente.");
-            // Fallback to download
-            const dataUrl = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = `ChinChin_Wrapped_${customerName.replace(/\s/g, '_')}_${year}_Story.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }
-        }
-      }, 'image/png');
-    }
-  }, [captureInfographic, customerName, year]);
+  // handleShareToInstagram is removed as per instructions.
 
   const handleBackToLogin = useCallback(() => {
     navigate('/');
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground p-4 font-sans overflow-auto">
+    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans overflow-auto"> {/* Removed p-4 from here */}
       {/* Main Infographic Content - captureTargetRef now wraps title and grid */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-center w-full h-full">
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-4 bg-black w-[90vw] max-w-[500px] h-[80vh] max-h-[888px] aspect-[9/16]"> {/* Updated className */}
         {/* Main Infographic Title */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -234,7 +161,7 @@ export const SummaryInfographic = ({
         </div>
 
         {isTitleTyped && (
-          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-[90vw] h-[80vh] max-w-[900px] max-h-[1600px] aspect-[9/16] border-2 border-white">
+          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white"> {/* Adjusted grid to fill parent */}
             {/* Row 1, Column 1: Total Visitas */}
             <Block bgColor="bg-black">
               <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center">
@@ -321,6 +248,14 @@ export const SummaryInfographic = ({
       {/* Nuevo Footer Centrado para Botones */}
       <div className="fixed bottom-0 left-0 right-0 bg-background p-4 flex justify-center space-x-4 z-50 border-t-2 border-white">
           <Button
+              onClick={handleBackToLogin}
+              className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"
+              disabled={isCapturing}
+          >
+              <Home className="mr-2 h-4 w-4" />
+              Volver
+          </Button>
+          <Button
               onClick={handleDownload}
               className="bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
               disabled={isCapturing}
@@ -330,27 +265,7 @@ export const SummaryInfographic = ({
               ) : (
                   <Download className="h-4 w-4" />
               )}
-              <span className="ml-2 hidden md:inline">Descargar</span>
-          </Button>
-          <Button
-              onClick={handleShareToInstagram}
-              className="bg-white text-black font-bold py-2 px-4 border-2 border-black rounded-none transition-none hover:bg-black hover:text-white hover:border-white"
-              disabled={isCapturing}
-          >
-              {isCapturing ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                  <Share2 className="h-4 w-4" />
-              )}
-              <span className="ml-2 hidden md:inline">Compartir IG</span>
-          </Button>
-          <Button
-              onClick={handleBackToLogin}
-              className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"
-              disabled={isCapturing}
-          >
-              <Home className="mr-2 h-4 w-4" />
-              Inicio
+              <span className="ml-2 hidden md:inline">Descargar Historia (9:16)</span>
           </Button>
       </div>
     </div>

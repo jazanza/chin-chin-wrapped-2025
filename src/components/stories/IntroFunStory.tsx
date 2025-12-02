@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-// import { AnimatedBackgroundLines } from '@/components/AnimatedBackgroundLines'; // REMOVED
 
 interface TextSegment {
   text: string;
@@ -8,22 +7,26 @@ interface TextSegment {
 
 interface IntroFunStoryProps {
   totalVisits: number;
-  // isPaused: boolean; // REMOVED
-  // onStoryFinished: () => void; // REMOVED
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
+  customerName: string; // Add customerName prop
 }
 
-export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroFunStoryProps) => {
+export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName }: IntroFunStoryProps) => {
+  const firstName = useMemo(() => {
+    // Asegura que customerName no sea nulo/vacío y devuelve el primer elemento (nombre).
+    return customerName ? customerName.split(' ')[0] : '';
+  }, [customerName]);
+
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: "¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!", color: highlightColor },
-    { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
+    { text: `¡GRACIAS POR ACOMPAÑARNOS ESTE 2025, ${firstName.toUpperCase()}!`, color: highlightColor }, // Use firstName
+    { text: "\n\n", color: textColor },
     { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor },
-    { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
+    { text: "\n\n", color: textColor },
     { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor },
-    { text: "\n\n", color: textColor }, // APLICAR DOBLE SALTO
+    { text: "\n\n", color: textColor },
     { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor }
-  ], [totalVisits, textColor, highlightColor]);
+  ], [totalVisits, textColor, highlightColor, firstName]); // Add firstName to dependencies
 
   const renderedText = useMemo(() => {
     return introSegments.flatMap((segment, segmentIndex) => {
@@ -44,9 +47,8 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor }: IntroF
 
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
-      {/* 1. CAMBIAR leading-tight por leading-normal */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`} 
+        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
         <p className={`text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)] text-center`}>
           {renderedText}

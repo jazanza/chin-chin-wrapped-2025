@@ -139,6 +139,48 @@ export function useDb() {
     }
   }, []);
 
+  const getAllBeerVarietiesInDb = useCallback(async () => {
+    if (!dbInstance) {
+      throw new Error("Base de datos no cargada.");
+    }
+
+    const buildExclusionClause = (tableAlias: string) => {
+      if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) {
+        return "";
+      }
+      const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
+      return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
+    };
+
+    const buildBeerCategoryFilterClause = (tableAlias: string) => {
+      if (ALL_BEER_PRODUCT_GROUP_IDS.length === 0) {
+        return "";
+      }
+      const categoryIdsSql = ALL_BEER_PRODUCT_GROUP_IDS.join(',');
+      return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
+    };
+
+    const totalUniqueProductsDbQuery = `
+      SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
+      FROM Product AS P
+      WHERE 1=1
+      AND P.IsEnabled = TRUE
+      ${buildExclusionClause('P')}
+      ${buildBeerCategoryFilterClause('P')};
+    `;
+    const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
+    const totalVarietiesInDbSet = new Set<string>();
+    for (const item of rawTotalVarietiesInDb) {
+      const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+      // Only count if it's a liquid product AND not from ProductGroupId 40
+      if (volumeMl > 0 && item.ProductGroupId !== 40) {
+        totalVarietiesInDbSet.add(item.ProductName);
+      }
+    }
+    return Array.from(totalVarietiesInDbSet).sort();
+  }, []);
+
+
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
     if (!dbInstance) {
       throw new Error("Base de datos no cargada.");
@@ -205,7 +247,7 @@ export function useDb() {
       let totalLiters = 0;
       const categoryVolumesByGroupId: { [key: number]: number } = {}; // Initialize empty to dynamically add categories
       const productLiters: { name: string; liters: number; color: string }[] = [];
-      const uniqueVarietiesSet = new Set<string>(); // To count unique varieties for the customer
+      const customerUniqueBeerNamesSet = new Set<string>(); // Renamed from uniqueVarietiesSet for clarity
 
       for (const item of rawProductDataCurrentYear) {
         const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
@@ -217,7 +259,7 @@ export function useDb() {
 
           // Only add to unique varieties set if it's a beer from the specified groups (excluding 750ml)
           if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId)) {
-            uniqueVarietiesSet.add(item.ProductName); 
+            customerUniqueBeerNamesSet.add(item.ProductName); 
           }
 
           // Aggregate liters for dominant category calculation (only for specified beer groups, excluding 750ml)
@@ -288,27 +330,18 @@ export function useDb() {
       // --- New Infographic Metrics for current year (2025) ---
 
       // Unique Varieties for customer in current year (using filtered data)
-      const uniqueVarieties2025 = uniqueVarietiesSet.size; // Use the set collected above
+      const uniqueVarieties2025 = customerUniqueBeerNamesSet.size; // Use the set collected above
+      const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesSet); // Convert to array for comparison
 
       // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid, AND EXCLUDING 750ml)
-      const totalUniqueProductsDbQuery = `
-        SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
-        FROM Product AS P
-        WHERE 1=1
-        AND P.IsEnabled = TRUE
-        ${buildExclusionClause('P')}
-        ${buildBeerCategoryFilterClause('P')};
-      `;
-      const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
-      const totalVarietiesInDbSet = new Set<string>();
-      for (const item of rawTotalVarietiesInDb) {
-        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-        // Only count if it's a liquid product AND not from ProductGroupId 40
-        if (volumeMl > 0 && item.ProductGroupId !== 40) { 
-          totalVarietiesInDbSet.add(item.ProductName);
-        }
-      }
-      const totalVarietiesInDb = totalVarietiesInDbSet.size;
+      const allDbUniqueBeerNames = await getAllBeerVarietiesInDb(); // Call the helper function
+
+      const totalVarietiesInDb = allDbUniqueBeerNames.length; // Update count based on the array
+
+      // Calculate missing varieties
+      const missingVarieties = allDbUniqueBeerNames.filter(
+        (dbBeerName) => !customerConsumedBeerNames.includes(dbBeerName)
+      );
 
       // Most Active Day 2025 - COUNT DISTINCT
       const mostActiveDayQuery = `
@@ -380,6 +413,7 @@ export function useDb() {
         mostActiveMonth,
         dailyVisits,
         monthlyVisits,
+        missingVarieties, // Add missing varieties to the returned data
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);
@@ -388,48 +422,7 @@ export function useDb() {
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  const getAllBeerVarietiesInDb = useCallback(async () => {
-    if (!dbInstance) {
-      throw new Error("Base de datos no cargada.");
-    }
-
-    const buildExclusionClause = (tableAlias: string) => {
-      if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) {
-        return "";
-      }
-      const keywordsSql = EXCLUDED_PRODUCT_KEYWORDS.map(k => `'${k}'`).join(',');
-      return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
-    };
-
-    const buildBeerCategoryFilterClause = (tableAlias: string) => {
-      if (ALL_BEER_PRODUCT_GROUP_IDS.length === 0) {
-        return "";
-      }
-      const categoryIdsSql = ALL_BEER_PRODUCT_GROUP_IDS.join(',');
-      return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
-    };
-
-    const totalUniqueProductsDbQuery = `
-      SELECT P.Name AS ProductName, P.Description AS ProductDescription, P.ProductGroupId AS ProductGroupId
-      FROM Product AS P
-      WHERE 1=1
-      AND P.IsEnabled = TRUE
-      ${buildExclusionClause('P')}
-      ${buildBeerCategoryFilterClause('P')};
-    `;
-    const rawTotalVarietiesInDb = queryData(dbInstance, totalUniqueProductsDbQuery);
-    const totalVarietiesInDbSet = new Set<string>();
-    for (const item of rawTotalVarietiesInDb) {
-      const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-      // Only count if it's a liquid product AND not from ProductGroupId 40
-      if (volumeMl > 0 && item.ProductGroupId !== 40) {
-        totalVarietiesInDbSet.add(item.ProductName);
-      }
-    }
-    return Array.from(totalVarietiesInDbSet).sort();
-  }, []);
+  }, [getAllBeerVarietiesInDb]);
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

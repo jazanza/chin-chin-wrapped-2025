@@ -16,6 +16,7 @@ import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
 import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
 import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
 import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory";
+import { MissingVarietiesCard } from "@/components/stories/MissingVarietiesCard"; // NEW IMPORT
 import { Top5Story } from "@/components/stories/Top5Story";
 import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
 import { SummaryInfographic } from "@/components/stories/SummaryInfographic";
@@ -164,21 +165,28 @@ const STORY_SCENES: StoryScene[] = [
     downloadFileName: 'Historia_CategoriaVariedades',
   },
   {
-    id: 'top5', // Slide 5
+    id: 'missingVarieties', // NEW Slide 5
+    component: MissingVarietiesCard,
+    duration: 15000, // 15 seconds
+    title: 'Variedades Pendientes',
+    downloadFileName: 'Historia_VariedadesPendientes',
+  },
+  {
+    id: 'top5', // Now Slide 6 (was Slide 5)
     component: Top5Story,
     duration: 15000, // 15 seconds
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
   },
   {
-    id: 'totalConsumption', // Slide 6
+    id: 'totalConsumption', // Now Slide 7 (was Slide 6)
     component: TotalConsumptionStory,
     duration: 15000, // 15 seconds
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
   },
   {
-    id: 'summaryInfographic', // Slide 7
+    id: 'summaryInfographic', // Now Slide 8 (was Slide 7)
     component: SummaryInfographic,
     duration: 15000, // 15 segundos para dar tiempo a descargar
     title: 'Infografía Final',
@@ -193,9 +201,10 @@ const BACKGROUND_COLORS = [
   "bg-black", // Slide 2: Mes Activo (Negro)
   "bg-white", // Slide 3: Día Activo (Blanco)
   "bg-black", // Slide 4: Categorías/Variedades (Negro)
-  "bg-white", // Slide 5: Top 5 Cervezas (Blanco)
-  "bg-black", // Slide 6: Total Litros (Negro)
-  "bg-white", // Slide 7: Infografía Final (Blanco)
+  "bg-white", // NEW Slide 5: Variedades Pendientes (Blanco)
+  "bg-black", // Now Slide 6: Top 5 Cervezas (Negro)
+  "bg-white", // Now Slide 7: Total Litros (Blanco)
+  "bg-black", // Now Slide 8: Infografía Final (Negro)
 ];
 
 const TEXT_COLORS = [
@@ -204,9 +213,10 @@ const TEXT_COLORS = [
   "text-white", // Slide 2: Mes Activo (Blanco)
   "text-black", // Slide 3: Día Activo (Negro)
   "text-white", // Slide 4: Categorías/Variedades (Blanco)
-  "text-black", // Slide 5: Top 5 Cervezas (Negro)
-  "text-white", // Slide 6: Total Litros (Blanco)
-  "text-black", // Slide 7: Infografía Final (Negro)
+  "text-black", // NEW Slide 5: Variedades Pendientes (Negro)
+  "text-white", // Now Slide 6: Top 5 Cervezas (Blanco)
+  "text-black", // Now Slide 7: Total Litros (Negro)
+  "text-white", // Now Slide 8: Infografía Final (Blanco)
 ];
 
 const HIGHLIGHT_COLORS = [
@@ -215,9 +225,10 @@ const HIGHLIGHT_COLORS = [
   "text-white", // Slide 2: Highlight (Blanco)
   "text-black", // Slide 3: Highlight (Negro)
   "text-white", // Slide 4: Highlight (Blanco)
-  "text-black", // Slide 5: Highlight (Negro)
-  "text-white", // Slide 6: Highlight (Blanco)
-  "text-black", // Slide 7: Infografía Final (Negro)
+  "text-black", // NEW Slide 5: Variedades Pendientes (Negro)
+  "text-white", // Now Slide 6: Top 5 Cervezas (Blanco)
+  "text-black", // Now Slide 7: Total Litros (Negro)
+  "text-white", // Now Slide 8: Infografía Final (Blanco)
 ];
 
 
@@ -384,6 +395,7 @@ const WrappedDashboard = () => {
     mostActiveMonth: wrappedData.mostActiveMonth,
     dailyVisits: wrappedData.dailyVisits, // Pass daily visits
     monthlyVisits: wrappedData.monthlyVisits, // Pass monthly visits
+    missingVarieties: wrappedData.missingVarieties, // NEW: Pass missing varieties
     isPaused: isPaused,
     textColor: currentTextColor,
     highlightColor: currentHighlightColor,

@@ -170,12 +170,12 @@ export function useDb() {
       const currentYear = year; // Use the passed year, which is '2025'
       const previousYear = (parseInt(year, 10) - 1).toString();
 
-      // Query for product data (name, description, quantity) for a given customer and year
-      // Now joins with Product and filters by ProductGroupId
+      // Query for product data (name, description, quantity, ProductGroupId) for a given customer and year
       const productDataQuery = `
         SELECT
             P.Name AS ProductName,
             P.Description AS ProductDescription,
+            P.ProductGroupId AS ProductGroupId, -- Include ProductGroupId
             SUM(DI.Quantity) AS TotalQuantity
         FROM
             Document AS D
@@ -187,30 +187,39 @@ export function useDb() {
             D.CustomerId = ?
             AND STRFTIME('%Y', D.Date) = ?
             ${buildExclusionClause('P')}
-            ${buildBeerCategoryFilterClause('P')}
         GROUP BY
-            P.Id, P.Name, P.Description
+            P.Id, P.Name, P.Description, P.ProductGroupId -- Group by ProductGroupId as well
         HAVING
             TotalQuantity > 0;
       `;
 
-      // Fetch product data for current year
+      // Fetch product data for current year (includes all products, then filter for dominant category)
       const rawProductDataCurrentYear = queryData(dbInstance, productDataQuery, [customerId, currentYear]);
 
       let totalLiters = 0;
-      const categoryVolumes: { [key: string]: number } = {};
+      const categoryVolumesByGroupId: { [key: number]: number } = {
+        [BEER_PRODUCT_GROUP_IDS[0]]: 0, // Cervezas Belgas
+        [BEER_PRODUCT_GROUP_IDS[1]]: 0, // Cervezas Alemanas
+      };
       const productLiters: { name: string; liters: number; color: string }[] = [];
       const uniqueVarietiesSet = new Set<string>(); // To count unique varieties for the customer
 
       for (const item of rawProductDataCurrentYear) {
         const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
         const liters = (item.TotalQuantity * volumeMl) / 1000;
-        totalLiters += liters;
-
+        
+        // Only count liters for the overall total if it's a liquid product
         if (liters > 0) {
-          const category = categorizeBeer(item.ProductName);
-          categoryVolumes[category] = (categoryVolumes[category] || 0) + liters;
+          totalLiters += liters;
           uniqueVarietiesSet.add(item.ProductName); // Add to unique varieties set
+
+          // Aggregate liters for dominant category calculation (only for specified beer groups)
+          if (BEER_PRODUCT_GROUP_IDS.includes(item.ProductGroupId)) {
+            categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
+          }
+
+          // For individual product display, use the more granular categorization
+          const category = categorizeBeer(item.ProductName);
           productLiters.push({
             name: item.ProductName,
             liters: liters,
@@ -219,22 +228,23 @@ export function useDb() {
         }
       }
 
-      // Metric 2: Dominant Beer for current year (using filtered data)
-      let dominantBeerCategory = "No Aplicable"; // Default to "No Aplicable"
-      let maxCategoryLiters = 0;
-      for (const category in categoryVolumes) { // Use categoryVolumes directly
-        if (categoryVolumes[category] > maxCategoryLiters) {
-          maxCategoryLiters = categoryVolumes[category];
-          dominantBeerCategory = category;
+      // Metric 2: Dominant Beer Category for current year (based on ProductGroupId 34 and 36)
+      let dominantBeerCategory = "Ninguna (otras categorías)"; // Default if no specific beer group consumption
+      const belgasLiters = categoryVolumesByGroupId[BEER_PRODUCT_GROUP_IDS[0]];
+      const alemanasLiters = categoryVolumesByGroupId[BEER_PRODUCT_GROUP_IDS[1]];
+
+      if (belgasLiters > 0 || alemanasLiters > 0) {
+        if (belgasLiters > alemanasLiters) {
+          dominantBeerCategory = "Cervezas Belgas";
+        } else if (alemanasLiters > belgasLiters) {
+          dominantBeerCategory = "Cervezas Alemanas";
+        } else {
+          dominantBeerCategory = "Cervezas Belgas y Alemanas (Empate)"; // Or choose one, or a combined name
         }
       }
-      // If no beer from specified categories was consumed, keep "No Aplicable"
-      if (maxCategoryLiters === 0) {
-        dominantBeerCategory = "Ninguna (otras categorías)";
-      }
 
 
-      // Metric 3: Top 10 Products for current year
+      // Metric 3: Top 10 Products for current year (from all liquid products)
       const top10Products = productLiters
         .sort((a, b) => b.liters - a.liters)
         .slice(0, 10); // Slice to 10
@@ -265,13 +275,12 @@ export function useDb() {
       // Unique Varieties for customer in current year (using filtered data)
       const uniqueVarieties2025 = uniqueVarietiesSet.size; // Use the set collected above
 
-      // Total Unique Varieties in DB (excluding non-liquid/excluded, and applying beer category filter)
+      // Total Unique Varieties in DB (excluding non-liquid/excluded)
       const totalUniqueProductsDbQuery = `
         SELECT COUNT(DISTINCT P.Name) AS TotalUniqueProducts
         FROM Product AS P
         WHERE 1=1
-        ${buildExclusionClause('P')}
-        ${buildBeerCategoryFilterClause('P')};
+        ${buildExclusionClause('P')};
       `;
       const totalVarietiesInDbResult = queryData(dbInstance, totalUniqueProductsDbQuery);
       const totalVarietiesInDb = totalVarietiesInDbResult.length > 0 ? totalVarietiesInDbResult[0].TotalUniqueProducts : 0;
@@ -335,9 +344,9 @@ export function useDb() {
         year,
         totalLiters,
         dominantBeerCategory,
-        top10Products, // Renamed to top10Products
+        top10Products,
         totalVisits,
-        categoryVolumes,
+        categoryVolumes: categoryVolumesByGroupId, // Renamed for clarity
         totalVisits2024,
         totalLiters2024,
         uniqueVarieties2025,

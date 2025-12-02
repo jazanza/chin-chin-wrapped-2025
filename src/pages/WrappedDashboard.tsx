@@ -16,7 +16,7 @@ import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory";
 import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
 import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";
 import { DominantCategoryAndVarietiesStory } from "@/components/stories/DominantCategoryAndVarietiesStory";
-import { MissingVarietiesCard } from "@/components/stories/MissingVarietiesCard"; // NEW IMPORT
+import { MissingVarietiesCard } from "@/components/stories/MissingVarietiesCard";
 import { Top5Story } from "@/components/stories/Top5Story";
 import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
 import { SummaryInfographic } from "@/components/stories/SummaryInfographic";
@@ -165,28 +165,28 @@ const STORY_SCENES: StoryScene[] = [
     downloadFileName: 'Historia_CategoriaVariedades',
   },
   {
-    id: 'missingVarieties', // NEW Slide 5
-    component: MissingVarietiesCard,
-    duration: 15000, // 15 seconds
-    title: 'Variedades Pendientes',
-    downloadFileName: 'Historia_VariedadesPendientes',
-  },
-  {
-    id: 'top5', // Now Slide 6 (was Slide 5)
+    id: 'top5', // Now Slide 5 (was Slide 6)
     component: Top5Story,
     duration: 15000, // 15 seconds
     title: 'Top 5 Cervezas',
     downloadFileName: 'Historia_Top5',
   },
   {
-    id: 'totalConsumption', // Now Slide 7 (was Slide 6)
+    id: 'totalConsumption', // Now Slide 6 (was Slide 7)
     component: TotalConsumptionStory,
     duration: 15000, // 15 seconds
     title: 'Consumo Total',
     downloadFileName: 'Historia_ConsumoTotal',
   },
   {
-    id: 'summaryInfographic', // Now Slide 8 (was Slide 7)
+    id: 'missingVarieties', // Now Slide 7 (was Slide 5)
+    component: MissingVarietiesCard,
+    duration: 15000, // 15 seconds
+    title: 'Variedades Pendientes',
+    downloadFileName: 'Historia_VariedadesPendientes',
+  },
+  {
+    id: 'summaryInfographic', // Now Slide 8 (was Slide 8)
     component: SummaryInfographic,
     duration: 15000, // 15 segundos para dar tiempo a descargar
     title: 'Infografía Final',
@@ -201,10 +201,10 @@ const BACKGROUND_COLORS = [
   "bg-black", // Slide 2: Mes Activo (Negro)
   "bg-white", // Slide 3: Día Activo (Blanco)
   "bg-black", // Slide 4: Categorías/Variedades (Negro)
-  "bg-white", // NEW Slide 5: Variedades Pendientes (Blanco)
-  "bg-black", // Now Slide 6: Top 5 Cervezas (Negro)
-  "bg-white", // Now Slide 7: Total Litros (Blanco)
-  "bg-black", // Now Slide 8: Infografía Final (Negro)
+  "bg-black", // Slide 5: Top 5 Cervezas (Negro) - (Originalmente era para MissingVarieties)
+  "bg-white", // Slide 6: Total Litros (Blanco) - (Originalmente era para Top5)
+  "bg-white", // Slide 7: Variedades Pendientes (Blanco) - (Originalmente era para TotalConsumption)
+  "bg-black", // Slide 8: Infografía Final (Negro)
 ];
 
 const TEXT_COLORS = [
@@ -213,10 +213,10 @@ const TEXT_COLORS = [
   "text-white", // Slide 2: Mes Activo (Blanco)
   "text-black", // Slide 3: Día Activo (Negro)
   "text-white", // Slide 4: Categorías/Variedades (Blanco)
-  "text-black", // NEW Slide 5: Variedades Pendientes (Negro)
-  "text-white", // Now Slide 6: Top 5 Cervezas (Blanco)
-  "text-black", // Now Slide 7: Total Litros (Negro)
-  "text-white", // Now Slide 8: Infografía Final (Blanco)
+  "text-white", // Slide 5: Top 5 Cervezas (Blanco)
+  "text-black", // Slide 6: Total Litros (Negro)
+  "text-black", // Slide 7: Variedades Pendientes (Negro)
+  "text-white", // Slide 8: Infografía Final (Blanco)
 ];
 
 const HIGHLIGHT_COLORS = [
@@ -225,23 +225,23 @@ const HIGHLIGHT_COLORS = [
   "text-white", // Slide 2: Highlight (Blanco)
   "text-black", // Slide 3: Highlight (Negro)
   "text-white", // Slide 4: Highlight (Blanco)
-  "text-black", // NEW Slide 5: Variedades Pendientes (Negro)
-  "text-white", // Now Slide 6: Top 5 Cervezas (Blanco)
-  "text-black", // Now Slide 7: Total Litros (Negro)
-  "text-white", // Now Slide 8: Infografía Final (Blanco)
+  "text-white", // Slide 5: Top 5 Cervezas (Blanco)
+  "text-black", // Slide 6: Total Litros (Negro)
+  "text-black", // Slide 7: Variedades Pendientes (Negro)
+  "text-white", // Slide 8: Infografía Final (Blanco)
 ];
 
 
 const WrappedDashboard = () => {
   const { customerId } = useParams<{ customerId: string }>();
-  const { getWrappedData, loading, error, dbLoaded, getAllBeerVarietiesInDb } = useDb(); // Import new function
+  const { getWrappedData, loading, error, dbLoaded, getAllBeerVarietiesInDb } = useDb();
   const [wrappedData, setWrappedData] = useState<any>(null);
   const [toastId, setToastId] = useState<string | number | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null); // Reintroduced timeoutRef
-  const storyContainerRef = useRef<HTMLDivElement>(null); // Ref for the main story container for screenshot
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const storyContainerRef = useRef<HTMLDivElement>(null);
 
   const currentStory = STORY_SCENES[currentStoryIndex];
 
@@ -251,7 +251,7 @@ const WrappedDashboard = () => {
     const fetchWrappedData = async () => {
       if (toastId) dismissToast(toastId);
       try {
-        const data = await getWrappedData(Number(customerId), '2025'); // Hardcoded year 2025
+        const data = await getWrappedData(Number(customerId), '2025');
         setWrappedData(data);
         showSuccess("¡Tu Wrapped 2025 está listo!");
       } catch (err: any) {
@@ -307,7 +307,7 @@ const WrappedDashboard = () => {
 
   const handlePauseStory = useCallback(() => {
     setIsPaused(true);
-    if (timeoutRef.current) { // Clear timeout when paused
+    if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
   }, []);
@@ -385,7 +385,7 @@ const WrappedDashboard = () => {
     year: wrappedData.year,
     totalLiters: wrappedData.totalLiters,
     dominantBeerCategory: wrappedData.dominantBeerCategory,
-    top10Products: wrappedData.top10Products, // Changed to top10Products
+    top10Products: wrappedData.top10Products,
     totalVisits: wrappedData.totalVisits,
     totalVisits2024: wrappedData.totalVisits2024,
     totalLiters2024: wrappedData.totalLiters2024,
@@ -393,13 +393,12 @@ const WrappedDashboard = () => {
     totalVarietiesInDb: wrappedData.totalVarietiesInDb,
     mostActiveDay: wrappedData.mostActiveDay,
     mostActiveMonth: wrappedData.mostActiveMonth,
-    dailyVisits: wrappedData.dailyVisits, // Pass daily visits
-    monthlyVisits: wrappedData.monthlyVisits, // Pass monthly visits
-    missingVarieties: wrappedData.missingVarieties, // NEW: Pass missing varieties
+    dailyVisits: wrappedData.dailyVisits,
+    monthlyVisits: wrappedData.monthlyVisits,
+    missingVarieties: wrappedData.missingVarieties,
     isPaused: isPaused,
     textColor: currentTextColor,
     highlightColor: currentHighlightColor,
-    // onStoryFinished: handleNextStory, // No longer needed with static text
   };
 
   return (
@@ -420,7 +419,7 @@ const WrappedDashboard = () => {
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
-            textColor={currentTextColor} // Pass textColor to the overlay
+            textColor={currentTextColor}
           />
         )}
 

@@ -13,25 +13,24 @@ interface TotalVisitsStoryProps {
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
   visitsPercentile: number; // NEW: customer's percentile for visits
-  mostFrequentBeerName: string; // NEW: Most frequent beer name
+  mostFrequentBeerName: string; // This prop is no longer used in this component's text logic
 }
 
-const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColor, highlightColor, mostFrequentBeerName }: { totalVisits: number; visitsPercentile: number; textColor: string; highlightColor: string; mostFrequentBeerName: string }) => {
-  const beerName = mostFrequentBeerName.toUpperCase();
+const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColor, highlightColor }: { totalVisits: number; visitsPercentile: number; textColor: string; highlightColor: string }) => {
   let wittyPhrase = "";
 
   if (visitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tus visitas.";
-  } else if (visitsPercentile >= 95 && totalVisits >= 30) {
-    wittyPhrase = `¡NIVEL LEYENDA! Eres un súper-habitué, con ${totalVisits} visitas. Te vimos más veces que a las etiquetas de ${beerName}.`;
-  } else if (visitsPercentile >= 95 && totalVisits < 30) {
-    wittyPhrase = `¡Felicidades! Eres oficialmente uno de nuestros clientes más fieles. Tu amor por ${beerName} te coloca por encima del ${visitsPercentile.toFixed(0)}% de la comunidad.`;
-  } else if (visitsPercentile >= 75) {
-    wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, tu camino habitual siempre lleva a tu favorita: ${beerName}.`;
-  } else if (visitsPercentile >= 50) {
-    wittyPhrase = `Tus visitas te ubican en la mitad superior de nuestros clientes. ¡La búsqueda de ${beerName} te trae de vuelta!`;
-  } else { // 0% - 49%
-    wittyPhrase = `Tus ${totalVisits} visitas te ubican por debajo de la mitad de nuestros clientes. ¡Te esperamos más seguido para reponer ${beerName}!`;
+  } else if (visitsPercentile >= 95 && totalVisits >= 75) {
+      wittyPhrase = `¡NIVEL LEYENDA! Eres un súper-habitué, con ${totalVisits} visitas. Eres nuestro cliente más fiel.`;
+  } else if (visitsPercentile >= 95 && totalVisits >= 50) {
+      wittyPhrase = `¡FELICIDADES! Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${visitsPercentile.toFixed(0)}% de la comunidad.`;
+  } else if (visitsPercentile >= 75 && totalVisits >= 30) {
+      wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, el hábito te llama de vuelta.`;
+  } else if (visitsPercentile >= 50 && totalVisits >= 10) {
+      wittyPhrase = `Tus visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te está gustando!`;
+  } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
+      wittyPhrase = `Tus ${totalVisits} visitas te ubican por debajo de la mitad de nuestros clientes. ¡Te esperamos más seguido!`;
   }
 
   return (
@@ -42,21 +41,22 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 };
 
 // Definir esta función FUERA del componente TotalVisitsStory
-const getVisitsIntroText = (count: number, mostFrequentBeerName: string) => {
-  const beerName = mostFrequentBeerName.toUpperCase();
-  if (count >= 30) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: `\nA esta altura, tu GPS nos tiene como 'Casa'. Venías por más ${beerName}.` };
-  if (count >= 16) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: `\nPasaste más tiempo aquí que en tu casa! La devoción por ${beerName} te hizo visitarnos.` };
-  if (count >= 9) return { top: "¡Atención, tenemos a un habitué!", bottom: `\nTu hogar tiene competencia. El motivo fue claro: reabastecerte de ${beerName}.` };
-  if (count >= 6) return { top: "¡Parece que Chin Chin te gustó!", bottom: `\nYa tienes tu ruta marcada. Tu amor por ${beerName} te hizo venir.` };
-  if (count >= 3) return { top: "¡Vemos Potencial!", bottom: `\nTu búsqueda de ${beerName} te trajo estas veces.` };
-  // 0 - 2 visitas
-  return { top: `¡INTERESANTE!`, bottom: `\nPARECE QUE ESTÁS EMPEZANDO TU CAMINO.` };
+const getVisitsIntroText = (count: number) => {
+  // Umbrales aumentados para un ranking más estricto
+  if (count >= 75) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: "\nA esta altura, tu GPS nos tiene como 'Casa'." };
+  if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nPasaste más tiempo aquí que en tu casa." };
+  if (count >= 30) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tiene competencia." };
+  if (count >= 15) return { top: "¡Parece que Chin Chin te gustó!", bottom: "\nYa tienes tu ruta marcada." };
+  if (count >= 5) return { top: "¡Vemos Potencial!", bottom: "\nTu búsqueda te trajo estas veces." };
+  
+  // 0-4 visitas
+  return { top: "¡INTERESANTE!", bottom: "\nPARECE QUE ESTÁS EMPEZANDO TU CAMINO." };
 };
 
 export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, highlightColor, visitsPercentile, mostFrequentBeerName }: TotalVisitsStoryProps) => {
   
   // 1. Obtener las frases dinámicas:
-  const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits, mostFrequentBeerName);
+  const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits); // Removed mostFrequentBeerName
 
   const storySegments: TextSegment[] = useMemo(() => [
     // 2. Usar las frases dinámicas:
@@ -64,7 +64,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
     { text: dynamicBottomPhrase, color: textColor },
     { text: `\n${totalVisits}`, color: highlightColor },
     { text: " VECES!", color: textColor },
-  ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]); // Agregar las nuevas dependencias
+  ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);
 
   const renderedText = useMemo(() => {
     return storySegments.flatMap((segment, segmentIndex) => {
@@ -97,7 +97,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
         visitsPercentile={visitsPercentile}
         textColor={textColor}
         highlightColor={highlightColor}
-        mostFrequentBeerName={mostFrequentBeerName}
+        // mostFrequentBeerName is no longer passed here
       />
     </div>
   );

@@ -59,9 +59,9 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
           {renderedText}
         </p>
       </div>
-      <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-2 p-4 border-2 border-white">
-        {top10Products.slice(0, 5).map((product, idx) => ( // Slice to 5 from top10Products
-          <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-[min(4vw,1.5rem)] md:text-[min(3.5vw,1.4rem)] lg:text-[min(3vw,1.2rem)] font-black' : 'text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold'}`}>
+      <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
+        {top10Products.slice(0, 10).map((product, idx) => ( // Changed slice to 10
+          <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-[min(3.5vw,1.4rem)] md:text-[min(3vw,1.2rem)] lg:text-[min(2.5vw,1.1rem)] font-black' : 'text-[min(2.5vw,1.1rem)] md:text-[min(2vw,1rem)] lg:text-[min(1.8vw,0.9rem)] font-bold'}`}> {/* Adjusted font sizes */}
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L BEBIDOS)`}
           </p>
         ))}

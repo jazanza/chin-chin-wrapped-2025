@@ -65,7 +65,7 @@ const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, te
 };
 
 export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, highlightColor, mostPopularCommunityDay }: MostActiveDayStoryProps) => {
-  const { title: dayTitle } = useMemo(() => getDaySpecificWittyRemark(mostActiveDay), [mostActiveDay]);
+  // Eliminada la línea 'const { title: dayTitle } = useMemo(() => getDaySpecificWittyRemark(mostActiveDay), [mostActiveDay]);'
 
   const mainStoryTextSegments: TextSegment[] = useMemo(() => {
     if (mostActiveDay === "N/A") {
@@ -74,10 +74,12 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       ];
     }
     return [
-      { text: dayTitle, color: highlightColor }, // Usar el título de la función helper
-      { text: `\n${mostActiveDay.toUpperCase()}`, color: textColor }, // Mostrar el día
+      // 1. Título genérico:
+      { text: "EL DÍA QUE MÁS\nNOS VISITASTE FUE EL", color: textColor }, 
+      // 2. El día activo resaltado:
+      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor }, 
     ];
-  }, [mostActiveDay, dayTitle, textColor, highlightColor]);
+  }, [mostActiveDay, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
     return mainStoryTextSegments.flatMap((segment, segmentIndex) => {

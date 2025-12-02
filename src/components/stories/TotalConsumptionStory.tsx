@@ -18,12 +18,8 @@ interface TotalConsumptionStoryProps {
 }
 
 const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
-  if (previous === 0) {
-    return (
-      <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-normal text-center ${textColor}`}>
-        No data for {parseInt(year) - 1}
-      </p>
-    );
+  if (previous <= 0) { // Check if previous value is zero or negative
+    return null; // Do not show comparison if no valid previous data
   }
 
   const diff = current - previous;

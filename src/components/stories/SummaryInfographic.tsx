@@ -12,7 +12,7 @@ interface SummaryInfographicProps {
   year: string;
   totalLiters: number;
   dominantBeerCategory: string;
-  top3Products: Product[]; // Changed from top5Products
+  top10Products: Product[]; // Changed from top3Products to top10Products
   totalVisits: number;
   isPaused: boolean; // Not directly used in 2D, but kept for consistency
   totalVisits2024: number;
@@ -27,12 +27,8 @@ interface SummaryInfographicProps {
 
 // Helper for comparison text and arrow (2D HTML/CSS version)
 const ComparisonText = ({ current, previous, year }: { current: number; previous: number; year: string }) => {
-  if (previous === 0) {
-    return (
-      <p className="text-[1.5vw] md:text-[0.8rem] lg:text-[1rem] font-normal text-center text-gray-500">
-        No data for {parseInt(year) - 1}
-      </p>
-    );
+  if (previous <= 0) { // Check if previous value is zero or negative
+    return null; // Do not show comparison if no valid previous data
   }
 
   const diff = current - previous;
@@ -68,7 +64,7 @@ export const SummaryInfographic = ({
   year,
   totalLiters,
   dominantBeerCategory,
-  top3Products, // Changed from top5Products
+  top10Products, // Changed from top3Products to top10Products
   totalVisits,
   totalVisits2024,
   totalLiters2024,
@@ -133,7 +129,7 @@ export const SummaryInfographic = ({
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1">
               TUS 3 FAVORITAS
             </p>
-            {top3Products.slice(0, 3).map((product, idx) => ( // Slice to 3
+            {top10Products.slice(0, 3).map((product, idx) => ( // Slice to 3 from top10Products
               <p
                 key={idx}
                 className={cn(

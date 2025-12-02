@@ -36,11 +36,16 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
     });
   }, [storySegments]);
 
-  // Filter and format daily visits as requested
-  const fridayVisits = dailyVisits.find(d => d.day === "Viernes")?.count || 0;
-  const otherDaysVisits = dailyVisits
-    .filter(d => d.day !== "Viernes" && d.day !== "Lunes")
-    .reduce((sum, d) => sum + d.count, 0);
+  // Filter and sort daily visits, excluding Monday
+  const filteredDailyVisits = useMemo(() => {
+    const order = ["Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    const visitsMap = new Map(dailyVisits.map(d => [d.day, d.count]));
+    
+    return order.map(day => ({
+      day,
+      count: visitsMap.get(day) || 0
+    }));
+  }, [dailyVisits]);
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
@@ -55,13 +60,13 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
         <p className={cn("text-center text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold mb-2", highlightColor)}>
           Frecuencia de Visitas:
         </p>
-        <p className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-          {`Viernes: ${fridayVisits} visitas`}
-        </p>
-        <p className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
-          {`Otros días (excepto Lunes): ${otherDaysVisits} visitas`}
-        </p>
-        {dailyVisits.length === 0 && (
+        {filteredDailyVisits.length > 0 ? (
+          filteredDailyVisits.map((data, idx) => (
+            <p key={idx} className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
+              {`${data.day}: ${data.count} visitas`}
+            </p>
+          ))
+        ) : (
           <p className={cn("text-center text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)]", textColor)}>
             No hay datos de visitas diarias.
           </p>

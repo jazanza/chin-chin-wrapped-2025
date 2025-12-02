@@ -220,7 +220,7 @@ export function useDb() {
       }
 
       // Metric 2: Dominant Beer for current year (using filtered data)
-      let dominantBeerCategory = "N/A";
+      let dominantBeerCategory = "No Aplicable"; // Default to "No Aplicable"
       let maxCategoryLiters = 0;
       for (const category in categoryVolumes) { // Use categoryVolumes directly
         if (categoryVolumes[category] > maxCategoryLiters) {
@@ -228,11 +228,16 @@ export function useDb() {
           dominantBeerCategory = category;
         }
       }
+      // If no beer from specified categories was consumed, keep "No Aplicable"
+      if (maxCategoryLiters === 0) {
+        dominantBeerCategory = "Ninguna (otras categorías)";
+      }
 
-      // Metric 3: Top 3 Products for current year (changed from Top 5)
-      const top3Products = productLiters
+
+      // Metric 3: Top 10 Products for current year
+      const top10Products = productLiters
         .sort((a, b) => b.liters - a.liters)
-        .slice(0, 3); // Slice to 3
+        .slice(0, 10); // Slice to 10
 
       // Metric 4: Frequency/Loyalty (Total Visits) for current year - COUNT DISTINCT
       const totalVisitsQuery = `
@@ -330,7 +335,7 @@ export function useDb() {
         year,
         totalLiters,
         dominantBeerCategory,
-        top3Products, // Renamed from top5Products
+        top10Products, // Renamed to top10Products
         totalVisits,
         categoryVolumes,
         totalVisits2024,

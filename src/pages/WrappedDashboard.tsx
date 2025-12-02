@@ -215,7 +215,7 @@ const HIGHLIGHT_COLORS = [
   "text-white", // Slide 4: Highlight (Blanco)
   "text-black", // Slide 5: Highlight (Negro)
   "text-white", // Slide 6: Highlight (Blanco)
-  "text-black", // Slide 7: Highlight (Negro)
+  "text-black", // Slide 7: Infografía Final (Negro)
 ];
 
 
@@ -362,7 +362,7 @@ const WrappedDashboard = () => {
     year: wrappedData.year,
     totalLiters: wrappedData.totalLiters,
     dominantBeerCategory: wrappedData.dominantBeerCategory,
-    top3Products: wrappedData.top3Products, // Changed from top5Products
+    top10Products: wrappedData.top10Products, // Changed to top10Products
     totalVisits: wrappedData.totalVisits,
     totalVisits2024: wrappedData.totalVisits2024,
     totalLiters2024: wrappedData.totalLiters2024,

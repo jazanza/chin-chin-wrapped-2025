@@ -381,8 +381,9 @@ const ClientLogin = () => {
           </div>
         )}
 
+        {/* H4 */}
         {!dbLoaded && step === "search" && (
-          <p className="mt-4 text-base text-white border-2 border-white p-2">Cargando base de datos...</p> {/* H4 */}
+          <p className="mt-4 text-base text-white border-2 border-white p-2">Cargando base de datos...</p>
         )}
       </div>
     </div>

@@ -19,7 +19,7 @@ interface DominantCategoryAndVarietiesStoryProps {
 
 // Definir esta función fuera del componente:
 const getVarietyComment = (uniqueCount: number, totalCount: number): string => {
-  if (totalCount === 0) return "¡El universo cervecero te espera!";
+  if (totalCount === 0) return "¡Un universo cervecero te espera!";
 
   const percentage = (uniqueCount / totalCount) * 100;
 
@@ -27,19 +27,19 @@ const getVarietyComment = (uniqueCount: number, totalCount: number): string => {
     return "¡LO LOGRASTE! Ahora ya puedes seguir bebiendo en paz.";
   }
   if (percentage >= 76) {
-    return "Tu currículum cervecero es envidiable. Eres una amenaza para los de la barra.";
+    return "Tu currículum cervecero es envidiable, ¡casi sommelier!";
   }
   if (percentage >= 51) {
-    return "Ya casi no tenemos secretos para ti. ¡Felicidades!";
+    return "Ya casi no tenemos secretos para ti, ¡Felicidades!";
   }
   if (percentage >= 31) {
-    return "Mitad de camino al nirvana cervecero. ¡Sigue así!";
+    return "Mitad de camino al nirvana cervecero, ¡sigue así!";
   }
   if (percentage >= 11) {
-    return "Parece que aún no te convencemos de probar algo diferente. ¿Qué esperas?";
+    return "Aún no te convencemos de probar algo diferente, ¿qué esperas?";
   }
   // 0% - 10%
-  return "Estás en el kinder garden de las cervezas. Hay que animarse a experimentar";
+  return "Estás en el kinder garden de las cervezas, ¡a experimentar!";
 };
 
 export const DominantCategoryAndVarietiesStory = ({

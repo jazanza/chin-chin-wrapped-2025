@@ -36,13 +36,29 @@ const ComparisonText = ({ current, previous, year, textColor }: { current: numbe
   );
 };
 
+// Definir esta función FUERA del componente TotalVisitsStory
+const getVisitsIntroText = (count: number) => {
+  if (count >= 80) return { top: "¡Por favor, te necesitamos en la nómina!", bottom: "\nA esta altura, tu GPS nos tiene como 'Casa'. Nos visitaste:" };
+  if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nGastaste más tiempo aquí que buscando las llaves. Nos visitaste:" };
+  if (count >= 25) return { top: "¡Atención, tenemos a un habitué!", bottom: "\nTu hogar tenía competencia, porque Chin Chin te vio:" };
+  if (count >= 10) return { top: "¡VAYA, parece que te gustó!", bottom: "\nNos visitaste más de una vez. En concreto:" };
+  
+  // 0 - 9 visitas: Usar la frase fija que aprobaste si no cumple el rango alto
+  return { top: `¡VAYA, VAYA!`, bottom: `\nTU HOGAR ESTUVO VACÍO... PORQUE NOS VISITASTE:` };
+};
+
 export const TotalVisitsStory = ({ customerName, year, totalVisits, totalVisits2024, textColor, highlightColor }: TotalVisitsStoryProps) => {
+  
+  // 1. Obtener las frases dinámicas:
+  const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits);
+
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: `¡VAYA, VAYA!`, color: highlightColor },
-    { text: "\nTU HOGAR ESTUVO VACÍO... PORQUE NOS VISITASTE:", color: textColor },
+    // 2. Usar las frases dinámicas:
+    { text: dynamicTopPhrase, color: highlightColor },
+    { text: dynamicBottomPhrase, color: textColor },
     { text: `\n${totalVisits}`, color: highlightColor },
     { text: " VECES!", color: textColor },
-  ], [totalVisits, textColor, highlightColor]); // Removed customerName from dependencies as it's no longer used in text
+  ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]); // Agregar las nuevas dependencias
 
   const renderedText = useMemo(() => {
     return storySegments.flatMap((segment, segmentIndex) => {

@@ -29,7 +29,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que se está perdiendo.", color: textColor });
       segments.push({ text: "\n", color: textColor }); // Add a line break
     }
-    segments.push({ text: "LAS 10 RAZONES POR LAS QUE CASI VIVES AQUÍ", color: highlightColor });
+    segments.push({ text: "LAS 10 RAZONES POR LAS QUE CASI VIVES EN CHIN CHIN", color: highlightColor });
     return segments;
   }, [top10Products, textColor, highlightColor]);
 

@@ -26,7 +26,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       segments.push({ text: `TU RELACIÓN MÁS SERIA ESTE AÑO FUE CON LA: ${top1Name.toUpperCase()}.`, color: highlightColor });
       segments.push({ text: "\n", color: textColor }); // Add a line break
     } else {
-      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que se está perdiendo.", color: textColor });
+      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor });
       segments.push({ text: "\n", color: textColor }); // Add a line break
     }
     segments.push({ text: "TU TOP 10 DE CERVEZAS:", color: highlightColor });

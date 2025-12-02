@@ -37,8 +37,18 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
 
   // Verificar si el título fue anulado por baja exploración
   if (dynamicTitle.toUpperCase() === LOW_EXPLORATION_TITLE) {
+      
+      // 1. Sanitización: Aseguramos que el ratio sea un número válido y finito, si no, usamos 0.
+      const safeRatio = (typeof varietyExplorationRatio === 'number' && isFinite(varietyExplorationRatio)) 
+                          ? varietyExplorationRatio 
+                          : 0;
+
+      // 2. Cálculo del porcentaje seguro: 
+      const explorationPercentage = (safeRatio * 100).toFixed(0);
+
       // Frase que es coherente con "Recién Bautizado" y el bajo número de variedades.
-      finalQuadrantPhrase = `RECIÉN BAUTIZADO. Aunque tienes un gusto interesante, apenas estás explorando el ${ (varietyExplorationRatio * 100).toFixed(0) }% de nuestra barra. ¡Te falta mucho por probar!`;
+      // 3. Uso del porcentaje seguro:
+      finalQuadrantPhrase = `RECIÉN BAUTIZADO. Aunque tienes un gusto interesante, apenas estás explorando el ${explorationPercentage}% de nuestra barra. ¡Te falta mucho por probar!`;
   }
 
   return (
@@ -49,7 +59,7 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
         <p className={cn("text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)] text-center mb-4", highlightColor)}>
           TU PALADAR CERVECERO ES:
         </p>
-        <p className={cn("text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[min(5vw,2rem)] text-center mb-8", highlightColor)}>
+        <p className={cn("text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[5vw] text-center mb-8", highlightColor)}>
           {dynamicTitle.toUpperCase()}
         </p>
         <p className={cn("text-[min(5vw,2rem)] md:text-[min(4vw,1.8rem)] lg:text-[min(3vw,1.5rem)] text-center", textColor)}>

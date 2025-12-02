@@ -12,7 +12,7 @@ interface SummaryInfographicProps {
   year: string;
   totalLiters: number;
   dominantBeerCategory: string;
-  top5Products: Product[];
+  top3Products: Product[]; // Changed from top5Products
   totalVisits: number;
   isPaused: boolean; // Not directly used in 2D, but kept for consistency
   totalVisits2024: number;
@@ -68,7 +68,7 @@ export const SummaryInfographic = ({
   year,
   totalLiters,
   dominantBeerCategory,
-  top5Products,
+  top3Products, // Changed from top5Products
   totalVisits,
   totalVisits2024,
   totalLiters2024,
@@ -128,12 +128,12 @@ export const SummaryInfographic = ({
             <ComparisonText current={totalLiters} previous={totalLiters2024} year={year} />
           </Block>
 
-          {/* Row 2, Column 1: Top 5 Cervezas */}
+          {/* Row 2, Column 1: Top 3 Cervezas */}
           <Block bgColor="bg-black">
             <p className="text-[2.5vw] md:text-[1.2rem] lg:text-[1.5rem] font-bold text-center mb-1">
-              TUS 5 FAVORITAS
+              TUS 3 FAVORITAS
             </p>
-            {top5Products.slice(0, 5).map((product, idx) => (
+            {top3Products.slice(0, 3).map((product, idx) => ( // Slice to 3
               <p
                 key={idx}
                 className={cn(

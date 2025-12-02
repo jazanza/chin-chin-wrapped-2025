@@ -12,15 +12,15 @@ interface TextSegment {
 }
 
 interface Top5StoryProps {
-  top5Products: Product[];
+  top3Products: Product[]; // Changed from top5Products
   // isPaused: boolean; // REMOVED
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
 }
 
-export const Top5Story = ({ top5Products, textColor, highlightColor }: Top5StoryProps) => {
+export const Top5Story = ({ top3Products, textColor, highlightColor }: Top5StoryProps) => { // Changed prop name
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "TU TOP 5\nDE CERVEZAS", color: highlightColor }, // Changed to highlight for impact
+    { text: "TU TOP 3\nDE CERVEZAS", color: highlightColor }, // Changed to highlight for impact and Top 3
   ], [highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -50,7 +50,7 @@ export const Top5Story = ({ top5Products, textColor, highlightColor }: Top5Story
         </p>
       </div>
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-2 p-4 border-2 border-white">
-        {top5Products.slice(0, 5).map((product, idx) => (
+        {top3Products.slice(0, 3).map((product, idx) => ( // Slice to 3
           <p key={idx} className={`text-center ${textColor} ${idx === 0 ? 'text-[min(4vw,1.5rem)] md:text-[min(3.5vw,1.4rem)] lg:text-[min(3vw,1.2rem)] font-black' : 'text-[min(3vw,1.2rem)] md:text-[min(2.5vw,1.1rem)] lg:text-[min(2vw,1rem)] font-bold'}`}>
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} L)`}
           </p>

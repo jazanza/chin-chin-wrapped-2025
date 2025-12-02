@@ -11,12 +11,34 @@ interface TextSegment {
 
 interface TotalConsumptionStoryProps {
   totalLiters: number;
+  totalLiters2024: number; // Added for comparison
   // isPaused: boolean; // REMOVED
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
 }
 
-export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor }: TotalConsumptionStoryProps) => {
+const ComparisonText = ({ current, previous, year, textColor }: { current: number; previous: number; year: string; textColor: string }) => {
+  if (previous === 0) {
+    return (
+      <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-normal text-center ${textColor}`}>
+        No data for {parseInt(year) - 1}
+      </p>
+    );
+  }
+
+  const diff = current - previous;
+  const percentage = (diff / previous) * 100;
+  const isPositive = percentage >= 0;
+  const colorClass = isPositive ? "text-green-500" : "text-red-500"; // Using Tailwind's default green/red
+
+  return (
+    <p className={`text-[min(2.5vw,1rem)] md:text-[min(2vw,0.9rem)] lg:text-[min(1.5vw,0.8rem)] font-bold text-center ${colorClass}`}>
+      {`${isPositive ? '▲ +' : '▼ '}${percentage.toFixed(1)}% vs. ${parseInt(year) - 1}`}
+    </p>
+  );
+};
+
+export const TotalConsumptionStory = ({ totalLiters, totalLiters2024, textColor, highlightColor }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
     { text: "TU CONSUMO\nTOTAL", color: textColor },
   ], [textColor]);
@@ -48,11 +70,17 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor }
           {renderedText}
         </p>
       </div>
-      <div className={`text-center ${highlightColor} border-2 border-white p-4`}>
+      <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
         <p className="text-[min(12vw,5rem)] md:text-[min(10vw,4rem)] lg:text-[min(8vw,3rem)] font-black leading-none">
           {totalLiters.toFixed(1)} L
         </p>
       </div>
+      <ComparisonText
+        current={totalLiters}
+        previous={totalLiters2024}
+        year="2025" // Assuming current year is 2025
+        textColor={textColor}
+      />
       {/* WrappedMeter REMOVED, replaced by simple text display */}
     </div>
   );

@@ -4,13 +4,10 @@ import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useDb } from "@/hooks/useDb";
 import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
-// import { ResponsiveCamera } from "@/components/ResponsiveCamera"; // REMOVED
-// import { PostProcessingEffects } from "@/components/PostProcessingEffects"; // REMOVED
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
-// import { ViewMode } from "@/components/CameraAnimator"; // REMOVED
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
-import { cn } from '@/lib/utils'; // For StoryProgressBar
+import { cn } from '@/lib/utils';
 
 // Import story components (now all 2D)
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
@@ -26,18 +23,19 @@ import { SummaryInfographic } from "@/components/stories/SummaryInfographic"; //
 interface WrappedOverlayProps {
   customerName: string;
   year: string;
+  textColor: string; // Added textColor prop
 }
 
-const WrappedOverlay = ({ customerName, year }: WrappedOverlayProps) => {
+const WrappedOverlay = ({ customerName, year, textColor }: WrappedOverlayProps) => {
   return (
-    <div className="absolute top-8 left-8 z-10 text-white pointer-events-none font-sans max-w-[80%]">
+    <div className="absolute top-8 left-8 z-10 pointer-events-none font-sans max-w-[80%]">
       <h1
-        className="text-[min(6vw,3.5rem)] font-bold text-white uppercase tracking-widest"
+        className={cn("text-[min(6vw,3.5rem)] font-bold uppercase tracking-widest", textColor)} // Use textColor here
       >
         {customerName}
       </h1>
       <p
-        className="text-[min(3vw,1.8rem)] font-bold text-white uppercase tracking-wide"
+        className={cn("text-[min(3vw,1.8rem)] font-bold uppercase tracking-wide", textColor)} // Use textColor here
       >
         {year} Wrapped
       </p>
@@ -364,7 +362,7 @@ const WrappedDashboard = () => {
     year: wrappedData.year,
     totalLiters: wrappedData.totalLiters,
     dominantBeerCategory: wrappedData.dominantBeerCategory,
-    top5Products: wrappedData.top5Products,
+    top3Products: wrappedData.top3Products, // Changed from top5Products
     totalVisits: wrappedData.totalVisits,
     totalVisits2024: wrappedData.totalVisits2024,
     totalLiters2024: wrappedData.totalLiters2024,
@@ -395,6 +393,7 @@ const WrappedDashboard = () => {
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
+            textColor={currentTextColor} // Pass textColor to the overlay
           />
         )}
 

@@ -72,6 +72,8 @@ const BEER_CATEGORY_COLORS: { [key: string]: string } = {
 const DAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+const BEER_PRODUCT_GROUP_IDS = [34, 36]; // 34: Cervezas Belgas, 36: Cervezas Alemanas
+
 
 export function useDb() {
   const [dbLoaded, setDbLoaded] = useState(false);
@@ -149,9 +151,13 @@ export function useDb() {
         return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
       };
 
-      // Helper to build the category filter clause for 'Cervezas Belgas' or 'Cervezas Alemanas'
+      // Helper to build the beer category filter clause for ProductGroupId
       const buildBeerCategoryFilterClause = (tableAlias: string) => {
-        return `AND (${tableAlias}.Name LIKE '%Cervezas Belgas%' OR ${tableAlias}.Name LIKE '%Cervezas Alemanas%' OR ${tableAlias}.Description LIKE '%Cervezas Belgas%' OR ${tableAlias}.Description LIKE '%Cervezas Alemanas%')`;
+        if (BEER_PRODUCT_GROUP_IDS.length === 0) {
+          return "";
+        }
+        const categoryIdsSql = BEER_PRODUCT_GROUP_IDS.join(',');
+        return `AND ${tableAlias}.ProductGroupId IN (${categoryIdsSql})`;
       };
 
 
@@ -165,23 +171,25 @@ export function useDb() {
       const previousYear = (parseInt(year, 10) - 1).toString();
 
       // Query for product data (name, description, quantity) for a given customer and year
+      // Now joins with Product and filters by ProductGroupId
       const productDataQuery = `
         SELECT
-            T3.Name AS ProductName,
-            T3.Description AS ProductDescription,
-            SUM(T2.Quantity) AS TotalQuantity
+            P.Name AS ProductName,
+            P.Description AS ProductDescription,
+            SUM(DI.Quantity) AS TotalQuantity
         FROM
-            Document AS T1
+            Document AS D
         INNER JOIN
-            DocumentItem AS T2 ON T1.Id = T2.DocumentId
+            DocumentItem AS DI ON D.Id = DI.DocumentId
         INNER JOIN
-            Product AS T3 ON T2.ProductId = T3.Id
+            Product AS P ON DI.ProductId = P.Id
         WHERE
-            T1.CustomerId = ?
-            AND STRFTIME('%Y', T1.Date) = ?
-            ${buildExclusionClause('T3')}
+            D.CustomerId = ?
+            AND STRFTIME('%Y', D.Date) = ?
+            ${buildExclusionClause('P')}
+            ${buildBeerCategoryFilterClause('P')}
         GROUP BY
-            T3.Id, T3.Name, T3.Description
+            P.Id, P.Name, P.Description
         HAVING
             TotalQuantity > 0;
       `;
@@ -192,12 +200,7 @@ export function useDb() {
       let totalLiters = 0;
       const categoryVolumes: { [key: string]: number } = {};
       const productLiters: { name: string; liters: number; color: string }[] = [];
-
-      // Filtered data for 'Cervezas Belgas' or 'Cervezas Alemanas'
-      let filteredTotalLiters = 0;
-      const filteredCategoryVolumes: { [key: string]: number } = {};
-      let filteredUniqueVarieties = new Set<string>();
-
+      const uniqueVarietiesSet = new Set<string>(); // To count unique varieties for the customer
 
       for (const item of rawProductDataCurrentYear) {
         const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
@@ -207,42 +210,31 @@ export function useDb() {
         if (liters > 0) {
           const category = categorizeBeer(item.ProductName);
           categoryVolumes[category] = (categoryVolumes[category] || 0) + liters;
-          
+          uniqueVarietiesSet.add(item.ProductName); // Add to unique varieties set
           productLiters.push({
             name: item.ProductName,
             liters: liters,
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
           });
         }
-
-        // Apply filter for 'Cervezas Belgas' or 'Cervezas Alemanas'
-        const productText = `${item.ProductName} ${item.ProductDescription || ""}`;
-        if (productText.toLowerCase().includes('cervezas belgas') || productText.toLowerCase().includes('cervezas alemanas')) {
-          filteredTotalLiters += liters;
-          if (liters > 0) {
-            const category = categorizeBeer(item.ProductName);
-            filteredCategoryVolumes[category] = (filteredCategoryVolumes[category] || 0) + liters;
-            filteredUniqueVarieties.add(item.ProductName);
-          }
-        }
       }
 
       // Metric 2: Dominant Beer for current year (using filtered data)
       let dominantBeerCategory = "N/A";
       let maxCategoryLiters = 0;
-      for (const category in filteredCategoryVolumes) {
-        if (filteredCategoryVolumes[category] > maxCategoryLiters) {
-          maxCategoryLiters = filteredCategoryVolumes[category];
+      for (const category in categoryVolumes) { // Use categoryVolumes directly
+        if (categoryVolumes[category] > maxCategoryLiters) {
+          maxCategoryLiters = categoryVolumes[category];
           dominantBeerCategory = category;
         }
       }
 
-      // Metric 3: Top 5 Products for current year
-      const top5Products = productLiters
+      // Metric 3: Top 3 Products for current year (changed from Top 5)
+      const top3Products = productLiters
         .sort((a, b) => b.liters - a.liters)
-        .slice(0, 5);
+        .slice(0, 3); // Slice to 3
 
-      // Metric 4: Frequency/Loyalty (Total Visits) for current year
+      // Metric 4: Frequency/Loyalty (Total Visits) for current year - COUNT DISTINCT
       const totalVisitsQuery = `
         SELECT COUNT(DISTINCT T1.Date) AS TotalVisits
         FROM Document AS T1
@@ -252,6 +244,7 @@ export function useDb() {
       const totalVisits = totalVisitsResult.length > 0 ? totalVisitsResult[0].TotalVisits : 0;
 
       // --- Data for previous year (2024) for comparison ---
+      // Re-run productDataQuery for previous year to get totalLiters2024 based on filtered products
       const rawProductDataPreviousYear = queryData(dbInstance, productDataQuery, [customerId, previousYear]);
       let totalLiters2024 = 0;
       for (const item of rawProductDataPreviousYear) {
@@ -259,28 +252,28 @@ export function useDb() {
         totalLiters2024 += (item.TotalQuantity * volumeMl) / 1000;
       }
 
-      const totalVisitsPreviousYearResult = queryData(dbInstance, totalVisitsQuery, [customerId, previousYear]);
+      const totalVisitsPreviousYearResult = queryData(dbInstance, totalVisitsQuery, [customerId, previousYear]); // Use updated totalVisitsQuery
       const totalVisits2024 = totalVisitsPreviousYearResult.length > 0 ? totalVisitsPreviousYearResult[0].TotalVisits : 0;
 
       // --- New Infographic Metrics for current year (2025) ---
 
       // Unique Varieties for customer in current year (using filtered data)
-      const uniqueVarieties2025 = filteredUniqueVarieties.size;
+      const uniqueVarieties2025 = uniqueVarietiesSet.size; // Use the set collected above
 
       // Total Unique Varieties in DB (excluding non-liquid/excluded, and applying beer category filter)
       const totalUniqueProductsDbQuery = `
-        SELECT COUNT(DISTINCT Name) AS TotalUniqueProducts
-        FROM Product
+        SELECT COUNT(DISTINCT P.Name) AS TotalUniqueProducts
+        FROM Product AS P
         WHERE 1=1
-        ${buildExclusionClause('Product')}
-        ${buildBeerCategoryFilterClause('Product')};
+        ${buildExclusionClause('P')}
+        ${buildBeerCategoryFilterClause('P')};
       `;
       const totalVarietiesInDbResult = queryData(dbInstance, totalUniqueProductsDbQuery);
       const totalVarietiesInDb = totalVarietiesInDbResult.length > 0 ? totalVarietiesInDbResult[0].TotalUniqueProducts : 0;
 
-      // Most Active Day 2025
+      // Most Active Day 2025 - COUNT DISTINCT
       const mostActiveDayQuery = `
-        SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(*) AS DayCount
+        SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(DISTINCT T1.Date) AS DayCount
         FROM Document AS T1
         WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
         GROUP BY DayOfWeek
@@ -290,9 +283,9 @@ export function useDb() {
       const mostActiveDayResult = queryData(dbInstance, mostActiveDayQuery, [customerId, currentYear]);
       const mostActiveDay = mostActiveDayResult.length > 0 ? DAY_NAMES[mostActiveDayResult[0].DayOfWeek] : "N/A";
 
-      // All Daily Visits for current year
+      // All Daily Visits for current year - COUNT DISTINCT
       const allDailyVisitsQuery = `
-        SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(*) AS DayCount
+        SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(DISTINCT T1.Date) AS DayCount
         FROM Document AS T1
         WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
         GROUP BY DayOfWeek
@@ -305,9 +298,9 @@ export function useDb() {
       }));
 
 
-      // Most Active Month 2025
+      // Most Active Month 2025 - COUNT DISTINCT
       const mostActiveMonthQuery = `
-        SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(*) AS MonthCount
+        SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(DISTINCT T1.Date) AS MonthCount
         FROM Document AS T1
         WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
         GROUP BY MonthOfYear
@@ -317,9 +310,9 @@ export function useDb() {
       const mostActiveMonthResult = queryData(dbInstance, mostActiveMonthQuery, [customerId, currentYear]);
       const mostActiveMonth = mostActiveMonthResult.length > 0 ? MONTH_NAMES[parseInt(mostActiveMonthResult[0].MonthOfYear, 10) - 1] : "N/A";
 
-      // All Monthly Visits for current year
+      // All Monthly Visits for current year - COUNT DISTINCT
       const allMonthlyVisitsQuery = `
-        SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(*) AS MonthCount
+        SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(DISTINCT T1.Date) AS MonthCount
         FROM Document AS T1
         WHERE T1.CustomerId = ? AND STRFTIME('%Y', T1.Date) = ?
         GROUP BY MonthOfYear
@@ -337,7 +330,7 @@ export function useDb() {
         year,
         totalLiters,
         dominantBeerCategory,
-        top5Products,
+        top3Products, // Renamed from top5Products
         totalVisits,
         categoryVolumes,
         totalVisits2024,
@@ -346,8 +339,8 @@ export function useDb() {
         totalVarietiesInDb,
         mostActiveDay,
         mostActiveMonth,
-        dailyVisits, // Added daily visits
-        monthlyVisits, // Added monthly visits
+        dailyVisits,
+        monthlyVisits,
       };
     } catch (e: any) {
       console.error("Error getting wrapped data:", e);

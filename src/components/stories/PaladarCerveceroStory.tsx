@@ -43,11 +43,10 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
                           ? varietyExplorationRatio 
                           : 0;
 
-      // 2. Cálculo del porcentaje seguro: 
-      const explorationPercentage = (safeRatio * 100).toFixed(0);
+      // 2. Cálculo del porcentaje seguro: ¡CAMBIO AQUÍ! Usamos toFixed(1)
+      const explorationPercentage = (safeRatio * 100).toFixed(1); // Muestra un decimal
 
-      // Frase que es coherente con "Recién Bautizado" y el bajo número de variedades.
-      // 3. Uso del porcentaje seguro:
+      // 3. Uso del porcentaje seguro: Se mantiene igual
       finalQuadrantPhrase = `RECIÉN BAUTIZADO. Aunque tienes un gusto interesante, apenas estás explorando el ${explorationPercentage}% de nuestra barra. ¡Te falta mucho por probar!`;
   }
 
@@ -56,7 +55,7 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
       >
-        <p className={cn("text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[min(3.5vw,1.8rem)] text-center mb-4", highlightColor)}>
+        <p className={cn("text-[min(6vw,2.5rem)] md:text-[min(4.5vw,2rem)] lg:text-[3.5vw] text-center mb-4", highlightColor)}>
           TU PALADAR CERVECERO ES:
         </p>
         <p className={cn("text-[min(8vw,3rem)] md:text-[min(6vw,2.5rem)] lg:text-[5vw] text-center mb-8", highlightColor)}>

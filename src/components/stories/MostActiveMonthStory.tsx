@@ -56,7 +56,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
     wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes más visitado! No nos sorprende.`;
   } else if (popularMonths.includes(mostActiveMonth)) {
     // Si es un mes popular, pero NO el más popular de la comunidad
-    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, un mes popular, pero con tu propio estilo.`;
+    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, el mes popular entre todos, pero siempre con estilo único.`;
   } else {
     // ✨ NUEVA LÓGICA: Meses Menos Comunes (Pionero con frase divertida)
     const seasonalRemark = getSeasonalWittyRemark(mostActiveMonth);

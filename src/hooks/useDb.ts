@@ -783,19 +783,12 @@ export function useDb() {
       const totalCustomersResult = queryData(dbInstance, totalCustomersQuery, [currentYear]);
       const totalCustomers = totalCustomersResult.length > 0 ? totalCustomersResult[0].TotalCustomers : 0;
 
-      const totalLitresQuery = `
+      // --- CORRECTED: Global Litres Calculation ---
+      const allSalesQuery = `
         SELECT
-            SUM(DI.Quantity * (
-                CASE
-                    WHEN P.Name LIKE '%ml' THEN CAST(REPLACE(P.Name, 'ml', '') AS INTEGER)
-                    WHEN P.Description LIKE '%ml' THEN CAST(REPLACE(P.Description, 'ml', '') AS INTEGER)
-                    WHEN P.Name LIKE '%pinta%' THEN 473
-                    WHEN P.Name LIKE '%caña%' THEN 200
-                    WHEN P.Name LIKE '%botella%' THEN 330
-                    WHEN P.Name LIKE '%lata%' THEN 330
-                    ELSE 0
-                END
-            ) / 1000.0) AS GrandTotalLiters
+            P.Name AS ProductName,
+            P.Description AS ProductDescription,
+            DI.Quantity
         FROM
             Document AS D
         INNER JOIN
@@ -813,8 +806,14 @@ export function useDb() {
                 OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             );
       `;
-      const totalLitresResult = queryData(dbInstance, totalLitresQuery, [currentYear]);
-      const totalLitres = totalLitresResult.length > 0 && totalLitresResult[0].GrandTotalLiters ? totalLitresResult[0].GrandTotalLiters : 0;
+      const allSalesForTotalLitres = queryData(dbInstance, allSalesQuery, [currentYear]);
+      let totalLitres = 0;
+      for (const sale of allSalesForTotalLitres) {
+        const volumeMl = extractVolumeMl(sale.ProductName, sale.ProductDescription);
+        if (volumeMl > 0) {
+          totalLitres += (sale.Quantity * volumeMl) / 1000;
+        }
+      }
 
 
       return {

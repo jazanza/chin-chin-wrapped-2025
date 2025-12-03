@@ -179,13 +179,14 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="mt-6"> {/* Added margin-top to separate from infographic */}
+      <div className="mt-6">
           <Button
               onClick={handleBackToLogin}
-              className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"
+              variant="ghost" // Changed to ghost variant
+              size="icon" // Changed to icon size
+              className="text-white hover:bg-white hover:text-black" // Minimal styling for icon
           >
-              <Home className="mr-2 h-4 w-4" />
-              Volver
+              <Home className="h-6 w-6" /> {/* Increased icon size for better visibility */}
           </Button>
       </div>
     </div>

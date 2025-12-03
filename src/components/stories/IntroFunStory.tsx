@@ -33,7 +33,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
     { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!\n\n`, color: highlightColor, sizeClass: "text-xl" },
     { text: `Gracias a ti y a los ${formattedCustomers} aficionados a las cervezas importadas. Entre todos tomaron ${formattedLitres} litros de alegría cervecera.\n\n`, color: textColor, sizeClass: "text-xl" },
     { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.\n\n`, color: highlightColor, sizeClass: "text-xl" },
-    { text: `Ahora sí, descubre tus logros cerveceros del año.`, color: textColor, sizeClass: "text-4xl" }
+    { text: `Ahora sí, descubre tus logros cerveceros del año.`, color: textColor, sizeClass: "text-xl" }
   ], [firstName, formattedCustomers, formattedLitres, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

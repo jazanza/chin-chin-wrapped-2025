@@ -26,7 +26,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
     const segments: TextSegment[] = [];
     if (top10Products && top10Products.length > 0) {
       const top1Name = top10Products[0].name;
-      segments.push({ text: `CERVEZA FAVORITA DEL AÑO:`, color: textColor, sizeClass: "text-4xl", nowrap: true }); // H2 - Added nowrap
+      segments.push({ text: `TU CERVEZA FAVORITA DEL AÑO:`, color: textColor, sizeClass: "text-4xl", nowrap: true }); // H2 - Added nowrap
       segments.push({ text: `\n${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-6xl" }); // H1
     } else {
       segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-4xl" }); // H2

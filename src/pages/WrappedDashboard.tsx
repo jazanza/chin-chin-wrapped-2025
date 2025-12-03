@@ -400,8 +400,6 @@ const WrappedDashboard = () => {
     mostPopularCommunityMonth: wrappedData.mostPopularCommunityMonth, // NEW
     mostFrequentBeerName: wrappedData.mostFrequentBeerName, // NEW: Most frequent beer name
     varietyExplorationRatio: wrappedData.varietyExplorationRatio, // NEW: variety exploration ratio
-    totalCommunityClients: wrappedData.totalCommunityClients, // NEW
-    totalCommunityLiters: wrappedData.totalCommunityLiters,   // NEW
   };
 
   return (

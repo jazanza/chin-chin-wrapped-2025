@@ -143,7 +143,7 @@ export const SummaryInfographic = ({
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   <p className="text-sm font-bold whitespace-normal"> {/* Reduced from text-base to text-sm */}
-                      PROBASTE: {uniqueVarieties2025} CERVEZAS
+                      PROBASTE {uniqueVarieties2025} CERVEZAS
                   </p>
                   <p className="text-xs mt-1 whitespace-normal"> {/* Reduced from text-sm to text-xs */}
                       DE {totalVarietiesInDb} DISPONIBLES.

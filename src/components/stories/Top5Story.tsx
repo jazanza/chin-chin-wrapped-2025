@@ -62,7 +62,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {/* Moved "TU TOP 10:" closer to the list */}
-      <p className={cn("text-xl font-black text-center mb-4", highlightColor)}> {/* H3 */}
+      <p className={cn("text-xl font-black text-center mb-4", highlightColor)}> {/* H2 */}
         TU TOP 10:
       </p>
 

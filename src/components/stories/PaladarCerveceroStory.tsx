@@ -16,13 +16,13 @@ interface PaladarCerveceroStoryProps {
 const getQuadrantPhrase = (palateCategory: PaladarCerveceroStoryProps['palateCategory']): string => {
   const { concentration, rarity } = palateCategory;
   if (concentration === 'Fiel' && rarity === 'Nicho') {
-    return "EL CURADOR. Tu paladar es exótico y exclusivo; pocos comparten tu gusto, y eres leal a las joyas raras que encuentras.";
+    return "Tu paladar es exótico y exclusivo; pocos comparten tu gusto, y eres leal a las joyas raras que encuentras.";
   } else if (concentration === 'Explorador' && rarity === 'Nicho') {
-    return "EL AVENTURERO. Exploraste las etiquetas más raras de nuestra barra, demostrando un gusto refinado y un paladar incansable por lo nuevo.";
+    return "Exploraste las etiquetas más raras de nuestra barra, demostrando un gusto refinado y un paladar incansable por lo nuevo.";
   } else if (concentration === 'Fiel' && rarity === 'Popular') {
-    return "EL CLÁSICO. Eres firme en tus decisiones. Disfrutas el Top 3 de los más vendidos y lo haces con una admirable consistencia.";
+    return "Eres firme en tus decisiones. Disfrutas el Top 3 de los más vendidos y lo haces con una admirable consistencia.";
   } else if (concentration === 'Explorador' && rarity === 'Popular') {
-    return "EL SOCIABLE. Eres el amigo que prueba de todo. Consumes la mayoría de las cervezas, pero nunca te atas a una sola.";
+    return "Eres el amigo que prueba de todo. Consumes la mayoría de las cervezas, pero nunca te atas a una sola.";
   }
   return "Descubre tu paladar cervecero.";
 };

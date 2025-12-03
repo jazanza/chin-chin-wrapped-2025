@@ -22,15 +22,19 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
   if (litersPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tu consumo.";
   } else if (litersPercentile >= 95 && totalLiters >= 150) {
-      wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de. Podrías llenar una piscina con tu consumo.`;
+      wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de. 
+      Podrías llenar una piscina con tu consumo.`;
   } else if (litersPercentile >= 95 && totalLiters >= 100) {
       wittyPhrase = `¡Consumo Destacado! Eres parte del Top 5% de consumidores, superando al ${litersPercentile.toFixed(0)}% de la comunidad.`;
   } else if (litersPercentile >= 75 && totalLiters >= 50) {
-    wittyPhrase = `¡Estás en el Top 25% de consumidores! Demuestras un buen ritmo y siempre con tu favorita.`;
+    wittyPhrase = `¡Estás en el Top 25% de consumidores!
+    Demuestras un buen ritmo y siempre con tu favorita.`;
   } else if (litersPercentile >= 50 && totalLiters >= 20) {
-    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Claramente, disfrutas mucho tus cervezas!`;
+    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. 
+    ¡Claramente, disfrutas mucho tus cervezas!`;
   } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
-    wittyPhrase = `Tienes un consumo moderado de ${totalLiters.toFixed(1)} litros. ¡Aún tienes tiempo para probar más cervezas y subir en el ranking!`;
+    wittyPhrase = `Tienes un consumo moderado de ${totalLiters.toFixed(1)} litros.
+    ¡Aún tienes tiempo para probar más cervezas y subir en el ranking!`;
   }
 
   return (

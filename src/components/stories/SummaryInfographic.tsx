@@ -48,7 +48,7 @@ const getBeerLevel = (uniqueVarietiesCount: number): string => {
   if (uniqueVarietiesCount >= 60) return "Maestro Cervecero (El que Nos Enseña)";
   if (uniqueVarietiesCount >= 40) return "Coleccionista de Sabores (Conocedor de la Barra)";
   if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas (El que Pide Sugerencias)";
-  if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo (Recién Bautizado)";
+  if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo";
   return "Novato en la Barra";
 };
 

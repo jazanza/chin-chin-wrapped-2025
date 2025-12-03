@@ -24,7 +24,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   } else if (visitsPercentile >= 95 && totalVisits >= 75) {
       wittyPhrase = `Eres nuestro súper-recontra-fan, con ${totalVisits} visitas, eres definitivamente nuestro cliente #1.`;
   } else if (visitsPercentile >= 95 && totalVisits >= 50) {
-      wittyPhrase = `¡FELICIDADES! Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${visitsPercentile.toFixed(0)}% de la comunidad.`;
+      wittyPhrase = `Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${visitsPercentile.toFixed(0)}% de la comunidad.`;
   } else if (visitsPercentile >= 75 && totalVisits >= 30) {
       wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, debes seguir viniendo.`;
   } else if (visitsPercentile >= 50 && totalVisits >= 10) {
@@ -42,10 +42,10 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 
 const getVisitsIntroText = (count: number) => {
   if (count >= 75) return { top: "A esta altura, tu GPS nos tiene como 'Casa'", bottom: "\n¡Eres Leyenda!" };
-  if (count >= 50) return { top: "¡Alarma! ¡Declarado residente no oficial!", bottom: "\nPasaste más tiempo aquí que en tu casa." };
+  if (count >= 50) return { top: "Pasaste más tiempo aquí que en tu casa.", bottom: "\n¡Declarado residente no oficial!" };
   if (count >= 30) return { top: "¡Tenemos a un habitué!", bottom: "\nTu casa tiene competencia." };
   if (count >= 15) return { top: "¡Parece que Chin Chin te gustó!", bottom: "\nYa tienes tu destino cervecero asegurado." };
-  if (count >= 5) return { top: "¡Te vemos potencial!", bottom: "\nTu búsqueda te trajo varias veces." };
+  if (count >= 5) return { top: "¡Te vemos potencial!", bottom: "\nSigue viniendo." };
   
   return { top: "¡INTERESANTE!", bottom: "\nPARECE QUE ESTÁS EMPEZANDO TU CAMINO." };
 };

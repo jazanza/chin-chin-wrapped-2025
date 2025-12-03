@@ -20,21 +20,21 @@ interface MostActiveMonthStoryProps {
 const getSeasonalWittyRemark = (month: string) => {
     switch (month) {
         case 'Enero':
-            return "Eres el anticuerpo del Dry January. ¡Mientras el mundo hace dieta, tú pides la pinta más grande!";
+            return "Eres el anticuerpo del Dry January. ¡Mientras el mundo hace dieta líquida, tú pides la cerveza más grande!";
         case 'Febrero':
-            return "Febrero es el mes corto... ¡Pero no para tu agenda de visitas! Nos encanta esa dedicación.";
+            return "Febrero es el mes corto... ¡Pero no para tu agenda cervcera! Nos encanta esa dedicación.";
         case 'Marzo':
             return "Marzo es la nueva primavera cervecera para ti. Despertaste justo a tiempo, antes de que llegara el frío.";
         case 'Abril':
-            return "Abril: Mes de bromas, pero tu hábito de visitarnos es 100% serio. ¡Tu fidelidad no es una broma!";
+            return "Abril: Mes de bromas, pero tu compromiso cervecero es 100% serio. ¡Tu fidelidad no es una broma!";
         case 'Mayo':
-            return "Mayo es el mes del 'Ni frío ni calor'. Perfecto para beber, y tú lo entendiste antes que la multitud.";
+            return "Mayo es el mes del 'Ni frío ni calor'. Perfecto para beber, y tú lo entendiste antes que el resto.";
         case 'Junio':
             return "Junio: La calma antes de la tormenta de julio. Disfrutaste de las mejores cervezas antes de las vacaciones de invierno.";
         case 'Septiembre':
-            return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal. Ojalá tuvieras un Lederhosen para cada visita.";
+            return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal.";
         case 'Octubre':
-            return "¡El verdadero espíritu del Oktoberfest! Tu pico de visitas en Octubre es una tradición global, aunque sea solo para ti.";
+            return "¡Tienes el gen del Oktoberfest! Tu pico de visitas en este mes es una tradición global.";
         case 'Noviembre':
             return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin las prisas de Diciembre.";
         

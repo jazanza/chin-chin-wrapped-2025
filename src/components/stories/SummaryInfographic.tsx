@@ -101,7 +101,7 @@ export const SummaryInfographic = ({
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                VISITAS
+                VISITAS:
               </p>
               <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
                 {totalVisits}
@@ -111,10 +111,10 @@ export const SummaryInfographic = ({
             {/* Row 1, Column 2: Total Litros */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                LITROS TOMADOS
+                LITROS TOMADOS:
               </p>
               <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
-                {totalLiters.toFixed(1)} L
+                {totalLiters.toFixed(1)}
               </p>
             </Block>
 
@@ -143,7 +143,7 @@ export const SummaryInfographic = ({
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   <p className="text-sm font-bold whitespace-normal"> {/* Reduced from text-base to text-sm */}
-                      PROBASTE {uniqueVarieties2025} CERVEZAS
+                      PROBASTE: {uniqueVarieties2025} CERVEZAS
                   </p>
                   <p className="text-xs mt-1 whitespace-normal"> {/* Reduced from text-sm to text-xs */}
                       DE {totalVarietiesInDb} DISPONIBLES.
@@ -166,7 +166,7 @@ export const SummaryInfographic = ({
               <img
                 src="/Logo.png"
                 alt="Logo Chin Chin"
-                className="w-auto max-w-[85px] p-1 mb-2"
+                className="w-auto max-w-[75px] p-1 mb-2"
               />
               <p className="text-xs font-bold"> {/* Reduced from text-sm to text-xs */}
                 @CHINCHIN.CERVEZAS

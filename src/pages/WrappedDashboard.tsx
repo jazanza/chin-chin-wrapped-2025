@@ -448,7 +448,7 @@ const WrappedDashboard = () => {
         {/* Chin Chin Logo - Conditionally rendered */}
         {!isSummaryInfographicStory && (
           <img
-            src={logoSrc} {/* Conditional logo source */}
+            src={logoSrc}
             alt="Logo Chin Chin"
             className="absolute bottom-4 left-4 z-10 w-14 h-auto p-1 md:w-20" // Ajustado a bottom-4 left-4 y tamaño reducido
           />

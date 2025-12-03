@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useDb } from "@/hooks/useDb";
-// import { showError } from "@/utils/toast"; // Removed import
+import { showError } from "@/utils/toast";
 
 interface Customer {
   Id: number;
@@ -28,12 +28,11 @@ const MAX_KBA_ATTEMPTS = 2; // Changed from 3 to 2
 
 // Helper to shuffle an array
 const shuffleArray = (array: any[]) => {
-  const shuffled = [...array]; // Initialize 'shuffled' as a copy of the input array
-  for (let i = shuffled.length - 1; i > 0; i--) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return shuffled;
+  return array;
 };
 
 // Helper to generate a fake phone number, guaranteed to be different from realPhone
@@ -137,7 +136,7 @@ const ClientLogin = () => {
     if (customer.Email) availableFields.push({ type: 'Email', value: customer.Email });
 
     if (availableFields.length === 0) {
-      // showError("No hay datos de verificación (KBA) disponibles para este cliente."); // Removed toast
+      showError("No hay datos de verificación (KBA) disponibles para este cliente.");
       return null;
     }
 
@@ -183,7 +182,7 @@ const ClientLogin = () => {
 
   const handleSearch = async () => {
     if (!dbLoaded) {
-      // showError("Base de datos no cargada. Por favor, espera."); // Removed toast
+      showError("Base de datos no cargada. Por favor, espera.");
       console.error("Attempted search before database was loaded.");
       return;
     }
@@ -203,11 +202,11 @@ const ClientLogin = () => {
         setSearchResults(results);
         setStep("select");
       } else { // No matches
-        // showError("No encontramos coincidencias. Intenta otro nombre o número."); // Removed toast
+        showError("No encontramos coincidencias. Intenta otro nombre o número.");
       }
     } catch (error: any) {
       console.error("Error searching for customer:", error);
-      // showError(error.message || "Ocurrió un error al buscar."); // Removed toast
+      showError(error.message || "Ocurrió un error al buscar.");
     } finally {
       setLoading(false);
     }
@@ -235,10 +234,10 @@ const ClientLogin = () => {
       const newAttempts = kbaAttempts + 1;
       setKbaAttempts(newAttempts);
       if (newAttempts >= MAX_KBA_ATTEMPTS) {
-        // showError("Has agotado tus intentos de verificación. Vuelve a empezar."); // Removed toast
+        showError("Has agotado tus intentos de verificación. Vuelve a empezar.");
         handleBackToSearch(); // Go back to search on too many failed attempts
       } else {
-        // showError(`Respuesta incorrecta. Intentos restantes: ${MAX_KBA_ATTEMPTS - newAttempts}`); // Removed toast
+        showError(`Respuesta incorrecta. Intentos restantes: ${MAX_KBA_ATTEMPTS - newAttempts}`);
       }
     }
   };

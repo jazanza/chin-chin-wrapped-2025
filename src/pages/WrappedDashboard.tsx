@@ -3,7 +3,7 @@
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { useDb } from "@/hooks/useDb";
-// import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast"; // Removed imports
+import { showError, showSuccess, showLoading, dismissToast } from "@/utils/toast";
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
 import { StoryInteractionZone } from "@/components/StoryInteractionZone";
@@ -306,17 +306,16 @@ const WrappedDashboard = () => {
     if (!dbLoaded) return;
 
     const fetchWrappedData = async () => {
-      // if (toastId) dismissToast(toastId); // Removed toast
+      if (toastId) dismissToast(toastId);
       try {
-        // setToastId(showLoading("Cargando tu Wrapped 2025...")); // Removed toast
         const data = await getWrappedData(Number(customerId), '2025');
         setWrappedData(data);
-        // showSuccess("¡Tu Wrapped 2025 está listo!"); // Removed toast
+        showSuccess("¡Tu Wrapped 2025 está listo!");
       } catch (err: any) {
         console.error("Error al obtener datos Wrapped:", err);
-        // showError(err.message || "No se pudo cargar tu Wrapped 2025."); // Removed toast
+        showError(err.message || "No se pudo cargar tu Wrapped 2025.");
       } finally {
-        // if (toastId) dismissToast(toastId); // Removed toast
+        if (toastId) dismissToast(toastId);
         setToastId(null);
       }
     };

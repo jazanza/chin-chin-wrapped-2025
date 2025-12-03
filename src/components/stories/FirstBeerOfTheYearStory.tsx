@@ -22,7 +22,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   const formattedDate = useMemo(() => {
     if (!firstBeerDetails?.date) return "N/A";
     const date = new Date(firstBeerDetails.date);
-    return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('es-AR', { month: 'long', day: 'numeric' });
   }, [firstBeerDetails]);
 
   const storySegments: TextSegment[] = useMemo(() => {

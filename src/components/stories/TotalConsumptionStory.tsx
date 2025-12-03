@@ -44,7 +44,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
 
 export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile, mostFrequentBeerName }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "TU HÍGADO PROCESÓ UN\nTOTAL DE:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: "TU HÍGADO PROCESÓ\nUN TOTAL DE:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
   ], [textColor]);
 
   const renderedText = useMemo(() => {

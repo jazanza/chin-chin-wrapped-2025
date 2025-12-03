@@ -21,8 +21,8 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 
   if (visitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tus visitas.";
-  } else if (visitsPercentile >= 100 && totalVisits >= 100) {
-      wittyPhrase = `Eres nuestro súper-recontra-fan, con ${totalVisits} visitas, eres definitivamente nuestro cliente #1.`;
+  } else if (visitsPercentile === 100) { // Manejar el caso del 100% de forma explícita
+      wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, eres nuestro cliente número uno, superando a todos los demás en la comunidad.`;
   } else if (visitsPercentile >= 95 && totalVisits >= 75) {
       wittyPhrase = `Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${visitsPercentile.toFixed(0)}% de la comunidad.`;
   } else if (visitsPercentile >= 75 && totalVisits >= 50) {

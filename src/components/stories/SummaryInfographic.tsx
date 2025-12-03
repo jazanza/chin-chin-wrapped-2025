@@ -179,14 +179,14 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="mt-6">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2"> {/* Positioned absolutely at the bottom center */}
           <Button
               onClick={handleBackToLogin}
-              variant="ghost" // Changed to ghost variant
-              size="icon" // Changed to icon size
-              className="text-white hover:bg-white hover:text-black" // Minimal styling for icon
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white hover:text-black"
           >
-              <Home className="h-6 w-6" /> {/* Increased icon size for better visibility */}
+              <Home className="h-6 w-6" />
           </Button>
       </div>
     </div>

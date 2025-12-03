@@ -18,16 +18,17 @@ interface TotalVisitsStoryProps {
 
 const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColor, highlightColor }: { totalVisits: number; visitsPercentile: number; textColor: string; highlightColor: string }) => {
   let wittyPhrase = "";
+  const roundedVisitsPercentile = Math.round(visitsPercentile); // Redondeamos el percentil aquí
 
-  if (visitsPercentile === 0) {
+  if (roundedVisitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tus visitas.";
-  } else if (visitsPercentile === 100) { // Manejar el caso del 100% de forma explícita
+  } else if (roundedVisitsPercentile === 100) { // Usamos el valor redondeado
       wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, eres nuestro cliente número uno, superando a todos los demás en la comunidad.`;
-  } else if (visitsPercentile >= 95 && visitsPercentile < 100 && totalVisits >= 75) { // MODIFICADO: Añadimos 'visitsPercentile < 100'
-      wittyPhrase = `Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${visitsPercentile.toFixed(0)}% de la comunidad.`;
-  } else if (visitsPercentile >= 75 && totalVisits >= 50) {
+  } else if (roundedVisitsPercentile >= 95 && roundedVisitsPercentile < 100 && totalVisits >= 75) { // Usamos el valor redondeado
+      wittyPhrase = `Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${roundedVisitsPercentile.toFixed(0)}% de la comunidad.`;
+  } else if (roundedVisitsPercentile >= 75 && totalVisits >= 50) { // Usamos el valor redondeado
       wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, debes seguir viniendo.`;
-  } else if (visitsPercentile >= 50 && totalVisits >= 25) {
+  } else if (roundedVisitsPercentile >= 50 && totalVisits >= 25) { // Usamos el valor redondeado
       wittyPhrase = `Tus visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te está gustando!`;
   } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
       wittyPhrase = `Tus ${totalVisits} visitas te ubican por debajo de la mitad de nuestros clientes. ¡Queremos verte más seguido!`;

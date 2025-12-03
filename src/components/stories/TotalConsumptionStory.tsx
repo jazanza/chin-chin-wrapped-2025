@@ -34,7 +34,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
     ¡Claramente, disfrutas las cervezas!`;
   } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
     wittyPhrase = `Tienes un consumo moderado de ${totalLiters.toFixed(1)} litros.
-    ¡Aún tienes tiempo para probar más cervezas y subir en el ranking!`;
+    ¡Aún tienes tiempo para probar más cervezas!`;
   }
 
   return (

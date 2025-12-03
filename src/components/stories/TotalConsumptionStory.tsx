@@ -22,7 +22,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
   if (litersPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tu consumo.";
   } else if (litersPercentile >= 95 && totalLiters >= 150) {
-      wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de. Podrías llenar nuestra piscina con tu consumo.`;
+      wittyPhrase = `¡NIVEL TITÁN! Consumiste ${totalLiters.toFixed(1)} litros de. Podrías llenar una piscina con tu consumo.`;
   } else if (litersPercentile >= 95 && totalLiters >= 100) {
       wittyPhrase = `¡Consumo Destacado! Eres parte del Top 5% de consumidores, superando al ${litersPercentile.toFixed(0)}% de la comunidad.`;
   } else if (litersPercentile >= 75 && totalLiters >= 50) {

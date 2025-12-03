@@ -81,9 +81,9 @@ export const SummaryInfographic = ({
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between bg-background text-foreground font-sans h-screen p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans h-screen overflow-y-auto py-10">
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] h-[92vh]">
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]">
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -105,7 +105,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 CANTIDAD DE VISITAS
               </p>
-              <p className="text-5xl font-black text-center"> {/* Changed to text-5xl */}
+              <p className="text-5xl font-black text-center leading-none"> {/* Changed to text-5xl, added leading-none */}
                 {totalVisits}
               </p>
             </Block>
@@ -115,7 +115,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 LITROS PROCESADOS
               </p>
-              <p className="text-5xl font-black text-center"> {/* Changed to text-5xl */}
+              <p className="text-5xl font-black text-center leading-none"> {/* Changed to text-5xl, added leading-none */}
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
@@ -129,7 +129,7 @@ export const SummaryInfographic = ({
                 <p
                   key={idx}
                   className={cn(
-                    "text-center leading-tight text-ellipsis overflow-hidden whitespace-nowrap",
+                    "text-center leading-tight whitespace-normal", // Removed text-ellipsis overflow-hidden whitespace-nowrap
                     idx === 0 ? "text-base font-black" : "text-sm font-bold"
                   )}
                 >
@@ -141,13 +141,13 @@ export const SummaryInfographic = ({
             {/* Row 2, Column 2: Variedades Probadas */}
             <Block bgColor="bg-white">
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
-                  <h2 className="text-xl font-black leading-tight mb-2 whitespace-normal"> {/* Added whitespace-normal */}
+                  <h2 className="text-xl font-black leading-tight mb-2 whitespace-normal">
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
-                  <p className="text-base font-bold whitespace-normal"> {/* Added whitespace-normal */}
+                  <p className="text-base font-bold whitespace-normal">
                       {uniqueVarieties2025} VARIEDADES PROBADAS
                   </p>
-                  <p className="text-sm mt-1 whitespace-normal"> {/* Added whitespace-normal */}
+                  <p className="text-sm mt-1 whitespace-normal">
                       de un total de {totalVarietiesInDb} DISPONIBLES.
                   </p>
               </div>
@@ -158,7 +158,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-5xl font-black text-center"> {/* Changed to text-5xl */}
+              <p className="text-4xl font-black text-center leading-none"> {/* Changed to text-4xl, added leading-none */}
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
@@ -179,7 +179,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div>
+      <div className="mt-6"> {/* Added margin-top to separate from infographic */}
           <Button
               onClick={handleBackToLogin}
               className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"

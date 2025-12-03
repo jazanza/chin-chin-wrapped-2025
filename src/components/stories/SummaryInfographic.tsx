@@ -45,11 +45,11 @@ const Block = ({ children, className }: BlockProps) => {
 // Función Helper para calcular el nivel de cerveza
 const getBeerLevel = (uniqueVarietiesCount: number): string => {
   if (uniqueVarietiesCount >= 80) return "LEYENDA ABSOLUTA";
-  if (uniqueVarietiesCount >= 60) return "Maestro Cervecero";
-  if (uniqueVarietiesCount >= 40) return "Coleccionista de Sabores";
-  if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas";
-  if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo";
-  return "Novato en la Barra";
+  if (uniqueVarietiesCount >= 60) return "MAESTRO CERVECERO";
+  if (uniqueVarietiesCount >= 40) return "COLECCIONAS DE SABORES";
+  if (uniqueVarietiesCount >= 20) return "EXPORADOR DE CERVEZAS";
+  if (uniqueVarietiesCount >= 10) return "CURIOSO DEL LÚPULO";
+  return "NOVATO EN LA BARRA";
 };
 
 export const SummaryInfographic = ({
@@ -121,7 +121,7 @@ export const SummaryInfographic = ({
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block>
               <p className="text-sm font-bold text-center mb-1"> {/* Reduced from text-base to text-sm */}
-                TOP 3
+                TOP 3:
               </p>
               {top10Products.slice(0, 3).map((product, idx) => (
                 <p
@@ -146,7 +146,7 @@ export const SummaryInfographic = ({
                       PROBASTE {uniqueVarieties2025} CERVEZAS
                   </p>
                   <p className="text-xs mt-1 whitespace-normal"> {/* Reduced from text-sm to text-xs */}
-                      DE UN TOTAL DE{totalVarietiesInDb}.
+                      DE {totalVarietiesInDb} DISPONIBLES.
                   </p>
               </div>
             </Block>
@@ -154,7 +154,7 @@ export const SummaryInfographic = ({
             {/* Row 3, Column 1: Día Más Activo */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                DÍA FAVORITO
+                DÍA FAVORITO:
               </p>
               <p className="text-3xl font-black text-center leading-none"> {/* Reduced from text-4xl to text-3xl */}
                 {mostActiveDay.toUpperCase()}

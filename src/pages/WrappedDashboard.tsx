@@ -440,12 +440,14 @@ const WrappedDashboard = () => {
         {/* Render current story component directly as 2D */}
         <StoryComponent {...storyProps} />
 
-        {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
-        <img
-          src="/Logo.png"
-          alt="Logo Chin Chin"
-          className="absolute bottom-4 right-4 z-10 w-24 h-auto p-1" // Fixed size for logo
-        />
+        {/* Chin Chin Logo - Conditionally rendered */}
+        {!isSummaryInfographicStory && (
+          <img
+            src="/Logo.png"
+            alt="Logo Chin Chin"
+            className="absolute bottom-4 right-4 z-10 w-24 h-auto p-1"
+          />
+        )}
 
         {/* Interaction Zone */}
         <StoryInteractionZone
@@ -455,9 +457,6 @@ const WrappedDashboard = () => {
           onResume={handleResumeStory}
           isPaused={isPaused}
         />
-
-        {/* Download Button (only for SummaryInfographic) - Brutalist styling */}
-        {/* REMOVED: Download button is now handled within SummaryInfographic.tsx */}
       </div>
     </div>
   );

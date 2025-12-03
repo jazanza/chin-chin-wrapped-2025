@@ -90,7 +90,7 @@ export const SummaryInfographic = ({
                 {customerName.toUpperCase()}
               </h1>
               <p className={cn("text-xl font-black uppercase leading-tight", textColor)}>
-                WRAPPED {year}
+                CHIN CHIN WRAPPED {year}
               </p>
             </>
           )}
@@ -101,7 +101,7 @@ export const SummaryInfographic = ({
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                CANTIDAD DE VISITAS
+                VISITAS
               </p>
               <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
                 {totalVisits}
@@ -111,7 +111,7 @@ export const SummaryInfographic = ({
             {/* Row 1, Column 2: Total Litros */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                LITROS PROCESADOS
+                LITROS TOMADOS
               </p>
               <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
                 {totalLiters.toFixed(1)} L
@@ -121,7 +121,7 @@ export const SummaryInfographic = ({
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block>
               <p className="text-sm font-bold text-center mb-1"> {/* Reduced from text-base to text-sm */}
-                EL TRÍO FAVORITO
+                TOP 3
               </p>
               {top10Products.slice(0, 3).map((product, idx) => (
                 <p
@@ -154,7 +154,7 @@ export const SummaryInfographic = ({
             {/* Row 3, Column 1: Día Más Activo */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                EL DÍA QUE TIENES MÁS SED
+                DÍA FAVORITO
               </p>
               <p className="text-3xl font-black text-center leading-none"> {/* Reduced from text-4xl to text-3xl */}
                 {mostActiveDay.toUpperCase()}
@@ -166,7 +166,7 @@ export const SummaryInfographic = ({
               <img
                 src="/Logo.png"
                 alt="Logo Chin Chin"
-                className="w-auto max-w-[100px] p-1 mb-2"
+                className="w-auto max-w-[85px] p-1 mb-2"
               />
               <p className="text-xs font-bold"> {/* Reduced from text-sm to text-xs */}
                 @CHINCHIN.CERVEZAS

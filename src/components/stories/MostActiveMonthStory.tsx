@@ -53,7 +53,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
     wittyPhrase = "No hay suficientes datos para determinar tu mes más activo.";
   } else if (mostActiveMonth === mostPopularCommunityMonth) {
     // Si coincide con el mes más popular de la comunidad
-    wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes más visitado! No nos sorprende.`;
+    wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes con más visitas! No nos sorprende.`;
   } else if (popularMonths.includes(mostActiveMonth)) {
     // Si es un mes popular, pero NO el más popular de la comunidad
     wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, el mes popular entre todos, pero siempre con estilo único.`;

@@ -305,7 +305,7 @@ export function useDb() {
         }
     }
     return { globalBeerDistribution, totalGlobalLiters };
-  }, [extractVolumeMl, getBaseBeerName]);
+  }, []);
 
   // New: Get all customer liters for percentile calculation
   const getAllCustomerLiters = useCallback(async (year: string) => {
@@ -450,7 +450,7 @@ export function useDb() {
       };
     }
     return null;
-  }, [getBaseBeerName]);
+  }, []);
 
 
   const getWrappedData = useCallback(async (customerId: number, year: string = '2025') => {
@@ -774,6 +774,48 @@ export function useDb() {
       // --- First Beer of the Year ---
       const firstBeerDetails = await getFirstBeerDetails(customerId, currentYear);
 
+      // --- NEW: Global Metrics for Intro ---
+      const totalCustomersQuery = `
+        SELECT COUNT(DISTINCT CustomerId) AS TotalCustomers
+        FROM Document
+        WHERE STRFTIME('%Y', Date) = ?;
+      `;
+      const totalCustomersResult = queryData(dbInstance, totalCustomersQuery, [currentYear]);
+      const totalCustomers = totalCustomersResult.length > 0 ? totalCustomersResult[0].TotalCustomers : 0;
+
+      const totalLitresQuery = `
+        SELECT
+            SUM(DI.Quantity * (
+                CASE
+                    WHEN P.Name LIKE '%ml' THEN CAST(REPLACE(P.Name, 'ml', '') AS INTEGER)
+                    WHEN P.Description LIKE '%ml' THEN CAST(REPLACE(P.Description, 'ml', '') AS INTEGER)
+                    WHEN P.Name LIKE '%pinta%' THEN 473
+                    WHEN P.Name LIKE '%caña%' THEN 200
+                    WHEN P.Name LIKE '%botella%' THEN 330
+                    WHEN P.Name LIKE '%lata%' THEN 330
+                    ELSE 0
+                END
+            ) / 1000.0) AS GrandTotalLiters
+        FROM
+            Document AS D
+        INNER JOIN
+            DocumentItem AS DI ON D.Id = DI.DocumentId
+        INNER JOIN
+            Product AS P ON DI.ProductId = P.Id
+        WHERE
+            STRFTIME('%Y', D.Date) = ?
+            ${buildExclusionClause('P')}
+            AND (
+                (
+                    P.IsEnabled = TRUE
+                    AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
+                )
+                OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
+            );
+      `;
+      const totalLitresResult = queryData(dbInstance, totalLitresQuery, [currentYear]);
+      const totalLitres = totalLitresResult.length > 0 && totalLitresResult[0].GrandTotalLiters ? totalLitresResult[0].GrandTotalLiters : 0;
+
 
       return {
         customerName,
@@ -801,6 +843,8 @@ export function useDb() {
         firstBeerDetails, // New: first beer of the year
         mostFrequentBeerName, // NEW: Most frequent beer name
         varietyExplorationRatio, // NEW: variety exploration ratio
+        totalCustomers, // NEW
+        totalLitres,    // NEW
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);
@@ -809,7 +853,7 @@ export function useDb() {
     } finally {
       setLoading(false);
     }
-  }, [getAllBeerVarietiesInDb, getGlobalBeerDistribution, getAllCustomerLiters, getAllCustomerVisits, getCommunityDailyVisits, getCommunityMonthlyVisits, getFirstBeerDetails, extractVolumeMl, getBaseBeerName, categorizeBeer]);
+  }, []);
 
   return { dbLoaded, loading, error, findCustomer, getWrappedData, extractVolumeMl, categorizeBeer, getAllBeerVarietiesInDb };
 }

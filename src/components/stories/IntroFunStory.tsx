@@ -12,23 +12,29 @@ interface IntroFunStoryProps {
   textColor: string; // Tailwind CSS class
   highlightColor: string; // Tailwind CSS class
   customerName: string; // Add customerName prop
+  totalCustomers: number; // NEW
+  totalLitres: number;    // NEW
 }
 
-export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName }: IntroFunStoryProps) => {
+export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName, totalCustomers, totalLitres }: IntroFunStoryProps) => {
   const firstName = useMemo(() => {
     // Asegura que customerName no sea nulo/vacío y devuelve el primer elemento (nombre).
     return customerName ? customerName.split(' ')[0] : '';
   }, [customerName]);
 
+  const numberFormatter = useMemo(() => new Intl.NumberFormat('es-ES', {
+    maximumFractionDigits: 0
+  }), []);
+
+  const formattedCustomers = useMemo(() => numberFormatter.format(totalCustomers), [totalCustomers, numberFormatter]);
+  const formattedLitres = useMemo(() => numberFormatter.format(totalLitres), [totalLitres, numberFormatter]);
+
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!`, color: highlightColor, sizeClass: "text-4xl" }, // H2
-    { text: "\n\n", color: textColor, sizeClass: "" },
-    { text: "PARA NOSOTROS, CADA VEZ QUE NOS VISITA ES UNA ALEGRÍA.", color: textColor, sizeClass: "text-xl" }, // H3
-    { text: "\n\n", color: textColor, sizeClass: "" },
-    { text: `POR CADA CERVEZA COMPARTIDA, POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.`, color: highlightColor, sizeClass: "text-xl" }, // H3
-    { text: "\n\n", color: textColor, sizeClass: "" },
-    { text: "GRACIAS POR ELEGIRNOS. ESTE ES TU ¡CHIN CHIN WRAPPED 2025!", color: textColor, sizeClass: "text-xl" } // H3
-  ], [totalVisits, textColor, highlightColor, firstName]); // Add firstName to dependencies
+    { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!\n\n`, color: highlightColor, sizeClass: "text-xl" },
+    { text: `Gracias a ti y a los ${formattedCustomers} aficionados a las cervezas importadas. Entre todos tomaron ${formattedLitres} litros de alegría cervecera.\n\n`, color: textColor, sizeClass: "text-xl" },
+    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.\n\n`, color: highlightColor, sizeClass: "text-xl" },
+    { text: `Ahora sí, descubre tus logros cerveceros del año.`, color: textColor, sizeClass: "text-4xl" }
+  ], [firstName, formattedCustomers, formattedLitres, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
     return introSegments.flatMap((segment, segmentIndex) => {

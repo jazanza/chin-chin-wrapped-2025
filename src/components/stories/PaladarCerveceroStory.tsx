@@ -28,7 +28,7 @@ const getQuadrantPhrase = (palateCategory: PaladarCerveceroStoryProps['palateCat
 };
 
 export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExplorationRatio, textColor, highlightColor }: PaladarCerveceroStoryProps) => {
-  const LOW_EXPLORATION_TITLE = "Curioso del Lúpulo (Recién Bautizado)".toUpperCase();
+  const LOW_EXPLORATION_TITLE = "Curioso del Lúpulo".toUpperCase();
 
   // Obtener la frase subyacente (original)
   const originalQuadrantPhrase = useMemo(() => getQuadrantPhrase(palateCategory), [palateCategory]);

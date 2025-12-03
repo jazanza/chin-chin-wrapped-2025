@@ -31,9 +31,9 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
 
   const introSegments: TextSegment[] = useMemo(() => [
     { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!\n\n`, color: highlightColor, sizeClass: "text-xl" },
-    { text: `Gracias a ti y a los ${formattedCustomers} aficionados a las cervezas importadas. Entre todos tomaron ${formattedLitres} litros de alegría cervecera.\n\n`, color: textColor, sizeClass: "text-xl" },
-    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A CHIN CHIN.\n\n`, color: highlightColor, sizeClass: "text-xl" },
-    { text: `Ahora sí, descubre tus logros cerveceros del año.`, color: textColor, sizeClass: "text-xl" }
+    { text: `TÚ Y LOS ${formattedCustomers} FANS DE CHIN CHIN, SE TOMARON ${formattedLitres} LITROS DE PURA ALEGRÍA CERVECERA.\n\n`, color: textColor, sizeClass: "text-xl" },
+    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A NOSOTROS.\n\n`, color: highlightColor, sizeClass: "text-xl" },
+    { text: `AHORA SÍ, DESCUBRE TUS LOGROS CERVECEROS DEL AÑO.`, color: textColor, sizeClass: "text-xl" }
   ], [firstName, formattedCustomers, formattedLitres, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

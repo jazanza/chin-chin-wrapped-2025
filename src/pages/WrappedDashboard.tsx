@@ -381,6 +381,9 @@ const WrappedDashboard = () => {
 
   const StoryComponent = currentStory.component;
 
+  // Determine which logo to use based on background color
+  const logoSrc = currentBackgroundColor === "bg-white" ? "/Logo_Black.png" : "/Logo.png";
+
   // Props mapping for the current story component
   const storyProps = {
     customerName: wrappedData.customerName,
@@ -445,7 +448,7 @@ const WrappedDashboard = () => {
         {/* Chin Chin Logo - Conditionally rendered */}
         {!isSummaryInfographicStory && (
           <img
-            src="/Logo.png"
+            src={logoSrc} {/* Conditional logo source */}
             alt="Logo Chin Chin"
             className="absolute bottom-4 left-4 z-10 w-14 h-auto p-1 md:w-20" // Ajustado a bottom-4 left-4 y tamaño reducido
           />

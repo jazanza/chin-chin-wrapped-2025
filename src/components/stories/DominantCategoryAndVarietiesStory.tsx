@@ -24,13 +24,13 @@ const getVarietyComment = (uniqueCount: number, totalCount: number): string => {
   if (percentage === 100) {
     return "¡LO LOGRASTE! Ahora ya puedes seguir bebiendo en paz.";
   }
-  if (percentage >= 76) {
+  if (percentage >= 75) {
     return "Tu currículum cervecero es envidiable, ¡casi sommelier!";
   }
-  if (percentage >= 51) {
+  if (percentage >= 50) {
     return "Ya casi no tenemos secretos para ti, ¡Felicidades!";
   }
-  if (percentage >= 31) {
+  if (percentage >= 30) {
     return "Mitad de camino al nirvana cervecero, ¡sigue así!";
   }
   if (percentage >= 11) {

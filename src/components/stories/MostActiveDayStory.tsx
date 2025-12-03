@@ -5,7 +5,6 @@ interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
   sizeClass: string; // Added for explicit size control
-  nowrap?: boolean; // NEW: Optional property to prevent wrapping
 }
 
 interface MostActiveDayStoryProps {
@@ -20,15 +19,15 @@ interface MostActiveDayStoryProps {
 const getDaySpecificWittyRemark = (day: string) => {
     switch (day) {
         case 'Martes':
-            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes. Eres un verdadero pionero que evita las multitudes." };
+            return { title: "¡ANTI-FIN DE SEMANA! 🍺", remark: "El martes es el nuevo viernes para ti. Eres un verdadero pionero que evita las multitudes." };
         case 'Miércoles':
-            return { title: "¡MIERNES! 🎯", remark: "Mitad de semana es mejor que fin de semana. Celebras los pequeños logros y nos visitas cuando más lo necesitas." };
+            return { title: "¡ROMPE MITADES! 🎯", remark: "Mitad de semana es mejor que fin de semana. Celebras los pequeños logros y nos visitas cuando más lo necesitas." };
         case 'Jueves':
-            return { title: "¡PRE-FINDE! 🚀", remark: "Te anticipas a todos y pruebas las cervezas antes de que se agoten el viernes." };
+            return { title: "¡PRE-FIN DE SEMANA! 🚀", remark: "Te anticipas a todos. Eres el insider que prueba las cervezas antes de que se agoten el viernes." };
         case 'Viernes':
             return { title: "¡SAN VIERNES! 🎉", remark: "El fin de semana comienza y tú garganta lo sabe." };
         case 'Sábado':
-            return { title: "¡POR FIN! 🏆", remark: "El sábado es tu día especial. Coincides con la mayoría, porque ese día Chin Chin es el lugar para estar." };
+            return { title: "¡DÍA DE PLACER! 🏆", remark: "El sábado es tu campo de juego. Coincides con la mayoría, porque ese día Chin Chin es el lugar para estar." };
         case 'Domingo':
             return { title: "¡CIERRE DE ORO! 🧘", remark: "Tu ritual de domingo es perfecto. Cierras la semana con la mejor compañía y el mejor lúpulo." };
         default: // Esto cubrirá 'Lunes' o cualquier valor inesperado
@@ -77,7 +76,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
     }
     return [
       // 1. Título genérico:
-      { text: "TU DÍA PREFERIDO:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
+      { text: "EL DÍA QUE MÁS\nNOS VISITASTE FUE EL:", color: textColor, sizeClass: "text-4xl" }, // H2
       // 2. El día activo resaltado:
       { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
     ];
@@ -88,7 +87,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass, segment.nowrap && 'whitespace-nowrap')}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];
@@ -127,7 +126,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
         {filteredDailyVisits.length > 0 ? (
           filteredDailyVisits.map((data, idx) => (
             <p key={idx} className={cn("text-base text-center", textColor)}> {/* H4 */}
-              {`${data.day}: ${data.count} Veces`}
+              {`${data.day}: ${data.count} Visitas`}
             </p>
           ))
         ) : (

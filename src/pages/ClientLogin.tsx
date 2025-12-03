@@ -312,7 +312,7 @@ const ClientLogin = () => {
 
         {step === "select" && (
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-white mb-4"> {/* H4 */}
+            <h2 className="text-4xl font-bold text-white mb-4"> {/* H2 */}
               ¿Quién eres?
             </h2>
             <RadioGroup
@@ -342,7 +342,7 @@ const ClientLogin = () => {
 
         {step === "kba" && selectedCustomer && kbaQuestion && (
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-white mb-4"> {/* H4 */}
+            <h2 className="text-4xl font-bold text-white mb-4"> {/* H2 */}
               Verifica tu identidad
             </h2>
             <p className="text-base text-white mb-4 border-2 border-white p-2"> {/* H4 */}

@@ -11,21 +11,14 @@ interface FirstBeerOfTheYearStoryProps {
   highlightColor: string;
 }
 
-interface TextSegment {
-  text: string;
-  color: string; // Tailwind CSS class for color, e.g., "text-white"
-  sizeClass: string; // Added for explicit size control
-  nowrap?: boolean; // NEW: Optional property to prevent wrapping
-}
-
 export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlightColor }: FirstBeerOfTheYearStoryProps) => {
   const formattedDate = useMemo(() => {
     if (!firstBeerDetails?.date) return "N/A";
     const date = new Date(firstBeerDetails.date);
-    return date.toLocaleDateString('es-AR', { month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
   }, [firstBeerDetails]);
 
-  const storySegments: TextSegment[] = useMemo(() => {
+  const storySegments = useMemo(() => {
     if (!firstBeerDetails) {
       return [
         { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor, sizeClass: "text-xl" }, // H3
@@ -35,13 +28,13 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
     }
 
     return [
-      { text: "TU PRIMER VISITA DEL AÑO:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
-      { text: `\n${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1 - Added \n here
+      { text: "TU VIAJE CERVECERO COMENZÓ EL ", color: textColor, sizeClass: "text-4xl" }, // H2
+      { text: `${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
       { text: "\n\n", color: textColor, sizeClass: "" },
-      { text: "TU PRIMERA CERVEZA DEL AÑO:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
-      { text: `\n${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1 - Added \n here
+      { text: "TU PRIMERA VARIEDAD DE 2025 FUE LA ", color: textColor, sizeClass: "text-4xl" }, // H2
+      { text: `${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
       { text: "\n\n", color: textColor, sizeClass: "" },
-      { text: `¡UNA EXCELENTE ELECCIÓN QUE MARCÓ TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-base" }, // H4
+      { text: `¡UNA EXCELENTE ELECCIÓN QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-base" }, // H4
     ];
   }, [firstBeerDetails, formattedDate, textColor, highlightColor]);
 
@@ -50,7 +43,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass, segment.nowrap && 'whitespace-nowrap')}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];

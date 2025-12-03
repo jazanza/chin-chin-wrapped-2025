@@ -5,7 +5,6 @@ interface TextSegment {
   text: string;
   color: string; // Tailwind CSS class for color, e.g., "text-white"
   sizeClass: string; // Added for explicit size control
-  nowrap?: boolean; // NEW: Optional property to prevent wrapping
 }
 
 interface MostActiveMonthStoryProps {
@@ -20,27 +19,27 @@ interface MostActiveMonthStoryProps {
 const getSeasonalWittyRemark = (month: string) => {
     switch (month) {
         case 'Enero':
-            return "Eres el anticuerpo del Dry January. ¡Mientras el mundo hace dieta líquida, tú pides la cerveza más grande!";
+            return "Eres el anticuerpo del Dry January. ¡Mientras el mundo hace dieta, tú pides la pinta más grande!";
         case 'Febrero':
-            return "Febrero es el mes corto... ¡Pero no para tu agenda cervcera! Nos encanta esa dedicación.";
+            return "Febrero es el mes corto... ¡Pero no para tu agenda de visitas! Nos encanta esa dedicación.";
         case 'Marzo':
             return "Marzo es la nueva primavera cervecera para ti. Despertaste justo a tiempo, antes de que llegara el frío.";
         case 'Abril':
-            return "Abril: Mes de bromas, pero tu compromiso cervecero es 100% serio. ¡Tu fidelidad no es una broma!";
+            return "Abril: Mes de bromas, pero tu hábito de visitarnos es 100% serio. ¡Tu fidelidad no es una broma!";
         case 'Mayo':
-            return "Mayo es el mes del 'Ni frío ni calor'. Perfecto para beber, y tú lo entendiste antes que el resto.";
+            return "Mayo es el mes del 'Ni frío ni calor'. Perfecto para beber, y tú lo entendiste antes que la multitud.";
         case 'Junio':
             return "Junio: La calma antes de la tormenta de julio. Disfrutaste de las mejores cervezas antes de las vacaciones de invierno.";
         case 'Septiembre':
-            return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal.";
+            return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal. Ojalá tuvieras un Lederhosen para cada visita.";
         case 'Octubre':
-            return "¡Tienes el gen del Oktoberfest! Tu pico de visitas en este mes es una tradición global.";
+            return "¡El verdadero espíritu del Oktoberfest! Tu pico de visitas en Octubre es una tradición global, aunque sea solo para ti.";
         case 'Noviembre':
-            return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin el apuro de Diciembre.";
+            return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin las prisas de Diciembre.";
         
         // Meses de alta actividad (Julio, Agosto, Diciembre) no necesitan esta frase, pues usan la lógica de "popular".
         default:
-            return "Marcaste un ritmo único que no sigue las estaciones. Siempre es buen momento para Chin Chin.";
+            return "Marcaste un ritmo único que no sigue las estaciones. Siempre es buen momento para una Chin Chin.";
     }
 };
 
@@ -53,10 +52,10 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
     wittyPhrase = "No hay suficientes datos para determinar tu mes más activo.";
   } else if (mostActiveMonth === mostPopularCommunityMonth) {
     // Si coincide con el mes más popular de la comunidad
-    wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes con más visitas! No nos sorprende.`;
+    wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes más visitado! No nos sorprende.`;
   } else if (popularMonths.includes(mostActiveMonth)) {
     // Si es un mes popular, pero NO el más popular de la comunidad
-    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, el mes popular entre todos, pero siempre con estilo único.`;
+    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, un mes popular, pero con tu propio estilo.`;
   } else {
     // ✨ NUEVA LÓGICA: Meses Menos Comunes (Pionero con frase divertida)
     const seasonalRemark = getSeasonalWittyRemark(mostActiveMonth);
@@ -72,7 +71,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
 
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TU MES DE MÁS VISITAS:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
+    { text: "EL MES QUE MÁS\nNOS NECESITASTE FUE:", color: textColor, sizeClass: "text-4xl" }, // H2
     { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
   ], [mostActiveMonth, textColor, highlightColor]);
 
@@ -81,7 +80,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
       const lines = segment.text.split('\n');
       return lines.flatMap((line, lineIndex) => {
         const elements: React.ReactNode[] = [
-          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass, segment.nowrap && 'whitespace-nowrap')}>
+          <span key={`${segmentIndex}-${lineIndex}-span`} className={cn(segment.color, segment.sizeClass)}>
             {line}
           </span>
         ];

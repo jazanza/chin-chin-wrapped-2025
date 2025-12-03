@@ -80,15 +80,15 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
         <p className="text-6xl font-black leading-none"> {/* H1 */}
           {totalLiters.toFixed(1)} LITROS.
         </p>
+        {/* Replaced volumeReaction with CommunityLitersComparisonText */}
+        <CommunityLitersComparisonText
+          totalLiters={totalLiters}
+          litersPercentile={litersPercentile}
+          textColor={textColor}
+          highlightColor={highlightColor}
+          mostFrequentBeerName={mostFrequentBeerName}
+        />
       </div>
-      {/* CommunityLitersComparisonText moved outside the box */}
-      <CommunityLitersComparisonText
-        totalLiters={totalLiters}
-        litersPercentile={litersPercentile}
-        textColor={textColor}
-        highlightColor={highlightColor}
-        mostFrequentBeerName={mostFrequentBeerName}
-      />
     </div>
   );
 };

@@ -61,9 +61,9 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
         </p>
       </div>
       
-      {/* Moved "TU TOP 10 ESTE AÑO:" closer to the list */}
+      {/* Moved "TU TOP 10:" closer to the list */}
       <p className={cn("text-xl font-black text-center mb-4", highlightColor)}> {/* H3 */}
-        TU TOP 10 DEL 2025:
+        TU TOP 10:
       </p>
 
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}

@@ -78,7 +78,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
       </div>
       <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
         <p className="text-5xl md:text-6xl font-black leading-none"> {/* H1, ajustado */}
-          {totalLiters.toFixed(1)} LITROS.
+          {totalLiters.toFixed(1)} LITROS
         </p>
       </div>
       {/* CommunityLitersComparisonText moved outside the box */}

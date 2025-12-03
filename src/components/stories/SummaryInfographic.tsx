@@ -44,10 +44,10 @@ const Block = ({ children, className }: BlockProps) => {
 
 // Función Helper para calcular el nivel de cerveza
 const getBeerLevel = (uniqueVarietiesCount: number): string => {
-  if (uniqueVarietiesCount >= 80) return "LEYENDA ABSOLUTA (¡ES HORA DE DEJAR TU CV!)";
-  if (uniqueVarietiesCount >= 60) return "Maestro Cervecero (El que Nos Enseña)";
-  if (uniqueVarietiesCount >= 40) return "Coleccionista de Sabores (Conocedor de la Barra)";
-  if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas (El que Pide Sugerencias)";
+  if (uniqueVarietiesCount >= 80) return "LEYENDA ABSOLUTA";
+  if (uniqueVarietiesCount >= 60) return "Maestro Cervecero";
+  if (uniqueVarietiesCount >= 40) return "Coleccionista de Sabores";
+  if (uniqueVarietiesCount >= 20) return "Explorador de Cervezas";
   if (uniqueVarietiesCount >= 10) return "Curioso del Lúpulo";
   return "Novato en la Barra";
 };

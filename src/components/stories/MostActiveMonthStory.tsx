@@ -40,7 +40,7 @@ const getSeasonalWittyRemark = (month: string) => {
         
         // Meses de alta actividad (Julio, Agosto, Diciembre) no necesitan esta frase, pues usan la lógica de "popular".
         default:
-            return "Marcaste un ritmo único que no sigue las estaciones. Siempre es buen momento para una Chin Chin.";
+            return "Marcaste un ritmo único que no sigue las estaciones. Siempre es buen momento para Chin Chin.";
     }
 };
 

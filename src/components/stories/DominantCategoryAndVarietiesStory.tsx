@@ -24,13 +24,13 @@ const getVarietyComment = (uniqueCount: number, totalCount: number): string => {
   if (percentage === 100) {
     return "¡LO LOGRASTE! Ahora ya puedes seguir bebiendo en paz.";
   }
-  if (percentage >= 76) {
+  if (percentage >= 75) {
     return "Tu currículum cervecero es envidiable, ¡casi sommelier!";
   }
-  if (percentage >= 51) {
+  if (percentage >= 50) {
     return "Ya casi no tenemos secretos para ti, ¡Felicidades!";
   }
-  if (percentage >= 31) {
+  if (percentage >= 30) {
     return "Mitad de camino al nirvana cervecero, ¡sigue así!";
   }
   if (percentage >= 11) {
@@ -52,14 +52,10 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "ESTÁS ENVICIADO CON LAS:", color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-4xl" }, // H2
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-    { text: "\n\nY PROBASTE ", color: textColor, sizeClass: "text-4xl" }, // H2
-    { text: `${uniqueVarieties2025}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-    { text: " VARIEDADES ÚNICAS. \nDE ", color: textColor, sizeClass: "text-4xl" }, // H2
-    { text: `${totalVarietiesInDb}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
-    // 2. Insertar la frase dinámica aquí:
-    { text: ` DISPONIBLES. (${dynamicComment}).`, color: textColor, sizeClass: "text-base" }, // H4
+    { text: `\n\nESTE AÑO PROBASTE ${uniqueVarieties2025} DE ${totalVarietiesInDb} VARIEDADES.`, color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: ` ${dynamicComment}.`, color: textColor, sizeClass: "text-base" }, // H4
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {

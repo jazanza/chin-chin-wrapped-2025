@@ -21,6 +21,7 @@ import { Top5Story } from "@/components/stories/Top5Story";
 import { PaladarCerveceroStory } from "@/components/stories/PaladarCerveceroStory"; // NEW
 import { TotalConsumptionStory } from "@/components/stories/TotalConsumptionStory";
 import { MissingVarietiesCard } from "@/components/stories/MissingVarietiesCard";
+import { OutroStory } from "@/components/stories/OutroStory";
 import { SummaryInfographic } from "@/components/stories/SummaryInfographic";
 
 
@@ -202,7 +203,14 @@ const STORY_SCENES: StoryScene[] = [
     downloadFileName: 'Historia_VariedadesPendientes',
   },
   {
-    id: 'summaryInfographic', // Slide 10 (was 8)
+    id: 'outro', // Slide 10
+    component: OutroStory,
+    duration: 15000,
+    title: 'Despedida',
+    downloadFileName: 'Historia_Despedida',
+  },
+  {
+    id: 'summaryInfographic', // Slide 11 (was 10)
     component: SummaryInfographic,
     duration: 15000, // 15 segundos para dar tiempo a descargar
     title: 'Infografía Final',
@@ -222,7 +230,8 @@ const BACKGROUND_COLORS = [
   "bg-white", // NEW Slide 7: Paladar Cervecero (Blanco)
   "bg-black", // Slide 8: Total Litros (Negro)
   "bg-white", // Slide 9: Variedades Pendientes (Blanco)
-  "bg-black", // Slide 10: Infografía Final (Negro)
+  "bg-black", // Slide 10: Outro (Negro)
+  "bg-black", // Slide 11: Infografía Final (Negro)
 ];
 
 const TEXT_COLORS = [
@@ -236,7 +245,8 @@ const TEXT_COLORS = [
   "text-black", // NEW Slide 7: Paladar Cervecero (Negro)
   "text-white", // Slide 8: Total Litros (Blanco)
   "text-black", // Slide 9: Variedades Pendientes (Negro)
-  "text-white", // Slide 10: Infografía Final (Blanco)
+  "text-white", // Slide 10: Outro (Blanco)
+  "text-white", // Slide 11: Infografía Final (Blanco)
 ];
 
 const HIGHLIGHT_COLORS = [
@@ -250,7 +260,8 @@ const HIGHLIGHT_COLORS = [
   "text-black", // NEW Slide 7: Paladar Cervecero Highlight (Negro)
   "text-white", // Slide 8: Total Litros (Blanco)
   "text-black", // Slide 9: Variedades Pendientes (Negro)
-  "text-white", // Slide 10: Infografía Final (Blanco)
+  "text-white", // Slide 10: Outro (Blanco)
+  "text-white", // Slide 11: Infografía Final (Blanco)
 ];
 
 
@@ -400,6 +411,8 @@ const WrappedDashboard = () => {
     mostPopularCommunityMonth: wrappedData.mostPopularCommunityMonth, // NEW
     mostFrequentBeerName: wrappedData.mostFrequentBeerName, // NEW: Most frequent beer name
     varietyExplorationRatio: wrappedData.varietyExplorationRatio, // NEW: variety exploration ratio
+    totalCustomers: wrappedData.totalCustomers, // NEW
+    totalLitres: wrappedData.totalLitres,       // NEW
   };
 
   return (
@@ -409,12 +422,14 @@ const WrappedDashboard = () => {
         <BubbleBackground backgroundColor={currentBackgroundColor} />
 
         {/* Story Progress Bar */}
-        <StoryProgressBar
-          currentStoryIndex={currentStoryIndex}
-          totalStories={STORY_SCENES.length}
-          storyDuration={currentStory.duration}
-          isPaused={isPaused}
-        />
+        {!isSummaryInfographicStory && (
+          <StoryProgressBar
+            currentStoryIndex={currentStoryIndex}
+            totalStories={STORY_SCENES.length}
+            storyDuration={currentStory.duration}
+            isPaused={isPaused}
+          />
+        )}
 
         {!isIntroStory && !isSummaryInfographicStory && (
           <WrappedOverlay
@@ -427,12 +442,14 @@ const WrappedDashboard = () => {
         {/* Render current story component directly as 2D */}
         <StoryComponent {...storyProps} />
 
-        {/* Chin Chin Logo - Centered at the bottom, 20% larger */}
-        <img
-          src="/Logo.png"
-          alt="Logo Chin Chin"
-          className="absolute bottom-4 right-4 z-10 w-24 h-auto p-1" // Fixed size for logo
-        />
+        {/* Chin Chin Logo - Conditionally rendered */}
+        {!isSummaryInfographicStory && (
+          <img
+            src="/Logo.png"
+            alt="Logo Chin Chin"
+            className="absolute bottom-4 right-4 z-10 w-24 h-auto p-1"
+          />
+        )}
 
         {/* Interaction Zone */}
         <StoryInteractionZone
@@ -442,9 +459,6 @@ const WrappedDashboard = () => {
           onResume={handleResumeStory}
           isPaused={isPaused}
         />
-
-        {/* Download Button (only for SummaryInfographic) - Brutalist styling */}
-        {/* REMOVED: Download button is now handled within SummaryInfographic.tsx */}
       </div>
     </div>
   );

@@ -81,10 +81,10 @@ export const SummaryInfographic = ({
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between bg-background text-foreground font-sans h-screen"> {/* Removed p-4, changed justify-start to justify-between */}
+    <div className="absolute inset-0 flex flex-col items-center justify-between bg-background text-foreground font-sans h-screen p-4">
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] h-[92vh] aspect-[9/16]"> {/* Adjusted height to h-[92vh] */}
-        {/* Main Infographic Title */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] aspect-[9/16]">
+        {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
             <>
@@ -99,13 +99,13 @@ export const SummaryInfographic = ({
         </div>
 
         {isTitleTyped && (
-          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white"> {/* Added h-full */}
-            {/* Row 1, Column 1: Total Visitas */}
+          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full flex-grow border-2 border-white">
+            {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block bgColor="bg-black">
               <p className="text-base font-bold text-center">
                 CANTIDAD DE VISITAS
               </p>
-              <p className="text-5xl font-black text-center"> {/* Changed to text-5xl */}
+              <p className="text-6xl font-black text-center">
                 {totalVisits}
               </p>
             </Block>
@@ -115,7 +115,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 LITROS PROCESADOS
               </p>
-              <p className="text-5xl font-black text-center"> {/* Changed to text-5xl */}
+              <p className="text-6xl font-black text-center">
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
@@ -141,7 +141,7 @@ export const SummaryInfographic = ({
             {/* Row 2, Column 2: Variedades Probadas */}
             <Block bgColor="bg-white">
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
-                  <h2 className="text-xl font-black leading-tight mb-2 whitespace-normal"> {/* Added whitespace-normal */}
+                  <h2 className="text-xl font-black leading-tight mb-2">
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   <p className="text-base font-bold">
@@ -158,7 +158,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-5xl font-black text-center"> {/* Changed to text-5xl */}
+              <p className="text-6xl font-black text-center">
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
@@ -170,7 +170,7 @@ export const SummaryInfographic = ({
                 alt="Logo Chin Chin"
                 className="w-auto max-w-[100px] p-1 mb-2"
               />
-              <p className="text-sm font-bold"> {/* Removed explicit text-white */}
+              <p className="text-white text-sm font-bold">
                 @CHINCHIN.CERVEZAS
               </p>
             </Block>
@@ -179,7 +179,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="pb-4"> {/* Added pb-4 for padding at the bottom */}
+      <div>
           <Button
               onClick={handleBackToLogin}
               className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"

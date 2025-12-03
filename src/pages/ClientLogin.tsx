@@ -261,7 +261,12 @@ const ClientLogin = () => {
   return (
     <div className="w-screen h-screen bg-background text-foreground flex flex-col items-center justify-center p-4 font-sans">
       <div className="text-center max-w-md w-full">
-        {/* Logo de la empresa - REMOVED */}
+        {/* Logo de la empresa */}
+        <img
+          src="/Logo.png"
+          alt="Logo Chin Chin"
+          className="mx-auto w-24 h-auto mb-6 md:w-32" // Centrado, tamaño y margen inferior, ajustado para responsividad
+        />
         <h1 
           className="text-4xl md:text-5xl font-bold mb-6 uppercase tracking-widest" // H1, ajustado para responsividad
         >

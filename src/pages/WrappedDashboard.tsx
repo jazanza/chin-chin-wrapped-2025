@@ -377,7 +377,6 @@ const WrappedDashboard = () => {
   const currentTextColor = TEXT_COLORS[currentStoryIndex];
   const currentHighlightColor = HIGHLIGHT_COLORS[currentStoryIndex];
 
-  const isIntroStory = currentStory.id === 'introFun';
   const isSummaryInfographicStory = currentStory.id === 'summaryInfographic';
 
   const StoryComponent = currentStory.component;
@@ -431,7 +430,8 @@ const WrappedDashboard = () => {
           />
         )}
 
-        {!isIntroStory && !isSummaryInfographicStory && (
+        {/* WrappedOverlay (customer name and year) */}
+        {!isSummaryInfographicStory && (
           <WrappedOverlay
             customerName={wrappedData.customerName}
             year={wrappedData.year}
@@ -443,7 +443,7 @@ const WrappedDashboard = () => {
         <StoryComponent {...storyProps} />
 
         {/* Chin Chin Logo - Conditionally rendered */}
-        {!isIntroStory && !isSummaryInfographicStory && (
+        {!isSummaryInfographicStory && (
           <img
             src="/Logo.png"
             alt="Logo Chin Chin"
@@ -452,7 +452,7 @@ const WrappedDashboard = () => {
         )}
 
         {/* chinchin.com.ec/wrapped text - Conditionally rendered */}
-        {!isIntroStory && !isSummaryInfographicStory && (
+        {!isSummaryInfographicStory && (
           <p className={cn("absolute bottom-4 right-4 z-10 text-xs md:text-sm font-bold", currentTextColor)}>
             chinchin.com.ec/wrapped
           </p>

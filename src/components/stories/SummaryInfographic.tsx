@@ -146,7 +146,7 @@ export const SummaryInfographic = ({
                       {uniqueVarieties2025} VARIEDADES PROBADAS
                   </p>
                   <p className="text-xs mt-1 whitespace-normal"> {/* Reduced from text-sm to text-xs */}
-                      de un total de {totalVarietiesInDb} DISPONIBLES.
+                      De un total de {totalVarietiesInDb}.
                   </p>
               </div>
             </Block>

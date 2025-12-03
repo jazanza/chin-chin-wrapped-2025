@@ -38,7 +38,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
       { text: "TU PRIMER VISITA DEL AÑO FUE:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
       { text: `\n${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1 - Added \n here
       { text: "\n\n", color: textColor, sizeClass: "" },
-      { text: "TU PRIMERA DEL AÑO FUE:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
+      { text: "TU PRIMERA CERVEZA FUE:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
       { text: `\n${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1 - Added \n here
       { text: "\n\n", color: textColor, sizeClass: "" },
       { text: `¡UNA EXCELENTE ELECCIÓN QUE MARCÓ EL TONO DE TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-base" }, // H4

@@ -422,12 +422,14 @@ const WrappedDashboard = () => {
         <BubbleBackground backgroundColor={currentBackgroundColor} />
 
         {/* Story Progress Bar */}
-        <StoryProgressBar
-          currentStoryIndex={currentStoryIndex}
-          totalStories={STORY_SCENES.length}
-          storyDuration={currentStory.duration}
-          isPaused={isPaused}
-        />
+        {!isSummaryInfographicStory && (
+          <StoryProgressBar
+            currentStoryIndex={currentStoryIndex}
+            totalStories={STORY_SCENES.length}
+            storyDuration={currentStory.duration}
+            isPaused={isPaused}
+          />
+        )}
 
         {!isIntroStory && !isSummaryInfographicStory && (
           <WrappedOverlay

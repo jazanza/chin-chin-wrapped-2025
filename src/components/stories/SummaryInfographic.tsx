@@ -81,9 +81,9 @@ export const SummaryInfographic = ({
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center bg-background text-foreground font-sans overflow-auto py-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-between bg-background text-foreground font-sans h-screen p-4">
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] h-auto aspect-[9/16]">
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] aspect-[9/16]">
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -179,7 +179,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="mt-4">
+      <div>
           <Button
               onClick={handleBackToLogin}
               className="bg-black text-white font-bold py-2 px-4 border-2 border-white rounded-none transition-none hover:bg-white hover:text-black hover:border-black"

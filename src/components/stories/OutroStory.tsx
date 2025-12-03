@@ -23,10 +23,10 @@ export const OutroStory = ({ customerName, totalLiters, totalVisits, textColor, 
   const formattedLiters = useMemo(() => totalLiters.toFixed(1), [totalLiters]);
 
   const outroSegments: TextSegment[] = useMemo(() => [
-    { text: `${firstName.toUpperCase()}, tu travesía cervecera de 2025 ha terminado, cerramos el año con un récord absoluto.\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
-    { text: `Te retamos a que en 2026 superes tus ${formattedLiters} litros y nos demuestres que ${totalVisits} visitas no es tu techo máximo.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
-    { text: `¡Chin Chin por un 2026 lleno de buenas cervezas y momentos!\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
-    { text: `¡Ahora sí! Sácale captura a la próxima imagen, súbelo a tus redes y etiquétanos para hacer oficial tu hazaña cervecera.`, color: highlightColor, sizeClass: "text-lg md:text-xl" } // Ajustado
+    { text: `${firstName.toUpperCase()}, TU TRAVESÍA CERVECERA DE 2025 HA TERMINADO, CERRAMOS EL AÑO CON UN RÉCORD ABSOLUTO.\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `TE RETAMOS A QUE EN 2026 SUPERES TUS ${formattedLiters} LITROS Y NOS DEMUESTRES QUE ${totalVisits} VISITAS NO ES TU TECHO MÁXIMO.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `¡CHIN CHIN POR UN 2026 LLENO DE BUENAS CERVEZAS Y MOMENTOS!\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `SÁCALE CAPTURA A LA PRÓXIMA IMÁGEN, SÚBELO A TUS REDES Y ETIQUÉTANOS PARA HACER OFICIAL TU HAZAÑA CERVECERA.`, color: highlightColor, sizeClass: "text-lg md:text-xl" } // Ajustado
   ], [firstName, formattedLiters, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

@@ -265,15 +265,15 @@ const ClientLogin = () => {
         <img
           src="/Logo.png"
           alt="Logo Chin Chin"
-          className="mx-auto w-32 h-auto mb-8" // Centrado, tamaño y margen inferior
+          className="mx-auto w-24 h-auto mb-6 md:w-32" // Centrado, tamaño y margen inferior, ajustado para responsividad
         />
         <h1 
-          className="text-6xl font-bold mb-8 uppercase tracking-widest" // H1
+          className="text-4xl md:text-5xl font-bold mb-6 uppercase tracking-widest" // H1, ajustado para responsividad
         >
           CHIN CHIN WRAPPED 2025
         </h1>
         <p 
-          className="text-xl mb-8 uppercase tracking-wide" // H3
+          className="text-lg md:text-xl mb-6 uppercase tracking-wide" // H3, ajustado para responsividad
         >
           Descubre tu año cervecero.
         </p>

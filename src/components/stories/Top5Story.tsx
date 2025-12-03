@@ -26,10 +26,10 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
     const segments: TextSegment[] = [];
     if (top10Products && top10Products.length > 0) {
       const top1Name = top10Products[0].name;
-      segments.push({ text: `TU CERVEZA FAVORITA DEL AÑO:`, color: textColor, sizeClass: "text-4xl", nowrap: true }); // H2 - Added nowrap
-      segments.push({ text: `\n${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-6xl" }); // H1
+      segments.push({ text: `TU CERVEZA FAVORITA DEL AÑO:`, color: textColor, sizeClass: "text-3xl md:text-4xl", nowrap: true }); // H2 - Added nowrap, ajustado
+      segments.push({ text: `\n${top1Name.toUpperCase()}.`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }); // H1, ajustado
     } else {
-      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-4xl" }); // H2
+      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-3xl md:text-4xl" }); // H2, ajustado
     }
     return segments;
   }, [top10Products, textColor, highlightColor]);
@@ -54,7 +54,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedMainText}
@@ -62,13 +62,13 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {/* Moved "TU TOP 10:" closer to the list */}
-      <p className={cn("text-xl font-black text-center mb-4", highlightColor)}> {/* H3 */}
+      <p className={cn("text-lg md:text-xl font-black text-center mb-4", highlightColor)}> {/* H3, ajustado */}
         TU TOP 10:
       </p>
 
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
         {top10Products.slice(0, 10).map((product, idx) => ( // Changed slice to 10
-          <p key={idx} className={cn("text-center", textColor, idx === 0 ? 'text-xl font-black' : 'text-sm font-bold')}> {/* H3 for first, Cuerpo for others */}
+          <p key={idx} className={cn("text-center", textColor, idx === 0 ? 'text-lg md:text-xl font-black' : 'text-xs md:text-sm font-bold')}> {/* H3 for first, Cuerpo for others, ajustado */}
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} LITROS BEBIDOS)`}
           </p>
         ))}

@@ -39,7 +39,7 @@ const getDaySpecificWittyRemark = (day: string) => {
 const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, textColor, highlightColor }: { mostActiveDay: string; mostPopularCommunityDay: string; textColor: string; highlightColor: string }) => {
   if (mostActiveDay === "N/A") {
     return (
-      <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
+      <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
         No hay suficientes datos para determinar tu día más activo.
       </p>
     );
@@ -56,10 +56,10 @@ const CommunityDayComparisonText = ({ mostActiveDay, mostPopularCommunityDay, te
 
   return (
     <div className="flex flex-col items-center justify-center mt-4">
-      <p className={cn("text-xl font-black text-center", highlightColor)}> {/* H3 */}
+      <p className={cn("text-lg md:text-xl font-black text-center", highlightColor)}> {/* H3, ajustado */}
         {title}
       </p>
-      <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
+      <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
         {remark} {comparisonPhrase}
       </p>
     </div>
@@ -72,14 +72,14 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
   const mainStoryTextSegments: TextSegment[] = useMemo(() => {
     if (mostActiveDay === "N/A") {
       return [
-        { text: "NO HAY DATOS SUFICIENTES PARA TU DÍA MÁS ACTIVO.", color: textColor, sizeClass: "text-4xl" }, // H2
+        { text: "NO HAY DATOS SUFICIENTES PARA TU DÍA MÁS ACTIVO.", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
       ];
     }
     return [
       // 1. Título genérico:
-      { text: "TU DÍA PREFERIDO:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
+      { text: "TU DÍA PREFERIDO:", color: textColor, sizeClass: "text-3xl md:text-4xl", nowrap: true }, // H2 - Added nowrap, ajustado
       // 2. El día activo resaltado:
-      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
+      { text: `\n${mostActiveDay.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
     ];
   }, [mostActiveDay, textColor, highlightColor]);
 
@@ -114,24 +114,24 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8`}
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
       <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
-        <p className={cn("text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3 */}
+        <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3, ajustado */}
           Los Días Que Más Viniste:
         </p>
         {filteredDailyVisits.length > 0 ? (
           filteredDailyVisits.map((data, idx) => (
-            <p key={idx} className={cn("text-base text-center", textColor)}> {/* H4 */}
+            <p key={idx} className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
               {`${data.day}: ${data.count} Veces`}
             </p>
           ))
         ) : (
-          <p className={cn("text-base text-center", textColor)}> {/* H4 */}
+          <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
             Parece que fuiste a Chin Chin... 0 días. ¡Error de sistema!
           </p>
         )}

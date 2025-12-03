@@ -46,22 +46,22 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-      <div className={cn("flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-8", textColor)}>
-        <p className={cn("text-4xl text-center", highlightColor)}> {/* H2 */}
+      <div className={cn("flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8", textColor)}> {/* Ajustado max-w */}
+        <p className={cn("text-3xl md:text-4xl text-center", highlightColor)}> {/* H2, ajustado */}
           TU MISIÓN PARA EL 2026:
         </p>
-        <p className={cn("text-6xl text-center mt-4", textColor)}> {/* H1 */}
+        <p className={cn("text-5xl md:text-6xl text-center mt-4", textColor)}> {/* H1, ajustado */}
           {wittyTitle}
         </p>
       </div>
 
       {randomSuggestions.length > 0 && (
         <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
-          <p className={cn("text-base font-bold mb-2 text-center", highlightColor)}> {/* H4 */}
+          <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H4, ajustado */}
             DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beerName, idx) => (
-            <p key={idx} className={cn("text-base text-center", textColor)}> {/* H4 */}
+            <p key={idx} className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
               {beerName.toUpperCase()}
             </p>
           ))}

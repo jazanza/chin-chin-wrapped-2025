@@ -28,20 +28,20 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   const storySegments: TextSegment[] = useMemo(() => {
     if (!firstBeerDetails) {
       return [
-        { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor, sizeClass: "text-xl" }, // H3
+        { text: "PARECE QUE NO REGISTRAMOS TU PRIMERA CERVEZA DEL AÑO.", color: textColor, sizeClass: "text-lg md:text-xl" }, // H3, ajustado
         { text: "\n\n", color: textColor, sizeClass: "" },
-        { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor, sizeClass: "text-xl" }, // H3
+        { text: "¡ESPERAMOS QUE EL 2026 SEA DIFERENTE!", color: highlightColor, sizeClass: "text-lg md:text-xl" }, // H3, ajustado
       ];
     }
 
     return [
-      { text: "TU PRIMER VISITA DEL AÑO:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
-      { text: `\n${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1 - Added \n here
+      { text: "TU PRIMER VISITA DEL AÑO:", color: textColor, sizeClass: "text-3xl md:text-4xl", nowrap: true }, // H2 - Added nowrap, ajustado
+      { text: `\n${formattedDate.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1 - Added \n here, ajustado
       { text: "\n\n", color: textColor, sizeClass: "" },
-      { text: "TU PRIMERA CERVEZA DEL AÑO:", color: textColor, sizeClass: "text-4xl", nowrap: true }, // H2 - Added nowrap
-      { text: `\n${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1 - Added \n here
+      { text: "TU PRIMERA CERVEZA DEL AÑO:", color: textColor, sizeClass: "text-3xl md:text-4xl", nowrap: true }, // H2 - Added nowrap, ajustado
+      { text: `\n${firstBeerDetails.name.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1 - Added \n here, ajustado
       { text: "\n\n", color: textColor, sizeClass: "" },
-      { text: `¡UNA EXCELENTE ELECCIÓN QUE MARCÓ TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-base" }, // H4
+      { text: `¡UNA EXCELENTE ELECCIÓN QUE MARCÓ TU AÑO CERVECERO!`, color: textColor, sizeClass: "text-sm md:text-base" }, // H4, ajustado
     ];
   }, [firstBeerDetails, formattedDate, textColor, highlightColor]);
 
@@ -65,7 +65,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

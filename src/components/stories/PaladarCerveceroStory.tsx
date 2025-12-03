@@ -53,15 +53,15 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >
-        <p className={cn("text-4xl text-center mb-4", highlightColor)}> {/* H2 */}
+        <p className={cn("text-3xl md:text-4xl text-center mb-4", highlightColor)}> {/* H2, ajustado */}
           TU PERFIL CERVECERO:
         </p>
-        <p className={cn("text-6xl text-center mb-8", highlightColor)}> {/* H1 */}
+        <p className={cn("text-5xl md:text-6xl text-center mb-8", highlightColor)}> {/* H1, ajustado */}
           {dynamicTitle.toUpperCase()}
         </p>
-        <p className={cn("text-base text-center", textColor)}> {/* H4 */}
+        <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
           {finalQuadrantPhrase}
         </p>
       </div>

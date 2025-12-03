@@ -52,10 +52,10 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-4xl" }, // H2
-    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-    { text: `\n\nESTE AÑO PROBASTE ${uniqueVarieties2025} DE ${totalVarietiesInDb} VARIEDADES.`, color: textColor, sizeClass: "text-4xl" }, // H2
-    { text: ` ${dynamicComment}.`, color: textColor, sizeClass: "text-base" }, // H4
+    { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: `\n\nESTE AÑO PROBASTE ${uniqueVarieties2025} DE ${totalVarietiesInDb} VARIEDADES.`, color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: ` ${dynamicComment}.`, color: textColor, sizeClass: "text-sm md:text-base" }, // H4, ajustado
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {
@@ -79,7 +79,7 @@ export const DominantCategoryAndVarietiesStory = ({
     <div className="absolute inset-0 flex items-center justify-center p-4">
       {/* AnimatedBackgroundLines REMOVED */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-tight`}
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-tight`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

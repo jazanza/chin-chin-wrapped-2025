@@ -34,7 +34,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   }
 
   return (
-    <p className={cn("text-base font-bold text-center", textColor)}> {/* H4 */}
+    <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
       {wittyPhrase}
     </p>
   );
@@ -55,11 +55,11 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-4xl" }, // H2
-    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-6xl" }, // H1
-    { text: " VECES", color: textColor, sizeClass: "text-6xl" }, // H1
-    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-4xl" }, // H2
-    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-4xl" }, // H2
+    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: " VECES", color: textColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
   ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);
 
   const renderedText = useMemo(() => {
@@ -82,7 +82,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-md tracking-tight font-black leading-tight mb-4`}
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

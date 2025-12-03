@@ -36,12 +36,12 @@ const WrappedOverlay = ({ customerName, year, textColor }: WrappedOverlayProps) 
   return (
     <div className="absolute top-8 left-8 z-10 pointer-events-none font-sans max-w-[80%]">
       <h1
-        className={cn("text-4xl font-bold uppercase tracking-widest", textColor)} // H2
+        className={cn("text-3xl md:text-4xl font-bold uppercase tracking-widest", textColor)} // H2, ajustado para responsividad
       >
         {customerName}
       </h1>
       <p
-        className={cn("text-xl font-bold uppercase tracking-wide", textColor)} // H3
+        className={cn("text-lg md:text-xl font-bold uppercase tracking-wide", textColor)} // H3, ajustado para responsividad
       >
         {year} WRAPPED
       </p>
@@ -447,7 +447,7 @@ const WrappedDashboard = () => {
           <img
             src="/Logo.png"
             alt="Logo Chin Chin"
-            className="absolute bottom-4 right-4 z-10 w-24 h-auto p-1"
+            className="absolute bottom-4 right-4 z-10 w-16 h-auto p-1 md:w-24" // Ajustado para responsividad
           />
         )}
 

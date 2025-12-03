@@ -23,10 +23,10 @@ export const OutroStory = ({ customerName, totalLiters, totalVisits, textColor, 
   const formattedLiters = useMemo(() => totalLiters.toFixed(1), [totalLiters]);
 
   const outroSegments: TextSegment[] = useMemo(() => [
-    { text: `${firstName.toUpperCase()}, tu travesía cervecera de 2025 ha terminado, cerramos el año con un récord absoluto.\n\n`, color: textColor, sizeClass: "text-xl" },
-    { text: `Te retamos a que en 2026 superes tus ${formattedLiters} litros y nos demuestres que ${totalVisits} visitas no es tu techo máximo.\n\n`, color: highlightColor, sizeClass: "text-xl" },
-    { text: `¡Chin Chin por un 2026 lleno de buenas cervezas y momentos!\n\n`, color: textColor, sizeClass: "text-xl" },
-    { text: `¡Ahora sí! Sácale captura a la próxima imagen, súbelo a tus redes y etiquétanos para hacer oficial tu hazaña cervecera.`, color: highlightColor, sizeClass: "text-xl" }
+    { text: `${firstName.toUpperCase()}, tu travesía cervecera de 2025 ha terminado, cerramos el año con un récord absoluto.\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `Te retamos a que en 2026 superes tus ${formattedLiters} litros y nos demuestres que ${totalVisits} visitas no es tu techo máximo.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `¡Chin Chin por un 2026 lleno de buenas cervezas y momentos!\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `¡Ahora sí! Sácale captura a la próxima imagen, súbelo a tus redes y etiquétanos para hacer oficial tu hazaña cervecera.`, color: highlightColor, sizeClass: "text-lg md:text-xl" } // Ajustado
   ], [firstName, formattedLiters, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -49,7 +49,7 @@ export const OutroStory = ({ customerName, totalLiters, totalVisits, textColor, 
   return (
     <div className="absolute inset-0 flex items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-2xl tracking-tight font-black leading-normal`}
+        className={`flex flex-col items-center justify-center p-4 max-w-sm md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

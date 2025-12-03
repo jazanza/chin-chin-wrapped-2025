@@ -28,7 +28,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
   } else if (litersPercentile >= 75 && totalLiters >= 50) {
     wittyPhrase = `¡Estás en el Top 25% de consumidores! Demuestras un buen ritmo y siempre con tu favorita.`;
   } else if (litersPercentile >= 50 && totalLiters >= 20) {
-    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Claramente, disfrutas mucho tu ${upperBeerName}!`;
+    wittyPhrase = `Tu consumo te ubica en la mitad superior de nuestros clientes. ¡Claramente, disfrutas mucho tus cervezas!`;
   } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
     wittyPhrase = `Tienes un consumo moderado de ${totalLiters.toFixed(1)} litros. ¡Aún tienes tiempo para probar más cervezas y subir en el ranking!`;
   }

@@ -22,20 +22,26 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 
   if (roundedVisitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tus visitas.";
-  } else if (totalVisits > 100) { // NUEVO: Prioridad para más de 100 visitas
+  } else if (totalVisits > 100) { // Más de 100 visitas
     wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, eres probablemente el mejor cliente con más visitas, superando al 99% de la comunidad.`;
-  } else if (totalVisits >= 75 && totalVisits <= 90) { // NUEVO: Prioridad para entre 75 y 90 visitas
+  } else if (totalVisits >= 91) { // Entre 91 y 100 visitas
+    wittyPhrase = `¡Casi un centenar! Con ${totalVisits} visitas, estás a un paso de la triple cifra. ¡Impresionante!`;
+  } else if (totalVisits >= 75) { // Entre 75 y 90 visitas
     wittyPhrase = `¡Estás en el Top 3 de visitantes! Con ${totalVisits} visitas, eres uno de nuestros clientes más frecuentes.`;
-  } else if (roundedVisitsPercentile === 100) { // Este caso ahora captura clientes con el percentil más alto pero <= 100 visitas
-      wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, te encuentras entre los clientes con más visitas de la comunidad.`;
-  } else if (roundedVisitsPercentile >= 95 && roundedVisitsPercentile < 100) { // Clientes en el Top 5% pero no en los rangos anteriores
-      wittyPhrase = `Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${roundedVisitsPercentile.toFixed(0)}% de la comunidad.`;
-  } else if (roundedVisitsPercentile >= 75) { // Clientes en el Top 25%
-    wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, debes seguir viniendo.`;
-  } else if (roundedVisitsPercentile >= 50) { // Clientes en la mitad superior
-      wittyPhrase = `Tus visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te está gustando!`;
-  } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
+  } else if (totalVisits >= 50) { // Entre 50 y 74 visitas
+    wittyPhrase = `¡Un verdadero habitué! Con ${totalVisits} visitas, demuestras una gran lealtad a Chin Chin.`;
+  } else if (totalVisits >= 30) { // Entre 30 y 49 visitas
+    wittyPhrase = `¡Buen ritmo! Con ${totalVisits} visitas, ya eres parte de la familia Chin Chin.`;
+  } else if (totalVisits >= 15) { // Entre 15 y 29 visitas
+    wittyPhrase = `¡Vas por buen camino! Con ${totalVisits} visitas, estás descubriendo tu lugar en nuestra comunidad.`;
+  } else if (totalVisits >= 5) { // Entre 5 y 14 visitas
+    wittyPhrase = `¡Bienvenido al club! Con ${totalVisits} visitas, ya eres parte de la experiencia Chin Chin.`;
+  } else { // Menos de 5 visitas
+    if (roundedVisitsPercentile >= 50) {
+      wittyPhrase = `Tus ${totalVisits} visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te está gustando!`;
+    } else {
       wittyPhrase = `Tus ${totalVisits} visitas te ubican por debajo de la mitad de nuestros clientes. ¡Queremos verte más seguido!`;
+    }
   }
 
   return (
@@ -46,6 +52,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 };
 
 const getVisitsIntroText = (count: number) => {
+  if (count > 100) return { top: "¡ERES UNA LEYENDA!", bottom: "\n¡Más de 100 visitas!" };
   if (count >= 75) return { top: "A esta altura, tu GPS nos tiene como 'Casa'", bottom: "\n¡Eres Leyenda!" };
   if (count >= 50) return { top: "Pasaste más tiempo aquí que en tu casa.", bottom: "\n¡Declarado residente no oficial!" };
   if (count >= 30) return { top: "¡Tenemos a un habitué!", bottom: "\nTu casa tiene competencia." };

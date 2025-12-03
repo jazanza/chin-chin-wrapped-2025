@@ -36,7 +36,7 @@ const getSeasonalWittyRemark = (month: string) => {
         case 'Octubre':
             return "¡Tienes el gen del Oktoberfest! Tu pico de visitas en este mes es una tradición global.";
         case 'Noviembre':
-            return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin las prisas de Diciembre.";
+            return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin el apuro de Diciembre.";
         
         // Meses de alta actividad (Julio, Agosto, Diciembre) no necesitan esta frase, pues usan la lógica de "popular".
         default:

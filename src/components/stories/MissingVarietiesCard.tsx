@@ -31,7 +31,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       return `¡TOMAR MÁS CERVEZAS!`;
     }
     // Default for < 50% missing (or between 2 and 50)
-    return `YA MISMO LO LOGRAS. SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
+    return `SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
   }, [missingCount, missingVarieties]);
 
   const randomSuggestions = useMemo(() => {

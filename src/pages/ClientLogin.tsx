@@ -28,9 +28,10 @@ const MAX_KBA_ATTEMPTS = 2; // Changed from 3 to 2
 
 // Helper to shuffle an array
 const shuffleArray = (array: any[]) => {
-  for (let i = array.length - 1; i > 0; i--) {
+  const shuffled = [...array]; // Initialize 'shuffled' as a copy of the input array
+  for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
 };

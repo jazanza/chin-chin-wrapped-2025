@@ -75,6 +75,7 @@ export const SummaryInfographic = ({
   }, [customerName, year]);
 
   const handleBackToLogin = useCallback(() => {
+    console.log("Navegando a la página de login..."); // Added console.log
     navigate('/');
   }, [navigate]);
 
@@ -177,7 +178,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30"> {/* Added z-30 here */}
           <Button
               onClick={handleBackToLogin}
               variant="ghost"

@@ -22,13 +22,17 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 
   if (roundedVisitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos de la comunidad para comparar tus visitas.";
-  } else if (roundedVisitsPercentile === 100) { // Usamos el valor redondeado
-      wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, eres nuestro cliente número uno, superando a todos los demás en la comunidad.`;
-  } else if (roundedVisitsPercentile >= 95 && roundedVisitsPercentile < 100 && totalVisits >= 75) { // Usamos el valor redondeado
+  } else if (totalVisits > 100) { // NUEVO: Prioridad para más de 100 visitas
+    wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, eres probablemente el mejor cliente con más visitas, superando al 99% de la comunidad.`;
+  } else if (totalVisits >= 75 && totalVisits <= 90) { // NUEVO: Prioridad para entre 75 y 90 visitas
+    wittyPhrase = `¡Estás en el Top 3 de visitantes! Con ${totalVisits} visitas, eres uno de nuestros clientes más frecuentes.`;
+  } else if (roundedVisitsPercentile === 100) { // Este caso ahora captura clientes con el percentil más alto pero <= 100 visitas
+      wittyPhrase = `¡NIVEL LEYENDA! Con ${totalVisits} visitas, te encuentras entre los clientes con más visitas de la comunidad.`;
+  } else if (roundedVisitsPercentile >= 95 && roundedVisitsPercentile < 100) { // Clientes en el Top 5% pero no en los rangos anteriores
       wittyPhrase = `Eres oficialmente uno de nuestros clientes más fieles. Estás en el Top 5%, superando al ${roundedVisitsPercentile.toFixed(0)}% de la comunidad.`;
-  } else if (roundedVisitsPercentile >= 75 && totalVisits >= 50) { // Usamos el valor redondeado
-      wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, debes seguir viniendo.`;
-  } else if (roundedVisitsPercentile >= 50 && totalVisits >= 25) { // Usamos el valor redondeado
+  } else if (roundedVisitsPercentile >= 75) { // Clientes en el Top 25%
+    wittyPhrase = `¡Estás en el Top 25% de clientes más frecuentes! Claramente, debes seguir viniendo.`;
+  } else if (roundedVisitsPercentile >= 50) { // Clientes en la mitad superior
       wittyPhrase = `Tus visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te está gustando!`;
   } else { // Cualquier otro caso (Baja Actividad/Bajo Percentil)
       wittyPhrase = `Tus ${totalVisits} visitas te ubican por debajo de la mitad de nuestros clientes. ¡Queremos verte más seguido!`;

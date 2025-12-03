@@ -83,8 +83,8 @@ export const SummaryInfographic = ({
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-between bg-background text-foreground font-sans h-screen p-4">
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] aspect-[9/16]">
-        {/* Main Infographic Title - MODIFIED */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] aspect-[9/16] max-h-[90vh]">
+        {/* Main Infographic Title */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
             <>
@@ -100,12 +100,12 @@ export const SummaryInfographic = ({
 
         {isTitleTyped && (
           <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full flex-grow border-2 border-white">
-            {/* Row 1, Column 1: Total Visitas - MODIFIED */}
+            {/* Row 1, Column 1: Total Visitas */}
             <Block bgColor="bg-black">
               <p className="text-base font-bold text-center">
                 CANTIDAD DE VISITAS
               </p>
-              <p className="text-6xl font-black text-center">
+              <p className="text-5xl font-black text-center">
                 {totalVisits}
               </p>
             </Block>
@@ -115,7 +115,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 LITROS PROCESADOS
               </p>
-              <p className="text-6xl font-black text-center">
+              <p className="text-5xl font-black text-center">
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
@@ -129,7 +129,7 @@ export const SummaryInfographic = ({
                 <p
                   key={idx}
                   className={cn(
-                    "text-center leading-tight text-ellipsis overflow-hidden whitespace-nowrap",
+                    "text-center leading-tight text-ellipsis overflow-hidden whitespace-nowrap w-full",
                     idx === 0 ? "text-base font-black" : "text-sm font-bold"
                   )}
                 >
@@ -141,7 +141,7 @@ export const SummaryInfographic = ({
             {/* Row 2, Column 2: Variedades Probadas */}
             <Block bgColor="bg-white">
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
-                  <h2 className="text-xl font-black leading-tight mb-2">
+                  <h2 className="text-xl font-black leading-tight mb-2 whitespace-normal">
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
                   <p className="text-base font-bold">
@@ -158,7 +158,7 @@ export const SummaryInfographic = ({
               <p className="text-base font-bold text-center">
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-6xl font-black text-center">
+              <p className="text-5xl font-black text-center">
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>

@@ -443,12 +443,19 @@ const WrappedDashboard = () => {
         <StoryComponent {...storyProps} />
 
         {/* Chin Chin Logo - Conditionally rendered */}
-        {!isSummaryInfographicStory && (
+        {!isIntroStory && !isSummaryInfographicStory && (
           <img
             src="/Logo.png"
             alt="Logo Chin Chin"
-            className="absolute bottom-4 right-4 z-10 w-16 h-auto p-1 md:w-24" // Ajustado para responsividad
+            className="absolute bottom-4 left-4 z-10 w-14 h-auto p-1 md:w-20" // Ajustado a bottom-4 left-4 y tamaño reducido
           />
+        )}
+
+        {/* chinchin.com.ec/wrapped text - Conditionally rendered */}
+        {!isIntroStory && !isSummaryInfographicStory && (
+          <p className={cn("absolute bottom-4 right-4 z-10 text-xs md:text-sm font-bold", currentTextColor)}>
+            chinchin.com.ec/wrapped
+          </p>
         )}
 
         {/* Interaction Zone */}

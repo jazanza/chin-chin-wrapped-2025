@@ -379,6 +379,8 @@ const WrappedDashboard = () => {
     dominantBeerCategory: wrappedData.dominantBeerCategory,
     top10Products: wrappedData.top10Products,
     totalVisits: wrappedData.totalVisits,
+    // REMOVED: totalVisits2024: wrappedData.totalVisits2024,
+    // REMOVED: totalLiters2024: wrappedData.totalLiters2024,
     uniqueVarieties2025: wrappedData.uniqueVarieties2025,
     totalVarietiesInDb: wrappedData.totalVarietiesInDb,
     mostActiveDay: wrappedData.mostActiveDay,
@@ -389,17 +391,15 @@ const WrappedDashboard = () => {
     isPaused: isPaused,
     textColor: currentTextColor,
     highlightColor: currentHighlightColor,
-    palateCategory: wrappedData.palateCategory,
-    dynamicTitle: wrappedData.dynamicTitle,
-    firstBeerDetails: wrappedData.firstBeerDetails,
-    litersPercentile: wrappedData.litersPercentile,
-    visitsPercentile: wrappedData.visitsPercentile,
-    mostPopularCommunityDay: wrappedData.mostPopularCommunityDay,
-    mostPopularCommunityMonth: wrappedData.mostPopularCommunityMonth,
-    mostFrequentBeerName: wrappedData.mostFrequentBeerName,
-    varietyExplorationRatio: wrappedData.varietyExplorationRatio,
-    totalCommunityClients: wrappedData.totalCommunityClients, // NEW
-    totalCommunityLiters: wrappedData.totalCommunityLiters, // NEW
+    palateCategory: wrappedData.palateCategory, // NEW
+    dynamicTitle: wrappedData.dynamicTitle, // NEW
+    firstBeerDetails: wrappedData.firstBeerDetails, // NEW
+    litersPercentile: wrappedData.litersPercentile, // NEW
+    visitsPercentile: wrappedData.visitsPercentile, // NEW
+    mostPopularCommunityDay: wrappedData.mostPopularCommunityDay, // NEW
+    mostPopularCommunityMonth: wrappedData.mostPopularCommunityMonth, // NEW
+    mostFrequentBeerName: wrappedData.mostFrequentBeerName, // NEW: Most frequent beer name
+    varietyExplorationRatio: wrappedData.varietyExplorationRatio, // NEW: variety exploration ratio
   };
 
   return (

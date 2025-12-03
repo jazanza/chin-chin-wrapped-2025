@@ -29,16 +29,14 @@ interface SummaryInfographicProps {
 
 // Helper component for each grid block (2D HTML/CSS version)
 interface BlockProps {
-  bgColor: string; // Tailwind background class
   children: React.ReactNode;
   className?: string; // Added className for grid spanning
 }
 
-const Block = ({ bgColor, children, className }: BlockProps) => {
-  // Determine text color based on background color for brutalist contrast
-  const textColorClass = bgColor === "bg-black" ? "text-white" : "text-black";
+const Block = ({ children, className }: BlockProps) => {
+  // All blocks will now have transparent background, white border, and white text
   return (
-    <div className={cn("flex flex-col items-center justify-center p-4 border-2 border-white", bgColor, textColorClass, className)}>
+    <div className={cn("flex flex-col items-center justify-center p-4 border-2 border-white bg-transparent text-white", className)}>
       {children}
     </div>
   );
@@ -101,27 +99,27 @@ export const SummaryInfographic = ({
         {isTitleTyped && (
           <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white">
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
-            <Block bgColor="bg-black">
+            <Block>
               <p className="text-base font-bold text-center">
                 CANTIDAD DE VISITAS
               </p>
-              <p className="text-5xl font-black text-center leading-none"> {/* Changed to text-5xl, added leading-none */}
+              <p className="text-5xl font-black text-center leading-none">
                 {totalVisits}
               </p>
             </Block>
 
             {/* Row 1, Column 2: Total Litros */}
-            <Block bgColor="bg-white">
+            <Block>
               <p className="text-base font-bold text-center">
                 LITROS PROCESADOS
               </p>
-              <p className="text-5xl font-black text-center leading-none"> {/* Changed to text-5xl, added leading-none */}
+              <p className="text-5xl font-black text-center leading-none">
                 {totalLiters.toFixed(1)} L
               </p>
             </Block>
 
             {/* Row 2, Column 1: Top 3 Cervezas */}
-            <Block bgColor="bg-black">
+            <Block>
               <p className="text-base font-bold text-center mb-1">
                 EL TRÍO FAVORITO
               </p>
@@ -129,7 +127,7 @@ export const SummaryInfographic = ({
                 <p
                   key={idx}
                   className={cn(
-                    "text-center leading-tight whitespace-normal", // Removed text-ellipsis overflow-hidden whitespace-nowrap
+                    "text-center leading-tight whitespace-normal",
                     idx === 0 ? "text-base font-black" : "text-sm font-bold"
                   )}
                 >
@@ -139,7 +137,7 @@ export const SummaryInfographic = ({
             </Block>
 
             {/* Row 2, Column 2: Variedades Probadas */}
-            <Block bgColor="bg-white">
+            <Block>
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
                   <h2 className="text-xl font-black leading-tight mb-2 whitespace-normal">
                       {getBeerLevel(uniqueVarieties2025)}
@@ -154,17 +152,17 @@ export const SummaryInfographic = ({
             </Block>
 
             {/* Row 3, Column 1: Día Más Activo */}
-            <Block bgColor="bg-black">
+            <Block>
               <p className="text-base font-bold text-center">
                 EL DÍA QUE TIENES MÁS SED
               </p>
-              <p className="text-4xl font-black text-center leading-none"> {/* Changed to text-4xl, added leading-none */}
+              <p className="text-4xl font-black text-center leading-none">
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
 
             {/* Row 3, Column 2: Logo y Handle de Instagram */}
-            <Block bgColor="bg-black">
+            <Block>
               <img
                 src="/Logo.png"
                 alt="Logo Chin Chin"
@@ -179,14 +177,14 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2"> {/* Positioned absolutely at the bottom center */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
           <Button
               onClick={handleBackToLogin}
               variant="ghost"
               size="icon"
               className="text-white hover:bg-white hover:text-black"
           >
-              <Home className="h-6 w-6" />
+              <Home className="h-7 w-7" /> {/* Icono 15% más grande */}
           </Button>
       </div>
     </div>

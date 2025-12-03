@@ -22,7 +22,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
     return customerName ? customerName.split(' ')[0] : '';
   }, [customerName]);
 
-  const numberFormatter = useMemo(() => new Intl.NumberFormat('es-ES', {
+  const numberFormatter = useMemo(() => new Intl.NumberFormat('es-AR', {
     maximumFractionDigits: 0
   }), []);
 

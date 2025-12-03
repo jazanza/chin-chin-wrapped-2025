@@ -746,7 +746,7 @@ export function useDb() {
 
       // Si la exploración es muy baja, anular el título
       if (varietyExplorationRatio < LOW_EXPLORATION_THRESHOLD) {
-          dynamicTitle = "Curioso del Lúpulo (Recién Bautizado)"; 
+          dynamicTitle = "Curioso del Lúpulo"; 
       }
 
 

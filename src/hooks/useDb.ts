@@ -28,15 +28,21 @@ export function useDb() {
         await initDb();
 
         // Fetch the database file
+        console.log(`Attempting to fetch database from: ${DB_PATH}`);
         const response = await fetch(DB_PATH);
+        console.log('DB Fetch Response Status:', response.status);
+        console.log('DB Fetch Response Content-Type:', response.headers.get('Content-Type'));
+
         if (!response.ok) {
-          throw new Error(`Failed to fetch database: ${response.statusText}`);
+          throw new Error(`Failed to fetch database: ${response.statusText} (Status: ${response.status})`);
         }
         const buffer = await response.arrayBuffer();
+        console.log('DB Buffer size:', buffer.byteLength, 'bytes'); // Log buffer size
 
         // Load the database
         dbInstance = loadDb(new Uint8Array(buffer));
         setDbLoaded(true);
+        console.log('Database loaded successfully!');
       } catch (err: any) {
         console.error("Error loading database:", err);
         setError(err.message || "Failed to load database.");

@@ -80,7 +80,7 @@ export const SummaryInfographic = ({
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans h-screen overflow-y-auto py-10">
+    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans h-full w-full p-6">
       {/* Main Infographic Content */}
       <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]">
         {/* Main Infographic Title - MODIFIED */}

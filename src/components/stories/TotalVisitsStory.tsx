@@ -92,7 +92,7 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4`} // Ajustado max-w
       >

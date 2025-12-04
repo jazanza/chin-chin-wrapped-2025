@@ -54,7 +54,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
   const topBeerImageUrl = top10Products.length > 0 ? top10Products[0].imageUrl : null;
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full"> {/* Flex column for vertical stacking */}
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
       >
@@ -64,7 +64,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {topBeerImageUrl && (
-        <div className="mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-40 h-40 md:w-52 md:h-52">
+        <div className="mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-32 h-32 md:w-40 md:h-40">
           <img
             src={topBeerImageUrl}
             alt={top10Products[0].name}

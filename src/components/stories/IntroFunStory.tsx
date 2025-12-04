@@ -54,7 +54,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [introSegments]);
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-sm md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >

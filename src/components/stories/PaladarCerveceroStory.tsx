@@ -52,7 +52,7 @@ export const PaladarCerveceroStory = ({ palateCategory, dynamicTitle, varietyExp
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >

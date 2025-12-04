@@ -45,7 +45,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div className={cn("flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8", textColor)}> {/* Ajustado max-w */}
         <p className={cn("text-3xl md:text-4xl text-center", highlightColor)}> {/* H2, ajustado */}
           TU MISIÓN DEL 2026:

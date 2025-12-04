@@ -72,7 +72,7 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
   // const volumeReaction = useMemo(() => getLitersReaction(totalLiters), [totalLiters]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full"> {/* Flex column for vertical stacking */}
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
       >

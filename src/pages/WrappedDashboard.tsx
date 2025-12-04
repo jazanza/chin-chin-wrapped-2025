@@ -427,7 +427,7 @@ const WrappedDashboard = () => {
 
   return (
     <div className={`w-screen h-screen relative font-sans flex items-center justify-center ${currentBackgroundColor}`}>
-      <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex items-center justify-center">
+      <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex flex-col justify-between">
         {/* Bubble Background */}
         <BubbleBackground backgroundColor={currentBackgroundColor} bubbleColorClass={bubbleColorForBackground} />
 

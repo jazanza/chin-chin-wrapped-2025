@@ -46,7 +46,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
-      <div className={cn("flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8", textColor)}> {/* Ajustado max-w */}
+      <div className={cn("flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4", textColor)}> {/* Ajustado max-w y mb-4 */}
         <p className={cn("text-3xl md:text-4xl text-center", highlightColor)}> {/* H2, ajustado */}
           TU MISIÓN DEL 2026:
         </p>
@@ -56,14 +56,14 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       </div>
 
       {randomSuggestions.length > 0 && (
-        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-4 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}> {/* Increased space-y */}
+        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-4 p-4 border-2 border-transparent")}> {/* Eliminado border-white, ajustado space-y */}
           <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H4, ajustado */}
             DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beer, idx) => (
             <div key={idx} className="flex items-center justify-center gap-4"> {/* Two-column layout */}
               {beer.imageUrl && (
-                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-20 h-20 md:w-28 md:h-28 flex-shrink-0"> {/* Adjusted size */}
+                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-16 h-16 md:w-22 md:h-22 flex-shrink-0"> {/* Reducido tamaño 20% adicional */}
                   <img
                     src={beer.imageUrl}
                     alt={beer.name}

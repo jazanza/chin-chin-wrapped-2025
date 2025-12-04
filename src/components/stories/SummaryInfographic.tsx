@@ -53,13 +53,7 @@ const getBeerLevel = (uniqueVarietiesCount: number): string => {
   return "NOVATO EN LA BARRA";
 };
 
-const SOFT_BACKGROUND_COLORS = [
-  "bg-indigo-50",
-  "bg-sky-50",
-  "bg-emerald-50",
-  "bg-rose-50",
-  "bg-amber-50",
-];
+// Eliminado SOFT_BACKGROUND_COLORS ya que el fondo será fijo negro.
 
 export const SummaryInfographic = ({
   customerName,
@@ -77,12 +71,9 @@ export const SummaryInfographic = ({
   const [isTitleTyped, setIsTitleTyped] = useState(false);
   const captureTargetRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const [dynamicBg, setDynamicBg] = useState("");
+  // Eliminado dynamicBg state
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * SOFT_BACKGROUND_COLORS.length);
-    setDynamicBg(SOFT_BACKGROUND_COLORS[randomIndex]);
-
     const timer = setTimeout(() => setIsTitleTyped(true), 1000);
     return () => clearTimeout(timer);
   }, [customerName, year]);
@@ -140,9 +131,9 @@ export const SummaryInfographic = ({
 
 
   return (
-    <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6", dynamicBg)}>
+    <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]"> {/* Removed bg-black */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] h-full aspect-[9/16] bg-black"> {/* Fondo negro y h-full para asegurar el espacio */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (

@@ -56,7 +56,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full"> {/* Flex column for vertical stacking */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4`} // Ajustado max-w y mb-4
       >
         <p className={`text-center`}>
           {renderedMainText}
@@ -64,7 +64,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {topBeerImageUrl && (
-        <div className="py-4 mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36"> {/* Adjusted size and added py-4 */}
+        <div className="py-2 mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36"> {/* Ajustado py-4 a py-2 */}
           <img
             src={topBeerImageUrl}
             alt={top10Products[0].name}
@@ -74,11 +74,11 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       )}
 
       {/* Moved "TU TOP 10:" closer to the list */}
-      <p className={cn("text-lg md:text-xl font-black text-center mb-4", highlightColor)}> {/* H3, ajustado */}
+      <p className={cn("text-lg md:text-xl font-black text-center mb-2", highlightColor)}> {/* H3, ajustado y mb-4 a mb-2 */}
         TU TOP 5:
       </p>
 
-      <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
+      <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-transparent"> {/* Eliminado border-2 border-white */}
         {top10Products.slice(0, 5).map((product, idx) => ( // Changed slice to 5
           <p key={idx} className={cn("text-center", textColor, idx === 0 ? 'text-lg md:text-xl font-black' : 'text-xs md:text-sm font-bold')}> {/* H3 for first, Cuerpo for others, ajustado */}
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} LITROS TOMADOS)`}

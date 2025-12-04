@@ -109,13 +109,13 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4`} // Ajustado max-w y mb-8 a mb-4
       >
         <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
-      <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
+      <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black", "mb-4")}> {/* Añadido mb-4 */}
         <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3, ajustado */}
           Tu Calendario de Visitas
         </p>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
 interface TextSegment {
@@ -14,22 +14,11 @@ interface IntroFunStoryProps {
   customerName: string; // Add customerName prop
   totalCustomers: number; // NEW
   totalLitres: number;    // NEW
+  backgroundColor: string; // NEW: Add backgroundColor prop
 }
 
-const NEON_BACKGROUND_COLORS = [
-  "bg-neon-pink",
-  "bg-neon-cyan",
-  "bg-neon-lime",
-  "bg-neon-purple",
-];
-
-export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName, totalCustomers, totalLitres }: IntroFunStoryProps) => {
-  const [dynamicBg, setDynamicBg] = useState("");
-
-  useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * NEON_BACKGROUND_COLORS.length);
-    setDynamicBg(NEON_BACKGROUND_COLORS[randomIndex]);
-  }, []);
+export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName, totalCustomers, totalLitres, backgroundColor }: IntroFunStoryProps) => {
+  // Eliminado useState y useEffect para dynamicBg
 
   const firstName = useMemo(() => {
     // Asegura que customerName no sea nulo/vacío y devuelve el primer elemento (nombre).
@@ -68,7 +57,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [introSegments]);
 
   return (
-    <div className={cn("absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full", dynamicBg)}>
+    <div className={cn("absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full", backgroundColor)}>
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-sm md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >

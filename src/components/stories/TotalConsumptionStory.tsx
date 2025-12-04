@@ -74,13 +74,13 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full"> {/* Flex column for vertical stacking */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4`} // Ajustado max-w y mb-4
       >
         <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
-      <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
+      <div className={`text-center ${highlightColor} border-4 border-white p-4 mb-4`}> {/* Aumentado border-2 a border-4, añadido mb-4 */}
         <p className="text-7xl md:text-9xl font-black leading-none"> {/* H1, ajustado */}
           {totalLiters.toFixed(1)}
         </p>

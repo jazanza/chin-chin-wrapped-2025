@@ -220,7 +220,7 @@ const STORY_SCENES: StoryScene[] = [
 
 // REVISIÓN CRÍTICA DE COLORES BRUTALISTAS Y NEONES
 const BACKGROUND_COLORS = [
-  "bg-black",       // Slide 0: Intro (Negro)
+  "bg-neon-lime",   // Slide 0: Intro (Lima Neón) - Cambiado a neón
   "bg-neon-cyan",   // Slide 1: Visitas (Cian Neón)
   "bg-neon-lime",   // NEW Slide 2: Primera Cerveza (Lima Neón)
   "bg-neon-pink",   // Slide 3: Mes Activo (Rosa Neón)
@@ -235,7 +235,7 @@ const BACKGROUND_COLORS = [
 ];
 
 const TEXT_COLORS = [
-  "text-white",     // Slide 0: Intro (Blanco sobre Negro)
+  "text-black",     // Slide 0: Intro (Negro sobre Lima Neón) - Cambiado a negro
   "text-black",     // Slide 1: Visitas (Negro sobre Cian Neón)
   "text-black",     // NEW Slide 2: Primera Cerveza (Negro sobre Lima Neón)
   "text-white",     // Slide 3: Mes Activo (Blanco sobre Rosa Neón)
@@ -250,7 +250,7 @@ const TEXT_COLORS = [
 ];
 
 const HIGHLIGHT_COLORS = [
-  "text-white",     // Slide 0: Highlight (Blanco sobre Negro)
+  "text-black",     // Slide 0: Highlight (Negro sobre Lima Neón) - Cambiado a negro
   "text-black",     // Slide 1: Highlight (Negro sobre Cian Neón)
   "text-black",     // NEW Slide 2: Primera Cerveza Highlight (Negro sobre Lima Neón)
   "text-white",     // Slide 3: Highlight (Blanco sobre Rosa Neón)
@@ -423,6 +423,7 @@ const WrappedDashboard = () => {
     varietyExplorationRatio: wrappedData.varietyExplorationRatio, // NEW: variety exploration ratio
     totalCustomers: wrappedData.totalCustomers, // NEW
     totalLitres: wrappedData.totalLitres,       // NEW
+    backgroundColor: currentBackgroundColor, // NEW: Pass background color to story components
   };
 
   return (

@@ -71,7 +71,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
         </p>
       </div>
       {firstBeerDetails?.imageUrl && (
-        <div className="py-4 bg-white rounded-lg flex items-center justify-center aspect-square w-36 h-36 md:w-48 md:h-48 mt-4"> {/* Adjusted size and added py-4 */}
+        <div className="py-4 bg-white rounded-lg flex items-center justify-center aspect-square w-36 h-36 md:w-48 md:h-48 mt-4 border-2 border-black"> {/* Added border-2 border-black */}
           <img
             src={firstBeerDetails.imageUrl}
             alt={firstBeerDetails.name}

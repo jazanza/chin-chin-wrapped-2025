@@ -56,14 +56,14 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       </div>
 
       {randomSuggestions.length > 0 && (
-        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-4 p-4 border-2 border-transparent")}> {/* Eliminado border-white, ajustado space-y */}
+        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-4 p-4 border-transparent")}> {/* Eliminado border-white, ajustado space-y */}
           <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H4, ajustado */}
             DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beer, idx) => (
             <div key={idx} className="flex items-center justify-center gap-4"> {/* Two-column layout */}
               {beer.imageUrl && (
-                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-16 h-16 md:w-22 md:h-22 flex-shrink-0"> {/* Reducido tamaño 20% adicional */}
+                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-16 h-16 md:w-22 md:h-22 flex-shrink-0 border-2 border-black"> {/* Added border-2 border-black */}
                   <img
                     src={beer.imageUrl}
                     alt={beer.name}

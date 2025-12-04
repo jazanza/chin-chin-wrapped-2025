@@ -64,7 +64,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {topBeerImageUrl && (
-        <div className="py-2 mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36"> {/* Ajustado py-4 a py-2 */}
+        <div className="py-2 mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36 border-2 border-black"> {/* Added border-2 border-black */}
           <img
             src={topBeerImageUrl}
             alt={top10Products[0].name}

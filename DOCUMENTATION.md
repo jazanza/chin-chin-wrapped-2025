@@ -232,16 +232,13 @@ Se recomienda encarecidamente cubrir con pruebas unitarias las siguientes funcio
 
 Para actualizar el Wrapped de 2025 a 2026, se deben modificar los siguientes parámetros:
 
-1.  **Año en `useDb.ts`**:
-    *   En la función `getWrappedData`, la llamada a `getWrappedData(Number(customerId), '2025')` en `src/pages/WrappedDashboard.tsx` debe actualizarse a `'2026'`.
+1.  **Centralización del Año (`WRAPPED_YEAR`)**:
+    *   Crea un archivo `src/config/constants.ts` y define una constante `export const WRAPPED_YEAR = '2026';`.
+    *   En `src/pages/WrappedDashboard.tsx`, actualiza la llamada a `getWrappedData(Number(customerId), '2025')` para usar `WRAPPED_YEAR`.
     *   Todas las consultas SQL que utilizan `STRFTIME('%Y', D.Date) = ?` y reciben el parámetro `year` ya están parametrizadas. Asegúrate de que el `year` pasado a `getWrappedData` sea el correcto.
 
 2.  **Textos en Componentes de Historia**:
-    *   Revisa los componentes de historia en `src/components/stories/` para cualquier referencia literal al año "2025" y actualízala a "2026".
-        *   `IntroFunStory.tsx`: `CHIN CHIN WRAPPED 2025` y `2026`.
-        *   `OutroStory.tsx`: `2025` y `2026`.
-        *   `SummaryInfographic.tsx`: `CHIN CHIN WRAPPED 2025`.
-        *   `WrappedOverlay` (inline en `WrappedDashboard.tsx`): `2025 WRAPPED`.
+    *   Actualizar todas las referencias estáticas al año ('2025') en `WrappedDashboard.tsx`, `IntroFunStory.tsx`, `OutroStory.tsx`, y `SummaryInfographic.tsx` para usar la variable centralizada `WRAPPED_YEAR`.
 
 3.  **`STORY_SCENES` en `WrappedDashboard.tsx`**:
     *   Si se añaden, eliminan o reordenan historias, el array `STORY_SCENES` debe ser actualizado.

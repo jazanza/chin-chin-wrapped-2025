@@ -28,7 +28,7 @@ const getSeasonalWittyRemark = (month: string) => {
         case 'Abril':
             return "Abril: Mes de la Ley de Pureza Bávara. Tu compromiso con la tradición es al 100%.";
         case 'Mayo':
-            return "Mayo es el mes del 'Ni frío ni calor'. Perfecto para beber, y tú lo entendiste antes que el resto.";
+            return "¡Mayo huele a lúpulo! Te anticipaste a los meses de sol para disfrutar de tus cervezas.";
         case 'Junio':
             return "Junio: La calma antes de la tormenta de julio. Disfrutaste de las mejores cervezas antes de las vacaciones de invierno.";
         case 'Septiembre':

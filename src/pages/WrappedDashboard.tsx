@@ -222,46 +222,46 @@ const STORY_SCENES: StoryScene[] = [
 const BACKGROUND_COLORS = [
   "bg-black",       // Slide 0: Intro (Negro)
   "bg-neon-cyan",   // Slide 1: Visitas (Cian Neón)
-  "bg-black",       // NEW Slide 2: Primera Cerveza (Negro)
+  "bg-neon-lime",   // NEW Slide 2: Primera Cerveza (Lima Neón)
   "bg-neon-pink",   // Slide 3: Mes Activo (Rosa Neón)
-  "bg-black",       // Slide 4: Día Activo (Negro)
-  "bg-neon-lime",   // Slide 5: Categorías/Variedades (Lima Neón)
-  "bg-black",       // Slide 6: Top 5 Cervezas (Negro)
-  "bg-neon-purple", // NEW Slide 7: Paladar Cervecero (Púrpura Neón)
-  "bg-black",       // Slide 8: Total Litros (Negro)
-  "bg-white",       // Slide 9: Variedades Pendientes (Blanco)
-  "bg-black",       // Slide 10: Outro (Negro)
+  "bg-neon-purple", // NEW Slide 4: Día Activo (Púrpura Neón)
+  "bg-neon-cyan",   // Slide 5: Categorías/Variedades (Cian Neón)
+  "bg-neon-pink",   // NEW Slide 6: Top 5 Cervezas (Rosa Neón)
+  "bg-neon-lime",   // NEW Slide 7: Paladar Cervecero (Lima Neón)
+  "bg-neon-purple", // NEW Slide 8: Total Litros (Púrpura Neón)
+  "bg-neon-cyan",   // NEW Slide 9: Variedades Pendientes (Cian Neón)
+  "bg-neon-pink",   // NEW Slide 10: Outro (Rosa Neón)
   "bg-black",       // Slide 11: Infografía Final (Negro)
 ];
 
 const TEXT_COLORS = [
-  "text-white",     // Slide 0: Intro (Blanco)
+  "text-white",     // Slide 0: Intro (Blanco sobre Negro)
   "text-black",     // Slide 1: Visitas (Negro sobre Cian Neón)
-  "text-white",     // NEW Slide 2: Primera Cerveza (Blanco)
+  "text-black",     // NEW Slide 2: Primera Cerveza (Negro sobre Lima Neón)
   "text-white",     // Slide 3: Mes Activo (Blanco sobre Rosa Neón)
-  "text-white",     // Slide 4: Día Activo (Blanco)
-  "text-black",     // Slide 5: Categorías/Variedades (Negro sobre Lima Neón)
-  "text-white",     // Slide 6: Top 5 Cervezas (Blanco)
-  "text-white",     // NEW Slide 7: Paladar Cervecero (Blanco sobre Púrpura Neón)
-  "text-white",     // Slide 8: Total Litros (Blanco)
-  "text-black",     // Slide 9: Variedades Pendientes (Negro)
-  "text-white",     // Slide 10: Outro (Blanco)
-  "text-white",     // Slide 11: Infografía Final (Blanco)
+  "text-white",     // NEW Slide 4: Día Activo (Blanco sobre Púrpura Neón)
+  "text-black",     // Slide 5: Categorías/Variedades (Negro sobre Cian Neón)
+  "text-white",     // NEW Slide 6: Top 5 Cervezas (Blanco sobre Rosa Neón)
+  "text-black",     // NEW Slide 7: Paladar Cervecero (Negro sobre Lima Neón)
+  "text-white",     // NEW Slide 8: Total Litros (Blanco sobre Púrpura Neón)
+  "text-black",     // NEW Slide 9: Variedades Pendientes (Negro sobre Cian Neón)
+  "text-white",     // NEW Slide 10: Outro (Blanco sobre Rosa Neón)
+  "text-white",     // Slide 11: Infografía Final (Blanco sobre Negro)
 ];
 
 const HIGHLIGHT_COLORS = [
-  "text-white",     // Slide 0: Highlight (Blanco)
+  "text-white",     // Slide 0: Highlight (Blanco sobre Negro)
   "text-black",     // Slide 1: Highlight (Negro sobre Cian Neón)
-  "text-white",     // NEW Slide 2: Primera Cerveza Highlight (Blanco)
+  "text-black",     // NEW Slide 2: Primera Cerveza Highlight (Negro sobre Lima Neón)
   "text-white",     // Slide 3: Highlight (Blanco sobre Rosa Neón)
-  "text-white",     // Slide 4: Highlight (Blanco)
-  "text-black",     // Slide 5: Highlight (Negro sobre Lima Neón)
-  "text-white",     // Slide 6: Top 5 Cervezas (Blanco)
-  "text-white",     // NEW Slide 7: Paladar Cervecero Highlight (Blanco sobre Púrpura Neón)
-  "text-white",     // Slide 8: Total Litros (Blanco)
-  "text-black",     // Slide 9: Variedades Pendientes (Negro)
-  "text-white",     // Slide 10: Outro (Blanco)
-  "text-white",     // Slide 11: Infografía Final (Blanco)
+  "text-white",     // NEW Slide 4: Día Activo Highlight (Blanco sobre Púrpura Neón)
+  "text-black",     // Slide 5: Highlight (Negro sobre Cian Neón)
+  "text-white",     // NEW Slide 6: Top 5 Cervezas Highlight (Blanco sobre Rosa Neón)
+  "text-black",     // NEW Slide 7: Paladar Cervecero Highlight (Negro sobre Lima Neón)
+  "text-white",     // NEW Slide 8: Total Litros Highlight (Blanco sobre Púrpura Neón)
+  "text-black",     // NEW Slide 9: Variedades Pendientes Highlight (Negro sobre Cian Neón)
+  "text-white",     // NEW Slide 10: Outro Highlight (Blanco sobre Rosa Neón)
+  "text-white",     // Slide 11: Infografía Final Highlight (Blanco sobre Negro)
 ];
 
 
@@ -382,7 +382,7 @@ const WrappedDashboard = () => {
   const StoryComponent = currentStory.component;
 
   // Determine which logo to use based on background color
-  const logoSrc = currentBackgroundColor === "bg-white" || currentBackgroundColor === "bg-neon-cyan" || currentBackgroundColor === "bg-neon-lime" ? "/Logo_Black.png" : "/Logo.png";
+  const logoSrc = (currentBackgroundColor === "bg-white" || currentBackgroundColor === "bg-neon-cyan" || currentBackgroundColor === "bg-neon-lime") ? "/Logo_Black.png" : "/Logo.png";
 
   // Determine bubble color based on current background
   let bubbleColorForBackground: string;

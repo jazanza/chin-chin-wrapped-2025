@@ -5,18 +5,12 @@ import { cn } from '@/lib/utils';
 
 interface BubbleBackgroundProps {
   backgroundColor: string; // e.g., "bg-black", "bg-white"
+  bubbleColorClass: string; // NEW: e.g., "bg-black", "bg-white"
 }
 
-const BubbleBackground = ({ backgroundColor }: BubbleBackgroundProps) => {
-  const bubbleColorClass = useMemo(() => {
-    // Determinar el color de la burbuja basado en el color de fondo
-    if (backgroundColor.includes("bg-black")) {
-      return "bg-white";
-    } else if (backgroundColor.includes("bg-white")) {
-      return "bg-black";
-    }
-    return "bg-white"; // Color por defecto si no coincide
-  }, [backgroundColor]);
+const BubbleBackground = ({ backgroundColor, bubbleColorClass }: BubbleBackgroundProps) => {
+  // La lógica para determinar bubbleColorClass ahora se maneja en WrappedDashboard.tsx
+  // y se pasa directamente como prop.
 
   const bubbles = useMemo(() => {
     const numBubbles = 30; // 20-30 elementos
@@ -38,7 +32,7 @@ const BubbleBackground = ({ backgroundColor }: BubbleBackgroundProps) => {
           key={i}
           className={cn(
             "absolute rounded-full pointer-events-none",
-            bubbleColorClass
+            bubbleColorClass // Usar la prop directamente
           )}
           style={{
             width: `${size}px`,
@@ -54,7 +48,7 @@ const BubbleBackground = ({ backgroundColor }: BubbleBackgroundProps) => {
       );
     }
     return generatedBubbles;
-  }, [bubbleColorClass]); // Regenerar burbujas si el color de fondo cambia
+  }, [bubbleColorClass]); // Regenerar burbujas si el color de la burbuja cambia
 
   return (
     <div className="absolute inset-0 overflow-hidden">

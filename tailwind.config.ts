@@ -65,7 +65,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Removed Neon/Glitch colors, keeping only base colors
+        neon: { // Nuevo objeto de colores neón
+          pink: "#FF1493",
+          cyan: "#00FFFF",
+          lime: "#CCFF00",
+          purple: "#BF00FF",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

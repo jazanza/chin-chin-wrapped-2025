@@ -218,50 +218,50 @@ const STORY_SCENES: StoryScene[] = [
   },
 ];
 
-// REVISIÓN CRÍTICA DE COLORES BRUTALISTAS
+// REVISIÓN CRÍTICA DE COLORES BRUTALISTAS Y NEONES
 const BACKGROUND_COLORS = [
-  "bg-black", // Slide 0: Intro (Negro)
-  "bg-white", // Slide 1: Visitas (Blanco)
-  "bg-black", // NEW Slide 2: Primera Cerveza (Negro)
-  "bg-white", // Slide 3: Mes Activo (Blanco)
-  "bg-black", // Slide 4: Día Activo (Negro)
-  "bg-white", // Slide 5: Categorías/Variedades (Blanco)
-  "bg-black", // Slide 6: Top 5 Cervezas (Negro)
-  "bg-white", // NEW Slide 7: Paladar Cervecero (Blanco)
-  "bg-black", // Slide 8: Total Litros (Negro)
-  "bg-white", // Slide 9: Variedades Pendientes (Blanco)
-  "bg-black", // Slide 10: Outro (Negro)
-  "bg-black", // Slide 11: Infografía Final (Negro)
+  "bg-black",       // Slide 0: Intro (Negro)
+  "bg-neon-cyan",   // Slide 1: Visitas (Cian Neón)
+  "bg-black",       // NEW Slide 2: Primera Cerveza (Negro)
+  "bg-neon-pink",   // Slide 3: Mes Activo (Rosa Neón)
+  "bg-black",       // Slide 4: Día Activo (Negro)
+  "bg-neon-lime",   // Slide 5: Categorías/Variedades (Lima Neón)
+  "bg-black",       // Slide 6: Top 5 Cervezas (Negro)
+  "bg-neon-purple", // NEW Slide 7: Paladar Cervecero (Púrpura Neón)
+  "bg-black",       // Slide 8: Total Litros (Negro)
+  "bg-white",       // Slide 9: Variedades Pendientes (Blanco)
+  "bg-black",       // Slide 10: Outro (Negro)
+  "bg-black",       // Slide 11: Infografía Final (Negro)
 ];
 
 const TEXT_COLORS = [
-  "text-white", // Slide 0: Intro (Blanco)
-  "text-black", // Slide 1: Visitas (Negro)
-  "text-white", // NEW Slide 2: Primera Cerveza (Blanco)
-  "text-black", // Slide 3: Mes Activo (Negro)
-  "text-white", // Slide 4: Día Activo (Blanco)
-  "text-black", // Slide 5: Categorías/Variedades (Negro)
-  "text-white", // Slide 6: Top 5 Cervezas (Blanco)
-  "text-black", // NEW Slide 7: Paladar Cervecero (Negro)
-  "text-white", // Slide 8: Total Litros (Blanco)
-  "text-black", // Slide 9: Variedades Pendientes (Negro)
-  "text-white", // Slide 10: Outro (Blanco)
-  "text-white", // Slide 11: Infografía Final (Blanco)
+  "text-white",     // Slide 0: Intro (Blanco)
+  "text-black",     // Slide 1: Visitas (Negro sobre Cian Neón)
+  "text-white",     // NEW Slide 2: Primera Cerveza (Blanco)
+  "text-white",     // Slide 3: Mes Activo (Blanco sobre Rosa Neón)
+  "text-white",     // Slide 4: Día Activo (Blanco)
+  "text-black",     // Slide 5: Categorías/Variedades (Negro sobre Lima Neón)
+  "text-white",     // Slide 6: Top 5 Cervezas (Blanco)
+  "text-white",     // NEW Slide 7: Paladar Cervecero (Blanco sobre Púrpura Neón)
+  "text-white",     // Slide 8: Total Litros (Blanco)
+  "text-black",     // Slide 9: Variedades Pendientes (Negro)
+  "text-white",     // Slide 10: Outro (Blanco)
+  "text-white",     // Slide 11: Infografía Final (Blanco)
 ];
 
 const HIGHLIGHT_COLORS = [
-  "text-white", // Slide 0: Highlight (Blanco)
-  "text-black", // Slide 1: Highlight (Negro)
-  "text-white", // NEW Slide 2: Primera Cerveza Highlight (Blanco)
-  "text-black", // Slide 3: Highlight (Negro)
-  "text-white", // Slide 4: Highlight (Blanco)
-  "text-black", // Slide 5: Highlight (Negro)
-  "text-white", // Slide 6: Top 5 Cervezas (Blanco)
-  "text-black", // NEW Slide 7: Paladar Cervecero Highlight (Negro)
-  "text-white", // Slide 8: Total Litros (Blanco)
-  "text-black", // Slide 9: Variedades Pendientes (Negro)
-  "text-white", // Slide 10: Outro (Blanco)
-  "text-white", // Slide 11: Infografía Final (Blanco)
+  "text-white",     // Slide 0: Highlight (Blanco)
+  "text-black",     // Slide 1: Highlight (Negro sobre Cian Neón)
+  "text-white",     // NEW Slide 2: Primera Cerveza Highlight (Blanco)
+  "text-white",     // Slide 3: Highlight (Blanco sobre Rosa Neón)
+  "text-white",     // Slide 4: Highlight (Blanco)
+  "text-black",     // Slide 5: Highlight (Negro sobre Lima Neón)
+  "text-white",     // Slide 6: Top 5 Cervezas (Blanco)
+  "text-white",     // NEW Slide 7: Paladar Cervecero Highlight (Blanco sobre Púrpura Neón)
+  "text-white",     // Slide 8: Total Litros (Blanco)
+  "text-black",     // Slide 9: Variedades Pendientes (Negro)
+  "text-white",     // Slide 10: Outro (Blanco)
+  "text-white",     // Slide 11: Infografía Final (Blanco)
 ];
 
 
@@ -382,7 +382,15 @@ const WrappedDashboard = () => {
   const StoryComponent = currentStory.component;
 
   // Determine which logo to use based on background color
-  const logoSrc = currentBackgroundColor === "bg-white" ? "/Logo_Black.png" : "/Logo.png";
+  const logoSrc = currentBackgroundColor === "bg-white" || currentBackgroundColor === "bg-neon-cyan" || currentBackgroundColor === "bg-neon-lime" ? "/Logo_Black.png" : "/Logo.png";
+
+  // Determine bubble color based on current background
+  let bubbleColorForBackground: string;
+  if (currentBackgroundColor === "bg-neon-cyan" || currentBackgroundColor === "bg-neon-lime" || currentBackgroundColor === "bg-white") {
+    bubbleColorForBackground = "bg-black";
+  } else { // bg-black, bg-neon-pink, bg-neon-purple
+    bubbleColorForBackground = "bg-white";
+  }
 
   // Props mapping for the current story component
   const storyProps = {
@@ -421,7 +429,7 @@ const WrappedDashboard = () => {
     <div className={`w-screen h-screen relative font-sans flex items-center justify-center ${currentBackgroundColor}`}>
       <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex items-center justify-center">
         {/* Bubble Background */}
-        <BubbleBackground backgroundColor={currentBackgroundColor} />
+        <BubbleBackground backgroundColor={currentBackgroundColor} bubbleColorClass={bubbleColorForBackground} />
 
         {/* Story Progress Bar */}
         {!isSummaryInfographicStory && (

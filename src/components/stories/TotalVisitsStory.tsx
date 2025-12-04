@@ -23,17 +23,17 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   if (roundedVisitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos.";
   } else if (totalVisits > 100) { // Más de 100 visitas
-    wittyPhrase = `🥇¡NIVEL LEYENDA!🥇 Con ${totalVisits} visitas, eres el cliente con más visitas, superando al 99% de la comunidad.`;
+    wittyPhrase = `🥇¡NIVEL LEYENDA!🥇 Con ${totalVisits} visitas, eres nuestros Fan #1, superando al 99% de la comunidad.`;
   } else if (totalVisits >= 91) { // Entre 91 y 100 visitas
-    wittyPhrase = `¡Casi un centenar! Con ${totalVisits} visitas, estás a un paso de la triple cifra. ¡Impresionante!`;
+    wittyPhrase = `¡IMPRESIONATE! Con ${totalVisits} visitas, estás a un paso de la triple cifra.`;
   } else if (totalVisits >= 75) { // Entre 75 y 90 visitas
-    wittyPhrase = `¡Estás en el Top 3 de visitantes! Con ${totalVisits} visitas, eres uno de nuestros clientes más frecuentes.`;
+    wittyPhrase = `¡TOP 3! Con ${totalVisits} visitas, eres uno de nuestros clientes más frecuentes.`;
   } else if (totalVisits >= 50) { // Entre 50 y 74 visitas
     wittyPhrase = `¡Un verdadero habitué! Con ${totalVisits} visitas, demuestras una gran lealtad a Chin Chin.`;
   } else if (totalVisits >= 30) { // Entre 30 y 49 visitas
     wittyPhrase = `¡Buen ritmo! Con ${totalVisits} visitas, ya eres parte de la familia Chin Chin.`;
   } else if (totalVisits >= 15) { // Entre 15 y 29 visitas
-    wittyPhrase = `¡Vas por buen camino! Con ${totalVisits} visitas, estás descubriendo tu lugar en nuestra comunidad.`;
+    wittyPhrase = `¡Vas por buen camino! Con ${totalVisits} visitas, estás descubriendo tu lugar en Chin Chin.`;
   } else if (totalVisits >= 5) { // Entre 5 y 14 visitas
     wittyPhrase = `¡Bienvenido al club! Con ${totalVisits} visitas, ya eres parte de la experiencia Chin Chin.`;
   } else { // Menos de 5 visitas

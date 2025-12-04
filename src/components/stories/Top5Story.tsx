@@ -69,7 +69,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
         {top10Products.slice(0, 10).map((product, idx) => ( // Changed slice to 10
           <p key={idx} className={cn("text-center", textColor, idx === 0 ? 'text-lg md:text-xl font-black' : 'text-xs md:text-sm font-bold')}> {/* H3 for first, Cuerpo for others, ajustado */}
-            {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} LITROS BEBIDOS)`}
+            {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} LITROS TOMADOS)`}
           </p>
         ))}
       </div>

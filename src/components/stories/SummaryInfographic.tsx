@@ -85,7 +85,7 @@ export const SummaryInfographic = ({
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[85vh] bg-black"> {/* Ajustado max-h y eliminado aspect-[9/16] */}
+      <div className="flex flex-col items-center justify-center p-2 w-[90vw] max-w-[500px] max-h-[90vh] bg-black"> {/* Ajustado max-h y padding, y justify-center */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -104,40 +104,46 @@ export const SummaryInfographic = ({
           <div className="grid grid-cols-2 grid-rows-3 gap-1 w-full h-full border-2 border-white">
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block>
-              <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                VISITAS:
-              </p>
-              <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
-                {totalVisits}
-              </p>
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
+                  VISITAS:
+                </p>
+                <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
+                  {totalVisits}
+                </p>
+              </div>
             </Block>
 
             {/* Row 1, Column 2: Total Litros */}
             <Block>
-              <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                LITROS TOMADOS:
-              </p>
-              <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
-                {totalLiters.toFixed(1)}
-              </p>
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
+                  LITROS TOMADOS:
+                </p>
+                <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
+                  {totalLiters.toFixed(1)}
+                </p>
+              </div>
             </Block>
 
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block>
-              <p className="text-sm font-bold text-center mb-1"> {/* Reduced from text-base to text-sm */}
-                TOP 3:
-              </p>
-              {top10Products.slice(0, 3).map((product, idx) => (
-                <p
-                  key={idx}
-                  className={cn(
-                    "text-center leading-tight whitespace-normal",
-                    idx === 0 ? "text-sm font-black" : "text-xs font-bold" // Reduced from text-base to text-sm, and text-sm to text-xs
-                  )}
-                >
-                  {`${idx + 1}. ${product.name.toUpperCase()}`}
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <p className="text-sm font-bold text-center mb-1"> {/* Reduced from text-base to text-sm */}
+                  TOP 3:
                 </p>
-              ))}
+                {top10Products.slice(0, 3).map((product, idx) => (
+                  <p
+                    key={idx}
+                    className={cn(
+                      "text-center leading-tight whitespace-normal",
+                      idx === 0 ? "text-sm font-black" : "text-xs font-bold" // Reduced from text-base to text-sm, and text-sm to text-xs
+                    )}
+                  >
+                    {`${idx + 1}. ${product.name.toUpperCase()}`}
+                  </p>
+                ))}
+              </div>
             </Block>
 
             {/* Row 2, Column 2: Variedades Probadas */}
@@ -157,24 +163,28 @@ export const SummaryInfographic = ({
 
             {/* Row 3, Column 1: Día Más Activo */}
             <Block>
-              <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
-                DÍA FAVORITO:
-              </p>
-              <p className="text-3xl font-black text-center leading-none"> {/* Reduced from text-4xl to text-3xl */}
-                {mostActiveDay.toUpperCase()}
-              </p>
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
+                  DÍA FAVORITO:
+                </p>
+                <p className="text-3xl font-black text-center leading-none"> {/* Reduced from text-4xl to text-3xl */}
+                  {mostActiveDay.toUpperCase()}
+                </p>
+              </div>
             </Block>
 
             {/* Row 3, Column 2: Logo y Handle de Instagram */}
             <Block>
-              <img
-                src="/Logo.png"
-                alt="Logo Chin Chin"
-                className="w-auto max-w-[75px] p-1 mb-2"
-              />
-              <p className="text-xs font-bold"> {/* Reduced from text-sm to text-xs */}
-                @CHINCHIN.CERVEZAS
-              </p>
+              <div className="flex flex-col items-center justify-center h-full w-full">
+                <img
+                  src="/Logo.png"
+                  alt="Logo Chin Chin"
+                  className="w-auto max-w-[75px] p-1 mb-2"
+                />
+                <p className="text-xs font-bold"> {/* Reduced from text-sm to text-xs */}
+                  @CHINCHIN.CERVEZAS
+                </p>
+              </div>
             </Block>
           </div>
         )}

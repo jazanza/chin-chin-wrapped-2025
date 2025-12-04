@@ -20,27 +20,27 @@ interface MostActiveMonthStoryProps {
 const getSeasonalWittyRemark = (month: string) => {
     switch (month) {
         case 'Enero':
-            return "Eres el anticuerpo del Dry January. ¡Mientras el mundo hace dieta líquida, tú pides la cerveza más grande!";
+            return "Mientras el mundo hace Dry January (dieta líquida), tú pides la cerveza más grande!";
         case 'Febrero':
-            return "Febrero es el mes corto... ¡Pero no para tu agenda cervcera! Nos encanta esa dedicación.";
+            return "Un mes cort, pero no para tu agenda cervcera, nos encanta tu dedicación.";
         case 'Marzo':
-            return "¡Marzo activa tu temporada cervecera y arranca con la energía de San Patricio.";
+            return "¡Tu temporada cervecera arranca con la energía de San Patricio.";
         case 'Abril':
-            return "Abril: Mes de la Ley de Pureza Bávara. Tu compromiso con la tradición es al 100%.";
+            return "Mes de la Ley de Pureza Bávara. Tu compromiso con la tradición es al 100%.";
         case 'Mayo':
-            return "¡Mayo huele a lúpulo! Te anticipaste a los meses de sol para disfrutar de tus cervezas.";
+            return "¡Huele a lúpulo! Te anticipaste a los meses de sol para disfrutar de tus cervezas.";
         case 'Junio':
-            return "Junio: Tu paladar está madurando. Disfrutaste de la calma antes de que se active el verano";
+            return "Tu paladar está madurando. Disfrutaste de la calma antes de que se active el verano";
         case 'Septiembre':
             return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal.";
         case 'Octubre':
-            return "¡Tienes el gen del Oktoberfest! Tu pico de visitas en este mes es una tradición global.";
+            return "¡Tienes el gen del Oktoberfest! Tu pico de visitas en este mes es una tradición.";
         case 'Noviembre':
-            return "Noviembre: El mes ideal para el 'pre-calentamiento'. Te preparaste para las fiestas sin el apuro de Diciembre.";
+            return "El mes ideal para el pre-calentamiento navideño.";
         
         // Meses de alta actividad (Julio, Agosto, Diciembre) no necesitan esta frase, pues usan la lógica de "popular".
         default:
-            return "Marcaste un ritmo único que no sigue las estaciones. Siempre es buen momento para Chin Chin.";
+            return "Marcaste un ritmo único que no sigue estaciones o modas. Siempre es buen momento para Chin Chin.";
     }
 };
 
@@ -50,17 +50,17 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
   const popularMonths = ['Diciembre', 'Julio', 'Agosto']; // Suponiendo meses de alta actividad
 
   if (mostActiveMonth === "N/A") {
-    wittyPhrase = "No hay suficientes datos para determinar tu mes más activo.";
+    wittyPhrase = "No hay suficientes datos.";
   } else if (mostActiveMonth === mostPopularCommunityMonth) {
     // Si coincide con el mes más popular de la comunidad
-    wittyPhrase = `Te uniste a la fiesta. ¡${mostActiveMonth} es nuestro mes con más visitas! No nos sorprende.`;
+    wittyPhrase = `Te uniste a la fiesta en ${mostActiveMonth}, ¡nuestro mes con más visitas!`;
   } else if (popularMonths.includes(mostActiveMonth)) {
     // Si es un mes popular, pero NO el más popular de la comunidad
-    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, el mes popular entre todos, pero siempre con estilo único.`;
+    wittyPhrase = `Disfrutaste de Chin Chin en ${mostActiveMonth}, un mes popular, pero siempre con tu estilo único.`;
   } else {
     // ✨ NUEVA LÓGICA: Meses Menos Comunes (Pionero con frase divertida)
     const seasonalRemark = getSeasonalWittyRemark(mostActiveMonth);
-    wittyPhrase = `Ignoraste las tendencias. ${seasonalRemark} Nos visitaste en ${mostActiveMonth} con un propósito especial.`;
+    wittyPhrase = `Ignoraste las tendencias. ${seasonalRemark} Nos visitaste en ${mostActiveMonth}.`;
   }
 
   return (

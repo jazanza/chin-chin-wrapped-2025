@@ -23,7 +23,7 @@ export const OutroStory = ({ customerName, totalLiters, totalVisits, textColor, 
   const formattedLiters = useMemo(() => totalLiters.toFixed(1), [totalLiters]);
 
   const outroSegments: TextSegment[] = useMemo(() => [
-    { text: `${firstName.toUpperCase()}, TU TRAVESÍA CERVECERA DE 2025 HA TERMINADO, CERRAMOS EL AÑO CON UN RÉCORD ABSOLUTO.\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `${firstName.toUpperCase()}, TU TRAVESÍA CERVECERA DE 2025 HA TERMINADO CON UN RÉCORD ABSOLUTO.\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
     { text: `TE RETAMOS A QUE EN 2026 SUPERES TUS ${formattedLiters} LITROS Y NOS DEMUESTRES QUE ${totalVisits} VISITAS NO ES TU TECHO MÁXIMO.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
     { text: `¡CHIN CHIN POR UN 2026 LLENO DE BUENAS CERVEZAS Y MOMENTOS!\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
     { text: `SÁCALE CAPTURA A LA PRÓXIMA IMÁGEN, SÚBELO A TUS REDES Y ETIQUÉTANOS PARA HACER OFICIAL TU HAZAÑA CERVECERA.`, color: highlightColor, sizeClass: "text-lg md:text-xl" } // Ajustado

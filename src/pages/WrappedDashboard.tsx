@@ -36,12 +36,12 @@ const WrappedOverlay = ({ customerName, year, textColor }: WrappedOverlayProps) 
   return (
     <div className="absolute top-8 left-8 z-10 pointer-events-none font-sans max-w-[80%]">
       <h1
-        className={cn("text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-widest", textColor)} // H2, ajustado para responsividad
+        className={cn("text-3xl md:text-4xl font-bold uppercase tracking-widest", textColor)} // H2, ajustado para responsividad
       >
         {customerName}
       </h1>
       <p
-        className={cn("text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-wide", textColor)} // H3, ajustado para responsividad
+        className={cn("text-lg md:text-xl font-bold uppercase tracking-wide", textColor)} // H3, ajustado para responsividad
       >
         {year} WRAPPED
       </p>
@@ -427,7 +427,7 @@ const WrappedDashboard = () => {
 
   return (
     <div className={`w-screen h-screen relative font-sans flex items-center justify-center ${currentBackgroundColor}`}>
-      <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex flex-col items-center justify-between"> {/* Changed to flex-col and justify-between */}
+      <div ref={storyContainerRef} className="relative w-full h-full overflow-hidden flex items-center justify-center">
         {/* Bubble Background */}
         <BubbleBackground backgroundColor={currentBackgroundColor} bubbleColorClass={bubbleColorForBackground} />
 

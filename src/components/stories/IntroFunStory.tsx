@@ -30,10 +30,10 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   const formattedLitres = useMemo(() => numberFormatter.format(totalLitres), [totalLitres, numberFormatter]);
 
   const introSegments: TextSegment[] = useMemo(() => [
-    { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!\n\n`, color: highlightColor, sizeClass: "text-lg sm:text-xl md:text-2xl" }, // Ajustado
-    { text: `TÚ Y LOS ${formattedCustomers} FANS DE CHIN CHIN, SE TOMARON ${formattedLitres} LITROS DE CERVEZA, ¡TODO UN RECORD!\n\n`, color: textColor, sizeClass: "text-lg sm:text-xl md:text-2xl" }, // Ajustado
-    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A NOSOTROS.\n\n`, color: highlightColor, sizeClass: "text-lg sm:text-xl md:text-2xl" }, // Ajustado
-    { text: `AHORA SÍ, DESCUBRE TUS LOGROS CERVECEROS.`, color: textColor, sizeClass: "text-lg sm:text-xl md:text-2xl" } // Ajustado
+    { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `TÚ Y LOS ${formattedCustomers} FANS DE CHIN CHIN, SE TOMARON ${formattedLitres} LITROS DE CERVEZA, ¡TODO UN RECORD!\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A NOSOTROS.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `AHORA SÍ, DESCUBRE TUS LOGROS CERVECEROS.`, color: textColor, sizeClass: "text-lg md:text-xl" } // Ajustado
   ], [firstName, formattedCustomers, formattedLitres, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -54,9 +54,9 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [introSegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-sm md:max-w-xl tracking-tight font-black leading-normal space-y-4`} // Ajustado max-w, added space-y-4
+        className={`flex flex-col items-center justify-center p-4 max-w-sm md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

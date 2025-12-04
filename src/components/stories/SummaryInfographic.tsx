@@ -36,7 +36,7 @@ interface BlockProps {
 const Block = ({ children, className }: BlockProps) => {
   // All blocks will now have transparent background, white border, and white text
   return (
-    <div className={cn("flex flex-col items-center justify-center p-2 border-2 border-white bg-transparent text-white", className)}> {/* Reduced padding */}
+    <div className={cn("flex flex-col items-center justify-center p-4 border-2 border-white bg-transparent text-white", className)}>
       {children}
     </div>
   );
@@ -80,17 +80,17 @@ export const SummaryInfographic = ({
   }, [navigate]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between bg-background text-foreground font-sans h-screen overflow-y-auto py-8"> {/* Changed justify-start to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex flex-col items-center justify-start bg-background text-foreground font-sans h-screen overflow-y-auto py-10">
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-between p-3 bg-black w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]"> {/* Changed justify-start to justify-between */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]">
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
             <>
-              <h1 className={cn("text-3xl sm:text-4xl font-black uppercase leading-tight", highlightColor)}> {/* Adjusted text size */}
+              <h1 className={cn("text-4xl font-black uppercase leading-tight", highlightColor)}>
                 {customerName.toUpperCase()}
               </h1>
-              <p className={cn("text-lg sm:text-xl font-black uppercase leading-tight", textColor)}> {/* Adjusted text size */}
+              <p className={cn("text-xl font-black uppercase leading-tight", textColor)}>
                 CHIN CHIN WRAPPED {year}
               </p>
             </>
@@ -101,27 +101,27 @@ export const SummaryInfographic = ({
           <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white">
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block>
-              <p className="text-xs sm:text-sm font-bold text-center"> {/* Adjusted text size */}
+              <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
                 VISITAS:
               </p>
-              <p className="text-3xl sm:text-4xl font-black text-center leading-none"> {/* Adjusted text size */}
+              <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
                 {totalVisits}
               </p>
             </Block>
 
             {/* Row 1, Column 2: Total Litros */}
             <Block>
-              <p className="text-xs sm:text-sm font-bold text-center"> {/* Adjusted text size */}
+              <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
                 LITROS TOMADOS:
               </p>
-              <p className="text-3xl sm:text-4xl font-black text-center leading-none"> {/* Adjusted text size */}
+              <p className="text-4xl font-black text-center leading-none"> {/* Reduced from text-5xl to text-4xl */}
                 {totalLiters.toFixed(1)}
               </p>
             </Block>
 
             {/* Row 2, Column 1: Top 3 Cervezas */}
             <Block>
-              <p className="text-xs sm:text-sm font-bold text-center mb-1"> {/* Adjusted text size */}
+              <p className="text-sm font-bold text-center mb-1"> {/* Reduced from text-base to text-sm */}
                 TOP 3:
               </p>
               {top10Products.slice(0, 3).map((product, idx) => (
@@ -129,7 +129,7 @@ export const SummaryInfographic = ({
                   key={idx}
                   className={cn(
                     "text-center leading-tight whitespace-normal",
-                    idx === 0 ? "text-xs sm:text-sm font-black" : "text-[0.6rem] sm:text-xs font-bold" // Adjusted text size
+                    idx === 0 ? "text-sm font-black" : "text-xs font-bold" // Reduced from text-base to text-sm, and text-sm to text-xs
                   )}
                 >
                   {`${idx + 1}. ${product.name.toUpperCase()}`}
@@ -140,13 +140,13 @@ export const SummaryInfographic = ({
             {/* Row 2, Column 2: Variedades Probadas */}
             <Block>
               <div className="flex flex-col items-center justify-center p-[1vw] md:p-2 h-full text-center">
-                  <h2 className="text-base sm:text-lg font-black leading-tight mb-2 whitespace-normal"> {/* Adjusted text size */}
+                  <h2 className="text-lg font-black leading-tight mb-2 whitespace-normal"> {/* Reduced from text-xl to text-lg */}
                       {getBeerLevel(uniqueVarieties2025)}
                   </h2>
-                  <p className="text-xs sm:text-sm font-bold whitespace-normal"> {/* Adjusted text size */}
+                  <p className="text-sm font-bold whitespace-normal"> {/* Reduced from text-base to text-sm */}
                       TOMASTE {uniqueVarieties2025} CERVEZAS
                   </p>
-                  <p className="text-[0.6rem] sm:text-xs mt-1 whitespace-normal"> {/* Adjusted text size */}
+                  <p className="text-xs mt-1 whitespace-normal"> {/* Reduced from text-sm to text-xs */}
                       DE {totalVarietiesInDb} VARIEDADES.
                   </p>
               </div>
@@ -154,10 +154,10 @@ export const SummaryInfographic = ({
 
             {/* Row 3, Column 1: Día Más Activo */}
             <Block>
-              <p className="text-xs sm:text-sm font-bold text-center"> {/* Adjusted text size */}
+              <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}
                 DÍA FAVORITO:
               </p>
-              <p className="text-2xl sm:text-3xl font-black text-center leading-none"> {/* Adjusted text size */}
+              <p className="text-3xl font-black text-center leading-none"> {/* Reduced from text-4xl to text-3xl */}
                 {mostActiveDay.toUpperCase()}
               </p>
             </Block>
@@ -169,7 +169,7 @@ export const SummaryInfographic = ({
                 alt="Logo Chin Chin"
                 className="w-auto max-w-[75px] p-1 mb-2"
               />
-              <p className="text-[0.6rem] sm:text-xs font-bold"> {/* Adjusted text size */}
+              <p className="text-xs font-bold"> {/* Reduced from text-sm to text-xs */}
                 @CHINCHIN.CERVEZAS
               </p>
             </Block>
@@ -178,7 +178,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botón Volver */}
-      <div className="relative bottom-0 z-30"> {/* Adjusted positioning */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30"> {/* Added z-30 here */}
           <Button
               onClick={handleBackToLogin}
               variant="ghost"

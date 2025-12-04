@@ -52,10 +52,10 @@ export const DominantCategoryAndVarietiesStory = ({
   const dynamicComment = getVarietyComment(uniqueVarieties2025, totalVarietiesInDb);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl" }, // H2, ajustado
-    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl sm:text-6xl md:text-7xl" }, // H1, ajustado
-    { text: `\n\nESTE AÑO PROBASTE ${uniqueVarieties2025} DE ${totalVarietiesInDb} VARIEDADES.`, color: textColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl" }, // H2, ajustado
-    { text: ` ${dynamicComment}.`, color: textColor, sizeClass: "text-sm sm:text-base" }, // H4, ajustado
+    { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: `\n\nESTE AÑO PROBASTE ${uniqueVarieties2025} DE ${totalVarietiesInDb} VARIEDADES.`, color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: ` ${dynamicComment}.`, color: textColor, sizeClass: "text-sm md:text-base" }, // H4, ajustado
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {
@@ -76,10 +76,10 @@ export const DominantCategoryAndVarietiesStory = ({
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex items-center justify-center p-4">
       {/* AnimatedBackgroundLines REMOVED */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-tight space-y-4`} // Ajustado max-w, added space-y-4
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-tight`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

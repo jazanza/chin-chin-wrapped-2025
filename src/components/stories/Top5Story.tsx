@@ -54,9 +54,9 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
   const topBeerImageUrl = top10Products.length > 0 ? top10Products[0].imageUrl : null;
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight space-y-4`} // Added space-y-4
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedMainText}
@@ -64,13 +64,11 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {topBeerImageUrl && (
-        <div className="bg-white rounded-md aspect-square w-40 h-40 md:w-52 md:h-52 flex items-center justify-center p-2"> {/* Image container */}
-          <img
-            src={topBeerImageUrl}
-            alt={top10Products[0].name}
-            className="w-full h-full object-contain" // Image styling
-          />
-        </div>
+        <img
+          src={topBeerImageUrl}
+          alt={top10Products[0].name}
+          className="mb-8 max-h-40 md:max-h-60 object-contain" // Added image styling
+        />
       )}
 
       {/* Moved "TU TOP 10:" closer to the list */}

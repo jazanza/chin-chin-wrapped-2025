@@ -38,7 +38,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
   }
 
   return (
-    <p className={cn("text-sm sm:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
+    <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
       {wittyPhrase}
     </p>
   );
@@ -48,7 +48,7 @@ const CommunityLitersComparisonText = ({ totalLiters, litersPercentile, textColo
 
 export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, litersPercentile, mostFrequentBeerName }: TotalConsumptionStoryProps) => {
   const titleSegments: TextSegment[] = useMemo(() => [
-    { text: "TU HÍGADO PROCESÓ\nUN TOTAL DE:", color: textColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl" }, // H2, ajustado
+    { text: "TU HÍGADO PROCESÓ\nUN TOTAL DE:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
   ], [textColor]);
 
   const renderedText = useMemo(() => {
@@ -72,16 +72,16 @@ export const TotalConsumptionStory = ({ totalLiters, textColor, highlightColor, 
   // const volumeReaction = useMemo(() => getLitersReaction(totalLiters), [totalLiters]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8 space-y-4`} // Ajustado max-w, added space-y-4
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
       <div className={`text-center ${highlightColor} border-2 border-white p-4 mb-4`}> {/* Added mb-4 for spacing */}
-        <p className="text-5xl sm:text-6xl md:text-7xl font-black leading-none"> {/* H1, ajustado */}
+        <p className="text-5xl md:text-6xl font-black leading-none"> {/* H1, ajustado */}
           {totalLiters.toFixed(1)} LITROS
         </p>
       </div>

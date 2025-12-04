@@ -45,7 +45,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   }
 
   return (
-    <p className={cn("text-sm sm:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
+    <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
       {wittyPhrase}
     </p>
   );
@@ -67,11 +67,11 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   const { top: dynamicTopPhrase, bottom: dynamicBottomPhrase } = getVisitsIntroText(totalVisits);
 
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl" }, // H2, ajustado
-    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-5xl sm:text-6xl md:text-7xl" }, // H1, ajustado
-    { text: " VECES", color: textColor, sizeClass: "text-5xl sm:text-6xl md:text-7xl" }, // H1, ajustado
-    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl" }, // H2, ajustado
-    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl" }, // H2, ajustado
+    { text: "NOS VISITASTE:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: `\n${totalVisits}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: " VECES", color: textColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: `\n\n${dynamicTopPhrase.toUpperCase()}`, color: highlightColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+    { text: `\n${dynamicBottomPhrase.toUpperCase()}`, color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
   ], [totalVisits, textColor, highlightColor, dynamicTopPhrase, dynamicBottomPhrase]);
 
   const renderedText = useMemo(() => {
@@ -92,9 +92,9 @@ export const TotalVisitsStory = ({ customerName, year, totalVisits, textColor, h
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight space-y-4`} // Ajustado max-w, added space-y-4
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-4`} // Ajustado max-w
       >
         <p className={`text-center`}>
           {renderedText}

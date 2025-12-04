@@ -45,7 +45,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
   }
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div className={cn("flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8", textColor)}> {/* Ajustado max-w */}
         <p className={cn("text-3xl md:text-4xl text-center", highlightColor)}> {/* H2, ajustado */}
           TU MISIÓN DEL 2026:
@@ -56,7 +56,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       </div>
 
       {randomSuggestions.length > 0 && (
-        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-2 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}> {/* Adjusted space-y for more items */}
+        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
           <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H4, ajustado */}
             DEBERÍAS PROBAR:
           </p>
@@ -66,13 +66,11 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
                 {beer.name.toUpperCase()}
               </p>
               {beer.imageUrl && (
-                <div className="bg-white rounded-md aspect-square w-24 h-24 md:w-32 md:h-32 flex items-center justify-center p-1 mt-2"> {/* Image container */}
-                  <img
-                    src={beer.imageUrl}
-                    alt={beer.name}
-                    className="w-full h-full object-contain" // Image styling
-                  />
-                </div>
+                <img
+                  src={beer.imageUrl}
+                  alt={beer.name}
+                  className="mt-2 max-h-24 object-contain" // Image styling
+                />
               )}
             </div>
           ))}

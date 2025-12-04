@@ -13,18 +13,26 @@ export function cn(...inputs: ClassValue[]) {
  * @returns Una URL de imagen formateada o la ruta al placeholder.
  */
 export function formatImageUrl(rawUrl: string | null | undefined): string {
-  // Si la URL es nula, indefinida o vacía, devuelve la ruta al placeholder.
-  if (!rawUrl || rawUrl.trim() === '') {
-    return '/placeholder.svg'; // Usamos el placeholder existente en /public/placeholder.svg
+  // Si la URL es nula o indefinida, devuelve la ruta al placeholder.
+  if (rawUrl === null || rawUrl === undefined) {
+    return '/placeholder.svg';
+  }
+
+  // Convierte explícitamente a string para asegurar que .trim() funcione.
+  const stringUrl = String(rawUrl);
+
+  // Si la cadena resultante está vacía después de limpiar espacios, devuelve el placeholder.
+  if (stringUrl.trim() === '') {
+    return '/placeholder.svg';
   }
 
   // Si ya es una URL absoluta (http/https) o un URI de datos (Base64), la devuelve tal cual.
-  if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://') || rawUrl.startsWith('data:')) {
-    return rawUrl;
+  if (stringUrl.startsWith('http://') || stringUrl.startsWith('https://') || stringUrl.startsWith('data:')) {
+    return stringUrl;
   }
 
   // Si es una ruta relativa, asume que está dentro de 'public/images/'
   // y la prefija con '/images/'. Asegura que no haya doble barra al inicio.
-  const cleanedUrl = rawUrl.startsWith('/') ? rawUrl.substring(1) : rawUrl;
+  const cleanedUrl = stringUrl.startsWith('/') ? stringUrl.substring(1) : stringUrl;
   return `/images/${cleanedUrl}`;
 }

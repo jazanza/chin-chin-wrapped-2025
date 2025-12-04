@@ -63,7 +63,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
           {randomSuggestions.map((beer, idx) => (
             <div key={idx} className="flex items-center justify-center gap-4"> {/* Two-column layout */}
               {beer.imageUrl && (
-                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36 flex-shrink-0"> {/* Adjusted size */}
+                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-20 h-20 md:w-28 md:h-28 flex-shrink-0"> {/* Adjusted size */}
                   <img
                     src={beer.imageUrl}
                     alt={beer.name}

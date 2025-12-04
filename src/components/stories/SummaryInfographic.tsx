@@ -142,7 +142,7 @@ export const SummaryInfographic = ({
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6", dynamicBg)}>
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 bg-black w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]">
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16]"> {/* Removed bg-black */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (

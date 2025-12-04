@@ -16,20 +16,19 @@ interface IntroFunStoryProps {
   totalLitres: number;    // NEW
 }
 
-const SOFT_BACKGROUND_COLORS = [
-  "bg-indigo-50",
-  "bg-sky-50",
-  "bg-emerald-50",
-  "bg-rose-50",
-  "bg-amber-50",
+const NEON_BACKGROUND_COLORS = [
+  "bg-neon-pink",
+  "bg-neon-cyan",
+  "bg-neon-lime",
+  "bg-neon-purple",
 ];
 
 export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName, totalCustomers, totalLitres }: IntroFunStoryProps) => {
   const [dynamicBg, setDynamicBg] = useState("");
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * SOFT_BACKGROUND_COLORS.length);
-    setDynamicBg(SOFT_BACKGROUND_COLORS[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * NEON_BACKGROUND_COLORS.length);
+    setDynamicBg(NEON_BACKGROUND_COLORS[randomIndex]);
   }, []);
 
   const firstName = useMemo(() => {

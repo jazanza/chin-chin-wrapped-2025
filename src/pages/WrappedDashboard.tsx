@@ -12,7 +12,7 @@ import BubbleBackground from "@/components/BubbleBackground"; // Importar el nue
 
 // Import story components
 import { IntroFunStory } from "@/components/stories/IntroFunStory";
-import { TotalVisitsStory } from "@/components/stories/TotalVisits/Story";
+import { TotalVisitsStory } from "@/components/stories/TotalVisitsStory"; // Corregido: Eliminado '/Story'
 import { FirstBeerOfTheYearStory } from "@/components/stories/FirstBeerOfTheYearStory"; // NEW
 import { MostActiveMonthStory } from "@/components/stories/MostActiveMonthStory";
 import { MostActiveDayStory } from "@/components/stories/MostActiveDayStory";

@@ -114,7 +114,7 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
           ))
         ) : (
           <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
-            Aún no conoces tu potencial cervecero. (No hay datos).
+            Aún no conoces tu potencial cervecero.
           </p>
         )}
       </div>

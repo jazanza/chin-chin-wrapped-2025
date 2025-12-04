@@ -164,6 +164,13 @@ export function useDb() {
         dbInstance = loadDb(new Uint8Array(buffer)); // Call the imported loadDb
         setDbLoaded(true);
         console.log("Base de datos cargada correctamente desde ruta estática.");
+
+        // --- TEMPORARY CONSOLE LOGS FOR DEBUGGING ---
+        console.log('BEER GROUPS INCLUIDOS:', BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT);
+        console.log('PALABRAS CLAVE EXCLUIDAS:', EXCLUDED_PRODUCT_KEYWORDS);
+        console.log('PALABRAS CLAVE NO LÍQUIDAS:', NON_LIQUID_KEYWORDS);
+        // --- END TEMPORARY CONSOLE LOGS ---
+
       } catch (e: any) {
         console.error("Error cargando base de datos:", e);
         setError(e.message);

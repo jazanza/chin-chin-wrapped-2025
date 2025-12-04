@@ -72,7 +72,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
   const mainStoryTextSegments: TextSegment[] = useMemo(() => {
     if (mostActiveDay === "N/A") {
       return [
-        { text: "NO HAY DATOS SUFICIENTES PARA TU DÍA MÁS ACTIVO.", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
+        { text: "NO HAY DATOS SUFICIENTES.", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
       ];
     }
     return [
@@ -132,7 +132,7 @@ export const MostActiveDayStory = ({ mostActiveDay, dailyVisits, textColor, high
           ))
         ) : (
           <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
-            Parece que fuiste a Chin Chin... 0 días. ¡Error de sistema!
+            Parece que viniste a Chin Chin 0 días. ¡Error!
           </p>
         )}
       </div>

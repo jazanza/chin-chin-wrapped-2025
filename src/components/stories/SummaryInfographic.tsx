@@ -85,7 +85,7 @@ export const SummaryInfographic = ({
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16] bg-black"> {/* Ajustado max-h y fondo negro */}
+      <div className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[85vh] bg-black"> {/* Ajustado max-h y eliminado aspect-[9/16] */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -181,7 +181,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botones de navegación */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex space-x-4"> {/* Ajustado bottom-4 a bottom-12 */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-4"> {/* Ajustado bottom-12 a bottom-4 */}
           <Button
               onClick={handleBackToLogin}
               variant="ghost"

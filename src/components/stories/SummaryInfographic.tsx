@@ -37,7 +37,7 @@ interface BlockProps {
 const Block = ({ children, className }: BlockProps) => {
   // All blocks will now have transparent background, white border, and white text
   return (
-    <div className={cn("flex flex-col items-center justify-center p-4 border-2 border-white bg-transparent text-white", className)}>
+    <div className={cn("flex flex-col items-center justify-center p-4 border-2 border-white bg-transparent text-white h-full", className)}>
       {children}
     </div>
   );
@@ -101,7 +101,7 @@ export const SummaryInfographic = ({
         </div>
 
         {isTitleTyped && (
-          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full border-2 border-white">
+          <div className="grid grid-cols-2 grid-rows-3 gap-1 w-full h-full border-2 border-white">
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block>
               <p className="text-sm font-bold text-center"> {/* Reduced from text-base to text-sm */}

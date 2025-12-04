@@ -31,9 +31,9 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
 
   const introSegments: TextSegment[] = useMemo(() => [
     { text: `${firstName.toUpperCase()}, ¡GRACIAS POR ACOMPAÑARNOS ESTE 2025!\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
-    { text: `TÚ Y LOS ${formattedCustomers} FANS DE CHIN CHIN, SE TOMARON ${formattedLitres} LITROS DE PURA ALEGRÍA CERVECERA.\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
-    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA (Y QUIZÁS NO RECUERDAS) Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A NOSOTROS.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
-    { text: `AHORA SÍ, DESCUBRE TUS LOGROS CERVECEROS DEL AÑO.`, color: textColor, sizeClass: "text-lg md:text-xl" } // Ajustado
+    { text: `TÚ Y LOS ${formattedCustomers} FANS DE CHIN CHIN, SE TOMARON ${formattedLitres} LITROS DE CERVEZA, ¡TODO UN RECORD!\n\n`, color: textColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `CELEBREMOS POR LOS NUEVOS AMIGOS QUE HICISTE EN LA BARRA Y POR ESOS ${totalVisits} DÍAS QUE TE AHORRASTE LA SESIÓN DE TERAPIA GRACIAS A NOSOTROS.\n\n`, color: highlightColor, sizeClass: "text-lg md:text-xl" }, // Ajustado
+    { text: `AHORA SÍ, DESCUBRE TUS LOGROS CERVECEROS.`, color: textColor, sizeClass: "text-lg md:text-xl" } // Ajustado
   ], [firstName, formattedCustomers, formattedLitres, totalVisits, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {

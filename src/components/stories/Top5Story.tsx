@@ -29,7 +29,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       segments.push({ text: `CERVEZA FAVORITA:`, color: textColor, sizeClass: "text-3xl md:text-4xl", nowrap: true }); // H2 - Added nowrap, ajustado
       segments.push({ text: `\n${top1Name.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }); // H1, ajustado
     } else {
-      segments.push({ text: "Aún no sabes lo que es bueno. Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-3xl md:text-4xl" }); // H2, ajustado
+      segments.push({ text: "Mira lo que te estás perdiendo.", color: textColor, sizeClass: "text-3xl md:text-4xl" }); // H2, ajustado
     }
     return segments;
   }, [top10Products, textColor, highlightColor]);

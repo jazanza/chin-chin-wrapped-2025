@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { initDb, loadDb, queryData, type Database, type Statement } from "@/lib/db";
-import { formatImageUrl } from "@/lib/utils"; // NEW: Import formatImageUrl
+import { createDataUrlFromBinary } from "@/lib/utils"; // NEW: Import createDataUrlFromBinary
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 const EXCLUDED_PRODUCT_KEYWORDS = [
@@ -242,10 +242,8 @@ export function useDb() {
 
     for (const item of rawProducts) {
       const baseBeerName = getBaseBeerName(item.ProductName);
-      const formattedImageUrl = formatImageUrl(item.ProductImage);
-      console.log(`[getAllBeerVarietiesInDb] Raw Image: '${item.ProductImage}', Formatted Image: '${formattedImageUrl}'`); // DEBUG LOG
       if (!uniqueBaseBeerNamesMap.has(baseBeerName)) {
-        uniqueBaseBeerNamesMap.set(baseBeerName, formattedImageUrl);
+        uniqueBaseBeerNamesMap.set(baseBeerName, createDataUrlFromBinary(item.ProductImage)); // NEW: Use createDataUrlFromBinary
       }
     }
     return Array.from(uniqueBaseBeerNamesMap.entries())
@@ -444,13 +442,11 @@ export function useDb() {
     `;
     const result = queryData(dbInstance, query, [customerId, year]);
     if (result.length > 0) {
-      const formattedImageUrl = formatImageUrl(result[0].ProductImage);
-      console.log(`[getFirstBeerDetails] Raw Image: '${result[0].ProductImage}', Formatted Image: '${formattedImageUrl}'`); // DEBUG LOG
       return {
         name: getBaseBeerName(result[0].ProductName),
         date: result[0].DocumentDate,
         quantity: result[0].Quantity,
-        imageUrl: formattedImageUrl,
+        imageUrl: createDataUrlFromBinary(result[0].ProductImage), // NEW: Use createDataUrlFromBinary
       };
     }
     return null;
@@ -541,9 +537,7 @@ export function useDb() {
 
           if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) {
             const baseBeerName = getBaseBeerName(item.ProductName);
-            const formattedImageUrl = formatImageUrl(item.ProductImage);
-            console.log(`[getWrappedData] Product: '${item.ProductName}', Raw Image: '${item.ProductImage}', Formatted Image: '${formattedImageUrl}'`); // DEBUG LOG
-            customerUniqueBeerNamesMap.set(baseBeerName, formattedImageUrl);
+            customerUniqueBeerNamesMap.set(baseBeerName, createDataUrlFromBinary(item.ProductImage)); // NEW: Use createDataUrlFromBinary
             
             // For palate analysis
             customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
@@ -560,7 +554,7 @@ export function useDb() {
             name: getBaseBeerName(item.ProductName),
             liters: liters,
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
-            imageUrl: formatImageUrl(item.ProductImage),
+            imageUrl: createDataUrlFromBinary(item.ProductImage), // NEW: Use createDataUrlFromBinary
           });
         }
       }

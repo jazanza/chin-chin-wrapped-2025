@@ -64,20 +64,22 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Changed to flex-col */}
+    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal space-y-4`} // Added space-y-4
       >
         <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
       {firstBeerDetails?.imageUrl && (
-        <img
-          src={firstBeerDetails.imageUrl}
-          alt={firstBeerDetails.name}
-          className="mt-8 max-h-40 md:max-h-60 object-contain" // Added image styling
-        />
+        <div className="bg-white rounded-md aspect-square w-40 h-40 md:w-52 md:h-52 flex items-center justify-center p-2"> {/* Image container */}
+          <img
+            src={firstBeerDetails.imageUrl}
+            alt={firstBeerDetails.name}
+            className="w-full h-full object-contain" // Image styling
+          />
+        </div>
       )}
     </div>
   );

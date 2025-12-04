@@ -64,7 +64,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
   }
 
   return (
-    <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
+    <p className={cn("text-sm sm:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
       {wittyPhrase}
     </p>
   );
@@ -72,8 +72,8 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
 
 export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor, highlightColor, mostPopularCommunityMonth }: MostActiveMonthStoryProps) => {
   const storySegments: TextSegment[] = useMemo(() => [
-    { text: "TU MES DE MÁS VISITAS:", color: textColor, sizeClass: "text-3xl md:text-4xl", nowrap: true }, // H2 - Added nowrap, ajustado
-    { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
+    { text: "TU MES DE MÁS VISITAS:", color: textColor, sizeClass: "text-3xl sm:text-4xl md:text-5xl", nowrap: true }, // H2 - Added nowrap, ajustado
+    { text: `\n${mostActiveMonth.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl sm:text-6xl md:text-7xl" }, // H1, ajustado
   ], [mostActiveMonth, textColor, highlightColor]);
 
   const renderedText = useMemo(() => {
@@ -94,26 +94,26 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-between p-4 py-8"> {/* Changed justify-center to justify-between, added py-8 */}
       <div
-        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8`} // Ajustado max-w
+        className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight space-y-4`} // Ajustado max-w, added space-y-4
       >
         <p className={`text-center`}>
           {renderedText}
         </p>
       </div>
       <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
-        <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3, ajustado */}
+        <p className={cn("text-lg sm:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3, ajustado */}
           Tu Calendario de Visitas
         </p>
         {monthlyVisits.length > 0 ? (
           monthlyVisits.map((data, idx) => (
-            <p key={idx} className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
+            <p key={idx} className={cn("text-sm sm:text-base text-center", textColor)}> {/* H4, ajustado */}
               {`${data.month}: ${data.count} Visitas`}
             </p>
           ))
         ) : (
-          <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
+          <p className={cn("text-sm sm:text-base text-center", textColor)}> {/* H4, ajustado */}
             Aún no conoces tu potencial cervecero.
           </p>
         )}

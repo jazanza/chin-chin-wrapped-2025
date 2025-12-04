@@ -57,7 +57,7 @@ const getVisitsIntroText = (count: number) => {
   if (count >= 50) return { top: "Pasaste más tiempo aquí que en tu casa.", bottom: "\n¡Declarado residente oficial!" };
   if (count >= 30) return { top: "¡Tenemos a un habitué!", bottom: "\nTu casa tiene competencia." };
   if (count >= 15) return { top: "¡Chin Chin te gustó!", bottom: "\nYa tienes tu barra cervecera." };
-  if (count >= 5) return { top: "¡Te vemos potencial!", bottom: "\nSigue viniendo." };
+  if (count >= 5) return { top: "¡Tienes potencial!", bottom: "\nSigue viniendo." };
   
   return { top: "¡INTERESANTE!", bottom: "\nPARECE QUE ESTÁS EMPEZANDO TU CAMINO." };
 };

@@ -245,6 +245,7 @@ export function useDb() {
       const baseBeerName = getBaseBeerName(item.ProductName);
       if (!uniqueBaseBeerNamesMap.has(baseBeerName)) { // Only add if not already present
         uniqueBaseBeerNamesMap.set(baseBeerName, item.ProductImage);
+        console.log(`[useDb] getAllBeerVarietiesInDb: Beer: ${baseBeerName}, Image URL: ${item.ProductImage}`); // DEBUG LOG
       }
     }
     // Return an array of objects { name, imageUrl }
@@ -450,6 +451,7 @@ export function useDb() {
     `;
     const result = queryData(dbInstance, query, [customerId, year]);
     if (result.length > 0) {
+      console.log(`[useDb] getFirstBeerDetails - Raw Image URL: ${result[0].ProductImage}`); // DEBUG LOG
       return {
         name: getBaseBeerName(result[0].ProductName),
         date: result[0].DocumentDate,
@@ -570,6 +572,7 @@ export function useDb() {
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
             imageUrl: item.ProductImage, // NEW: Include image URL
           });
+          console.log(`[useDb] getWrappedData - Product: ${item.ProductName}, Image URL: ${item.ProductImage}`); // DEBUG LOG
         }
       }
 
@@ -852,7 +855,7 @@ export function useDb() {
         mostPopularCommunityMonth, // New: community's most popular month
         dynamicTitle, // New: dynamic title based on palate
         firstBeerDetails, // New: first beer of the year
-        mostFrequentBeerName, // NEW: Most frequent beer name
+        mostFrequentBeerName: top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita", // Ensure this is correctly set
         varietyExplorationRatio, // NEW: variety exploration ratio
         totalCustomers, // NEW
         totalLitres,    // NEW

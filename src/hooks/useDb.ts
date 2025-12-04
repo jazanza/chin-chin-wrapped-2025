@@ -84,7 +84,6 @@ const FORCED_INCLUDED_VARIETY_IDS = [
     111, // Asahi - 330ml
     659, // Bear Bear Wheat - 500ml
     695, // Bear Beer Lager - 500ml
-    578, // Bush Caractere - 750ml
     583, // Bush De Nuits - 750ml
     584, // Bush Prestige - 750ml
     738, // Club Colombia Roja - 330ml

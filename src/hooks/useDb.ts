@@ -242,8 +242,10 @@ export function useDb() {
 
     for (const item of rawProducts) {
       const baseBeerName = getBaseBeerName(item.ProductName);
+      const formattedImageUrl = formatImageUrl(item.ProductImage);
+      console.log(`[getAllBeerVarietiesInDb] Raw Image: '${item.ProductImage}', Formatted Image: '${formattedImageUrl}'`); // DEBUG LOG
       if (!uniqueBaseBeerNamesMap.has(baseBeerName)) {
-        uniqueBaseBeerNamesMap.set(baseBeerName, formatImageUrl(item.ProductImage)); // NEW: Format image URL
+        uniqueBaseBeerNamesMap.set(baseBeerName, formattedImageUrl);
       }
     }
     return Array.from(uniqueBaseBeerNamesMap.entries())
@@ -442,12 +444,13 @@ export function useDb() {
     `;
     const result = queryData(dbInstance, query, [customerId, year]);
     if (result.length > 0) {
-      console.log(`[useDb] getFirstBeerDetails - Raw Image URL: ${result[0].ProductImage}`);
+      const formattedImageUrl = formatImageUrl(result[0].ProductImage);
+      console.log(`[getFirstBeerDetails] Raw Image: '${result[0].ProductImage}', Formatted Image: '${formattedImageUrl}'`); // DEBUG LOG
       return {
         name: getBaseBeerName(result[0].ProductName),
         date: result[0].DocumentDate,
         quantity: result[0].Quantity,
-        imageUrl: formatImageUrl(result[0].ProductImage), // NEW: Format image URL
+        imageUrl: formattedImageUrl,
       };
     }
     return null;
@@ -515,7 +518,7 @@ export function useDb() {
 
       let totalLiters = 0;
       const categoryVolumesByGroupId: { [key: number]: number } = {};
-      const productLiters: { name: string; liters: number; color: string; imageUrl: string }[] = []; // imageUrl is now always a string
+      const productLiters: { name: string; liters: number; color: string; imageUrl: string }[] = [];
       const customerUniqueBeerNamesMap = new Map<string, string>(); // Map base name to image URL
 
       // Fetch global beer distribution for rarity calculation
@@ -538,7 +541,9 @@ export function useDb() {
 
           if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) {
             const baseBeerName = getBaseBeerName(item.ProductName);
-            customerUniqueBeerNamesMap.set(baseBeerName, formatImageUrl(item.ProductImage)); // NEW: Format image URL
+            const formattedImageUrl = formatImageUrl(item.ProductImage);
+            console.log(`[getWrappedData] Product: '${item.ProductName}', Raw Image: '${item.ProductImage}', Formatted Image: '${formattedImageUrl}'`); // DEBUG LOG
+            customerUniqueBeerNamesMap.set(baseBeerName, formattedImageUrl);
             
             // For palate analysis
             customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
@@ -555,9 +560,8 @@ export function useDb() {
             name: getBaseBeerName(item.ProductName),
             liters: liters,
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
-            imageUrl: formatImageUrl(item.ProductImage), // NEW: Format image URL
+            imageUrl: formatImageUrl(item.ProductImage),
           });
-          console.log(`[useDb] getWrappedData - Product: ${item.ProductName}, Formatted Image URL: ${formatImageUrl(item.ProductImage)}`); // DEBUG LOG
         }
       }
 

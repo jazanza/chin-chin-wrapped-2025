@@ -18,11 +18,11 @@ export function formatImageUrl(rawUrl: string | null | undefined): string {
     return '/placeholder.svg';
   }
 
-  // Convierte explícitamente a string para asegurar que .trim() funcione.
-  const stringUrl = String(rawUrl);
+  // Convierte explícitamente a string y recorta espacios en blanco.
+  const stringUrl = String(rawUrl).trim();
 
-  // Si la cadena resultante está vacía después de limpiar espacios, devuelve el placeholder.
-  if (stringUrl.trim() === '') {
+  // Si la cadena resultante está vacía, devuelve el placeholder.
+  if (stringUrl === '') {
     return '/placeholder.svg';
   }
 
@@ -31,8 +31,15 @@ export function formatImageUrl(rawUrl: string | null | undefined): string {
     return stringUrl;
   }
 
-  // Si es una ruta relativa, asume que está dentro de 'public/images/'
-  // y la prefija con '/images/'. Asegura que no haya doble barra al inicio.
-  const cleanedUrl = stringUrl.startsWith('/') ? stringUrl.substring(1) : stringUrl;
-  return `/images/${cleanedUrl}`;
+  // Normaliza la ruta: elimina cualquier barra inicial si existe.
+  let cleanedUrl = stringUrl.startsWith('/') ? stringUrl.substring(1) : stringUrl;
+
+  // Si la ruta ya comienza con 'images/' (insensible a mayúsculas/minúsculas),
+  // simplemente asegúrate de que tenga una barra inicial.
+  if (cleanedUrl.toLowerCase().startsWith('images/')) {
+    return `/${cleanedUrl}`; // Ej: "images/beer.png" -> "/images/beer.png"
+  }
+
+  // De lo contrario, asume que es solo un nombre de archivo y prefija con '/images/'
+  return `/images/${cleanedUrl}`; // Ej: "beer.png" -> "/images/beer.png"
 }

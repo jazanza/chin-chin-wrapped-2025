@@ -238,7 +238,7 @@ export function useDb() {
     `;
 
     const rawProducts = queryData(dbInstance, queryForBaseNames);
-    const uniqueBaseBeerNamesMap = new Map<string, string | null>();
+    const uniqueBaseBeerNamesMap = new Map<string, string>(); // Map base name to image URL
 
     for (const item of rawProducts) {
       const baseBeerName = getBaseBeerName(item.ProductName);
@@ -515,8 +515,8 @@ export function useDb() {
 
       let totalLiters = 0;
       const categoryVolumesByGroupId: { [key: number]: number } = {};
-      const productLiters: { name: string; liters: number; color: string; imageUrl: string | null }[] = [];
-      const customerUniqueBeerNamesMap = new Map<string, string | null>();
+      const productLiters: { name: string; liters: number; color: string; imageUrl: string }[] = []; // imageUrl is now always a string
+      const customerUniqueBeerNamesMap = new Map<string, string>(); // Map base name to image URL
 
       // Fetch global beer distribution for rarity calculation
       const { globalBeerDistribution, totalGlobalLiters } = await getGlobalBeerDistribution(currentYear);

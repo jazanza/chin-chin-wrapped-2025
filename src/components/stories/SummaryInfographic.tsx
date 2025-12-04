@@ -85,7 +85,7 @@ export const SummaryInfographic = ({
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div className="flex flex-col items-center justify-center p-2 w-[90vw] max-w-[500px] max-h-[95vh] bg-black"> {/* Ajustado max-h y padding, y justify-center */}
+      <div className="flex flex-col items-center justify-center pt-[30px] p-2 w-[90vw] max-w-[500px] max-h-[95vh] bg-black"> {/* Añadido pt-[30px] */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (

@@ -54,7 +54,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
 const getVisitsIntroText = (count: number) => {
   if (count > 100) return { top: "¡ERES UNA LEYENDA!", bottom: "\nMás de 100 visitas" };
   if (count >= 75) return { top: "A esta altura, tu GPS nos tiene como 'Casa'", bottom: "\n¡UN VERDADERO FAN!" };
-  if (count >= 50) return { top: "Pasaste más tiempo aquí que en tu casa.", bottom: "\n¡Declarado residente oficial!" };
+  if (count >= 50) return { top: "Pasaste más tiempo aquí que en tu casa.", bottom: "\n¡Residente no oficial!" };
   if (count >= 30) return { top: "¡Tenemos a un habitué!", bottom: "\nTu casa tiene competencia." };
   if (count >= 15) return { top: "¡Chin Chin te gustó!", bottom: "\nYa tienes tu barra cervecera." };
   if (count >= 5) return { top: "¡Tienes potencial!", bottom: "\nSigue visitándonos." };

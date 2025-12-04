@@ -23,7 +23,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
   if (roundedVisitsPercentile === 0) {
     wittyPhrase = "No hay suficientes datos.";
   } else if (totalVisits > 100) { // Más de 100 visitas
-    wittyPhrase = `🥇¡NIVEL LEYENDA!🥇 Con ${totalVisits} visitas, eres nuestros Fan #1, superando al 99% de la comunidad.`;
+    wittyPhrase = `🥇¡NIVEL DIOS!🥇 Con ${totalVisits} visitas, eres nuestros Fan #1, superando al 99% de la comunidad.`;
   } else if (totalVisits >= 91) { // Entre 91 y 100 visitas
     wittyPhrase = `¡IMPRESIONATE! Con ${totalVisits} visitas, estás a un paso de la triple cifra.`;
   } else if (totalVisits >= 75) { // Entre 75 y 90 visitas

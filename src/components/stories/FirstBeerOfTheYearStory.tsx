@@ -64,7 +64,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full"> {/* Changed to flex-col */}
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >
@@ -73,13 +73,19 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
         </p>
       </div>
       {firstBeerDetails?.imageUrl && (
-        <div className="mt-8 bg-white rounded-lg flex items-center justify-center aspect-square w-32 h-32 md:w-40 md:h-40">
+        <div className="py-4 bg-white rounded-lg flex items-center justify-center aspect-square w-36 h-36 md:w-48 md:h-48 mt-4"> {/* Adjusted size and added py-4 */}
           <img
             src={firstBeerDetails.imageUrl}
             alt={firstBeerDetails.name}
             className="w-full h-full object-contain"
           />
         </div>
+      )}
+      {/* Description text moved below the image */}
+      {firstBeerDetails && (
+        <p className={cn("text-sm md:text-base text-center mt-4", textColor)}> {/* H4, ajustado */}
+          ¡UNA EXCELENTE CERVEZA QUE MARCÓ TU 2025!
+        </p>
       )}
     </div>
   );

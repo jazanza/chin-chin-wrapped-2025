@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 interface TextSegment {
@@ -16,7 +16,22 @@ interface IntroFunStoryProps {
   totalLitres: number;    // NEW
 }
 
+const SOFT_BACKGROUND_COLORS = [
+  "bg-indigo-50",
+  "bg-sky-50",
+  "bg-emerald-50",
+  "bg-rose-50",
+  "bg-amber-50",
+];
+
 export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customerName, totalCustomers, totalLitres }: IntroFunStoryProps) => {
+  const [dynamicBg, setDynamicBg] = useState("");
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * SOFT_BACKGROUND_COLORS.length);
+    setDynamicBg(SOFT_BACKGROUND_COLORS[randomIndex]);
+  }, []);
+
   const firstName = useMemo(() => {
     // Asegura que customerName no sea nulo/vacío y devuelve el primer elemento (nombre).
     return customerName ? customerName.split(' ')[0] : '';
@@ -54,7 +69,7 @@ export const IntroFunStory = ({ totalVisits, textColor, highlightColor, customer
   }, [introSegments]);
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
+    <div className={cn("absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full", dynamicBg)}>
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-sm md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >

@@ -55,7 +55,7 @@ export const DominantCategoryAndVarietiesStory = ({
     { text: "TUS FAVORITAS SON LAS:", color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
     { text: `\n${dominantBeerCategory.toUpperCase()}`, color: highlightColor, sizeClass: "text-5xl md:text-6xl" }, // H1, ajustado
     { text: `\n\nESTE AÑO PROBASTE ${uniqueVarieties2025} DE ${totalVarietiesInDb} VARIEDADES.`, color: textColor, sizeClass: "text-3xl md:text-4xl" }, // H2, ajustado
-    { text: ` ${dynamicComment}.`, color: textColor, sizeClass: "text-sm md:text-base" }, // H4, ajustado
+    { text: `\n${dynamicComment}.`, color: textColor, sizeClass: "text-sm md:text-base" }, // H4, ajustado, added \n
   ], [dominantBeerCategory, uniqueVarieties2025, totalVarietiesInDb, textColor, highlightColor, dynamicComment]); 
 
   const renderedText = useMemo(() => {

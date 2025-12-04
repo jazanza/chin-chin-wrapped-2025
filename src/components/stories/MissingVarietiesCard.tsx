@@ -56,17 +56,14 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       </div>
 
       {randomSuggestions.length > 0 && (
-        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
+        <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-4 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}> {/* Increased space-y */}
           <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H4, ajustado */}
             DEBERÍAS PROBAR:
           </p>
           {randomSuggestions.map((beer, idx) => (
-            <div key={idx} className="flex flex-col items-center mb-2"> {/* Container for text and image */}
-              <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
-                {beer.name.toUpperCase()}
-              </p>
+            <div key={idx} className="flex items-center justify-center gap-4"> {/* Two-column layout */}
               {beer.imageUrl && (
-                <div className="mt-2 bg-white rounded-lg flex items-center justify-center aspect-square w-24 h-24 md:w-32 md:h-32">
+                <div className="bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36 flex-shrink-0"> {/* Adjusted size */}
                   <img
                     src={beer.imageUrl}
                     alt={beer.name}
@@ -74,6 +71,9 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
                   />
                 </div>
               )}
+              <p className={cn("text-sm md:text-base text-left flex-grow", textColor)}> {/* H4, ajustado */}
+                {beer.name.toUpperCase()}
+              </p>
             </div>
           ))}
         </div>

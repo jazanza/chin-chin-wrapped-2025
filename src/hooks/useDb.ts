@@ -581,11 +581,11 @@ export function useDb() {
         }
       }
 
-      const top10Products = productLiters
+      const top5Products = productLiters // Changed to top5Products
         .sort((a, b) => b.liters - a.liters)
-        .slice(0, 10);
+        .slice(0, 5); // Changed slice to 5
       
-      const mostFrequentBeerName = top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita";
+      const mostFrequentBeerName = top5Products.length > 0 ? top5Products[0].name : "tu cerveza favorita"; // Changed to top5Products
 
       const totalVisitsQuery = `
         SELECT COUNT(DISTINCT T1.Date) AS TotalVisits
@@ -778,7 +778,7 @@ export function useDb() {
         year,
         totalLiters,
         dominantBeerCategory,
-        top10Products,
+        top10Products: top5Products, // Changed to top5Products
         totalVisits,
         categoryVolumes: categoryVolumesByGroupId,
         uniqueVarieties2025,
@@ -795,7 +795,7 @@ export function useDb() {
         mostPopularCommunityMonth,
         dynamicTitle,
         firstBeerDetails,
-        mostFrequentBeerName: top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita",
+        mostFrequentBeerName: top5Products.length > 0 ? top5Products[0].name : "tu cerveza favorita", // Changed to top5Products
         varietyExplorationRatio,
         totalCustomers,
         totalLitres,

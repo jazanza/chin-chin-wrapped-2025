@@ -64,7 +64,7 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {topBeerImageUrl && (
-        <div className="mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-32 h-32 md:w-40 md:h-40">
+        <div className="py-4 mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-28 h-28 md:w-36 md:h-36"> {/* Adjusted size and added py-4 */}
           <img
             src={topBeerImageUrl}
             alt={top10Products[0].name}
@@ -75,11 +75,11 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
 
       {/* Moved "TU TOP 10:" closer to the list */}
       <p className={cn("text-lg md:text-xl font-black text-center mb-4", highlightColor)}> {/* H3, ajustado */}
-        TU TOP 10:
+        TU TOP 5:
       </p>
 
       <div className="w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2 border-white"> {/* Adjusted space-y for more items */}
-        {top10Products.slice(0, 10).map((product, idx) => ( // Changed slice to 10
+        {top10Products.slice(0, 5).map((product, idx) => ( // Changed slice to 5
           <p key={idx} className={cn("text-center", textColor, idx === 0 ? 'text-lg md:text-xl font-black' : 'text-xs md:text-sm font-bold')}> {/* H3 for first, Cuerpo for others, ajustado */}
             {`${idx + 1}. ${product.name.toUpperCase()} (${product.liters.toFixed(1)} LITROS TOMADOS)`}
           </p>

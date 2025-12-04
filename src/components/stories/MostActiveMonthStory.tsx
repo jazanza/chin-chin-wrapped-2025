@@ -64,7 +64,7 @@ const CommunityMonthComparisonText = ({ mostActiveMonth, mostPopularCommunityMon
   }
 
   return (
-    <p className={cn("text-sm md:text-base font-bold text-center", textColor)}> {/* H4, ajustado */}
+    <p className={cn("text-sm md:text-base font-bold text-center", textColor, "pb-5")}> {/* H4, ajustado, added pb-5 */}
       {wittyPhrase}
     </p>
   );
@@ -93,6 +93,18 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
     });
   }, [storySegments]);
 
+  const sortedMonthlyVisits = useMemo(() => {
+    // Ensure all 12 months are present, even if count is 0
+    const fullMonths = MONTH_NAMES.map(monthName => {
+      const existing = monthlyVisits.find(mv => mv.month === monthName);
+      return { month: monthName, count: existing ? existing.count : 0 };
+    });
+    return fullMonths;
+  }, [monthlyVisits]);
+
+  const firstHalfMonths = sortedMonthlyVisits.slice(0, 6);
+  const secondHalfMonths = sortedMonthlyVisits.slice(6);
+
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 h-full w-full">
       <div
@@ -102,21 +114,26 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
           {renderedText}
         </p>
       </div>
-      <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
-        <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3, ajustado */}
+      <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
+        <p className={cn("text-lg md:text-xl font-bold mb-4 text-center", highlightColor)}> {/* H3, ajustado */}
           Tu Calendario de Visitas
         </p>
-        {monthlyVisits.length > 0 ? (
-          monthlyVisits.map((data, idx) => (
-            <p key={idx} className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
-              {`${data.month}: ${data.count} Visitas`}
-            </p>
-          ))
-        ) : (
-          <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
-            Aún no conoces tu potencial cervecero.
-          </p>
-        )}
+        <div className="grid grid-cols-2 gap-x-4"> {/* Two columns for months */}
+          <div className="flex flex-col space-y-1">
+            {firstHalfMonths.map((data, idx) => (
+              <p key={idx} className={cn("text-sm md:text-base text-left", textColor)}> {/* H4, ajustado */}
+                {`${data.month}: ${data.count} Visitas`}
+              </p>
+            ))}
+          </div>
+          <div className="flex flex-col space-y-1">
+            {secondHalfMonths.map((data, idx) => (
+              <p key={idx} className={cn("text-sm md:text-base text-left", textColor)}> {/* H4, ajustado */}
+                {`${data.month}: ${data.count} Visitas`}
+              </p>
+            ))}
+          </div>
+        </div>
       </div>
       <CommunityMonthComparisonText
         mostActiveMonth={mostActiveMonth}

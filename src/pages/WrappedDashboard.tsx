@@ -398,7 +398,7 @@ const WrappedDashboard = () => {
     year: wrappedData.year,
     totalLiters: wrappedData.totalLiters,
     dominantBeerCategory: wrappedData.dominantBeerCategory,
-    top10Products: wrappedData.top10Products,
+    top10Products: wrappedData.top10Products, // Now contains Top 5
     totalVisits: wrappedData.totalVisits,
     // REMOVED: totalVisits2024: wrappedData.totalVisits2024,
     // REMOVED: totalLiters2024: wrappedData.totalLiters2024,
@@ -451,7 +451,9 @@ const WrappedDashboard = () => {
         )}
 
         {/* Render current story component directly as 2D */}
-        <StoryComponent {...storyProps} />
+        <div className="h-full w-full"> {/* This div ensures the story component fills the available space */}
+          <StoryComponent {...storyProps} />
+        </div>
 
         {/* Chin Chin Logo - Conditionally rendered */}
         {!isSummaryInfographicStory && (

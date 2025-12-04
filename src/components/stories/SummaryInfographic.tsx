@@ -53,8 +53,6 @@ const getBeerLevel = (uniqueVarietiesCount: number): string => {
   return "NOVATO EN LA BARRA";
 };
 
-// Eliminado SOFT_BACKGROUND_COLORS ya que el fondo será fijo negro.
-
 export const SummaryInfographic = ({
   customerName,
   year,
@@ -71,7 +69,6 @@ export const SummaryInfographic = ({
   const [isTitleTyped, setIsTitleTyped] = useState(false);
   const captureTargetRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  // Eliminado dynamicBg state
 
   useEffect(() => {
     const timer = setTimeout(() => setIsTitleTyped(true), 1000);
@@ -133,7 +130,7 @@ export const SummaryInfographic = ({
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] h-full aspect-[9/16] bg-black"> {/* Fondo negro y h-full para asegurar el espacio */}
+      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16] bg-black"> {/* Ajustado max-h y fondo negro */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -229,7 +226,7 @@ export const SummaryInfographic = ({
       </div>
 
       {/* Botones de navegación y descarga */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-4"> {/* Added z-30 and space-x-4 */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-4"> {/* Ajustado bottom-8 a bottom-4 */}
           <Button
               onClick={handleBackToLogin}
               variant="ghost"

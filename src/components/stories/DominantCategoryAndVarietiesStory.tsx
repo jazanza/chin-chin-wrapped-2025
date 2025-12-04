@@ -17,12 +17,12 @@ interface DominantCategoryAndVarietiesStoryProps {
 
 // Definir esta función fuera del componente:
 const getVarietyComment = (uniqueCount: number, totalCount: number): string => {
-  if (totalCount === 0) return "¡Un universo cervecero te espera!";
+  if (totalCount === 0) return "¡Un universo de cervezas te espera!";
 
   const percentage = (uniqueCount / totalCount) * 100;
 
   if (percentage === 100) {
-    return "¡LO LOGRASTE! Ya puedes seguir bebiendo en paz.";
+    return "¡LO LOGRASTE! Ya puedes seguir bebiendo sin presión.";
   }
   if (percentage >= 75) {
     return "¡Tu currículum cervecero es envidiable!";

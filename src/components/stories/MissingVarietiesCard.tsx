@@ -21,9 +21,9 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
 
   const wittyTitle = useMemo(() => {
     if (missingCount === 0) return ""; // Should not render if 0, but for safety
-    if (missingCount === 1) {
+    if (missingCount === 3) {
       const missingName = missingVarieties[0];
-      return `¡SOLO TE QUEDA UNA! ${missingName.toUpperCase()}. NO TIENES EXCUSAS.`;
+      return `¡SOLO TE QUEDA UNAS! ${missingName.toUpperCase()}. NO TIENES EXCUSAS.`;
     }
     // Assuming total varieties is around 100.
     // If missingCount > 50, it means more than half are missing.
@@ -31,7 +31,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
       return `¡TOMAR MÁS CERVEZAS!`;
     }
     // Default for < 50% missing (or between 2 and 50)
-    return `SOLO ${missingCount} CERVEZAS TE SEPARAN DE CONVERTIRTE EN LEYENDA.`;
+    return `SOLO ${missingCount} CERVEZAS PARA CONVERTIRTE EN LEYENDA.`;
   }, [missingCount, missingVarieties]);
 
   const randomSuggestions = useMemo(() => {
@@ -48,7 +48,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
       <div className={cn("flex flex-col items-center justify-center p-4 max-w-xs md:max-w-md tracking-tight font-black leading-tight mb-8", textColor)}> {/* Ajustado max-w */}
         <p className={cn("text-3xl md:text-4xl text-center", highlightColor)}> {/* H2, ajustado */}
-          TU MISIÓN PARA EL 2026:
+          TU MISIÓN DEL 2026:
         </p>
         <p className={cn("text-5xl md:text-6xl text-center mt-4", textColor)}> {/* H1, ajustado */}
           {wittyTitle}

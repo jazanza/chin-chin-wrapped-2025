@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { initDb, loadDb, queryData, type Database, type Statement } from "@/lib/db";
-import { createDataUrlFromBinary } from "@/lib/utils"; // NEW: Import createDataUrlFromBinary
+import { createDataUrlFromBinary } from "@/lib/utils";
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 const EXCLUDED_PRODUCT_KEYWORDS = [
@@ -9,7 +9,7 @@ const EXCLUDED_PRODUCT_KEYWORDS = [
     "Letrero", "Gorra", "Tapas Mix", "Nachos", "Lanyard"
 ];
 
-let dbInstance: Database | null = null; // Global instance for the database, correctly typed
+let dbInstance: Database | null = null;
 
 const NON_LIQUID_KEYWORDS = ["snack", "jamon", "sandwich", "pin", "camiseta", "gorra", "vaso", "merchandising", "comida", "accesorio"];
 
@@ -78,62 +78,12 @@ export const MONTH_NAMES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio
 const BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT = [34, 36, 40, 52, 53];
 
 // IDs de productos que deben ser incluidos forzosamente, independientemente de su estado IsEnabled
+// ESTA ES LA LISTA DEFINITIVA DE IDS PROPORCIONADA POR EL USUARIO
 const FORCED_INCLUDED_VARIETY_IDS = [
-    499, // 5.0 Craft - 500ml
-    498, // 5.0 Lager - 500ml
-    511, // 5.0 Weiss - 500ml
-    111, // Asahi - 330ml
-    659, // Bear Bear Wheat - 500ml
-    695, // Bear Beer Lager - 500ml
-    583, // Bush De Nuits - 750ml
-    584, // Bush Prestige - 750ml
-    738, // Club Colombia Roja - 330ml
-    651, // Cusqueña Doble Malta - 330ml
-    652, // Cusqueña Dorada - 330ml
-    737, // Cusqueña Trigo - 330ml
-    594, // Czechvar - 500ml
-    292, // Erdinger OktoberFest - 500ml
-    592, // Erdinger Urwisse - 500ml
-    665, // Hofbrau 3.3 Session Lager - 500ml
-    707, // Ladenburger Hefeweizen - 500ml
-    706, // Ladenburger Helles - 500ml
-    822, // Modelo Negra - 355ml
-    605, // Oettinger Radler - 500ml
-    86,  // Peroni - 330ml
-    672, // Sapporo - 330ml
-    801  // Schofferhofer Grapefruit - 330ml
+    84, 181, 291, 292, 294, 296, 297, 298, 312, 313, 314, 315, 321, 348, 350, 351, 353, 354, 355, 364, 365, 386, 387, 388, 396, 397, 401, 402, 403, 404, 405, 406, 407, 408, 418, 419, 420, 421, 430, 436, 437, 438, 439, 448, 449, 455, 456, 464, 465, 471, 497, 500, 501, 502, 504, 505, 534, 535, 552, 568, 569, 570, 571, 572, 573, 574, 576, 577, 578, 579, 580, 592, 603, 604, 605, 606, 627, 628, 629, 634, 638, 639, 655, 656, 657, 665, 684, 685, 686, 688, 691, 692, 693, 694, 697, 700, 705, 706, 707, 726, 776, 777, 801, 892, 896, 945, 956, 960
 ];
 
-// NEW: Definitive list of beer names provided by the user
-const RAW_DEFINITIVE_BEER_NAMES = [
-  "Estrella Galicia - 330ml", "DAB Dortmunder - 330ml", "Erdinger Dunkel - 500ml", "Erdinger OktoberFest - 500ml",
-  "Benediktiner Hell - 500ml", "Gulden Draak Classic - 330ml", "Duvel Clasica - 330ml", "Lindemans Kriek - 250ml",
-  "Lindemans Framboise - 250ml", "Bush Peche Mel - 330ml", "Cherry Chouffe - 330ml", "Piraat Red - 330ml",
-  "Gulden Draak Smoked - 330ml", "Augustijn Donker - 330ml", "Flensburger Dunkel - 330ml", "Flensburger Weizen - 330ml",
-  "Lindemans Cassis - 250ml", "Lindemans Geuze - 250ml", "Gulden Draak Brewmaster - 330ml", "Gulden Draak 9000 - 330ml",
-  "Trappistes Rochefort 8 - 330ml", "Erdinger Pikantus - 500ml", "1906 Red Vintage - 330ml", "1906 Black Coupage - 330ml",
-  "Paulaner Weissbier - 500ml", "Paulaner Dunkel - 500ml", "Piraat Triple Hop - 330ml", "Augustijn Blond - 330ml",
-  "La Chouffe - 330ml", "Gruut Bruin - 330ml", "Cuvee des Trolls - 330ml", "Bush Caractère - 330ml",
-  "Delirium Argentum - 330ml", "Delirium Nocturnum - 330ml", "Delirium Red - 330ml", "Petrus Nitro Cherry - 330ml",
-  "Petrus Red - 330ml", "Straffe Hendrick Tripel - 330ml", "Maisel Weisse - 500ml", "St Bernardus Tripel - 330ml",
-  "St Bernardus Abt 12 - 330ml", "Duchesse de Bourgogne - 330ml", "Delirium Tremens - 330ml", "Mc Chouffe -330ml",
-  "Piraat Clasica - 330ml", "Bitburger Botella - 330ml", "Flensburger Gold - 330ml", "Brugse Zot - 330ml",
-  "Duchesse Chocolate Cherry - 330ml", "Erdinger Weissbier - 500ml", "5.0 Negra - 500ml", "9.0 Strong - 500ml",
-  "Hofbrau Dunkel - 330ml", "Hofbrau Original - 330ml", "Bush Noel - 330ml", "Gruut Wit - 330ml",
-  "Duchesse Cherry - 330ml", "Trappistes Rochefort 6 - 330ml", "Baptist Wit - 330ml", "1906 Reserva Especial - 330ml",
-  "Delirium Tremens - 750ml", "Delirium Red - 750ml", "Delirium Argentum - 750ml", "Delirium Nocturnum - 750ml",
-  "Straffe Hendrik - 750ml", "Brugse Zot - 750ml", "Gulden Draak Classic - 750ml", "Gulden Draak 9000 - 750ml",
-  "Bush Caractere - 750ml", "St Bernardus ABT 12 - 750ml", "Maisel & Friends Pale Ale - 330ml", "Erdinger Urwisse - 500ml",
-  "Oettinger Schwarz - 500ml", "Oettinger Weissbier - 500ml", "Oettinger Radler - 500ml", "Oettinger Super Fuerte - 500ml",
-  "Benediktiner Weissbier - 500ml", "DAB Radler - 500ml", "Paulaner Munchen Hell - 500ml", "Flensburger Pilsener - 330ml",
-  "St Bernardus Christmas Ale - 330ml", "Cuvee des Trolls - 750ml", "Augustijn Blonde - 750ml", "Piraat Clasica - 750ml",
-  "St Bernardus Tripel - 750ml", "Hofbrau 3.3 Session Lager - 500ml", "DAB Dark - 500ml", "Duvel Triple Hop Citra - 330ml",
-  "Bush Frambuesa - 330ml", "Paulaner Oktoberfest - 500ml", "Chimay Azul - 330ml", "Chimay Roja - 330ml",
-  "Chimay Tripel - 330ml", "DAB Maibock - 500ml", "Mahou IPA (Botella) - 330ml", "Lindemans Kriek - 750ml",
-  "Ladenburger Super Forte - 500ml", "Ladenburger Helles - 500ml", "Ladenburger Hefeweizen - 500ml", "Maisel & Friends IPA - 330ml",
-  "Schofferhofer Grapefruit - 500ml", "Schofferhofer Weizen - 500ml", "Schofferhofer Grapefruit - 330ml", "Mahou 5 Estrellas - 330ml",
-  "Monastere Blonde - 750 ml", "DAB Dortmunder - 500ml", "St Bernardus Christmas Ale - 750ml", "Delirium Christmas Ale - 330ml"
-];
+// Eliminadas RAW_DEFINITIVE_BEER_NAMES y DEFINITIVE_BEER_VARIETIES_NAMES
 
 // Helper to extract the base beer name by removing volume/format suffix
 const getBaseBeerName = (productName: string): string => {
@@ -148,11 +98,6 @@ const getBaseBeerName = (productName: string): string => {
 
   return baseName;
 };
-
-// Create a Set for efficient lookup of definitive beer names (normalized)
-const DEFINITIVE_BEER_VARIETIES_NAMES = new Set(
-  RAW_DEFINITIVE_BEER_NAMES.map(name => getBaseBeerName(name).toUpperCase())
-);
 
 // Helper para calcular el percentil
 const calculatePercentile = (data: number[], value: number): number => {
@@ -180,14 +125,13 @@ export function useDb() {
       setLoading(true);
       setError(null);
       try {
-        await initDb(); // Call the imported initDb
-        // Static load from public/data/bbdd.db
+        await initDb();
         const response = await fetch('/data/bbdd.db');
         if (!response.ok) {
           throw new Error(`Fallo al cargar base de datos: ${response.statusText}`);
         }
         const buffer = await response.arrayBuffer();
-        dbInstance = loadDb(new Uint8Array(buffer)); // Call the imported loadDb
+        dbInstance = loadDb(new Uint8Array(buffer));
         setDbLoaded(true);
         console.log("Base de datos cargada correctamente desde ruta estática.");
 
@@ -195,7 +139,7 @@ export function useDb() {
         console.log('BEER GROUPS INCLUIDOS (para categorización):', BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT);
         console.log('PALABRAS CLAVE EXCLUIDAS:', EXCLUDED_PRODUCT_KEYWORDS);
         console.log('PALABRAS CLAVE NO LÍQUIDAS:', NON_LIQUID_KEYWORDS);
-        console.log('NOMBRES DE CERVEZAS DEFINITIVAS (normalizadas):', Array.from(DEFINITIVE_BEER_VARIETIES_NAMES));
+        console.log('NOMBRES DE CERVEZAS DEFINITIVAS (por ID):', FORCED_INCLUDED_VARIETY_IDS);
         // --- END TEMPORARY CONSOLE LOGS ---
 
       } catch (e: any) {
@@ -213,9 +157,8 @@ export function useDb() {
       throw new Error("Base de datos no cargada.");
     }
 
-    // Normalize search term for SQL query
     const normalizedSearchTerm = searchTerm.toUpperCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove accents
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     let customerQuery = `
       SELECT Id, Name, PhoneNumber, TaxNumber, Email
@@ -231,7 +174,7 @@ export function useDb() {
 
     try {
       const results = queryData(dbInstance, customerQuery, queryParams);
-      return results; // Return all potential matches
+      return results;
     } catch (e: any) {
       console.error("Error ejecutando consulta de cliente:", e);
       throw new Error(`Fallo al ejecutar búsqueda de cliente: ${e.message}. Verifica el esquema de la base de datos (tabla Customer, columnas Id, Name, etc.) o el término de búsqueda.`);
@@ -251,35 +194,33 @@ export function useDb() {
       return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query para obtener todos los productos que están habilitados o forzados,
-    // el filtrado por la lista definitiva se hará en JavaScript.
+    // Ahora la consulta se basa directamente en FORCED_INCLUDED_VARIETY_IDS
     const queryForBaseNames = `
       SELECT
+          P.Id AS ProductId,
           P.Name AS ProductName,
           P.Description AS ProductDescription,
-          P.ProductGroupId AS ProductGroupId,
           P.Image AS ProductImage
       FROM
           Product AS P
       WHERE
-          (P.IsEnabled = TRUE OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')}))
+          P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
           ${buildExclusionClause('P')};
     `;
 
     const rawProducts = queryData(dbInstance, queryForBaseNames);
-    const uniqueBaseBeerNamesMap = new Map<string, string>(); // Map base name to image URL
+    const uniqueBeerVarietiesMap = new Map<number, { name: string; imageUrl: string }>(); // Map ProductId to {name, imageUrl}
 
     for (const item of rawProducts) {
-      const baseBeerName = getBaseBeerName(item.ProductName);
-      // NEW: Filter by the definitive list of beer names
-      if (DEFINITIVE_BEER_VARIETIES_NAMES.has(baseBeerName.toUpperCase())) {
-        if (!uniqueBaseBeerNamesMap.has(baseBeerName)) {
-          uniqueBaseBeerNamesMap.set(baseBeerName, createDataUrlFromBinary(item.ProductImage));
-        }
+      // Asegurarse de que cada ID de la lista forzada se cuente como una variedad única
+      if (!uniqueBeerVarietiesMap.has(item.ProductId)) {
+        uniqueBeerVarietiesMap.set(item.ProductId, {
+          name: getBaseBeerName(item.ProductName), // Usar getBaseBeerName para el nombre de visualización
+          imageUrl: createDataUrlFromBinary(item.ProductImage)
+        });
       }
     }
-    return Array.from(uniqueBaseBeerNamesMap.entries())
-      .map(([name, imageUrl]) => ({ name, imageUrl }))
+    return Array.from(uniqueBeerVarietiesMap.values())
       .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
@@ -296,13 +237,12 @@ export function useDb() {
         return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query para obtener todos los productos que están habilitados o forzados,
-    // el filtrado por la lista definitiva se hará en JavaScript.
+    // La consulta ahora se basa directamente en FORCED_INCLUDED_VARIETY_IDS
     const globalProductDataQuery = `
         SELECT
+            P.Id AS ProductId,
             P.Name AS ProductName,
             P.Description AS ProductDescription,
-            P.ProductGroupId AS ProductGroupId,
             SUM(DI.Quantity) AS TotalQuantity
         FROM
             Document AS D
@@ -312,10 +252,10 @@ export function useDb() {
             Product AS P ON DI.ProductId = P.Id
         WHERE
             STRFTIME('%Y', D.Date) = ?
-            AND (P.IsEnabled = TRUE OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')}))
+            AND P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             ${buildExclusionClause('P')}
         GROUP BY
-            P.Id, P.Name, P.Description, P.ProductGroupId
+            P.Id, P.Name, P.Description
         HAVING
             TotalQuantity > 0;
     `;
@@ -327,15 +267,12 @@ export function useDb() {
 
     for (const item of rawGlobalProductData) {
         const baseBeerName = getBaseBeerName(item.ProductName);
-        // NEW: Filter by the definitive list of beer names
-        if (DEFINITIVE_BEER_VARIETIES_NAMES.has(baseBeerName.toUpperCase())) {
-            const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-            const liters = (item.TotalQuantity * volumeMl) / 1000;
+        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+        const liters = (item.TotalQuantity * volumeMl) / 1000;
 
-            if (liters > 0) {
-                totalGlobalLiters += liters;
-                globalBeerDistribution.set(baseBeerName, (globalBeerDistribution.get(baseBeerName) || 0) + liters);
-            }
+        if (liters > 0) {
+            totalGlobalLiters += liters;
+            globalBeerDistribution.set(baseBeerName, (globalBeerDistribution.get(baseBeerName) || 0) + liters);
         }
     }
     return { globalBeerDistribution, totalGlobalLiters };
@@ -350,11 +287,11 @@ export function useDb() {
       return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query para obtener todos los productos que están habilitados o forzados,
-    // el filtrado por la lista definitiva se hará en JavaScript.
+    // La consulta ahora se basa directamente en FORCED_INCLUDED_VARIETY_IDS
     const query = `
       SELECT
           D.CustomerId,
+          P.Id AS ProductId,
           P.Name AS ProductName,
           P.Description AS ProductDescription,
           DI.Quantity
@@ -366,7 +303,7 @@ export function useDb() {
           Product AS P ON DI.ProductId = P.Id
       WHERE
           STRFTIME('%Y', D.Date) = ?
-          AND (P.IsEnabled = TRUE OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')}))
+          AND P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
           ${buildExclusionClause('P')};
     `;
     const rawResults = queryData(dbInstance, query, [year]);
@@ -374,14 +311,10 @@ export function useDb() {
     const customerLitersMap = new Map<number, number>();
 
     for (const row of rawResults) {
-        const baseBeerName = getBaseBeerName(row.ProductName);
-        // NEW: Filter by the definitive list of beer names
-        if (DEFINITIVE_BEER_VARIETIES_NAMES.has(baseBeerName.toUpperCase())) {
-            const volumeMl = extractVolumeMl(row.ProductName, row.ProductDescription);
-            const liters = (row.Quantity * volumeMl) / 1000;
-            if (liters > 0) {
-                customerLitersMap.set(row.CustomerId, (customerLitersMap.get(row.CustomerId) || 0) + liters);
-            }
+        const volumeMl = extractVolumeMl(row.ProductName, row.ProductDescription);
+        const liters = (row.Quantity * volumeMl) / 1000;
+        if (liters > 0) {
+            customerLitersMap.set(row.CustomerId, (customerLitersMap.get(row.CustomerId) || 0) + liters);
         }
     }
     return Array.from(customerLitersMap.values());
@@ -390,7 +323,6 @@ export function useDb() {
   const getAllCustomerVisits = useCallback(async (year: string) => {
     if (!dbInstance) throw new Error("Base de datos no cargada.");
 
-    // This query does not need product filtering as it only counts documents/visits
     const query = `
       SELECT
           CustomerId,
@@ -443,10 +375,10 @@ export function useDb() {
       return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
     };
 
-    // Query para obtener todos los productos que están habilitados o forzados,
-    // el filtrado por la lista definitiva se hará en JavaScript.
+    // La consulta ahora se basa directamente en FORCED_INCLUDED_VARIETY_IDS
     const query = `
       SELECT
+          P.Id AS ProductId,
           P.Name AS ProductName,
           D.Date AS DocumentDate,
           DI.Quantity AS Quantity,
@@ -460,27 +392,24 @@ export function useDb() {
       WHERE
           D.CustomerId = ?
           AND STRFTIME('%Y', D.Date) = ?
-          AND (P.IsEnabled = TRUE OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')}))
+          AND P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
           ${buildExclusionClause('P')}
       ORDER BY
           D.Date ASC
-      LIMIT 10; -- Fetch a few more to ensure we find a definitive beer if the first few aren't
+      LIMIT 1;
     `;
-    const rawResults = queryData(dbInstance, query, [customerId, year]);
+    const result = queryData(dbInstance, query, [customerId, year]);
 
-    // NEW: Filter raw results by the definitive beer names
-    for (const item of rawResults) {
-        const baseBeerName = getBaseBeerName(item.ProductName);
-        if (DEFINITIVE_BEER_VARIETIES_NAMES.has(baseBeerName.toUpperCase())) {
-            return {
-                name: baseBeerName,
-                date: item.DocumentDate,
-                quantity: item.Quantity,
-                imageUrl: createDataUrlFromBinary(item.ProductImage),
-            };
-        }
+    if (result.length > 0) {
+        const item = result[0];
+        return {
+            name: getBaseBeerName(item.ProductName),
+            date: item.DocumentDate,
+            quantity: item.Quantity,
+            imageUrl: createDataUrlFromBinary(item.ProductImage),
+        };
     }
-    return null; // No definitive beer found
+    return null;
   }, []);
 
 
@@ -491,7 +420,6 @@ export function useDb() {
     setLoading(true);
     setError(null);
     try {
-      // Helper to build the exclusion clause
       const buildExclusionClause = (tableAlias: string) => {
         if (EXCLUDED_PRODUCT_KEYWORDS.length === 0) {
           return "";
@@ -500,23 +428,20 @@ export function useDb() {
         return `AND ${tableAlias}.Name NOT IN (${keywordsSql})`;
       };
 
-      // Metric 5: Customer Name (fetched separately for overlay)
       const customerNameQuery = `SELECT Name FROM Customer WHERE Id = ? LIMIT 1;`;
       const customerNameResult = queryData(dbInstance, customerNameQuery, [customerId]);
       const customerName = customerNameResult.length > 0 ? customerNameResult[0].Name : "Cliente Desconocido";
 
-      // --- Data for current year (2025) ---
       const currentYear = year;
 
-      // Query for product data (name, description, quantity, ProductGroupId, Image) for a given customer and year
-      // The filtering by definitive list will happen in JavaScript
+      // La consulta ahora se basa directamente en FORCED_INCLUDED_VARIETY_IDS
       const productDataQuery = `
         SELECT
+            P.Id AS ProductId,
             P.Name AS ProductName,
             P.Description AS ProductDescription,
             P.ProductGroupId AS ProductGroupId,
             SUM(DI.Quantity) AS TotalQuantity,
-            P.Id AS ProductId,
             P.Image AS ProductImage
         FROM
             Document AS D
@@ -527,7 +452,7 @@ export function useDb() {
         WHERE
             D.CustomerId = ?
             AND STRFTIME('%Y', D.Date) = ?
-            AND (P.IsEnabled = TRUE OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')}))
+            AND P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             ${buildExclusionClause('P')}
         GROUP BY
             P.Id, P.Name, P.Description, P.ProductGroupId, P.Image
@@ -535,55 +460,46 @@ export function useDb() {
             TotalQuantity > 0;
       `;
 
-      // Fetch raw product data
       const rawProductDataCurrentYear = queryData(dbInstance, productDataQuery, [customerId, currentYear]);
 
       let totalLiters = 0;
       const categoryVolumesByGroupId: { [key: number]: number } = {};
       const productLiters: { name: string; liters: number; color: string; imageUrl: string }[] = [];
-      const customerUniqueBeerNamesMap = new Map<string, string>(); // Map base name to image URL
+      const customerUniqueBeerIds = new Set<number>(); // Usar Set de IDs para variedades únicas
 
-      // Fetch global beer distribution for rarity calculation
       const { globalBeerDistribution, totalGlobalLiters } = await getGlobalBeerDistribution(currentYear);
 
-      // Calculate customer's beer consumption by base name for palate analysis
       const customerBeerLitersMap = new Map<string, number>();
       let customerTotalBeerLitersForPalate = 0;
 
-      // Also collect top 3 for concentration coefficient
       const customerProductLitersForConcentration: { name: string; liters: number }[] = [];
 
 
       for (const item of rawProductDataCurrentYear) {
         const baseBeerName = getBaseBeerName(item.ProductName);
-        // NEW: Filter by the definitive list of beer names
-        if (DEFINITIVE_BEER_VARIETIES_NAMES.has(baseBeerName.toUpperCase())) {
-            const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-            const liters = (item.TotalQuantity * volumeMl) / 1000;
-            
-            if (liters > 0) {
-              totalLiters += liters;
+        const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
+        const liters = (item.TotalQuantity * volumeMl) / 1000;
+        
+        if (liters > 0) {
+          totalLiters += liters;
 
-              // This part still uses ProductGroupId for categorization, but only for items in the definitive list
-              if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) {
-                categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
-              }
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) {
+            categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
+          }
 
-              customerUniqueBeerNamesMap.set(baseBeerName, createDataUrlFromBinary(item.ProductImage));
-              
-              // For palate analysis
-              customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
-              customerTotalBeerLitersForPalate += liters;
-              customerProductLitersForConcentration.push({ name: baseBeerName, liters: liters });
-              
-              const category = categorizeBeer(item.ProductName);
-              productLiters.push({
-                name: baseBeerName,
-                liters: liters,
-                color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
-                imageUrl: createDataUrlFromBinary(item.ProductImage),
-              });
-            }
+          customerUniqueBeerIds.add(item.ProductId); // Añadir el ID del producto
+          
+          customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
+          customerTotalBeerLitersForPalate += liters;
+          customerProductLitersForConcentration.push({ name: baseBeerName, liters: liters });
+          
+          const category = categorizeBeer(item.ProductName);
+          productLiters.push({
+            name: baseBeerName,
+            liters: liters,
+            color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
+            imageUrl: createDataUrlFromBinary(item.ProductImage),
+          });
         }
       }
 
@@ -623,16 +539,13 @@ export function useDb() {
       const totalVisitsResult = queryData(dbInstance, totalVisitsQuery, [customerId, currentYear]);
       const totalVisits = totalVisitsResult.length > 0 ? totalVisitsResult[0].TotalVisits : 0;
 
-      const uniqueVarieties2025 = customerUniqueBeerNamesMap.size;
-      const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesMap.keys());
-
-      const allDbUniqueBeerObjects = await getAllBeerVarietiesInDb(); // This now uses the definitive list
-      const allDbUniqueBeerNames = allDbUniqueBeerObjects.map(item => item.name);
-
-      const totalVarietiesInDb = allDbUniqueBeerNames.length;
+      const uniqueVarieties2025 = customerUniqueBeerIds.size; // Usar el tamaño del Set de IDs
+      
+      const allDbUniqueBeerObjects = await getAllBeerVarietiesInDb();
+      const totalVarietiesInDb = allDbUniqueBeerObjects.length; // Esto debería ser 108 ahora
 
       const missingVarieties = allDbUniqueBeerObjects.filter(
-        (dbBeer) => !customerConsumedBeerNames.includes(dbBeer.name)
+        (dbBeer) => !Array.from(customerUniqueBeerIds).includes(dbBeer.id) // Filtrar por ID
       );
 
       const mostActiveDayQuery = `
@@ -768,9 +681,9 @@ export function useDb() {
       const totalCustomersResult = queryData(dbInstance, totalCustomersQuery, [currentYear]);
       const totalCustomers = totalCustomersResult.length > 0 ? totalCustomersResult[0].TotalCustomers : 0;
 
-      // Query for all sales, then filter in JS
       const allSalesQuery = `
         SELECT
+            P.Id AS ProductId,
             P.Name AS ProductName,
             P.Description AS ProductDescription,
             DI.Quantity,
@@ -783,19 +696,15 @@ export function useDb() {
             Product AS P ON DI.ProductId = P.Id
         WHERE
             STRFTIME('%Y', D.Date) = ?
-            AND (P.IsEnabled = TRUE OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')}))
+            AND P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             ${buildExclusionClause('P')};
       `;
       const allSalesForTotalLitresRaw = queryData(dbInstance, allSalesQuery, [currentYear]);
       let totalLitres = 0;
       for (const sale of allSalesForTotalLitresRaw) {
-        const baseBeerName = getBaseBeerName(sale.ProductName);
-        // NEW: Filter by the definitive list of beer names
-        if (DEFINITIVE_BEER_VARIETIES_NAMES.has(baseBeerName.toUpperCase())) {
-            const volumeMl = extractVolumeMl(sale.ProductName, sale.ProductDescription);
-            if (volumeMl > 0) {
-              totalLitres += (sale.Quantity * volumeMl) / 1000;
-            }
+        const volumeMl = extractVolumeMl(sale.ProductName, sale.ProductDescription);
+        if (volumeMl > 0) {
+          totalLitres += (sale.Quantity * volumeMl) / 1000;
         }
       }
 

@@ -1,2 +1,0 @@
-// Este componente ha sido eliminado ya que no es compatible con el entorno 2D HTML/CSS.
-// Si se desea un espectro de sabores, se debería implementar con CSS o SVG.

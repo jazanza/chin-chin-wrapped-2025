@@ -30,7 +30,7 @@ const getSeasonalWittyRemark = (month: string) => {
         case 'Mayo':
             return "¡Mayo huele a lúpulo! Te anticipaste a los meses de sol para disfrutar de tus cervezas.";
         case 'Junio':
-            return "Junio: La calma antes de la tormenta de julio. Disfrutaste de las mejores cervezas antes de las vacaciones de invierno.";
+            return "Junio: Tu paladar está madurando. Disfrutaste de la calma antes de que se active el verano";
         case 'Septiembre':
             return "¡Te anticipaste a Múnich! Septiembre es tu Oktoberfest personal.";
         case 'Octubre':

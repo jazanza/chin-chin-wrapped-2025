@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 
 interface MissingVarietiesCardProps {
-  missingVarieties: string[];
+  missingVarieties: { name: string; imageUrl: string | null }[]; // NEW: Update to array of objects
   textColor: string;
   highlightColor: string;
 }
 
-const shuffleArray = (array: string[]) => {
+const shuffleArray = (array: any[]) => { // Changed type to any[] to handle objects
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -21,9 +21,9 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
 
   const wittyTitle = useMemo(() => {
     if (missingCount === 0) return ""; // Should not render if 0, but for safety
-    if (missingCount === 3) {
-      const missingName = missingVarieties[0];
-      return `¡SOLO TE QUEDA UNAS! ${missingName.toUpperCase()}. NO TIENES EXCUSAS.`;
+    if (missingCount === 3) { // Assuming this means 3 varieties left to try
+      const missingName = missingVarieties[0]?.name; // Access name property
+      return `¡SOLO TE QUEDA UNAS! ${missingName ? missingName.toUpperCase() : ''}. NO TIENES EXCUSAS.`;
     }
     // Assuming total varieties is around 100.
     // If missingCount > 50, it means more than half are missing.
@@ -37,7 +37,7 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
   const randomSuggestions = useMemo(() => {
     if (missingCount === 0) return [];
     const shuffled = shuffleArray(missingVarieties);
-    return shuffled.slice(0, Math.min(3, missingCount)); // Get up to 3 random suggestions
+    return shuffled.slice(0, Math.min(3, missingCount)); // Get up to 3 random suggestions (objects)
   }, [missingVarieties, missingCount]);
 
   if (missingCount === 0) {
@@ -60,10 +60,19 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
           <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H4, ajustado */}
             DEBERÍAS PROBAR:
           </p>
-          {randomSuggestions.map((beerName, idx) => (
-            <p key={idx} className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
-              {beerName.toUpperCase()}
-            </p>
+          {randomSuggestions.map((beer, idx) => (
+            <div key={idx} className="flex flex-col items-center mb-2"> {/* Container for text and image */}
+              <p className={cn("text-sm md:text-base text-center", textColor)}> {/* H4, ajustado */}
+                {beer.name.toUpperCase()}
+              </p>
+              {beer.imageUrl && (
+                <img
+                  src={beer.imageUrl}
+                  alt={beer.name}
+                  className="mt-2 max-h-24 object-contain" // Image styling
+                />
+              )}
+            </div>
           ))}
         </div>
       )}

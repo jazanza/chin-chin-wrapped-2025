@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 interface Product {
   name: string;
   liters: number;
-  // color: string; // Not used in 2D
+  imageUrl: string | null; // NEW: Add imageUrl
 }
 
 interface TextSegment {
@@ -51,6 +51,8 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
     });
   }, [mainTitleSegments]);
 
+  const topBeerImageUrl = top10Products.length > 0 ? top10Products[0].imageUrl : null;
+
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Flex column for vertical stacking */}
       <div
@@ -61,6 +63,14 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
         </p>
       </div>
       
+      {topBeerImageUrl && (
+        <img
+          src={topBeerImageUrl}
+          alt={top10Products[0].name}
+          className="mb-8 max-h-40 md:max-h-60 object-contain" // Added image styling
+        />
+      )}
+
       {/* Moved "TU TOP 10:" closer to the list */}
       <p className={cn("text-lg md:text-xl font-black text-center mb-4", highlightColor)}> {/* H3, ajustado */}
         TU TOP 10:

@@ -6,6 +6,7 @@ interface FirstBeerOfTheYearStoryProps {
     name: string;
     date: string; // YYYY-MM-DD format
     quantity: number;
+    imageUrl: string | null; // NEW: Add imageUrl
   } | null;
   textColor: string;
   highlightColor: string;
@@ -63,7 +64,7 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
   }, [storySegments]);
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center p-4">
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-4"> {/* Changed to flex-col */}
       <div
         className={`flex flex-col items-center justify-center p-4 max-w-xs md:max-w-xl tracking-tight font-black leading-normal`} // Ajustado max-w
       >
@@ -71,6 +72,13 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
           {renderedText}
         </p>
       </div>
+      {firstBeerDetails?.imageUrl && (
+        <img
+          src={firstBeerDetails.imageUrl}
+          alt={firstBeerDetails.name}
+          className="mt-8 max-h-40 md:max-h-60 object-contain" // Added image styling
+        />
+      )}
     </div>
   );
 };

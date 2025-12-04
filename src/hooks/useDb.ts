@@ -221,7 +221,8 @@ export function useDb() {
       SELECT
           P.Name AS ProductName,
           P.Description AS ProductDescription,
-          P.ProductGroupId AS ProductGroupId
+          P.ProductGroupId AS ProductGroupId,
+          P.Image AS ProductImage -- NEW: Select Image
       FROM
           Product AS P
       WHERE
@@ -238,12 +239,18 @@ export function useDb() {
     `;
 
     const rawProducts = queryData(dbInstance, queryForBaseNames);
-    const uniqueBaseBeerNamesSet = new Set<string>();
+    const uniqueBaseBeerNamesMap = new Map<string, string | null>(); // Map base name to image URL
 
     for (const item of rawProducts) {
-      uniqueBaseBeerNamesSet.add(getBaseBeerName(item.ProductName));
+      const baseBeerName = getBaseBeerName(item.ProductName);
+      if (!uniqueBaseBeerNamesMap.has(baseBeerName)) { // Only add if not already present
+        uniqueBaseBeerNamesMap.set(baseBeerName, item.ProductImage);
+      }
     }
-    return Array.from(uniqueBaseBeerNamesSet).sort();
+    // Return an array of objects { name, imageUrl }
+    return Array.from(uniqueBaseBeerNamesMap.entries())
+      .map(([name, imageUrl]) => ({ name, imageUrl }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
   // New function to get global beer distribution
@@ -418,7 +425,8 @@ export function useDb() {
       SELECT
           P.Name AS ProductName,
           D.Date AS DocumentDate,
-          DI.Quantity AS Quantity
+          DI.Quantity AS Quantity,
+          P.Image AS ProductImage -- NEW: Select Image
       FROM
           Document AS D
       INNER JOIN
@@ -446,6 +454,7 @@ export function useDb() {
         name: getBaseBeerName(result[0].ProductName),
         date: result[0].DocumentDate,
         quantity: result[0].Quantity,
+        imageUrl: result[0].ProductImage, // NEW: Include image URL
       };
     }
     return null;
@@ -477,14 +486,15 @@ export function useDb() {
       const currentYear = year; // Use the passed year, which is '2025'
       // const previousYear = (parseInt(year, 10) - 1).toString(); // REMOVED: No longer needed for comparison
 
-      // Query for product data (name, description, quantity, ProductGroupId) for a given customer and year
+      // Query for product data (name, description, quantity, ProductGroupId, Image) for a given customer and year
       const productDataQuery = `
         SELECT
             P.Name AS ProductName,
             P.Description AS ProductDescription,
             P.ProductGroupId AS ProductGroupId,
             SUM(DI.Quantity) AS TotalQuantity,
-            P.Id AS ProductId -- Added ProductId to the select
+            P.Id AS ProductId,
+            P.Image AS ProductImage -- NEW: Select Image
         FROM
             Document AS D
         INNER JOIN
@@ -504,7 +514,7 @@ export function useDb() {
                 OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             )
         GROUP BY
-            P.Id, P.Name, P.Description, P.ProductGroupId
+            P.Id, P.Name, P.Description, P.ProductGroupId, P.Image -- NEW: Group by Image
         HAVING
             TotalQuantity > 0;
       `;
@@ -514,8 +524,8 @@ export function useDb() {
 
       let totalLiters = 0;
       const categoryVolumesByGroupId: { [key: number]: number } = {}; // Initialize empty to dynamically add categories
-      const productLiters: { name: string; liters: number; color: string }[] = [];
-      const customerUniqueBeerNamesSet = new Set<string>(); // Renamed from uniqueVarietiesSet for clarity
+      const productLiters: { name: string; liters: number; color: string; imageUrl: string | null }[] = []; // NEW: Added imageUrl
+      const customerUniqueBeerNamesMap = new Map<string, string | null>(); // Map base beer name to image URL
 
       // Fetch global beer distribution for rarity calculation
       const { globalBeerDistribution, totalGlobalLiters } = await getGlobalBeerDistribution(currentYear);
@@ -539,7 +549,7 @@ export function useDb() {
           // Only add to customer's unique varieties set if it's a beer from the specified groups (now including 750ml)
           if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) { // Added check for forced IDs
             const baseBeerName = getBaseBeerName(item.ProductName);
-            customerUniqueBeerNamesSet.add(baseBeerName); // Use the new helper
+            customerUniqueBeerNamesMap.set(baseBeerName, item.ProductImage); // Store image with base name
             
             // For palate analysis
             customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
@@ -558,6 +568,7 @@ export function useDb() {
             name: getBaseBeerName(item.ProductName), // Apply getBaseBeerName here
             liters: liters,
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
+            imageUrl: item.ProductImage, // NEW: Include image URL
           });
         }
       }
@@ -620,17 +631,18 @@ export function useDb() {
       // --- New Infographic Metrics for current year (2025) ---
 
       // Unique Varieties for customer in current year (using filtered data)
-      const uniqueVarieties2025 = customerUniqueBeerNamesSet.size; // Use the set collected above
-      const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesSet); // Convert to array for comparison
+      const uniqueVarieties2025 = customerUniqueBeerNamesMap.size; // Use the set collected above
+      const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesMap.keys()); // Convert to array for comparison
 
       // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid, AND INCLUDING 750ml)
-      const allDbUniqueBeerNames = await getAllBeerVarietiesInDb(); // Call the helper function
+      const allDbUniqueBeerObjects = await getAllBeerVarietiesInDb(); // Call the helper function, now returns objects
+      const allDbUniqueBeerNames = allDbUniqueBeerObjects.map(item => item.name); // Extract names for comparison
 
       const totalVarietiesInDb = allDbUniqueBeerNames.length; // Update count based on the array
 
-      // Calculate missing varieties
-      const missingVarieties = allDbUniqueBeerNames.filter(
-        (dbBeerName) => !customerConsumedBeerNames.includes(dbBeerName)
+      // Calculate missing varieties, now including image URLs
+      const missingVarieties = allDbUniqueBeerObjects.filter(
+        (dbBeer) => !customerConsumedBeerNames.includes(dbBeer.name)
       );
 
       // Most Active Day 2025 - COUNT DISTINCT
@@ -787,7 +799,8 @@ export function useDb() {
         SELECT
             P.Name AS ProductName,
             P.Description AS ProductDescription,
-            DI.Quantity
+            DI.Quantity,
+            P.Image AS ProductImage -- NEW: Select Image
         FROM
             Document AS D
         INNER JOIN

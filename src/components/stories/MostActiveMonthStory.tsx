@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { cn } from '@/lib/utils';
+import { MONTH_NAMES } from '@/hooks/useDb'; // Import MONTH_NAMES
 
 interface TextSegment {
   text: string;
@@ -114,8 +115,8 @@ export const MostActiveMonthStory = ({ mostActiveMonth, monthlyVisits, textColor
           {renderedText}
         </p>
       </div>
-      <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
-        <p className={cn("text-lg md:text-xl font-bold mb-4 text-center", highlightColor)}> {/* H3, ajustado */}
+      <div className={cn("w-full max-w-xs md:max-w-sm lg:max-w-md space-y-1 p-4 border-2", textColor === "text-white" ? "border-white" : "border-black")}>
+        <p className={cn("text-lg md:text-xl font-bold mb-2 text-center", highlightColor)}> {/* H3, ajustado */}
           Tu Calendario de Visitas
         </p>
         <div className="grid grid-cols-2 gap-x-4"> {/* Two columns for months */}

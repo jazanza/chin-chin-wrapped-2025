@@ -38,7 +38,7 @@ const CommunityVisitsComparisonText = ({ totalVisits, visitsPercentile, textColo
     wittyPhrase = `¡Bienvenido al club! Con ${totalVisits} visitas, ya eres parte de la experiencia Chin Chin.`;
   } else { // Menos de 5 visitas
     if (roundedVisitsPercentile >= 50) {
-      wittyPhrase = `Tus ${totalVisits} visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te está gustando!`;
+      wittyPhrase = `Tus ${totalVisits} visitas te ubican en la mitad superior de nuestros clientes. ¡Chin Chin te gusta!`;
     } else {
       wittyPhrase = `Tus ${totalVisits} visitas te ubican por debajo de la mitad de nuestros clientes. ¡Queremos verte más seguido!`;
     }

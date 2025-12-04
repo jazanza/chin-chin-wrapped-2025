@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { initDb, loadDb, queryData, type Database, type Statement } from "@/lib/db";
+import { formatImageUrl } from "@/lib/utils"; // NEW: Import formatImageUrl
 
 const EXCLUDED_CUSTOMERS = ["Maria Fernanda Azanza Arias", "Jose Azanza Arias", "Enrique Cobo", "Juan Francisco Perez", "Islas Boutique"];
 const EXCLUDED_PRODUCT_KEYWORDS = [
@@ -222,39 +223,34 @@ export function useDb() {
           P.Name AS ProductName,
           P.Description AS ProductDescription,
           P.ProductGroupId AS ProductGroupId,
-          P.Image AS ProductImage -- NEW: Select Image
+          P.Image AS ProductImage
       FROM
           Product AS P
       WHERE
           (
-              -- Criterio 1: Cervezas activas en categorías principales
               (
                   P.IsEnabled = TRUE
                   AND P.ProductGroupId IN (${BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.join(',')})
               )
-              -- Criterio 2: Cervezas de la lista blanca (aunque estén desactivadas)
               OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
           )
           ${buildExclusionClause('P')};
     `;
 
     const rawProducts = queryData(dbInstance, queryForBaseNames);
-    const uniqueBaseBeerNamesMap = new Map<string, string | null>(); // Map base name to image URL
+    const uniqueBaseBeerNamesMap = new Map<string, string | null>();
 
     for (const item of rawProducts) {
       const baseBeerName = getBaseBeerName(item.ProductName);
-      if (!uniqueBaseBeerNamesMap.has(baseBeerName)) { // Only add if not already present
-        uniqueBaseBeerNamesMap.set(baseBeerName, item.ProductImage);
-        console.log(`[useDb] getAllBeerVarietiesInDb: Beer: ${baseBeerName}, Image URL: ${item.ProductImage}`); // DEBUG LOG
+      if (!uniqueBaseBeerNamesMap.has(baseBeerName)) {
+        uniqueBaseBeerNamesMap.set(baseBeerName, formatImageUrl(item.ProductImage)); // NEW: Format image URL
       }
     }
-    // Return an array of objects { name, imageUrl }
     return Array.from(uniqueBaseBeerNamesMap.entries())
       .map(([name, imageUrl]) => ({ name, imageUrl }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }, []);
 
-  // New function to get global beer distribution
   const getGlobalBeerDistribution = useCallback(async (year: string) => {
     if (!dbInstance) {
         throw new Error("Base de datos no cargada.");
@@ -314,7 +310,6 @@ export function useDb() {
     return { globalBeerDistribution, totalGlobalLiters };
   }, []);
 
-  // New: Get all customer liters for percentile calculation
   const getAllCustomerLiters = useCallback(async (year: string) => {
     if (!dbInstance) throw new Error("Base de datos no cargada.");
 
@@ -345,7 +340,7 @@ export function useDb() {
       INNER JOIN
           Product AS P ON DI.ProductId = P.Id
       WHERE
-          STRFTIME('%Y', D.Date) = ?
+          STRFTIME('%Y', Date) = ?
           ${buildExclusionClause('P')}
           AND (
               (
@@ -363,7 +358,6 @@ export function useDb() {
     return results.map((row: any) => row.TotalLiters);
   }, []);
 
-  // New: Get all customer visits for percentile calculation
   const getAllCustomerVisits = useCallback(async (year: string) => {
     if (!dbInstance) throw new Error("Base de datos no cargada.");
 
@@ -384,7 +378,6 @@ export function useDb() {
     return results.map((row: any) => row.TotalVisits);
   }, []);
 
-  // New: Get community daily visits
   const getCommunityDailyVisits = useCallback(async (year: string) => {
     if (!dbInstance) throw new Error("Base de datos no cargada.");
 
@@ -398,7 +391,6 @@ export function useDb() {
     return queryData(dbInstance, query, [year]);
   }, []);
 
-  // New: Get community monthly visits
   const getCommunityMonthlyVisits = useCallback(async (year: string) => {
     if (!dbInstance) throw new Error("Base de datos no cargada.");
 
@@ -412,7 +404,6 @@ export function useDb() {
     return queryData(dbInstance, query, [year]);
   }, []);
 
-  // New: Get first beer details for the year
   const getFirstBeerDetails = useCallback(async (customerId: number, year: string) => {
     if (!dbInstance) throw new Error("Base de datos no cargada.");
 
@@ -427,7 +418,7 @@ export function useDb() {
           P.Name AS ProductName,
           D.Date AS DocumentDate,
           DI.Quantity AS Quantity,
-          P.Image AS ProductImage -- NEW: Select Image
+          P.Image AS ProductImage
       FROM
           Document AS D
       INNER JOIN
@@ -451,12 +442,12 @@ export function useDb() {
     `;
     const result = queryData(dbInstance, query, [customerId, year]);
     if (result.length > 0) {
-      console.log(`[useDb] getFirstBeerDetails - Raw Image URL: ${result[0].ProductImage}`); // DEBUG LOG
+      console.log(`[useDb] getFirstBeerDetails - Raw Image URL: ${result[0].ProductImage}`);
       return {
         name: getBaseBeerName(result[0].ProductName),
         date: result[0].DocumentDate,
         quantity: result[0].Quantity,
-        imageUrl: result[0].ProductImage, // NEW: Include image URL
+        imageUrl: formatImageUrl(result[0].ProductImage), // NEW: Format image URL
       };
     }
     return null;
@@ -485,8 +476,7 @@ export function useDb() {
       const customerName = customerNameResult.length > 0 ? customerNameResult[0].Name : "Cliente Desconocido";
 
       // --- Data for current year (2025) ---
-      const currentYear = year; // Use the passed year, which is '2025'
-      // const previousYear = (parseInt(year, 10) - 1).toString(); // REMOVED: No longer needed for comparison
+      const currentYear = year;
 
       // Query for product data (name, description, quantity, ProductGroupId, Image) for a given customer and year
       const productDataQuery = `
@@ -496,7 +486,7 @@ export function useDb() {
             P.ProductGroupId AS ProductGroupId,
             SUM(DI.Quantity) AS TotalQuantity,
             P.Id AS ProductId,
-            P.Image AS ProductImage -- NEW: Select Image
+            P.Image AS ProductImage
         FROM
             Document AS D
         INNER JOIN
@@ -507,7 +497,6 @@ export function useDb() {
             D.CustomerId = ?
             AND STRFTIME('%Y', D.Date) = ?
             ${buildExclusionClause('P')}
-            -- *** FILTRO ESTRICTO: SOLO CERVEZAS RELEVANTES O FORZADAS ***
             AND (
                 (
                     P.IsEnabled = TRUE
@@ -516,7 +505,7 @@ export function useDb() {
                 OR P.Id IN (${FORCED_INCLUDED_VARIETY_IDS.join(',')})
             )
         GROUP BY
-            P.Id, P.Name, P.Description, P.ProductGroupId, P.Image -- NEW: Group by Image
+            P.Id, P.Name, P.Description, P.ProductGroupId, P.Image
         HAVING
             TotalQuantity > 0;
       `;
@@ -525,16 +514,16 @@ export function useDb() {
       const rawProductDataCurrentYear = queryData(dbInstance, productDataQuery, [customerId, currentYear]);
 
       let totalLiters = 0;
-      const categoryVolumesByGroupId: { [key: number]: number } = {}; // Initialize empty to dynamically add categories
-      const productLiters: { name: string; liters: number; color: string; imageUrl: string | null }[] = []; // NEW: Added imageUrl
-      const customerUniqueBeerNamesMap = new Map<string, string | null>(); // Map base beer name to image URL
+      const categoryVolumesByGroupId: { [key: number]: number } = {};
+      const productLiters: { name: string; liters: number; color: string; imageUrl: string | null }[] = [];
+      const customerUniqueBeerNamesMap = new Map<string, string | null>();
 
       // Fetch global beer distribution for rarity calculation
       const { globalBeerDistribution, totalGlobalLiters } = await getGlobalBeerDistribution(currentYear);
 
       // Calculate customer's beer consumption by base name for palate analysis
       const customerBeerLitersMap = new Map<string, number>();
-      let customerTotalBeerLitersForPalate = 0; // Only for beers considered in rarity/concentration
+      let customerTotalBeerLitersForPalate = 0;
 
       // Also collect top 3 for concentration coefficient
       const customerProductLitersForConcentration: { name: string; liters: number }[] = [];
@@ -544,14 +533,12 @@ export function useDb() {
         const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
         const liters = (item.TotalQuantity * volumeMl) / 1000;
         
-        // Only count liters for the overall total if it's a liquid product
         if (liters > 0) {
-          totalLiters += liters; // This includes all liquid products, including ID 40
+          totalLiters += liters;
 
-          // Only add to customer's unique varieties set if it's a beer from the specified groups (now including 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) { // Added check for forced IDs
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) {
             const baseBeerName = getBaseBeerName(item.ProductName);
-            customerUniqueBeerNamesMap.set(baseBeerName, item.ProductImage); // Store image with base name
+            customerUniqueBeerNamesMap.set(baseBeerName, formatImageUrl(item.ProductImage)); // NEW: Format image URL
             
             // For palate analysis
             customerBeerLitersMap.set(baseBeerName, (customerBeerLitersMap.get(baseBeerName) || 0) + liters);
@@ -559,29 +546,26 @@ export function useDb() {
             customerProductLitersForConcentration.push({ name: baseBeerName, liters: liters });
           }
 
-          // Aggregate liters for dominant category calculation (now including 750ml)
-          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) { // Added check for forced IDs
+          if (BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT.includes(item.ProductGroupId) || FORCED_INCLUDED_VARIETY_IDS.includes(item.ProductId)) {
             categoryVolumesByGroupId[item.ProductGroupId] = (categoryVolumesByGroupId[item.ProductGroupId] || 0) + liters;
           }
 
-          // For individual product display, use the more granular categorization
           const category = categorizeBeer(item.ProductName);
           productLiters.push({
-            name: getBaseBeerName(item.ProductName), // Apply getBaseBeerName here
+            name: getBaseBeerName(item.ProductName),
             liters: liters,
             color: BEER_CATEGORY_COLORS[category] || BEER_CATEGORY_COLORS["Other"],
-            imageUrl: item.ProductImage, // NEW: Include image URL
+            imageUrl: formatImageUrl(item.ProductImage), // NEW: Format image URL
           });
-          console.log(`[useDb] getWrappedData - Product: ${item.ProductName}, Image URL: ${item.ProductImage}`); // DEBUG LOG
+          console.log(`[useDb] getWrappedData - Product: ${item.ProductName}, Formatted Image URL: ${formatImageUrl(item.ProductImage)}`); // DEBUG LOG
         }
       }
 
-      // Metric 2: Dominant Beer Category for current year (based on BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT)
       let dominantBeerCategory = "Ninguna (otras categorías)";
       let maxLiters = 0;
       let dominantGroupId: number | null = null;
 
-      for (const groupId of BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT) { // Loop through groups relevant for dominance (now including 750ml)
+      for (const groupId of BEER_PRODUCT_GROUP_IDS_FOR_VARIETIES_AND_DOMINANT) {
         if (categoryVolumesByGroupId[groupId] > maxLiters) {
           maxLiters = categoryVolumesByGroupId[groupId];
           dominantGroupId = groupId;
@@ -589,28 +573,22 @@ export function useDb() {
       }
 
       if (dominantGroupId !== null) {
-        // Map ProductGroupId to a more descriptive name for display
         switch (dominantGroupId) {
           case 34: dominantBeerCategory = "Cervezas Belgas"; break;
           case 36: dominantBeerCategory = "Cervezas Alemanas"; break;
-          case 40: dominantBeerCategory = "Cervezas de 750ml"; break; // Added for 750ml
+          case 40: dominantBeerCategory = "Cervezas de 750ml"; break;
           case 52: dominantBeerCategory = "Cervezas Españolas"; break;
           case 53: dominantBeerCategory = "Cervezas del Mundo"; break;
           default: dominantBeerCategory = "Categoría de Cerveza Dominante";
         }
       }
 
-
-      // Metric 3: Top 10 Products for current year (from all liquid products)
       const top10Products = productLiters
         .sort((a, b) => b.liters - a.liters)
-        .slice(0, 10); // Slice to 10
+        .slice(0, 10);
       
-      // Determine most frequent beer name
       const mostFrequentBeerName = top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita";
 
-
-      // Metric 4: Frequency/Loyalty (Total Visits) for current year - COUNT DISTINCT
       const totalVisitsQuery = `
         SELECT COUNT(DISTINCT T1.Date) AS TotalVisits
         FROM Document AS T1
@@ -619,36 +597,18 @@ export function useDb() {
       const totalVisitsResult = queryData(dbInstance, totalVisitsQuery, [customerId, currentYear]);
       const totalVisits = totalVisitsResult.length > 0 ? totalVisitsResult[0].TotalVisits : 0;
 
-      // --- Data for previous year (2024) for comparison ---
-      // REMOVED: totalLiters2024 and totalVisits2024 calculations
-      // const rawProductDataPreviousYear = queryData(dbInstance, productDataQuery, [customerId, previousYear]);
-      // let totalLiters2024 = 0;
-      // for (const item of rawProductDataPreviousYear) {
-      //   const volumeMl = extractVolumeMl(item.ProductName, item.ProductDescription);
-      //   totalLiters2024 += (item.TotalQuantity * volumeMl) / 1000;
-      // }
+      const uniqueVarieties2025 = customerUniqueBeerNamesMap.size;
+      const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesMap.keys());
 
-      // const totalVisitsPreviousYearResult = queryData(dbInstance, totalVisitsQuery, [customerId, previousYear]);
-      // const totalVisits2024 = totalVisitsPreviousYearResult.length > 0 ? totalVisitsPreviousYearResult[0].TotalVisits : 0;
+      const allDbUniqueBeerObjects = await getAllBeerVarietiesInDb();
+      const allDbUniqueBeerNames = allDbUniqueBeerObjects.map(item => item.name);
 
-      // --- New Infographic Metrics for current year (2025) ---
+      const totalVarietiesInDb = allDbUniqueBeerNames.length;
 
-      // Unique Varieties for customer in current year (using filtered data)
-      const uniqueVarieties2025 = customerUniqueBeerNamesMap.size; // Use the set collected above
-      const customerConsumedBeerNames = Array.from(customerUniqueBeerNamesMap.keys()); // Convert to array for comparison
-
-      // Total Unique Varieties in DB (excluding non-liquid/excluded, AND applying beer category filter AND checking if liquid, AND INCLUDING 750ml)
-      const allDbUniqueBeerObjects = await getAllBeerVarietiesInDb(); // Call the helper function, now returns objects
-      const allDbUniqueBeerNames = allDbUniqueBeerObjects.map(item => item.name); // Extract names for comparison
-
-      const totalVarietiesInDb = allDbUniqueBeerNames.length; // Update count based on the array
-
-      // Calculate missing varieties, now including image URLs
       const missingVarieties = allDbUniqueBeerObjects.filter(
         (dbBeer) => !customerConsumedBeerNames.includes(dbBeer.name)
       );
 
-      // Most Active Day 2025 - COUNT DISTINCT
       const mostActiveDayQuery = `
         SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(DISTINCT T1.Date) AS DayCount
         FROM Document AS T1
@@ -660,7 +620,6 @@ export function useDb() {
       const mostActiveDayResult = queryData(dbInstance, mostActiveDayQuery, [customerId, currentYear]);
       const mostActiveDay = mostActiveDayResult.length > 0 ? DAY_NAMES[mostActiveDayResult[0].DayOfWeek] : "N/A";
 
-      // All Daily Visits for current year - COUNT DISTINCT
       const allDailyVisitsQuery = `
         SELECT STRFTIME('%w', T1.Date) AS DayOfWeek, COUNT(DISTINCT T1.Date) AS DayCount
         FROM Document AS T1
@@ -674,8 +633,6 @@ export function useDb() {
         count: row.DayCount,
       }));
 
-
-      // Most Active Month 2025 - COUNT DISTINCT
       const mostActiveMonthQuery = `
         SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(DISTINCT T1.Date) AS MonthCount
         FROM Document AS T1
@@ -687,7 +644,6 @@ export function useDb() {
       const mostActiveMonthResult = queryData(dbInstance, mostActiveMonthQuery, [customerId, currentYear]);
       const mostActiveMonth = mostActiveMonthResult.length > 0 ? MONTH_NAMES[parseInt(mostActiveMonthResult[0].MonthOfYear, 10) - 1] : "N/A";
 
-      // All Monthly Visits for current year - COUNT DISTINCT
       const allMonthlyVisitsQuery = `
         SELECT STRFTIME('%m', T1.Date) AS MonthOfYear, COUNT(DISTINCT T1.Date) AS MonthCount
         FROM Document AS T1
@@ -701,28 +657,26 @@ export function useDb() {
         count: row.MonthCount,
       }));
 
-      // --- Calculate Patrón de Consumo (Concentration) ---
       let concentration: 'Fiel' | 'Explorador' = 'Explorador';
       if (customerTotalBeerLitersForPalate > 0) {
           const sortedCustomerBeers = customerProductLitersForConcentration.sort((a, b) => b.liters - a.liters);
           const top3Liters = sortedCustomerBeers.slice(0, 3).reduce((sum, beer) => sum + beer.liters, 0);
           const concentrationCoefficient = top3Liters / customerTotalBeerLitersForPalate;
-          if (concentrationCoefficient > 0.60) { // Threshold as suggested
+          if (concentrationCoefficient > 0.60) {
               concentration = 'Fiel';
           }
       }
 
-      // --- Calculate Rareza de Gusto (Rarity) ---
       let rarity: 'Nicho' | 'Popular' = 'Popular';
       let weightedRarityScore = 0;
-      let totalWeightedLiters = 0; // Sum of customer liters for beers that have global data
+      let totalWeightedLiters = 0;
 
       if (customerTotalBeerLitersForPalate > 0 && totalGlobalLiters > 0) {
           for (const [baseBeerName, customerLiters] of customerBeerLitersMap.entries()) {
               const globalLiters = globalBeerDistribution.get(baseBeerName) || 0;
               if (globalLiters > 0) {
-                  const globalPopularity = globalLiters / totalGlobalLiters; // 0 to 1, 1 being most popular
-                  const beerRarityFactor = 1 - globalPopularity; // 0 to 1, 1 being most rare (less popular)
+                  const globalPopularity = globalLiters / totalGlobalLiters;
+                  const beerRarityFactor = 1 - globalPopularity;
 
                   weightedRarityScore += customerLiters * beerRarityFactor;
                   totalWeightedLiters += customerLiters;
@@ -731,9 +685,7 @@ export function useDb() {
 
           if (totalWeightedLiters > 0) {
               const averageRarityScore = weightedRarityScore / totalWeightedLiters;
-              // Define a fixed threshold for rarity. This might need tuning.
-              // A higher averageRarityScore means the customer drinks more rare beers.
-              const RARITY_THRESHOLD = 0.7; // Example threshold, needs empirical tuning
+              const RARITY_THRESHOLD = 0.7;
               if (averageRarityScore > RARITY_THRESHOLD) {
                   rarity = 'Nicho';
               }
@@ -742,8 +694,7 @@ export function useDb() {
 
       const palateCategory = { concentration, rarity };
 
-      // --- Calculate Dynamic Title ---
-      let dynamicTitle = "Tu Título Cervecero"; // Default
+      let dynamicTitle = "Tu Título Cervecero";
       if (palateCategory.concentration === 'Fiel' && palateCategory.rarity === 'Nicho') {
         dynamicTitle = "El Monje Cervecero";
       } else if (palateCategory.concentration === 'Explorador' && palateCategory.rarity === 'Nicho') {
@@ -754,17 +705,13 @@ export function useDb() {
         dynamicTitle = "El Explorador Sociable";
       }
 
-      // I. FIX: Coherencia de Paladar - Lógica de Anulación del Título
       const varietyExplorationRatio = totalVarietiesInDb > 0 ? (uniqueVarieties2025 / totalVarietiesInDb) : 0;
-      const LOW_EXPLORATION_THRESHOLD = 0.20; // 20%
+      const LOW_EXPLORATION_THRESHOLD = 0.20;
 
-      // Si la exploración es muy baja, anular el título
       if (varietyExplorationRatio < LOW_EXPLORATION_THRESHOLD) {
           dynamicTitle = "Curioso del Lúpulo"; 
       }
 
-
-      // --- Community Comparisons ---
       const allCustomerLiters = await getAllCustomerLiters(currentYear);
       const litersPercentile = calculatePercentile(allCustomerLiters, totalLiters);
 
@@ -785,10 +732,8 @@ export function useDb() {
       }));
       const mostPopularCommunityMonth = communityMonthlyVisits.reduce((prev, current) => (prev.count > current.count ? prev : current), { month: "N/A", count: 0 }).month;
 
-      // --- First Beer of the Year ---
       const firstBeerDetails = await getFirstBeerDetails(customerId, currentYear);
 
-      // --- NEW: Global Metrics for Intro ---
       const totalCustomersQuery = `
         SELECT COUNT(DISTINCT CustomerId) AS TotalCustomers
         FROM Document
@@ -797,13 +742,12 @@ export function useDb() {
       const totalCustomersResult = queryData(dbInstance, totalCustomersQuery, [currentYear]);
       const totalCustomers = totalCustomersResult.length > 0 ? totalCustomersResult[0].TotalCustomers : 0;
 
-      // --- CORRECTED: Global Litres Calculation ---
       const allSalesQuery = `
         SELECT
             P.Name AS ProductName,
             P.Description AS ProductDescription,
             DI.Quantity,
-            P.Image AS ProductImage -- NEW: Select Image
+            P.Image AS ProductImage
         FROM
             Document AS D
         INNER JOIN
@@ -838,27 +782,25 @@ export function useDb() {
         dominantBeerCategory,
         top10Products,
         totalVisits,
-        categoryVolumes: categoryVolumesByGroupId, // Renamed for clarity
-        // REMOVED: totalVisits2024,
-        // REMOVED: totalLiters2024,
+        categoryVolumes: categoryVolumesByGroupId,
         uniqueVarieties2025,
         totalVarietiesInDb,
         mostActiveDay,
         mostActiveMonth,
         dailyVisits,
         monthlyVisits,
-        missingVarieties, // Add missing varieties to the returned data
-        palateCategory, // Add new palate category
-        litersPercentile, // New: customer's percentile for liters
-        visitsPercentile, // New: customer's percentile for visits
-        mostPopularCommunityDay, // New: community's most popular day
-        mostPopularCommunityMonth, // New: community's most popular month
-        dynamicTitle, // New: dynamic title based on palate
-        firstBeerDetails, // New: first beer of the year
-        mostFrequentBeerName: top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita", // Ensure this is correctly set
-        varietyExplorationRatio, // NEW: variety exploration ratio
-        totalCustomers, // NEW
-        totalLitres,    // NEW
+        missingVarieties,
+        palateCategory,
+        litersPercentile,
+        visitsPercentile,
+        mostPopularCommunityDay,
+        mostPopularCommunityMonth,
+        dynamicTitle,
+        firstBeerDetails,
+        mostFrequentBeerName: top10Products.length > 0 ? top10Products[0].name : "tu cerveza favorita",
+        varietyExplorationRatio,
+        totalCustomers,
+        totalLitres,
       };
     } catch (e: any) {
       console.error("Error obteniendo datos Wrapped:", e);

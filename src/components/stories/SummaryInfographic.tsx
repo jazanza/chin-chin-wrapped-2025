@@ -85,7 +85,7 @@ export const SummaryInfographic = ({
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div className="flex flex-col items-center justify-center p-2 w-[90vw] max-w-[500px] max-h-[95vh] bg-black"> {/* Ajustado max-h a 95vh */}
+      <div className="flex flex-col items-center justify-center p-2 w-[90vw] max-w-[500px] max-h-[95vh] bg-black"> {/* Ajustado max-h y padding, y justify-center */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -101,7 +101,7 @@ export const SummaryInfographic = ({
         </div>
 
         {isTitleTyped && (
-          <div className="grid grid-cols-2 grid-rows-3 gap-1 w-full h-full border-2 border-white">
+          <div className="grid grid-cols-2 grid-rows-3 gap-2 w-full h-full"> {/* Cambiado gap-1 a gap-2 y eliminado border-2 border-white */}
             {/* Row 1, Column 1: Total Visitas - MODIFIED */}
             <Block>
               <div className="flex flex-col items-center justify-center h-full w-full">

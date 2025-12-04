@@ -73,11 +73,13 @@ export const FirstBeerOfTheYearStory = ({ firstBeerDetails, textColor, highlight
         </p>
       </div>
       {firstBeerDetails?.imageUrl && (
-        <img
-          src={firstBeerDetails.imageUrl}
-          alt={firstBeerDetails.name}
-          className="mt-8 max-h-40 md:max-h-60 object-contain" // Added image styling
-        />
+        <div className="mt-8 bg-white rounded-lg flex items-center justify-center aspect-square w-40 h-40 md:w-52 md:h-52">
+          <img
+            src={firstBeerDetails.imageUrl}
+            alt={firstBeerDetails.name}
+            className="w-full h-full object-contain"
+          />
+        </div>
       )}
     </div>
   );

@@ -66,11 +66,13 @@ export const MissingVarietiesCard = ({ missingVarieties, textColor, highlightCol
                 {beer.name.toUpperCase()}
               </p>
               {beer.imageUrl && (
-                <img
-                  src={beer.imageUrl}
-                  alt={beer.name}
-                  className="mt-2 max-h-24 object-contain" // Image styling
-                />
+                <div className="mt-2 bg-white rounded-lg flex items-center justify-center aspect-square w-24 h-24 md:w-32 md:h-32">
+                  <img
+                    src={beer.imageUrl}
+                    alt={beer.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
               )}
             </div>
           ))}

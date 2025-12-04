@@ -64,11 +64,13 @@ export const Top5Story = ({ top10Products, textColor, highlightColor }: Top5Stor
       </div>
       
       {topBeerImageUrl && (
-        <img
-          src={topBeerImageUrl}
-          alt={top10Products[0].name}
-          className="mb-8 max-h-40 md:max-h-60 object-contain" // Added image styling
-        />
+        <div className="mb-8 bg-white rounded-lg flex items-center justify-center aspect-square w-40 h-40 md:w-52 md:h-52">
+          <img
+            src={topBeerImageUrl}
+            alt={top10Products[0].name}
+            className="w-full h-full object-contain"
+          />
+        </div>
       )}
 
       {/* Moved "TU TOP 10:" closer to the list */}

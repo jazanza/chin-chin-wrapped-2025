@@ -468,7 +468,7 @@ const WrappedDashboard = () => {
         {/* chinchin.com.ec/wrapped text - Conditionally rendered */}
         {!isSummaryInfographicStory && (
           <p className={cn("absolute bottom-4 right-4 z-10 text-xs md:text-sm font-bold", currentTextColor)}>
-            chinchin.com.ec/wrapped
+            wrapped.chinchin.com.ec
           </p>
         )}
 

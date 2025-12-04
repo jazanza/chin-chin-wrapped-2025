@@ -24,7 +24,7 @@ const getSeasonalWittyRemark = (month: string) => {
         case 'Febrero':
             return "Febrero es el mes corto... ¡Pero no para tu agenda cervcera! Nos encanta esa dedicación.";
         case 'Marzo':
-            return "Marzo es la nueva primavera cervecera para ti. Despertaste justo a tiempo, antes de que llegara el frío.";
+            return "¡Marzo activa tu temporada cervecera y arranca con la energía de San Patricio.";
         case 'Abril':
             return "Abril: Mes de bromas, pero tu compromiso cervecero es 100% serio. ¡Tu fidelidad no es una broma!";
         case 'Mayo':

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils'; // For Tailwind class merging
 import { Button } from '@/components/ui/button'; // Assuming you have a Button component
-import { Home, Download } from 'lucide-react'; // Icons, added Download
+import { Home } from 'lucide-react'; // Icons, removed Download
 import { useNavigate } from 'react-router-dom'; // For navigation
-import html2canvas from 'html2canvas'; // Import html2canvas
+// Removed html2canvas import
 
 interface Product {
   name: string;
@@ -67,7 +67,7 @@ export const SummaryInfographic = ({
 }: SummaryInfographicProps) => {
 
   const [isTitleTyped, setIsTitleTyped] = useState(false);
-  const captureTargetRef = useRef<HTMLDivElement>(null);
+  // Removed captureTargetRef
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,57 +80,12 @@ export const SummaryInfographic = ({
     navigate('/');
   }, [navigate]);
 
-  const handleDownloadScreenshot = useCallback(async () => {
-    if (captureTargetRef.current) {
-      // Add a temporary padding div to the body for the screenshot
-      const paddingDiv = document.createElement('div');
-      paddingDiv.style.padding = '20px';
-      paddingDiv.style.backgroundColor = 'black'; // Match infographic background
-      paddingDiv.style.display = 'inline-block'; // To wrap content
-      paddingDiv.style.position = 'absolute';
-      paddingDiv.style.top = '0';
-      paddingDiv.style.left = '0';
-      paddingDiv.style.zIndex = '-1'; // Hide it visually
-
-      // Clone the target element to capture it with padding
-      const clonedElement = captureTargetRef.current.cloneNode(true) as HTMLElement;
-      clonedElement.style.width = captureTargetRef.current.offsetWidth + 'px'; // Ensure correct width
-      clonedElement.style.height = captureTargetRef.current.offsetHeight + 'px'; // Ensure correct height
-      clonedElement.style.margin = '0'; // Remove any external margins
-      clonedElement.style.transform = 'none'; // Remove any transforms that might affect capture
-
-      paddingDiv.appendChild(clonedElement);
-      document.body.appendChild(paddingDiv);
-
-      try {
-        const canvas = await html2canvas(paddingDiv, {
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#000000', // Ensure black background for padding
-          scale: 2, // Increase scale for better quality
-        });
-
-        const image = canvas.toDataURL("image/png");
-        const link = document.createElement('a');
-        link.href = image;
-        link.download = `ChinChinWrapped_${customerName.replace(/\s/g, '')}_${year}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (error) {
-        console.error("Error al generar la captura de pantalla:", error);
-        // Optionally show an error toast
-      } finally {
-        document.body.removeChild(paddingDiv); // Clean up the temporary div
-      }
-    }
-  }, [customerName, year]);
-
+  // Removed handleDownloadScreenshot
 
   return (
     <div className={cn("absolute inset-0 flex flex-col items-center justify-start text-foreground font-sans h-full w-full p-6 bg-black")}> {/* Fondo fijo negro */}
       {/* Main Infographic Content */}
-      <div ref={captureTargetRef} className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16] bg-black"> {/* Ajustado max-h y fondo negro */}
+      <div className="flex flex-col items-center justify-start p-3 w-[90vw] max-w-[500px] max-h-[75vh] aspect-[9/16] bg-black"> {/* Ajustado max-h y fondo negro */}
         {/* Main Infographic Title - MODIFIED */}
         <div className="mb-4 text-center">
           {isTitleTyped && (
@@ -225,8 +180,8 @@ export const SummaryInfographic = ({
         )}
       </div>
 
-      {/* Botones de navegación y descarga */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex space-x-4"> {/* Ajustado bottom-8 a bottom-4 */}
+      {/* Botones de navegación */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 flex space-x-4"> {/* Ajustado bottom-4 a bottom-12 */}
           <Button
               onClick={handleBackToLogin}
               variant="ghost"
@@ -235,14 +190,7 @@ export const SummaryInfographic = ({
           >
               <Home className="h-7 w-7" />
           </Button>
-          <Button
-              onClick={handleDownloadScreenshot}
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white hover:text-black"
-          >
-              <Download className="h-7 w-7" />
-          </Button>
+          {/* Removed Download Button */}
       </div>
     </div>
   );
